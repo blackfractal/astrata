@@ -17817,5 +17817,5728 @@
     "file": "assets/item-curseNeck-v2.png",
     "generatedAt": "2026-09-26T19:55:21.573Z",
     "revision": 2
+  },
+  {
+    "id": "card-blast",
+    "name": "Blast",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910002,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (close-up of a brilliant ivory arcane bolt bursting from a wizard hand, luminous magical impact, central spell projectile:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (close-up of a brilliant ivory arcane bolt bursting from a wizard hand, luminous magical impact, central spell projectile:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910002,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-blast-v3"
+        }
+      }
+    },
+    "file": "assets/card-blast-v3.png",
+    "generatedAt": "2026-09-26T19:57:55.286Z",
+    "revision": 3
+  },
+  {
+    "id": "card-shield",
+    "name": "Shield",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910003,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large translucent circular magical barrier of pale blue light, concentric runes, protective dome, no person:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large translucent circular magical barrier of pale blue light, concentric runes, protective dome, no person:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910003,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-shield-v3"
+        }
+      }
+    },
+    "file": "assets/card-shield-v3.png",
+    "generatedAt": "2026-09-26T19:57:59.355Z",
+    "revision": 3
+  },
+  {
+    "id": "card-sapling",
+    "name": "Sapling",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910004,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a tiny living tree companion with two branch arms and root feet, bright green leaves, expressive wooden face, full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a tiny living tree companion with two branch arms and root feet, bright green leaves, expressive wooden face, full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910004,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-sapling-v3"
+        }
+      }
+    },
+    "file": "assets/card-sapling-v3.png",
+    "generatedAt": "2026-09-26T19:58:03.403Z",
+    "revision": 3
+  },
+  {
+    "id": "card-clear",
+    "name": "Clear Mind",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910005,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating transparent crystal brain surrounded by wisps of pale blue magic, close-up magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating transparent crystal brain surrounded by wisps of pale blue magic, close-up magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910005,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-clear-v3"
+        }
+      }
+    },
+    "file": "assets/card-clear-v3.png",
+    "generatedAt": "2026-09-26T19:58:07.454Z",
+    "revision": 3
+  },
+  {
+    "id": "card-focus",
+    "name": "Focus Energy",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910006,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a tightly focused sphere of golden energy held between two hands, close-up magic:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a tightly focused sphere of golden energy held between two hands, close-up magic:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910006,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-focus-v3"
+        }
+      }
+    },
+    "file": "assets/card-focus-v3.png",
+    "generatedAt": "2026-09-26T19:58:11.506Z",
+    "revision": 3
+  },
+  {
+    "id": "card-ignis",
+    "name": "Ignis Spark",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910007,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a brilliant orange spark erupting into a bird-shaped flame, close-up of flames:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a brilliant orange spark erupting into a bird-shaped flame, close-up of flames:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910007,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-ignis-v3"
+        }
+      }
+    },
+    "file": "assets/card-ignis-v3.png",
+    "generatedAt": "2026-09-26T19:58:15.570Z",
+    "revision": 3
+  },
+  {
+    "id": "card-water",
+    "name": "Water Blast",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910008,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a spiraling torrent of sapphire water exploding outward, dynamic water spell, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a spiraling torrent of sapphire water exploding outward, dynamic water spell, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910008,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-water-v3"
+        }
+      }
+    },
+    "file": "assets/card-water-v3.png",
+    "generatedAt": "2026-09-26T19:58:19.637Z",
+    "revision": 3
+  },
+  {
+    "id": "card-gust",
+    "name": "Gust",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910009,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a swirling pale silver tornado scattering autumn leaves, wind magic close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a swirling pale silver tornado scattering autumn leaves, wind magic close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910009,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-gust-v3"
+        }
+      }
+    },
+    "file": "assets/card-gust-v3.png",
+    "generatedAt": "2026-09-26T19:58:23.688Z",
+    "revision": 3
+  },
+  {
+    "id": "card-discord",
+    "name": "Discordia Pulse",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910010,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a jagged violet pulsating sphere of chaotic magic, fractured light, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a jagged violet pulsating sphere of chaotic magic, fractured light, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910010,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-discord-v3"
+        }
+      }
+    },
+    "file": "assets/card-discord-v3.png",
+    "generatedAt": "2026-09-26T19:58:27.739Z",
+    "revision": 3
+  },
+  {
+    "id": "card-heat",
+    "name": "Heat",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910011,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a wizard palm radiating intense orange heat over a blue water orb, steam, close-up spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a wizard palm radiating intense orange heat over a blue water orb, steam, close-up spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910011,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-heat-v3"
+        }
+      }
+    },
+    "file": "assets/card-heat-v3.png",
+    "generatedAt": "2026-09-26T19:58:31.793Z",
+    "revision": 3
+  },
+  {
+    "id": "card-kiln",
+    "name": "Kiln",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910012,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ancient small stone kiln with molten orange energy bursting from its mouth, central object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ancient small stone kiln with molten orange energy bursting from its mouth, central object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910012,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-kiln-v3"
+        }
+      }
+    },
+    "file": "assets/card-kiln-v3.png",
+    "generatedAt": "2026-09-26T19:58:35.841Z",
+    "revision": 3
+  },
+  {
+    "id": "card-cinder",
+    "name": "Cinder Snap",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910013,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hand snapping fingers releasing an explosive shower of orange cinders, close-up hand:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hand snapping fingers releasing an explosive shower of orange cinders, close-up hand:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910013,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-cinder-v3"
+        }
+      }
+    },
+    "file": "assets/card-cinder-v3.png",
+    "generatedAt": "2026-09-26T19:58:39.902Z",
+    "revision": 3
+  },
+  {
+    "id": "card-palimpsest",
+    "name": "Palimpsest",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910014,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ancient open parchment manuscript, overlapping erased runes glowing ivory, close-up book:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ancient open parchment manuscript, overlapping erased runes glowing ivory, close-up book:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910014,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-palimpsest-v3"
+        }
+      }
+    },
+    "file": "assets/card-palimpsest-v3.png",
+    "generatedAt": "2026-09-26T19:58:43.971Z",
+    "revision": 3
+  },
+  {
+    "id": "card-undertow",
+    "name": "Undertow",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910015,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a violent turquoise whirlpool pulling a magical scroll into its spiral, close-up water:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a violent turquoise whirlpool pulling a magical scroll into its spiral, close-up water:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910015,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-undertow-v3"
+        }
+      }
+    },
+    "file": "assets/card-undertow-v3.png",
+    "generatedAt": "2026-09-26T19:58:48.040Z",
+    "revision": 3
+  },
+  {
+    "id": "card-terra",
+    "name": "Terra Guard",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910016,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an earthy humanoid guardian made from stone and moss carrying a massive stone shield, full portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an earthy humanoid guardian made from stone and moss carrying a massive stone shield, full portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910016,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-terra-v3"
+        }
+      }
+    },
+    "file": "assets/card-terra-v3.png",
+    "generatedAt": "2026-09-26T19:58:52.100Z",
+    "revision": 3
+  },
+  {
+    "id": "card-guardian",
+    "name": "Energy Guardian",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910017,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a protective floating humanoid figure made entirely of blue luminous energy, no weapons:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a protective floating humanoid figure made entirely of blue luminous energy, no weapons:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910017,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-guardian-v3"
+        }
+      }
+    },
+    "file": "assets/card-guardian-v3.png",
+    "generatedAt": "2026-09-26T19:58:56.164Z",
+    "revision": 3
+  },
+  {
+    "id": "card-resonance",
+    "name": "Resonance",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910018,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (two large tuning forks made of crystal resonating with visible golden waves, central objects:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (two large tuning forks made of crystal resonating with visible golden waves, central objects:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910018,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-resonance-v3"
+        }
+      }
+    },
+    "file": "assets/card-resonance-v3.png",
+    "generatedAt": "2026-09-26T19:59:00.238Z",
+    "revision": 3
+  },
+  {
+    "id": "card-keystone",
+    "name": "Keystone",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910019,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a square carved keystone bearing four leaf runes, glowing root connections, close-up stone:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a square carved keystone bearing four leaf runes, glowing root connections, close-up stone:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910019,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-keystone-v3"
+        }
+      }
+    },
+    "file": "assets/card-keystone-v3.png",
+    "generatedAt": "2026-09-26T19:59:04.297Z",
+    "revision": 3
+  },
+  {
+    "id": "card-rite",
+    "name": "Opening Rite",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910020,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a shallow golden offering bowl with tiny flames and pale roots, ritual altar, close-up object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a shallow golden offering bowl with tiny flames and pale roots, ritual altar, close-up object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910020,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-rite-v3"
+        }
+      }
+    },
+    "file": "assets/card-rite-v3.png",
+    "generatedAt": "2026-09-26T19:59:08.356Z",
+    "revision": 3
+  },
+  {
+    "id": "card-transmute",
+    "name": "Transmute",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910021,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating red crystal halfway transformed into a blue crystal, swirling magical ribbons, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating red crystal halfway transformed into a blue crystal, swirling magical ribbons, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910021,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-transmute-v3"
+        }
+      }
+    },
+    "file": "assets/card-transmute-v3.png",
+    "generatedAt": "2026-09-26T19:59:12.410Z",
+    "revision": 3
+  },
+  {
+    "id": "card-quicksilver",
+    "name": "Quicksilver",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910022,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a liquid silver spiral lifting a small stone into the air, close-up mercury magic:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a liquid silver spiral lifting a small stone into the air, close-up mercury magic:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910022,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-quicksilver-v3"
+        }
+      }
+    },
+    "file": "assets/card-quicksilver-v3.png",
+    "generatedAt": "2026-09-26T19:59:16.466Z",
+    "revision": 3
+  },
+  {
+    "id": "card-surge",
+    "name": "Arcane Surge",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910023,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large electric arcane lightning blast bursting from a glowing staff tip, close-up spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large electric arcane lightning blast bursting from a glowing staff tip, close-up spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910023,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-surge-v3"
+        }
+      }
+    },
+    "file": "assets/card-surge-v3.png",
+    "generatedAt": "2026-09-26T19:59:20.541Z",
+    "revision": 3
+  },
+  {
+    "id": "card-prism",
+    "name": "Prismatic Core",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910024,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large clear prism dividing four colored magical beams, red green blue white, central object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large clear prism dividing four colored magical beams, red green blue white, central object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910024,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-prism-v3"
+        }
+      }
+    },
+    "file": "assets/card-prism-v3.png",
+    "generatedAt": "2026-09-26T19:59:24.595Z",
+    "revision": 3
+  },
+  {
+    "id": "card-soothe",
+    "name": "Soothe",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910025,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (two gentle hands cradling a glowing blue healing droplet, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (two gentle hands cradling a glowing blue healing droplet, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910025,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-soothe-v3"
+        }
+      }
+    },
+    "file": "assets/card-soothe-v3.png",
+    "generatedAt": "2026-09-26T19:59:28.656Z",
+    "revision": 3
+  },
+  {
+    "id": "card-thorn",
+    "name": "Thorn Choir",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910026,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a dense crown of sharp thorn vines erupting forward as a spell, central thorn cluster:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a dense crown of sharp thorn vines erupting forward as a spell, central thorn cluster:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910026,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-thorn-v3"
+        }
+      }
+    },
+    "file": "assets/card-thorn-v3.png",
+    "generatedAt": "2026-09-26T19:59:32.723Z",
+    "revision": 3
+  },
+  {
+    "id": "card-bloom",
+    "name": "Bloomcall",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910027,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single huge luminous white flower opening with golden healing pollen, macro flower:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single huge luminous white flower opening with golden healing pollen, macro flower:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910027,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-bloom-v3"
+        }
+      }
+    },
+    "file": "assets/card-bloom-v3.png",
+    "generatedAt": "2026-09-26T19:59:36.781Z",
+    "revision": 3
+  },
+  {
+    "id": "card-root",
+    "name": "Root Lance",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910028,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a spear made from twisting roots and green thorns, magical weapon spell, close-up root spear:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a spear made from twisting roots and green thorns, magical weapon spell, close-up root spear:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910028,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-root-v3"
+        }
+      }
+    },
+    "file": "assets/card-root-v3.png",
+    "generatedAt": "2026-09-26T19:59:40.847Z",
+    "revision": 3
+  },
+  {
+    "id": "card-rain",
+    "name": "Rain Lantern",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910029,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ornate blue lantern surrounded by suspended raindrops, close-up magical lantern:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ornate blue lantern surrounded by suspended raindrops, close-up magical lantern:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910029,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-rain-v3"
+        }
+      }
+    },
+    "file": "assets/card-rain-v3.png",
+    "generatedAt": "2026-09-26T19:59:44.909Z",
+    "revision": 3
+  },
+  {
+    "id": "card-seed",
+    "name": "Patient Seed",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910030,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single large golden seed with tiny pale roots and a green shoot, glowing magic, macro seed:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single large golden seed with tiny pale roots and a green shoot, glowing magic, macro seed:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910030,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-seed-v3"
+        }
+      }
+    },
+    "file": "assets/card-seed-v3.png",
+    "generatedAt": "2026-09-26T19:59:48.980Z",
+    "revision": 3
+  },
+  {
+    "id": "card-storm",
+    "name": "Storm Canopy",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910031,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a violent lightning storm swirling in a canopy of leaves, central bright lightning bolt:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a violent lightning storm swirling in a canopy of leaves, central bright lightning bolt:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910031,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-storm-v3"
+        }
+      }
+    },
+    "file": "assets/card-storm-v3.png",
+    "generatedAt": "2026-09-26T19:59:53.040Z",
+    "revision": 3
+  },
+  {
+    "id": "card-rot",
+    "name": "Slow Rot",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910032,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a decaying leaf dissolving into glowing acidic green droplets, close-up magical corrosion:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a decaying leaf dissolving into glowing acidic green droplets, close-up magical corrosion:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910032,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-rot-v3"
+        }
+      }
+    },
+    "file": "assets/card-rot-v3.png",
+    "generatedAt": "2026-09-26T19:59:57.105Z",
+    "revision": 3
+  },
+  {
+    "id": "card-spore",
+    "name": "Bitter Spore",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910033,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a cluster of toxic glowing green mushrooms releasing a thick cloud of spores, macro mushrooms:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a cluster of toxic glowing green mushrooms releasing a thick cloud of spores, macro mushrooms:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910033,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-spore-v3"
+        }
+      }
+    },
+    "file": "assets/card-spore-v3.png",
+    "generatedAt": "2026-09-26T20:00:01.165Z",
+    "revision": 3
+  },
+  {
+    "id": "card-solitude",
+    "name": "Solitude",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910034,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant white candle enclosed by a circle of black stones, stark magical still life:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant white candle enclosed by a circle of black stones, stark magical still life:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910034,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-solitude-v3"
+        }
+      }
+    },
+    "file": "assets/card-solitude-v3.png",
+    "generatedAt": "2026-09-26T20:00:05.227Z",
+    "revision": 3
+  },
+  {
+    "id": "card-corner",
+    "name": "Corner Flame",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910035,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a bright orange flame fixed in the corner of an ancient stone frame, magical flame close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a bright orange flame fixed in the corner of an ancient stone frame, magical flame close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910035,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-corner-v3"
+        }
+      }
+    },
+    "file": "assets/card-corner-v3.png",
+    "generatedAt": "2026-09-26T20:00:09.296Z",
+    "revision": 3
+  },
+  {
+    "id": "card-conduit",
+    "name": "Wild Conduit",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910036,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a branching crystal rod carrying vivid white lightning from end to end, close-up magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a branching crystal rod carrying vivid white lightning from end to end, close-up magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910036,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-conduit-v3"
+        }
+      }
+    },
+    "file": "assets/card-conduit-v3.png",
+    "generatedAt": "2026-09-26T20:00:13.365Z",
+    "revision": 3
+  },
+  {
+    "id": "card-tide",
+    "name": "Tide Memory",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910037,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a pearlescent seashell overflowing with spiraling blue water and tiny runes, close-up shell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a pearlescent seashell overflowing with spiraling blue water and tiny runes, close-up shell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910037,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-tide-v3"
+        }
+      }
+    },
+    "file": "assets/card-tide-v3.png",
+    "generatedAt": "2026-09-26T20:00:17.445Z",
+    "revision": 3
+  },
+  {
+    "id": "card-sun",
+    "name": "Sunfruit",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910038,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a plump golden glowing fruit with leaf wings and tiny root feet, friendly magical companion:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a plump golden glowing fruit with leaf wings and tiny root feet, friendly magical companion:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910038,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-sun-v3"
+        }
+      }
+    },
+    "file": "assets/card-sun-v3.png",
+    "generatedAt": "2026-09-26T20:00:21.508Z",
+    "revision": 3
+  },
+  {
+    "id": "card-eclipse",
+    "name": "Eclipse Seed",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910039,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a black seed eclipsing a brilliant golden sun with violet corona, cosmic magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a black seed eclipsing a brilliant golden sun with violet corona, cosmic magical object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910039,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-eclipse-v3"
+        }
+      }
+    },
+    "file": "assets/card-eclipse-v3.png",
+    "generatedAt": "2026-09-26T20:00:25.578Z",
+    "revision": 3
+  },
+  {
+    "id": "card-square",
+    "name": "Fourfold Grove",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910040,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (four green saplings growing at four corners of a glowing square root lattice, top view:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (four green saplings growing at four corners of a glowing square root lattice, top view:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910040,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-square-v3"
+        }
+      }
+    },
+    "file": "assets/card-square-v3.png",
+    "generatedAt": "2026-09-26T20:00:29.640Z",
+    "revision": 3
+  },
+  {
+    "id": "card-clean",
+    "name": "Unbinding Dew",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910041,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single blue dew drop washing black chains from a leafy branch, close-up healing spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single blue dew drop washing black chains from a leafy branch, close-up healing spell:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910041,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-clean-v3"
+        }
+      }
+    },
+    "file": "assets/card-clean-v3.png",
+    "generatedAt": "2026-09-26T20:00:33.708Z",
+    "revision": 3
+  },
+  {
+    "id": "card-bone",
+    "name": "Bone Lock",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910042,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ivory bone padlock with interlocking skeletal fingers, close-up cursed object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an ivory bone padlock with interlocking skeletal fingers, close-up cursed object:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910042,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-bone-v3"
+        }
+      }
+    },
+    "file": "assets/card-bone-v3.png",
+    "generatedAt": "2026-09-26T20:00:37.766Z",
+    "revision": 3
+  },
+  {
+    "id": "card-milky",
+    "name": "Milky Eyes",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910043,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a pair of cloudy white eyes surrounded by gray mist, eerie close-up magical curse:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a pair of cloudy white eyes surrounded by gray mist, eerie close-up magical curse:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910043,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-milky-v3"
+        }
+      }
+    },
+    "file": "assets/card-milky-v3.png",
+    "generatedAt": "2026-09-26T20:00:41.824Z",
+    "revision": 3
+  },
+  {
+    "id": "card-itch",
+    "name": "Burning Itch",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910044,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a glowing red ember under cracked bark, itchy red branching curse runes, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a glowing red ember under cracked bark, itchy red branching curse runes, close-up:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910044,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-itch-v3"
+        }
+      }
+    },
+    "file": "assets/card-itch-v3.png",
+    "generatedAt": "2026-09-26T20:00:45.887Z",
+    "revision": 3
+  },
+  {
+    "id": "card-rust",
+    "name": "Rust Memory",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910045,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a rusty iron ring disintegrating into orange dust, close-up corrosion curse:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a rusty iron ring disintegrating into orange dust, close-up corrosion curse:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910045,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-rust-v3"
+        }
+      }
+    },
+    "file": "assets/card-rust-v3.png",
+    "generatedAt": "2026-09-26T20:00:49.952Z",
+    "revision": 3
+  },
+  {
+    "id": "card-fog",
+    "name": "Fog of Names",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910046,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a blank parchment covered in thick white fog with fading unreadable ink, close-up cursed scroll:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a blank parchment covered in thick white fog with fading unreadable ink, close-up cursed scroll:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910046,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/card-fog-v3"
+        }
+      }
+    },
+    "file": "assets/card-fog-v3.png",
+    "generatedAt": "2026-09-26T20:00:54.025Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-sludge",
+    "name": "Sludge",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910047,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an amorphous translucent blue slime monster with dripping tendrils and a dark eye, full creature portrait, no legs:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an amorphous translucent blue slime monster with dripping tendrils and a dark eye, full creature portrait, no legs:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910047,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-sludge-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-sludge-v3.png",
+    "generatedAt": "2026-09-26T20:00:58.081Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-wisp",
+    "name": "Spark-Wisp",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910048,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a small floating orange flame spirit with two bright eyes, no body, no legs, a magical will-o-wisp:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a small floating orange flame spirit with two bright eyes, no body, no legs, a magical will-o-wisp:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910048,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-wisp-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-wisp-v3.png",
+    "generatedAt": "2026-09-26T20:01:02.137Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-elemental",
+    "name": "Elemental Wisp",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910049,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating sphere made of four elemental swirls, fire water wind stone, luminous spirit, no legs:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a floating sphere made of four elemental swirls, fire water wind stone, luminous spirit, no legs:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910049,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-elemental-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-elemental-v3.png",
+    "generatedAt": "2026-09-26T20:01:06.210Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-hart",
+    "name": "The Cinder Hart",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910050,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a gigantic flaming stag with branching ember antlers, unmistakable deer anatomy, imposing full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a gigantic flaming stag with branching ember antlers, unmistakable deer anatomy, imposing full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910050,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-hart-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-hart-v3.png",
+    "generatedAt": "2026-09-26T20:01:10.262Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-choir",
+    "name": "The Glass Choir",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910051,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (three eerie pale glass faces fused into a floating crystalline choir, shards like wings, imposing fantasy boss:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (three eerie pale glass faces fused into a floating crystalline choir, shards like wings, imposing fantasy boss:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910051,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-choir-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-choir-v3.png",
+    "generatedAt": "2026-09-26T20:01:14.309Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-leech",
+    "name": "Ink Leech",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910052,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large glossy black leech with a circular toothed mouth, curling worm body, full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a large glossy black leech with a circular toothed mouth, curling worm body, full creature portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910052,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-leech-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-leech-v3.png",
+    "generatedAt": "2026-09-26T20:01:18.395Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-weaver",
+    "name": "Pale Weaver",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910053,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an elegant pale spider creature weaving shining threads, long thin legs, glowing white silk:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (an elegant pale spider creature weaving shining threads, long thin legs, glowing white silk:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910053,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-weaver-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-weaver-v3.png",
+    "generatedAt": "2026-09-26T20:01:22.459Z",
+    "revision": 3
+  },
+  {
+    "id": "enemy-mason",
+    "name": "Hollow Mason",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910054,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hulking hollow stone golem carrying a massive hammer, moss-covered sculpted humanoid, portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hulking hollow stone golem carrying a massive hammer, moss-covered sculpted humanoid, portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910054,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-mason-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-mason-v3.png",
+    "generatedAt": "2026-09-26T20:01:26.514Z",
+    "revision": 3
+  },
+  {
+    "id": "item-ruby",
+    "name": "Ruby",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910055,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted red ruby gemstone, macro red jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted red ruby gemstone, macro red jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910055,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-ruby-v3"
+        }
+      }
+    },
+    "file": "assets/item-ruby-v3.png",
+    "generatedAt": "2026-09-26T20:01:30.583Z",
+    "revision": 3
+  },
+  {
+    "id": "item-sapphire",
+    "name": "Sapphire",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910056,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted deep blue sapphire gemstone, macro blue jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted deep blue sapphire gemstone, macro blue jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910056,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-sapphire-v3"
+        }
+      }
+    },
+    "file": "assets/item-sapphire-v3.png",
+    "generatedAt": "2026-09-26T20:01:34.642Z",
+    "revision": 3
+  },
+  {
+    "id": "item-topaz",
+    "name": "Topaz",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910057,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted pale yellow topaz gemstone, macro yellow jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (one brilliant faceted pale yellow topaz gemstone, macro yellow jewel, on black velvet:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910057,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-topaz-v3"
+        }
+      }
+    },
+    "file": "assets/item-topaz-v3.png",
+    "generatedAt": "2026-09-26T20:01:38.707Z",
+    "revision": 3
+  },
+  {
+    "id": "item-channelRing",
+    "name": "Ring of Embers",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910058,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single ornate gold finger ring set with a tiny orange glowing ember, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a single ornate gold finger ring set with a tiny orange glowing ember, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910058,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-channelRing-v3"
+        }
+      }
+    },
+    "file": "assets/item-channelRing-v3.png",
+    "generatedAt": "2026-09-26T20:01:42.787Z",
+    "revision": 3
+  },
+  {
+    "id": "item-gold",
+    "name": "Gold Bracelet",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910059,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a broad golden wrist bracelet engraved with leaves, circular band large enough for a wrist, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a broad golden wrist bracelet engraved with leaves, circular band large enough for a wrist, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910059,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-gold-v3"
+        }
+      }
+    },
+    "file": "assets/item-gold-v3.png",
+    "generatedAt": "2026-09-26T20:01:46.854Z",
+    "revision": 3
+  },
+  {
+    "id": "item-curseNeck",
+    "name": "Lead Psalm",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910060,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a heavy lead necklace with a cursed dark pendant, coiled necklace chain, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a heavy lead necklace with a cursed dark pendant, coiled necklace chain, close-up jewelry:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910060,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/item-curseNeck-v3"
+        }
+      }
+    },
+    "file": "assets/item-curseNeck-v3.png",
+    "generatedAt": "2026-09-26T20:01:50.925Z",
+    "revision": 3
   }
 ]

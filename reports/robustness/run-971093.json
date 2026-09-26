@@ -1,0 +1,2583 @@
+{
+  "seed": 971093,
+  "version": {
+    "rules": "1.0.0",
+    "content": "1.0.0",
+    "observation": 1,
+    "actions": 1
+  },
+  "policy": "weighted-druid-v1",
+  "weights": {
+    "damage": 1,
+    "survival": 1.4,
+    "economy": 4,
+    "development": 1,
+    "progress": 1
+  },
+  "outcome": "win",
+  "cause": "",
+  "hp": 27,
+  "rounds": 19,
+  "steps": 119,
+  "elapsedMs": 13,
+  "stats": {
+    "damageDealt": 126,
+    "damageTaken": 60,
+    "goldEarned": 230,
+    "goldSpent": 85,
+    "cardsGained": [
+      "Terra Guard",
+      "Thorn Choir",
+      "Arcane Surge",
+      "Grove Titan",
+      "Grove Titan",
+      "Fourfold Grove",
+      "Wild Conduit",
+      "Wild Conduit"
+    ],
+    "itemsGained": [
+      "Bronze Bracelet",
+      "Rootbound Ring",
+      "Topaz",
+      "Storm Opal",
+      "Amber Thought",
+      "Storm Opal",
+      "Ring of Embers"
+    ],
+    "purchases": [
+      "card:conduit"
+    ],
+    "sales": [],
+    "encounters": [
+      {
+        "round": 13,
+        "enemies": [
+          "Pale Weaver"
+        ],
+        "outcome": "victory",
+        "hpStart": 65,
+        "turns": 5,
+        "hpEnd": 51
+      },
+      {
+        "round": 19,
+        "enemies": [
+          "Void-Colossus"
+        ],
+        "outcome": "victory",
+        "hpStart": 65,
+        "turns": 7,
+        "hpEnd": 27
+      }
+    ]
+  },
+  "deck": [
+    {
+      "uid": 1,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 2,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 3,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 4,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 5,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 6,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 7,
+      "id": "familiar",
+      "upgrade": false
+    },
+    {
+      "uid": 8,
+      "id": "clear",
+      "upgrade": false
+    },
+    {
+      "uid": 9,
+      "id": "focus",
+      "upgrade": false
+    },
+    {
+      "uid": 10,
+      "id": "sapling",
+      "upgrade": true
+    },
+    {
+      "uid": 18,
+      "id": "terra",
+      "upgrade": false
+    },
+    {
+      "uid": 22,
+      "id": "thorn",
+      "upgrade": false
+    },
+    {
+      "uid": 26,
+      "id": "surge",
+      "upgrade": false
+    },
+    {
+      "uid": 29,
+      "id": "grove",
+      "upgrade": false
+    },
+    {
+      "uid": 31,
+      "id": "grove",
+      "upgrade": false
+    },
+    {
+      "uid": 32,
+      "id": "square",
+      "upgrade": false
+    },
+    {
+      "uid": 36,
+      "id": "conduit",
+      "upgrade": false
+    },
+    {
+      "uid": 40,
+      "id": "conduit",
+      "upgrade": false
+    }
+  ],
+  "log": [
+    {
+      "step": 0,
+      "mode": "class",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "chooseClass",
+        "label": "Druid · Growth and pattern",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"chooseClass\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 1,
+      "mode": "gem",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "startGem",
+        "slot": "wrist1",
+        "label": "Socket Topaz into Bracelet",
+        "effects": {
+          "defense": 3,
+          "damage": 0
+        },
+        "costs": {},
+        "key": "[\"startGem\",{\"slot\":\"wrist1\"}]"
+      },
+      "reason": "Imbue the starting Bracelet for passive protection."
+    },
+    {
+      "step": 2,
+      "mode": "intro",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "begin",
+        "label": "Enter the Ashen Weald",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"begin\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 3,
+      "mode": "field",
+      "round": 1,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 6,
+        "label": "Move to 6, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 4,
+      "mode": "event",
+      "round": 1,
+      "hp": 65,
+      "action": {
+        "type": "eventChoice",
+        "index": 1,
+        "label": "Turn away",
+        "effects": {
+          "label": "Turn away"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":1}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 5,
+      "mode": "field",
+      "round": 2,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 5,
+        "label": "Move to 6, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 6,
+      "mode": "field",
+      "round": 2,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 4,
+        "label": "Move to 5, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 7,
+      "mode": "field",
+      "round": 3,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 5,
+        "label": "Move to 6, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 8,
+      "mode": "field",
+      "round": 3,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 4,
+        "label": "Move to 7, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 9,
+      "mode": "field",
+      "round": 4,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 5,
+        "label": "Move to 8, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 10,
+      "mode": "item",
+      "round": 4,
+      "hp": 65,
+      "action": {
+        "type": "takeItem",
+        "index": 1,
+        "label": "Take Terra Guard",
+        "effects": {
+          "item": "card:terra"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":1}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 11,
+      "mode": "field",
+      "round": 5,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 6,
+        "label": "Move to 7, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 12,
+      "mode": "field",
+      "round": 5,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 7,
+        "label": "Move to 6, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 13,
+      "mode": "field",
+      "round": 6,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 8,
+        "label": "Move to 5, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 14,
+      "mode": "field",
+      "round": 6,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 9,
+        "label": "Move to 5, 10",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":9}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 15,
+      "mode": "field",
+      "round": 7,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 10,
+        "label": "Move to 6, 11",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":10}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 16,
+      "mode": "event",
+      "round": 7,
+      "hp": 65,
+      "action": {
+        "type": "eventChoice",
+        "index": 1,
+        "label": "Accept a cutting · receive Thorn Choir",
+        "effects": {
+          "label": "Accept a cutting · receive Thorn Choir",
+          "card": "thorn"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":1}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 17,
+      "mode": "field",
+      "round": 8,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 9,
+        "label": "Move to 5, 10",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":9}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 18,
+      "mode": "field",
+      "round": 8,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 8,
+        "label": "Move to 4, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 19,
+      "mode": "field",
+      "round": 9,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 2,
+        "y": 7,
+        "label": "Move to 3, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":2,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 20,
+      "mode": "field",
+      "round": 9,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 1,
+        "y": 6,
+        "label": "Move to 2, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":1,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 21,
+      "mode": "field",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 0,
+        "y": 5,
+        "label": "Move to 1, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":0,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 22,
+      "mode": "item",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Arcane Surge",
+        "effects": {
+          "item": "card:surge"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 23,
+      "mode": "field",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 1,
+        "y": 4,
+        "label": "Move to 2, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":1,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 24,
+      "mode": "field",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 2,
+        "y": 5,
+        "label": "Move to 3, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":2,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 25,
+      "mode": "event",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "eventChoice",
+        "index": 0,
+        "label": "Rest · recover 10 HP",
+        "effects": {
+          "label": "Rest · recover 10 HP",
+          "heal": 10
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":0}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 26,
+      "mode": "field",
+      "round": 12,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 4,
+        "label": "Move to 4, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 27,
+      "mode": "item",
+      "round": 12,
+      "hp": 65,
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Grove Titan",
+        "effects": {
+          "item": "card:grove"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 28,
+      "mode": "field",
+      "round": 13,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 2,
+        "y": 5,
+        "label": "Move to 3, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":2,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 29,
+      "mode": "event",
+      "round": 13,
+      "hp": 65,
+      "action": {
+        "type": "eventChoice",
+        "index": 0,
+        "label": "Trade a Bracelet for Grove Titan",
+        "effects": {
+          "label": "Trade a Bracelet for Grove Titan",
+          "tradeWrist": true,
+          "card": "grove"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":0}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 30,
+      "mode": "battle",
+      "round": 13,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 1,
+        "slot": 0,
+        "label": "Place Blast · slot 1",
+        "effects": {
+          "card": "blast",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":1,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 31,
+      "mode": "battle",
+      "round": 13,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 32,
+      "mode": "battle",
+      "round": 13,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 28,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Pale Weaver",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":28,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 33,
+      "mode": "battle",
+      "round": 13,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 34,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 10,
+        "slot": 1,
+        "label": "Place Sapling · slot 2",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":10,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 35,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 36,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 28,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Pale Weaver",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":28,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 37,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 38,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "takeHit",
+        "label": "Let it reach your equipment",
+        "effects": {
+          "takeDamage": 7
+        },
+        "costs": {},
+        "key": "[\"takeHit\",{}]"
+      },
+      "reason": "Let passive equipment absorb a manageable hit."
+    },
+    {
+      "step": 39,
+      "mode": "battle",
+      "round": 13,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "takeHit",
+        "label": "Let it reach your equipment",
+        "effects": {
+          "takeDamage": 7
+        },
+        "costs": {},
+        "key": "[\"takeHit\",{}]"
+      },
+      "reason": "Let passive equipment absorb a manageable hit."
+    },
+    {
+      "step": 40,
+      "mode": "battle",
+      "round": 13,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 22,
+        "slot": 2,
+        "label": "Place Thorn Choir · slot 3",
+        "effects": {
+          "card": "thorn",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":22,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 41,
+      "mode": "battle",
+      "round": 13,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 42,
+      "mode": "battle",
+      "round": 13,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 28,
+        "element": "Earth",
+        "label": "Thorn Choir · Earth → Pale Weaver",
+        "effects": {
+          "damage": 6,
+          "adj": 2,
+          "card": "thorn",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":28,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 43,
+      "mode": "battle",
+      "round": 13,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 44,
+      "mode": "battle",
+      "round": 13,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 9,
+        "slot": 6,
+        "label": "Place Focus Energy · slot 7",
+        "effects": {
+          "card": "focus",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":9,\"slot\":6}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 45,
+      "mode": "battle",
+      "round": 13,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 46,
+      "mode": "battle",
+      "round": 13,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 6,
+        "target": null,
+        "element": "Arcane",
+        "label": "Focus Energy · Arcane",
+        "effects": {
+          "focusPermanent": 1,
+          "damage": 0,
+          "card": "focus",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 47,
+      "mode": "battle",
+      "round": 13,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 48,
+      "mode": "battle",
+      "round": 13,
+      "turn": 5,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 3,
+        "slot": 3,
+        "label": "Place Blast · slot 4",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":3,\"slot\":3}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 49,
+      "mode": "battle",
+      "round": 13,
+      "turn": 5,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 7,
+        "slot": 4,
+        "label": "Place Familiar · slot 5",
+        "effects": {
+          "card": "familiar",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":7,\"slot\":4}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 50,
+      "mode": "battle",
+      "round": 13,
+      "turn": 5,
+      "hp": 51,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 51,
+      "mode": "battle",
+      "round": 13,
+      "turn": 5,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 28,
+        "element": "Earth",
+        "label": "Thorn Choir · Earth → Pale Weaver",
+        "effects": {
+          "damage": 6,
+          "adj": 2,
+          "card": "thorn",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":28,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 52,
+      "mode": "reward",
+      "round": 13,
+      "hp": 51,
+      "action": {
+        "type": "rewardCard",
+        "id": "square",
+        "label": "Take Fourfold Grove",
+        "effects": {
+          "card": "square"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"square\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 53,
+      "mode": "reward",
+      "round": 13,
+      "hp": 51,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 54,
+      "mode": "reward",
+      "round": 13,
+      "hp": 51,
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 55,
+      "mode": "field",
+      "round": 14,
+      "hp": 51,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 4,
+        "label": "Move to 4, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Gold"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 56,
+      "mode": "field",
+      "round": 15,
+      "hp": 51,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 3,
+        "label": "Move to 5, 4",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern",
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":3}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 57,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 51,
+      "action": {
+        "type": "socket",
+        "uid": 12,
+        "gem": 33,
+        "label": "Socket Storm Opal into Rootbound Ring",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"socket\",{\"uid\":12,\"gem\":33}]"
+      },
+      "reason": "Socket unused Gems to activate their powers."
+    },
+    {
+      "step": 58,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 51,
+      "action": {
+        "type": "heal",
+        "label": "Rest · heal 20 HP · 20 Gold",
+        "effects": {
+          "heal": 14
+        },
+        "costs": {
+          "gold": 20
+        },
+        "key": "[\"heal\",{}]"
+      },
+      "reason": "Recover HP before the next encounter."
+    },
+    {
+      "step": 59,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "buy",
+        "index": 2,
+        "price": 65,
+        "label": "Buy Wild Conduit · 65 Gold",
+        "effects": {
+          "item": "card:conduit"
+        },
+        "costs": {
+          "gold": 65
+        },
+        "key": "[\"buy\",{\"index\":2,\"price\":65}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 60,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "upgrade",
+        "uid": 10,
+        "label": "Upgrade Sapling · 8 HP",
+        "effects": {
+          "upgrade": 1
+        },
+        "costs": {
+          "gold": 0,
+          "hp": 8
+        },
+        "key": "[\"upgrade\",{\"uid\":10}]"
+      },
+      "reason": "Improve a card when the cost is affordable."
+    },
+    {
+      "step": 61,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 57,
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "reason": "Continue when useful services are exhausted."
+    },
+    {
+      "step": 62,
+      "mode": "event",
+      "round": 15,
+      "hp": 57,
+      "action": {
+        "type": "eventChoice",
+        "index": 1,
+        "label": "Take an Amber Thought",
+        "effects": {
+          "label": "Take an Amber Thought",
+          "item": "focusGem"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":1}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 63,
+      "mode": "field",
+      "round": 16,
+      "hp": 57,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 4,
+        "label": "Move to 6, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 64,
+      "mode": "field",
+      "round": 16,
+      "hp": 57,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 5,
+        "label": "Move to 7, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 65,
+      "mode": "event",
+      "round": 16,
+      "hp": 57,
+      "action": {
+        "type": "eventChoice",
+        "index": 0,
+        "label": "Drink · recover 12 HP",
+        "effects": {
+          "label": "Drink · recover 12 HP",
+          "heal": 12
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":0}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 66,
+      "mode": "field",
+      "round": 17,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 4,
+        "label": "Move to 6, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 67,
+      "mode": "field",
+      "round": 17,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 3,
+        "label": "Move to 6, 4",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":3}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 68,
+      "mode": "field",
+      "round": 18,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 2,
+        "label": "Move to 7, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":2}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 69,
+      "mode": "field",
+      "round": 18,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 1,
+        "label": "Move to 8, 2",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Gold"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":1}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 70,
+      "mode": "field",
+      "round": 19,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 2,
+        "label": "Move to 7, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":2}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 71,
+      "mode": "field",
+      "round": 19,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 3,
+        "label": "Move to 6, 4",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":3}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 72,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 10,
+        "slot": 0,
+        "label": "Place Sapling · slot 1",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":10,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 73,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 74,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Sapling · Earth → Void-Colossus",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 75,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Sapling · Earth → Void-Colossus",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 76,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 77,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "intercept",
+        "slot": 0,
+        "label": "Sapling intercepts · 7 HP",
+        "effects": {
+          "allyHp": 7,
+          "element": "Earth",
+          "swallow": false
+        },
+        "costs": {},
+        "key": "[\"intercept\",{\"slot\":0}]"
+      },
+      "reason": "Protect player HP while retaining valuable growing Allies when possible."
+    },
+    {
+      "step": 78,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 62,
+      "action": {
+        "type": "place",
+        "uid": 1,
+        "slot": 0,
+        "label": "Place Blast · slot 1",
+        "effects": {
+          "card": "blast",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":1,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 79,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 62,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 80,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 62,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 81,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 62,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 82,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 62,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 83,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 52,
+      "action": {
+        "type": "place",
+        "uid": 9,
+        "slot": 1,
+        "label": "Place Focus Energy · slot 2",
+        "effects": {
+          "card": "focus",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":9,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 84,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 52,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 85,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 52,
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": null,
+        "element": "Arcane",
+        "label": "Focus Energy · Arcane",
+        "effects": {
+          "focusPermanent": 1,
+          "damage": 0,
+          "card": "focus",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 86,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 52,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 87,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "place",
+        "uid": 22,
+        "slot": 0,
+        "label": "Place Thorn Choir · slot 1",
+        "effects": {
+          "card": "thorn",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":22,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 88,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "place",
+        "uid": 4,
+        "slot": 5,
+        "label": "Place Blast · slot 6",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":4,\"slot\":5}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 89,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 90,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Thorn Choir · Earth → Void-Colossus",
+        "effects": {
+          "damage": 8,
+          "adj": 2,
+          "card": "thorn",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 91,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Thorn Choir · Earth → Void-Colossus",
+        "effects": {
+          "damage": 8,
+          "adj": 2,
+          "card": "thorn",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 92,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 52,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 93,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "place",
+        "uid": 26,
+        "slot": 2,
+        "label": "Place Arcane Surge · slot 3",
+        "effects": {
+          "card": "surge",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":26,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 94,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "place",
+        "uid": 3,
+        "slot": 3,
+        "label": "Place Blast · slot 4",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":3,\"slot\":3}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 95,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 96,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Thorn Choir · Earth → Void-Colossus",
+        "effects": {
+          "damage": 8,
+          "adj": 2,
+          "card": "thorn",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 97,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 38,
+        "element": "Arcane",
+        "label": "Arcane Surge · Arcane → Void-Colossus",
+        "effects": {
+          "damage": 14,
+          "card": "surge",
+          "charge": 2
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":38,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 98,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 41,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 99,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "place",
+        "uid": 36,
+        "slot": 4,
+        "label": "Place Wild Conduit · slot 5",
+        "effects": {
+          "card": "conduit",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":36,\"slot\":4}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 100,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "place",
+        "uid": 5,
+        "slot": 9,
+        "label": "Place Shield · slot 10",
+        "effects": {
+          "card": "shield",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":5,\"slot\":9}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 101,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 102,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 38,
+        "element": "Arcane",
+        "label": "Arcane Surge · Arcane → Void-Colossus",
+        "effects": {
+          "damage": 14,
+          "card": "surge",
+          "charge": 1
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":38,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 103,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 4,
+        "target": null,
+        "element": "Wind",
+        "label": "Wild Conduit · Wind",
+        "effects": {
+          "channel": 3,
+          "damage": 0,
+          "card": "conduit",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Wind\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 104,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 4,
+        "target": null,
+        "element": "Wind",
+        "label": "Wild Conduit · Wind",
+        "effects": {
+          "channel": 3,
+          "damage": 0,
+          "card": "conduit",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Wind\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 105,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 3,
+        "target": 38,
+        "element": "Wind",
+        "label": "Blast · Wind → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":3,\"target\":38,\"element\":\"Wind\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 106,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 3,
+        "target": 38,
+        "element": "Wind",
+        "label": "Blast · Wind → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":3,\"target\":38,\"element\":\"Wind\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 107,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 5,
+        "target": 38,
+        "element": "Earth",
+        "label": "Blast · Earth → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":5,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 108,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 5,
+        "target": 38,
+        "element": "Earth",
+        "label": "Blast · Earth → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":5,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 109,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 9,
+        "target": null,
+        "element": "Wind",
+        "label": "Shield · Wind",
+        "effects": {
+          "shield": 5,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":9,\"target\":null,\"element\":\"Wind\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 110,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 27,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 111,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 27,
+      "action": {
+        "type": "place",
+        "uid": 32,
+        "slot": 0,
+        "label": "Place Fourfold Grove · slot 1",
+        "effects": {
+          "card": "square",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":32,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 112,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 27,
+      "action": {
+        "type": "place",
+        "uid": 2,
+        "slot": 5,
+        "label": "Place Blast · slot 6",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":2,\"slot\":5}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 113,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 27,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 114,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 27,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 38,
+        "element": "Earth",
+        "label": "Fourfold Grove · Earth → Void-Colossus",
+        "effects": {
+          "damage": 6,
+          "square": true,
+          "card": "square",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":38,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 115,
+      "mode": "reward",
+      "round": 19,
+      "hp": 27,
+      "action": {
+        "type": "rewardCard",
+        "id": "conduit",
+        "label": "Take Wild Conduit",
+        "effects": {
+          "card": "conduit"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"conduit\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 116,
+      "mode": "reward",
+      "round": 19,
+      "hp": 27,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 117,
+      "mode": "reward",
+      "round": 19,
+      "hp": 27,
+      "action": {
+        "type": "rewardSetting",
+        "id": "channelRing",
+        "label": "Take Ring of Embers",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardSetting\",{\"id\":\"channelRing\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 118,
+      "mode": "reward",
+      "round": 19,
+      "hp": 27,
+      "action": {
+        "type": "continueReward",
+        "label": "Complete Stratum 1",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    }
+  ]
+}

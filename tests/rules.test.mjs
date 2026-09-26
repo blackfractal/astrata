@@ -415,3 +415,35 @@ test("repeated mid-battle save and resume always restarts the same battle openin
   act(restored, "activatePhase");
   assert.deepEqual(restored.save(), opening);
 });
+test("gossip predicts the next Tavern healer truthfully and only once per visit", () => {
+  const g = new Game(123);
+  g.s.gold = 100;
+  g.openTavern();
+  act(g, "gossip");
+  const hint = g.observe().nextHealerHint;
+  assert.equal(typeof hint, "boolean");
+  assert.ok(!g.legal().some((a) => a.type === "gossip"));
+  g.openTavern();
+  assert.equal(g.s.shop.healer, hint);
+  assert.equal(g.observe().nextHealerHint, undefined);
+});
+test("Wanderer completes its rolled path even when passing through the player", () => {
+  const g = new Game(9);
+  g.s.mode = "field";
+  g.s.field = {
+    round: 17,
+    spawned: 16,
+    queue: [],
+    x: 5,
+    y: 5,
+    moves: 0,
+    stage: "player",
+    entities: [{ uid: 900, enemy: "bat", x: 4, y: 5, restless: 0, born: 1 }],
+  };
+  let n = 0;
+  g.rand = () => (n++ % 2 === 0 ? 0.9 : 0.5);
+  g.endMovement();
+  assert.equal(g.s.mode, "field");
+  assert.equal(g.s.field.entities[0].x, 6);
+  assert.equal(g.s.field.entities[0].y, 5);
+});

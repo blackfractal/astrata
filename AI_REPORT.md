@@ -27,6 +27,6 @@ No player exploit was demonstrated in these five runs. The long Colossus fight i
 
 ## Scale and robustness check
 
-A separate 100-run batch (971010–971109) completed without crashes, illegal moves, or step-limit stalls: 68 wins. It encountered all three Archons, including a Bat plus Glass Choir encounter. These were not used to train weights and are not substituted for the five-run report above. They demonstrate that the batch command scales beyond five and exercise more content; they still do not establish balance.
+A separate 100-run batch (971010–971109) completed without crashes, illegal moves, or step-limit stalls: 67 wins. It encountered all three Archons, including a Bat plus Glass Choir encounter. These were not used to train weights and are not substituted for the five-run report above. They demonstrate that the batch command scales beyond five and exercise more content; they still do not establish balance.
 
 Exact versions and policy weights accompany each run. Tests separately verify unfamiliar legal actions, changed starting resource values, hidden-state omission, deterministic replay, and atomic defenses. Future training should split training and held-out evaluation seeds, associate checkpoints with all four version fields, and reject incompatible checkpoints. Future search must sample plausible hidden outcomes into isolated state; the real engine RNG and hidden decks must never become policy input.

@@ -395,30 +395,31 @@ export class Game {
     f.moves = 0;
     f.stage = "enemyDone";
     const reaching = new Set();
-    const move = (e, n, dx, dy) => {
+    const arrive = (e) => {
+      if (e.x !== f.x || e.y !== f.y || reaching.has(e.uid)) return;
+      reaching.add(e.uid);
+      for (const mate of f.entities.filter((x) => x.enemy && x.uid !== e.uid)) {
+        const d = enemies[mate.enemy];
+        if (
+          d.pack &&
+          enemies[e.enemy].name.includes(d.pack) &&
+          !(mate.x === f.x && mate.y === f.y)
+        )
+          move(
+            mate,
+            2,
+            (x) => Math.sign(f.x - x.x),
+            (x) => Math.sign(f.y - x.y),
+          );
+      }
+    };
+    const move = (e, n, dx, dy, stopAtPlayer = true) => {
+      arrive(e);
       for (let k = 0; k < n; k++) {
-        if (e.x === f.x && e.y === f.y) break;
+        if (stopAtPlayer && e.x === f.x && e.y === f.y) break;
         e.x = clamp(e.x + dx(e), 0, 10);
         e.y = clamp(e.y + dy(e), 0, 10);
-      }
-      if (e.x === f.x && e.y === f.y && !reaching.has(e.uid)) {
-        reaching.add(e.uid);
-        for (const mate of f.entities.filter(
-          (x) => x.enemy && x.uid !== e.uid,
-        )) {
-          const d = enemies[mate.enemy];
-          if (
-            d.pack &&
-            enemies[e.enemy].name.includes(d.pack) &&
-            !(mate.x === f.x && mate.y === f.y)
-          )
-            move(
-              mate,
-              2,
-              (x) => Math.sign(f.x - x.x),
-              (x) => Math.sign(f.y - x.y),
-            );
-        }
+        arrive(e);
       }
     };
     for (const e of f.entities.filter((e) => e.enemy)) {
@@ -454,6 +455,7 @@ export class Game {
           n,
           () => dx,
           () => dy,
+          false,
         );
       } else
         move(
@@ -1270,10 +1272,12 @@ export class Game {
           Object.keys(items).filter((id) => !items[id].cursed),
         ).slice(0, 6),
       ],
-      healer: this.rand() < 0.75,
+      healer: this.s.nextTavernHealer ?? this.rand() < 0.75,
       healerPrice: this.pick([35, 50, 80]),
       healUsed: false,
     };
+    delete this.s.nextTavernHealer;
+    delete this.s.nextHealerHint;
   }
   equipChoices(add) {
     const s = this.s;
@@ -1446,10 +1450,10 @@ export class Game {
           { heal: Math.min(20, s.maxHp - s.hp) },
           { gold: 20 },
         );
-      if (s.gold >= 15 && !s.revealedArchon)
+      if (s.gold >= 15 && !shop.gossipUsed)
         add(
           "gossip",
-          "Gossip · reveal the Archon · 15 Gold",
+          "Gossip · Archon and next healer · 15 Gold",
           {},
           { information: 1 },
           { gold: 15 },
@@ -1825,6 +1829,14 @@ export class Game {
       case "gossip":
         this.spend(15);
         s.revealedArchon = s.archon;
+        s.shop.gossipUsed = true;
+        s.nextTavernHealer = this.rand() < 0.75;
+        s.nextHealerHint = s.nextTavernHealer;
+        this.log(
+          s.nextHealerHint
+            ? "A healer will visit the next Tavern."
+            : "No healer will visit the next Tavern.",
+        );
         this.log("The traveler names " + enemies[s.archon].name + ".");
         break;
       case "buy": {
@@ -1978,6 +1990,7 @@ export class Game {
       startGem: s.startGem,
       archon: s.revealedArchon ? enemies[s.revealedArchon].name : null,
       pendingArmor: s.pendingArmor,
+      nextHealerHint: s.nextHealerHint,
     };
     if (s.mode === "battle") {
       o.battle = clone(s.battle);

@@ -716,7 +716,7 @@ item(
   "finger",
   { damage: 1 },
   40,
-  "Spells deal +1 damage, imbued with the socketed element.",
+  "After a damaging activation: a separate 1-damage hit, imbued with the socketed element.",
   { socket: true },
 );
 item(
@@ -838,7 +838,7 @@ item(
   "head",
   { damage: 1 },
   90,
-  "All card damage +1.",
+  "After each damaging card effect: a separate 1 Arcane damage.",
 );
 item(
   "sightCrown",

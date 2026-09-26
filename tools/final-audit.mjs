@@ -1,0 +1,2 @@
+import fs from 'node:fs';let p='tools/contact-sheet.py',s=fs.readFileSync(p,'utf8');s=s.replace("selected={r['id']:r['file'] for r in records};entries=sorted(selected.items())","selected=json.loads(Path('reports/asset-selections.json').read_text(encoding='utf-8'))['selected'];entries=sorted(selected.items())");fs.writeFileSync(p,s);
+p='tools/package.mjs';s=fs.readFileSync(p,'utf8').replace('"art-manifest.json",','"art-manifest.json",\n  "asset-selections.json",');fs.writeFileSync(p,s);

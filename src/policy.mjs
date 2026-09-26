@@ -345,7 +345,7 @@ export class WeightedPolicy {
         ];
       case "gossip":
         return [
-          o.gold > 100 ? 2 : -5,
+          !o.archon && o.gold > 100 ? 2 : -5,
           "Buy Archon information only with surplus Gold.",
         ];
       case "leave":

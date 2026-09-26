@@ -1,0 +1,3311 @@
+{
+  "seed": 971105,
+  "version": {
+    "rules": "1.0.0",
+    "content": "1.0.0",
+    "observation": 1,
+    "actions": 1
+  },
+  "policy": "weighted-druid-v1",
+  "weights": {
+    "damage": 1,
+    "survival": 1.4,
+    "economy": 4,
+    "development": 1,
+    "progress": 1
+  },
+  "outcome": "win",
+  "cause": "",
+  "hp": 37,
+  "rounds": 19,
+  "steps": 154,
+  "elapsedMs": 19,
+  "stats": {
+    "damageDealt": 174,
+    "damageTaken": 43,
+    "goldEarned": 219,
+    "goldSpent": 70,
+    "cardsGained": [
+      "Focus Energy",
+      "Water Blast",
+      "Bitter Spore",
+      "Undertow",
+      "Bitter Spore",
+      "Plasma Ball",
+      "Water Blast",
+      "Wild Conduit"
+    ],
+    "itemsGained": [
+      "Bronze Bracelet",
+      "Rootbound Ring",
+      "Sapphire",
+      "Storm Opal",
+      "Storm Opal",
+      "Sturdy Metal Helmet",
+      "Storm Opal",
+      "Storm Opal",
+      "Ring of Embers"
+    ],
+    "purchases": [
+      "card:spore"
+    ],
+    "sales": [],
+    "encounters": [
+      {
+        "round": 2,
+        "enemies": [
+          "Bell Beetle"
+        ],
+        "outcome": "victory",
+        "hpStart": 57,
+        "turns": 2,
+        "hpEnd": 56
+      },
+      {
+        "round": 7,
+        "enemies": [
+          "Needle Imp"
+        ],
+        "outcome": "victory",
+        "hpStart": 56,
+        "turns": 2,
+        "hpEnd": 56
+      },
+      {
+        "round": 10,
+        "enemies": [
+          "Ashling"
+        ],
+        "outcome": "victory",
+        "hpStart": 65,
+        "turns": 2,
+        "hpEnd": 65
+      },
+      {
+        "round": 16,
+        "enemies": [
+          "Shard-Walker"
+        ],
+        "outcome": "victory",
+        "hpStart": 65,
+        "turns": 2,
+        "hpEnd": 59
+      },
+      {
+        "round": 19,
+        "enemies": [
+          "Void-Colossus"
+        ],
+        "outcome": "victory",
+        "hpStart": 65,
+        "turns": 7,
+        "hpEnd": 37
+      }
+    ]
+  },
+  "deck": [
+    {
+      "uid": 1,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 2,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 3,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 4,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 5,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 6,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 7,
+      "id": "familiar",
+      "upgrade": false
+    },
+    {
+      "uid": 8,
+      "id": "clear",
+      "upgrade": false
+    },
+    {
+      "uid": 9,
+      "id": "focus",
+      "upgrade": false
+    },
+    {
+      "uid": 10,
+      "id": "sapling",
+      "upgrade": true
+    },
+    {
+      "uid": 16,
+      "id": "focus",
+      "upgrade": false
+    },
+    {
+      "uid": 23,
+      "id": "water",
+      "upgrade": false
+    },
+    {
+      "uid": 27,
+      "id": "spore",
+      "upgrade": false
+    },
+    {
+      "uid": 30,
+      "id": "undertow",
+      "upgrade": false
+    },
+    {
+      "uid": 36,
+      "id": "spore",
+      "upgrade": false
+    },
+    {
+      "uid": 38,
+      "id": "plasma",
+      "upgrade": false
+    },
+    {
+      "uid": 40,
+      "id": "water",
+      "upgrade": false
+    },
+    {
+      "uid": 43,
+      "id": "conduit",
+      "upgrade": false
+    }
+  ],
+  "log": [
+    {
+      "step": 0,
+      "mode": "class",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "chooseClass",
+        "label": "Druid · Growth and pattern",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"chooseClass\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 1,
+      "mode": "gem",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "startGem",
+        "slot": "wrist1",
+        "label": "Socket Sapphire into Bracelet",
+        "effects": {
+          "defense": 3,
+          "damage": 0
+        },
+        "costs": {},
+        "key": "[\"startGem\",{\"slot\":\"wrist1\"}]"
+      },
+      "reason": "Imbue the starting Bracelet for passive protection."
+    },
+    {
+      "step": 2,
+      "mode": "intro",
+      "round": 0,
+      "hp": 65,
+      "action": {
+        "type": "begin",
+        "label": "Enter the Ashen Weald",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"begin\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 3,
+      "mode": "field",
+      "round": 1,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 6,
+        "label": "Move to 5, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 4,
+      "mode": "field",
+      "round": 1,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 7,
+        "label": "Move to 5, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 5,
+      "mode": "tavern",
+      "round": 1,
+      "hp": 65,
+      "action": {
+        "type": "upgrade",
+        "uid": 10,
+        "label": "Upgrade Sapling · 8 HP",
+        "effects": {
+          "upgrade": 1
+        },
+        "costs": {
+          "gold": 0,
+          "hp": 8
+        },
+        "key": "[\"upgrade\",{\"uid\":10}]"
+      },
+      "reason": "Improve a card when the cost is affordable."
+    },
+    {
+      "step": 6,
+      "mode": "tavern",
+      "round": 1,
+      "hp": 57,
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "reason": "Continue when useful services are exhausted."
+    },
+    {
+      "step": 7,
+      "mode": "field",
+      "round": 2,
+      "hp": 57,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 8,
+        "label": "Move to 4, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Mote"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 8,
+      "mode": "battle",
+      "round": 2,
+      "turn": 1,
+      "hp": 57,
+      "action": {
+        "type": "place",
+        "uid": 4,
+        "slot": 0,
+        "label": "Place Blast · slot 1",
+        "effects": {
+          "card": "blast",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":4,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 9,
+      "mode": "battle",
+      "round": 2,
+      "turn": 1,
+      "hp": 57,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 10,
+      "mode": "battle",
+      "round": 2,
+      "turn": 1,
+      "hp": 57,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 15,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Bell Beetle",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":15,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 11,
+      "mode": "battle",
+      "round": 2,
+      "turn": 1,
+      "hp": 57,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 12,
+      "mode": "battle",
+      "round": 2,
+      "turn": 1,
+      "hp": 57,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Water · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Water"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 13,
+      "mode": "battle",
+      "round": 2,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "place",
+        "uid": 1,
+        "slot": 1,
+        "label": "Place Blast · slot 2",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":1,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 14,
+      "mode": "battle",
+      "round": 2,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 15,
+      "mode": "battle",
+      "round": 2,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 15,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Bell Beetle",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":15,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 16,
+      "mode": "reward",
+      "round": 2,
+      "hp": 56,
+      "action": {
+        "type": "rewardCard",
+        "id": "focus",
+        "label": "Take Focus Energy",
+        "effects": {
+          "card": "focus"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"focus\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 17,
+      "mode": "reward",
+      "round": 2,
+      "hp": 56,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 18,
+      "mode": "reward",
+      "round": 2,
+      "hp": 56,
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 19,
+      "mode": "field",
+      "round": 3,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 7,
+        "label": "Move to 4, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 20,
+      "mode": "field",
+      "round": 3,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 6,
+        "label": "Move to 5, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 21,
+      "mode": "field",
+      "round": 4,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 5,
+        "label": "Move to 6, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 22,
+      "mode": "field",
+      "round": 4,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 5,
+        "label": "Move to 7, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 23,
+      "mode": "field",
+      "round": 5,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 6,
+        "label": "Move to 8, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 24,
+      "mode": "field",
+      "round": 5,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 8,
+        "y": 7,
+        "label": "Move to 9, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":8,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 25,
+      "mode": "field",
+      "round": 6,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 9,
+        "y": 8,
+        "label": "Move to 10, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":9,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 26,
+      "mode": "event",
+      "round": 6,
+      "hp": 56,
+      "action": {
+        "type": "eventChoice",
+        "index": 1,
+        "label": "Turn away",
+        "effects": {
+          "label": "Turn away"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":1}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 27,
+      "mode": "field",
+      "round": 7,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 8,
+        "y": 7,
+        "label": "Move to 9, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":8,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 28,
+      "mode": "field",
+      "round": 7,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 6,
+        "label": "Move to 8, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 29,
+      "mode": "battle",
+      "round": 7,
+      "turn": 1,
+      "hp": 56,
+      "action": {
+        "type": "place",
+        "uid": 10,
+        "slot": 0,
+        "label": "Place Sapling · slot 1",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":10,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 30,
+      "mode": "battle",
+      "round": 7,
+      "turn": 1,
+      "hp": 56,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 31,
+      "mode": "battle",
+      "round": 7,
+      "turn": 1,
+      "hp": 56,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 22,
+        "element": "Earth",
+        "label": "Sapling · Earth → Needle Imp",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":22,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 32,
+      "mode": "battle",
+      "round": 7,
+      "turn": 1,
+      "hp": 56,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 33,
+      "mode": "battle",
+      "round": 7,
+      "turn": 1,
+      "hp": 56,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Water · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Water"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 34,
+      "mode": "battle",
+      "round": 7,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "place",
+        "uid": 16,
+        "slot": 1,
+        "label": "Place Focus Energy · slot 2",
+        "effects": {
+          "card": "focus",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":16,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 35,
+      "mode": "battle",
+      "round": 7,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 36,
+      "mode": "battle",
+      "round": 7,
+      "turn": 2,
+      "hp": 56,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 22,
+        "element": "Earth",
+        "label": "Sapling · Earth → Needle Imp",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":22,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 37,
+      "mode": "reward",
+      "round": 7,
+      "hp": 56,
+      "action": {
+        "type": "rewardCard",
+        "id": "water",
+        "label": "Take Water Blast",
+        "effects": {
+          "card": "water"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"water\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 38,
+      "mode": "reward",
+      "round": 7,
+      "hp": 56,
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 39,
+      "mode": "field",
+      "round": 8,
+      "hp": 56,
+      "action": {
+        "type": "move",
+        "x": 8,
+        "y": 5,
+        "label": "Move to 9, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":8,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 40,
+      "mode": "tavern",
+      "round": 8,
+      "hp": 56,
+      "action": {
+        "type": "socket",
+        "uid": 12,
+        "gem": 17,
+        "label": "Socket Storm Opal into Rootbound Ring",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"socket\",{\"uid\":12,\"gem\":17}]"
+      },
+      "reason": "Socket unused Gems to activate their powers."
+    },
+    {
+      "step": 41,
+      "mode": "tavern",
+      "round": 8,
+      "hp": 56,
+      "action": {
+        "type": "heal",
+        "label": "Rest · heal 20 HP · 20 Gold",
+        "effects": {
+          "heal": 9
+        },
+        "costs": {
+          "gold": 20
+        },
+        "key": "[\"heal\",{}]"
+      },
+      "reason": "Recover HP before the next encounter."
+    },
+    {
+      "step": 42,
+      "mode": "tavern",
+      "round": 8,
+      "hp": 65,
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "reason": "Continue when useful services are exhausted."
+    },
+    {
+      "step": 43,
+      "mode": "field",
+      "round": 9,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 6,
+        "label": "Move to 8, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 44,
+      "mode": "field",
+      "round": 9,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 7,
+        "label": "Move to 7, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 45,
+      "mode": "field",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 8,
+        "label": "Move to 6, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Mote"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 46,
+      "mode": "battle",
+      "round": 10,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 16,
+        "slot": 0,
+        "label": "Place Focus Energy · slot 1",
+        "effects": {
+          "card": "focus",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":16,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 47,
+      "mode": "battle",
+      "round": 10,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 48,
+      "mode": "battle",
+      "round": 10,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": null,
+        "element": "Arcane",
+        "label": "Focus Energy · Arcane",
+        "effects": {
+          "focusPermanent": 1,
+          "damage": 0,
+          "card": "focus",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 49,
+      "mode": "battle",
+      "round": 10,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 50,
+      "mode": "battle",
+      "round": 10,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Water · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Water"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 51,
+      "mode": "battle",
+      "round": 10,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 9,
+        "slot": 1,
+        "label": "Place Focus Energy · slot 2",
+        "effects": {
+          "card": "focus",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":9,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 52,
+      "mode": "battle",
+      "round": 10,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 23,
+        "slot": 2,
+        "label": "Place Water Blast · slot 3",
+        "effects": {
+          "card": "water",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":23,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 53,
+      "mode": "battle",
+      "round": 10,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 54,
+      "mode": "battle",
+      "round": 10,
+      "turn": 2,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 25,
+        "element": "Water",
+        "label": "Water Blast · Water → Ashling",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":25,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 55,
+      "mode": "reward",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "rewardCard",
+        "id": "spore",
+        "label": "Take Bitter Spore",
+        "effects": {
+          "card": "spore"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"spore\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 56,
+      "mode": "reward",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 57,
+      "mode": "reward",
+      "round": 10,
+      "hp": 65,
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 58,
+      "mode": "field",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 7,
+        "label": "Move to 7, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 59,
+      "mode": "field",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 7,
+        "label": "Move to 8, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 60,
+      "mode": "item",
+      "round": 11,
+      "hp": 65,
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Undertow",
+        "effects": {
+          "item": "card:undertow"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 61,
+      "mode": "field",
+      "round": 12,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 8,
+        "label": "Move to 7, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 62,
+      "mode": "field",
+      "round": 12,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 9,
+        "label": "Move to 6, 10",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":9}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 63,
+      "mode": "field",
+      "round": 13,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 10,
+        "label": "Move to 5, 11",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Event"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":10}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 64,
+      "mode": "event",
+      "round": 13,
+      "hp": 65,
+      "action": {
+        "type": "eventChoice",
+        "index": 0,
+        "label": "Take the helmet",
+        "effects": {
+          "label": "Take the helmet",
+          "item": "crown"
+        },
+        "costs": {
+          "gold": 0
+        },
+        "key": "[\"eventChoice\",{\"index\":0}]"
+      },
+      "reason": "Compare the visible reward, recovery, and cost of this event choice."
+    },
+    {
+      "step": 65,
+      "mode": "field",
+      "round": 14,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 9,
+        "label": "Move to 4, 10",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":9}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 66,
+      "mode": "field",
+      "round": 14,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 3,
+        "y": 8,
+        "label": "Move to 4, 9",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":3,\"y\":8}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 67,
+      "mode": "field",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 4,
+        "y": 7,
+        "label": "Move to 5, 8",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":4,\"y\":7}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 68,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "socket",
+        "uid": 11,
+        "gem": 28,
+        "label": "Socket Storm Opal into Bronze Bracelet",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"socket\",{\"uid\":11,\"gem\":28}]"
+      },
+      "reason": "Socket unused Gems to activate their powers."
+    },
+    {
+      "step": 69,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "buy",
+        "index": 0,
+        "price": 30,
+        "label": "Buy Bitter Spore · 30 Gold",
+        "effects": {
+          "item": "card:spore"
+        },
+        "costs": {
+          "gold": 30
+        },
+        "key": "[\"buy\",{\"index\":0,\"price\":30}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 70,
+      "mode": "tavern",
+      "round": 15,
+      "hp": 65,
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "reason": "Continue when useful services are exhausted."
+    },
+    {
+      "step": 71,
+      "mode": "field",
+      "round": 16,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 6,
+        "label": "Move to 6, 7",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":6}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 72,
+      "mode": "field",
+      "round": 16,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 5,
+        "label": "Move to 7, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 73,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 27,
+        "slot": 0,
+        "label": "Place Bitter Spore · slot 1",
+        "effects": {
+          "card": "spore",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":27,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 74,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 75,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 35,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Shard-Walker",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":35,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 76,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 35,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Shard-Walker",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":35,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 77,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 78,
+      "mode": "battle",
+      "round": 16,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Arcane · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Arcane"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 79,
+      "mode": "battle",
+      "round": 16,
+      "turn": 2,
+      "hp": 59,
+      "action": {
+        "type": "place",
+        "uid": 10,
+        "slot": 1,
+        "label": "Place Sapling · slot 2",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":10,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 80,
+      "mode": "battle",
+      "round": 16,
+      "turn": 2,
+      "hp": 59,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 81,
+      "mode": "battle",
+      "round": 16,
+      "turn": 2,
+      "hp": 59,
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": 35,
+        "element": "Earth",
+        "label": "Sapling · Earth → Shard-Walker",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":35,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 82,
+      "mode": "battle",
+      "round": 16,
+      "turn": 2,
+      "hp": 59,
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": 35,
+        "element": "Earth",
+        "label": "Sapling · Earth → Shard-Walker",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":35,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 83,
+      "mode": "battle",
+      "round": 16,
+      "turn": 2,
+      "hp": 59,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 84,
+      "mode": "reward",
+      "round": 16,
+      "hp": 59,
+      "action": {
+        "type": "rewardCard",
+        "id": "plasma",
+        "label": "Take Plasma Ball",
+        "effects": {
+          "card": "plasma"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"plasma\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 85,
+      "mode": "reward",
+      "round": 16,
+      "hp": 59,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 86,
+      "mode": "reward",
+      "round": 16,
+      "hp": 59,
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    },
+    {
+      "step": 87,
+      "mode": "field",
+      "round": 17,
+      "hp": 59,
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 4,
+        "label": "Move to 8, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 88,
+      "mode": "item",
+      "round": 17,
+      "hp": 59,
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Water Blast",
+        "effects": {
+          "item": "card:water"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "reason": "Value the offered item against its price and risk."
+    },
+    {
+      "step": 89,
+      "mode": "field",
+      "round": 18,
+      "hp": 59,
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 4,
+        "label": "Move to 7, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":4}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 90,
+      "mode": "tavern",
+      "round": 18,
+      "hp": 59,
+      "action": {
+        "type": "heal",
+        "label": "Rest · heal 20 HP · 20 Gold",
+        "effects": {
+          "heal": 6
+        },
+        "costs": {
+          "gold": 20
+        },
+        "key": "[\"heal\",{}]"
+      },
+      "reason": "Recover HP before the next encounter."
+    },
+    {
+      "step": 91,
+      "mode": "tavern",
+      "round": 18,
+      "hp": 65,
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "reason": "Continue when useful services are exhausted."
+    },
+    {
+      "step": 92,
+      "mode": "field",
+      "round": 19,
+      "hp": 65,
+      "action": {
+        "type": "move",
+        "x": 5,
+        "y": 5,
+        "label": "Move to 6, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Archon"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":5,\"y\":5}]"
+      },
+      "reason": "Move toward useful visible encounters, favoring recovery and avoiding dangerous packs."
+    },
+    {
+      "step": 93,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "place",
+        "uid": 16,
+        "slot": 0,
+        "label": "Place Focus Energy · slot 1",
+        "effects": {
+          "card": "focus",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":16,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 94,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 95,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": null,
+        "element": "Arcane",
+        "label": "Focus Energy · Arcane",
+        "effects": {
+          "focusPermanent": 1,
+          "damage": 0,
+          "card": "focus",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 96,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 97,
+      "mode": "battle",
+      "round": 19,
+      "turn": 1,
+      "hp": 65,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Arcane · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Arcane"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 98,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "place",
+        "uid": 9,
+        "slot": 1,
+        "label": "Place Focus Energy · slot 2",
+        "effects": {
+          "card": "focus",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":9,\"slot\":1}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 99,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "place",
+        "uid": 23,
+        "slot": 2,
+        "label": "Place Water Blast · slot 3",
+        "effects": {
+          "card": "water",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":23,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 100,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 101,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": null,
+        "element": "Arcane",
+        "label": "Focus Energy · Arcane",
+        "effects": {
+          "focusPermanent": 1,
+          "damage": 0,
+          "card": "focus",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 102,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 37,
+        "element": "Water",
+        "label": "Water Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 103,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 37,
+        "element": "Water",
+        "label": "Water Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 104,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 105,
+      "mode": "battle",
+      "round": 19,
+      "turn": 2,
+      "hp": 58,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Arcane · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Arcane"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 106,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 1,
+        "slot": 3,
+        "label": "Place Blast · slot 4",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":1,\"slot\":3}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 107,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 5,
+        "slot": 7,
+        "label": "Place Shield · slot 8",
+        "effects": {
+          "card": "shield",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":5,\"slot\":7}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 108,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 8,
+        "slot": 4,
+        "label": "Place Clear Mind · slot 5",
+        "effects": {
+          "card": "clear",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":8,\"slot\":4}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 109,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 110,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 3,
+        "target": 37,
+        "element": "Water",
+        "label": "Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":3,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 111,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 3,
+        "target": 37,
+        "element": "Water",
+        "label": "Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":3,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 112,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 4,
+        "target": null,
+        "element": "Arcane",
+        "label": "Clear Mind · Arcane",
+        "effects": {
+          "insight": 2,
+          "damage": 0,
+          "card": "clear",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 113,
+      "mode": "battle",
+      "round": 19,
+      "turn": 3,
+      "hp": 51,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 114,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 10,
+        "slot": 2,
+        "label": "Place Sapling · slot 3",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 2,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":10,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 115,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 38,
+        "slot": 7,
+        "label": "Place Plasma Ball · slot 8",
+        "effects": {
+          "card": "plasma",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":38,\"slot\":7}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 116,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "place",
+        "uid": 36,
+        "slot": 5,
+        "label": "Place Bitter Spore · slot 6",
+        "effects": {
+          "card": "spore",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":36,\"slot\":5}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 117,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 118,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 7,
+        "target": null,
+        "element": "Chaos",
+        "label": "Plasma Ball · Chaos",
+        "effects": {
+          "damage": 10,
+          "card": "plasma",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":7,\"target\":null,\"element\":\"Chaos\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 119,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 41,
+        "element": "Earth",
+        "label": "Sapling · Earth → Mini-Void",
+        "effects": {
+          "hpDamage": true,
+          "damage": 7,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":41,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 120,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "activate",
+        "slot": 7,
+        "target": null,
+        "element": "Chaos",
+        "label": "Plasma Ball · Chaos",
+        "effects": {
+          "damage": 10,
+          "card": "plasma",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":7,\"target\":null,\"element\":\"Chaos\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 121,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 122,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "takeHit",
+        "label": "Let it reach your equipment",
+        "effects": {
+          "takeDamage": 14
+        },
+        "costs": {},
+        "key": "[\"takeHit\",{}]"
+      },
+      "reason": "Let passive equipment absorb a manageable hit."
+    },
+    {
+      "step": 123,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 51,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Arcane · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Arcane"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 124,
+      "mode": "battle",
+      "round": 19,
+      "turn": 4,
+      "hp": 40,
+      "action": {
+        "type": "takeHit",
+        "label": "Let it reach your equipment",
+        "effects": {
+          "takeDamage": 2
+        },
+        "costs": {},
+        "key": "[\"takeHit\",{}]"
+      },
+      "reason": "Let passive equipment absorb a manageable hit."
+    },
+    {
+      "step": 125,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "place",
+        "uid": 40,
+        "slot": 6,
+        "label": "Place Water Blast · slot 7",
+        "effects": {
+          "card": "water",
+          "neighbors": 3,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":40,\"slot\":6}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 126,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "place",
+        "uid": 4,
+        "slot": 8,
+        "label": "Place Blast · slot 9",
+        "effects": {
+          "card": "blast",
+          "neighbors": 2,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":4,\"slot\":8}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 127,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "place",
+        "uid": 6,
+        "slot": 10,
+        "label": "Place Shield · slot 11",
+        "effects": {
+          "card": "shield",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":6,\"slot\":10}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 128,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 129,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 42,
+        "element": "Earth",
+        "label": "Sapling · Earth → Mini-Void",
+        "effects": {
+          "hpDamage": true,
+          "damage": 10,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":42,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 130,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "activate",
+        "slot": 5,
+        "target": 37,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Void-Colossus",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":5,\"target\":37,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 131,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "activate",
+        "slot": 5,
+        "target": 37,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Void-Colossus",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":5,\"target\":37,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 132,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 133,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "intercept",
+        "slot": 2,
+        "label": "Sapling intercepts · 10 HP",
+        "effects": {
+          "allyHp": 10,
+          "element": "Earth",
+          "swallow": false
+        },
+        "costs": {},
+        "key": "[\"intercept\",{\"slot\":2}]"
+      },
+      "reason": "Protect player HP while retaining valuable growing Allies when possible."
+    },
+    {
+      "step": 134,
+      "mode": "battle",
+      "round": 19,
+      "turn": 5,
+      "hp": 38,
+      "action": {
+        "type": "bracelet",
+        "uid": 11,
+        "label": "Bronze Bracelet · Arcane · 3 block",
+        "effects": {
+          "block": 3,
+          "element": "Arcane"
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":11}]"
+      },
+      "reason": "Use the portion with the strongest effective block against this element."
+    },
+    {
+      "step": 135,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "place",
+        "uid": 3,
+        "slot": 2,
+        "label": "Place Blast · slot 3",
+        "effects": {
+          "card": "blast",
+          "neighbors": 3,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":3,\"slot\":2}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 136,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "place",
+        "uid": 2,
+        "slot": 11,
+        "label": "Place Blast · slot 12",
+        "effects": {
+          "card": "blast",
+          "neighbors": 2,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":2,\"slot\":11}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 137,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "place",
+        "uid": 30,
+        "slot": 0,
+        "label": "Place Undertow · slot 1",
+        "effects": {
+          "card": "undertow",
+          "neighbors": 2,
+          "level": 2
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":30,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 138,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 139,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 6,
+        "target": 37,
+        "element": "Water",
+        "label": "Water Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":6,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 140,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 6,
+        "target": 37,
+        "element": "Water",
+        "label": "Water Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":6,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 141,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 11,
+        "target": 37,
+        "element": "Water",
+        "label": "Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":11,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 142,
+      "mode": "battle",
+      "round": 19,
+      "turn": 6,
+      "hp": 37,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 143,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "place",
+        "uid": 27,
+        "slot": 0,
+        "label": "Place Bitter Spore · slot 1",
+        "effects": {
+          "card": "spore",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":27,\"slot\":0}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 144,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "place",
+        "uid": 7,
+        "slot": 5,
+        "label": "Place Familiar · slot 6",
+        "effects": {
+          "card": "familiar",
+          "neighbors": 2,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":7,\"slot\":5}]"
+      },
+      "reason": "Develop usable offense, growth, and economy while preserving placement conditions."
+    },
+    {
+      "step": 145,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 146,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 37,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Void-Colossus",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":37,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 147,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": 37,
+        "element": "Earth",
+        "label": "Bitter Spore · Earth → Void-Colossus",
+        "effects": {
+          "poison": 3,
+          "damage": 0,
+          "card": "spore",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":37,\"element\":\"Earth\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 148,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "activate",
+        "slot": 11,
+        "target": 37,
+        "element": "Water",
+        "label": "Blast · Water → Void-Colossus",
+        "effects": {
+          "damage": 5,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":11,\"target\":37,\"element\":\"Water\"}]"
+      },
+      "reason": "Balance immediate kills, incoming damage, healing, and future resources."
+    },
+    {
+      "step": 149,
+      "mode": "battle",
+      "round": 19,
+      "turn": 7,
+      "hp": 37,
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "reason": "Advance after worthwhile actions are used."
+    },
+    {
+      "step": 150,
+      "mode": "reward",
+      "round": 19,
+      "hp": 37,
+      "action": {
+        "type": "rewardCard",
+        "id": "conduit",
+        "label": "Take Wild Conduit",
+        "effects": {
+          "card": "conduit"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"conduit\"}]"
+      },
+      "reason": "Choose a card by its damage, defense, economy, and growth features."
+    },
+    {
+      "step": 151,
+      "mode": "reward",
+      "round": 19,
+      "hp": 37,
+      "action": {
+        "type": "rewardGem",
+        "id": "channelGem",
+        "label": "Take Storm Opal",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardGem\",{\"id\":\"channelGem\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 152,
+      "mode": "reward",
+      "round": 19,
+      "hp": 37,
+      "action": {
+        "type": "rewardSetting",
+        "id": "channelRing",
+        "label": "Take Ring of Embers",
+        "effects": {
+          "gear": {
+            "channel": 1
+          }
+        },
+        "costs": {},
+        "key": "[\"rewardSetting\",{\"id\":\"channelRing\"}]"
+      },
+      "reason": "Prefer permanent economy and passive protection."
+    },
+    {
+      "step": 153,
+      "mode": "reward",
+      "round": 19,
+      "hp": 37,
+      "action": {
+        "type": "continueReward",
+        "label": "Complete Stratum 1",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "reason": "Advance the journey."
+    }
+  ]
+}

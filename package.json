@@ -13,30 +13,15 @@
     "art": "node tools/art.mjs",
     "package": "node tools/package.mjs",
     "test:gui": "node tools/gui-test.mjs",
-    "art:revise": "node tools/revise-art.mjs"
-  },
-  "build": {
-    "appId": "games.blackfractal.astrata",
-    "productName": "Astrata",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "src/**/*",
-      "assets/**/*",
-      "index.html",
-      "desktop.cjs",
-      "preload.cjs",
-      "package.json"
-    ],
-    "win": {
-      "target": "dir",
-      "signAndEditExecutable": false
-    }
+    "art:revise": "node tools/revise-art.mjs",
+    "art:paint": "node tools/paint-art.mjs",
+    "audit": "node tools/audit.mjs",
+    "test:controls": "node tools/ui-smoke.mjs",
+    "art:select": "node tools/select-art.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "electron": "^44.4.5",
-    "prettier": "^3.9.9"
+    "@playwright/test": "1.63.0",
+    "electron": "44.4.5",
+    "prettier": "3.9.9"
   }
 }

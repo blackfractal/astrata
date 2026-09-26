@@ -121,7 +121,7 @@ function sidebar(o) {
         .join("") +
       "</div></div>"
     : "";
-  return `<aside class="sidebar"><div><div class="eyebrow">The traveler</div><h3>Druid</h3><small>Growth & pattern</small></div><div class="panel"><h4>The three economies</h4><div>${key("Insight")} <span class="gold">${o.bonuses.insight}</span> · ${key("Focus")} <span class="gold">${o.bonuses.focus}</span> · ${key("Channel")} <span class="gold">${o.bonuses.channel}</span></div><small>Starting values each battle</small></div>${detail}<div><div class="eyebrow">The gatekeeper</div><p>${o.archon || "An unknown Archon waits."}</p><small>Herald victories and Tavern gossip reveal its identity.</small></div><div class="log">${o.log
+  return `<aside class="sidebar"><div><div class="eyebrow">The traveler</div><h3>Druid</h3><small>Growth & pattern</small></div><div class="panel"><h4>The three economies</h4><div>${key("Insight")} <span class="gold">${o.bonuses.insight}</span> · ${key("Focus")} <span class="gold">${o.bonuses.focus}</span> · ${key("Channel")} <span class="gold">${o.bonuses.channel}</span></div><small>Starting values each battle</small></div>${detail}<div><div class="eyebrow">The gatekeeper</div><p>${o.archon || "An unknown Archon waits."}</p><small>Herald victories and Tavern gossip reveal its identity.${o.nextHealerHint != null ? `<br>Next Tavern: ${o.nextHealerHint ? "healer visiting" : "no healer"}.` : ""}</small></div><div class="log">${o.log
     .slice(-9)
     .reverse()
     .map((s) => `<p>${esc(s)}</p>`)
@@ -237,7 +237,7 @@ function render() {
     body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Battle · Turn ${b.turn}</div><h2>The Mind Grid</h2></div><div class="resources"><span><b>${b.insight || 0}</b>${key("Insight")}</span><span><b>${b.focus || 0}</b>${key("Focus")}</span><span><b>${b.channel || 0}</b>${key("Channel")}</span></div></div><div class="enemy-line">${b.enemies
       .map(
         (e) =>
-          `<article class="enemy" title="${esc(e.signature + " Counterplay: " + e.counter)}">${img("enemy-" + e.id)}<div class="info"><h4>${e.name}</h4><small style="color:var(--${e.element})">${e.element} · ${e.hp} / ${e.maxHp} HP ${e.restless ? "· Restless " + e.restless : ""}</small><div class="health-track"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i></div><div class="tell">${text(tellText(e.tell))}</div><small>${Object.entries(
+          `<article class="enemy" data-enemy="${e.id}" title="${esc(e.signature + " Counterplay: " + e.counter)}">${img("enemy-" + e.id)}<div class="info"><h4>${e.name}</h4><small style="color:var(--${e.element})">${e.element} · ${e.hp} / ${e.maxHp} HP ${e.restless ? "· Restless " + e.restless : ""}</small><div class="health-track"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i></div><div class="tell">${text(tellText(e.tell))}</div><small>${Object.entries(
             e.status,
           )
             .filter(([k, v]) => v)
@@ -524,6 +524,37 @@ async function ui(name) {
   }
 }
 function bind(root = app) {
+  root.querySelectorAll("[data-enemy]").forEach(
+    (el) =>
+      (el.onclick = () => {
+        const e = enemies[el.dataset.enemy];
+        dialog(
+          "<h2>" +
+            e.name +
+            '</h2><div class="row">' +
+            img("enemy-" + e.id) +
+            "<div><p>" +
+            e.element +
+            " · " +
+            e.hp +
+            " HP · " +
+            e.tier +
+            "</p><p>" +
+            e.movement +
+            " " +
+            (e.speed || "") +
+            (e.schedule ? " · " + e.schedule : "") +
+            "</p><p>" +
+            e.signature +
+            "</p><small>Counterplay: " +
+            e.counter +
+            '</small></div></div><h3 style="margin-top:20px">Tell rotation</h3>' +
+            e.rotation.map((t) => "<p>" + text(tellText(t)) + "</p>").join("") +
+            '<p class="muted">Each completed cycle adds 1 attack damage. Restless adds 1 damage per token. Archons below half HP add 3 attack damage.</p>',
+        );
+      }),
+  );
+
   root.querySelectorAll("[data-action]").forEach(
     (el) =>
       (el.onclick = async () => {

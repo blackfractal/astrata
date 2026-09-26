@@ -39,3 +39,25 @@ await fs.writeFile(
   "ASTRATA\n\nDouble-click Astrata.exe. Keep the entire Astrata folder together.\nNo installation, Node.js, editor or network connection is required.\n\nSave, settings and run history: %APPDATA%/astrata\nMouse controls. Escape opens the menu. Enter confirms the main choice.\nAI step and Watch AI are available during a run.\n",
 );
 console.log("Packaged", path.join(dest, "Astrata.exe"));
+
+for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
+  await fs.copyFile(path.join(root, name), path.join(dest, name));
+await fs.mkdir(path.join(dest, "reports"), { recursive: true });
+for (const name of [
+  "evaluation",
+  "gui-verification.json",
+  "manual-controls-verification.json",
+  "content-audit.json",
+  "art-manifest.json",
+  "asset-selections.json",
+]) {
+  try {
+    await fs.cp(
+      path.join(root, "reports", name),
+      path.join(dest, "reports", name),
+      { recursive: true },
+    );
+  } catch (e) {
+    if (e.code !== "ENOENT") throw e;
+  }
+}
