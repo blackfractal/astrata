@@ -1,123 +1,2009 @@
-import {cards,items,enemies,events,starter,ELEMENTS,cycle,VERSION} from './content.mjs';
-export const clone=x=>structuredClone(x);
-export function offense(n,from,to){return Math.ceil(n*(from==='Arcane'||to==='Arcane'?1:cycle[from]===to?1.5:cycle[to]===from?.5:1));}
-export function defenseRate(def,attack){return def==='Arcane'||attack==='Arcane'?1:def===attack?2:cycle[attack]===def?.5:1;}
-export function blockHit(block,element,damage,attack){const rate=defenseRate(element,attack),effective=Math.ceil(block*rate),stopped=Math.min(effective,damage);return {remaining:damage-stopped,block:Math.floor((effective-stopped)/rate)};}
-export function adjacent(i){return [i%5?i-1:-1,i%5<4?i+1:-1,i>=5?i-5:-1,i<15?i+5:-1].filter(x=>x>=0);}
-const corner=i=>[0,4,15,19].includes(i),top=slot=>slot?.at(-1),blankStatus=()=>({burn:0,poison:0,corrode:0}),clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
-export class Game{
- constructor(seed=Date.now(),saved=null){if(saved){this.s=clone(saved);return;}
- this.s={version:VERSION,seed:Number(seed)>>>0,rng:Number(seed)>>>0||1,uid:0,mode:'class',classId:'druid',hp:65,maxHp:65,gold:0,deck:[],inventory:[],equipment:{head:null,neck:null,torso:null,wrist1:null,wrist2:null,finger1:null,finger2:null},field:{round:0,spawned:0,queue:[],entities:[],x:5,y:5,moves:2,stage:'player'},status:blankStatus(),log:[],history:[],stats:{damageDealt:0,damageTaken:0,goldEarned:0,goldSpent:0,cardsGained:[],itemsGained:[],purchases:[],sales:[],encounters:[]},steps:0};
- this.s.archon=this.pick(Object.values(enemies).filter(e=>e.tier==='Archon').map(e=>e.id));
- this.s.enemyDecks={Mote:this.shuffle(Object.values(enemies).filter(e=>e.tier==='Mote'&&!e.summonOnly).flatMap(e=>e.movement==='Skittish'?[e.id]:[e.id,e.id])),Eidolon:this.shuffle(Object.values(enemies).filter(e=>e.tier==='Eidolon').map(e=>e.id))};
- this.s.eventDeck=this.shuffle(events.filter(e=>e.id!=='shrine').map(e=>e.id));this.s.itemDeck=this.shuffle([...Object.keys(items),...Object.keys(cards).filter(id=>!starter.includes(id)).map(id=>'card:'+id)]);
- for(const id of starter)this.s.deck.push(this.newCard(id));this.addItem('bronze');this.addItem('ring');this.s.startGem=this.pick(['ruby','emerald','topaz','sapphire']);this.addItem(this.s.startGem);this.s.equipment.wrist1=this.s.inventory[0].uid;this.s.equipment.finger1=this.s.inventory[1].uid;
- }
- rand(){let x=this.s.rng;x^=x<<13;x^=x>>>17;x^=x<<5;this.s.rng=x>>>0;return this.s.rng/4294967296;}
- pick(xs){return xs[Math.floor(this.rand()*xs.length)];}
- shuffle(xs){const a=[...xs];for(let i=a.length-1;i>0;i--){const j=Math.floor(this.rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
- uid(){return ++this.s.uid;}
- newCard(id,upgrade=false){return {uid:this.uid(),id,upgrade};}
- addCard(id){const c=this.newCard(id);this.s.deck.push(c);this.s.stats.cardsGained.push(cards[id].name);this.log('Gained '+cards[id].name);return c;}
- addItem(id){if(items[id].slot==='torso'&&this.s.inventory.filter(x=>items[x.id].slot==='torso').length>=3){this.s.pendingArmor=id;return null;}const c={uid:this.uid(),id,gem:null};this.s.inventory.push(c);this.s.stats.itemsGained.push(items[id].name);if(items[id].cursed&&items[id].slot!=='gem'){const slots=Object.keys(this.s.equipment).filter(k=>k.startsWith(items[id].slot));const free=slots.find(k=>!this.s.equipment[k])||slots.find(k=>!items[this.getItem(this.s.equipment[k]).id].cursed);if(free)this.s.equipment[free]=c.uid;else c.unequippedCurse=true;}return c;}
- getItem(uid){return this.s.inventory.find(x=>x.uid===uid);}
- log(msg){this.s.log.push(msg);if(this.s.log.length>120)this.s.log.shift();}
- gainGold(n){this.s.gold+=n;this.s.stats.goldEarned+=n;}
- spend(n){this.s.gold-=n;this.s.stats.goldSpent+=n;}
- bonuses(){const sum={insight:3,focus:1,channel:1,movement:2,damage:0,shield:0,heal:0,armor:0,recall:0};for(const uid of Object.values(this.s.equipment)){const inst=this.getItem(uid);if(!inst)continue;const d=items[inst.id];for(const [k,v] of Object.entries(d.effect))if(typeof v==='number')sum[k]=(sum[k]||0)+v;if(inst.gem){const g=items[this.getItem(inst.gem)?.id];if(g)for(const[k,v]of Object.entries(g.effect))if(typeof v==='number')sum[k]=(sum[k]||0)+v;if(d.synergy===g?.id)sum.heal++;}}for(const inst of this.s.inventory)if(items[inst.id].cursed&&inst.unequippedCurse)sum.movement--;for(const k of ['insight','focus','channel','movement'])sum[k]=Math.max(1,Math.floor(sum[k]));return sum;}
- equipped(){return Object.entries(this.s.equipment).flatMap(([slot,uid])=>{const x=this.getItem(uid);return x?[{...x,slot,definition:items[x.id],element:items[this.getItem(x.gem)?.id]?.element||'Arcane'}]:[];});}
- pool(rarity='common'){return Object.values(cards).filter(c=>c.type!=='Hex'&&c.rarity===rarity&&!['transmute','quicksilver','surge'].includes(c.id));}
- offer(rare=false){const common=this.shuffle(this.pool().map(c=>c.id)).slice(0,rare?2:3);return rare?[...common,this.pick(this.pool('rare').map(c=>c.id))]:common;}
- drawDeck(key,source){let a=this.s[key];if(!a.length)this.s[key]=a=this.shuffle(source);return a.pop();}
- batch(){const f=this.s.field;f.queue=Array.from({length:Math.min(4,16-f.spawned)},(_,i)=>f.spawned+i===15?'Archon':['Mote',f.spawned===0?'Mote':'Eidolon','Gold','Item','Event','Tavern'][Math.floor(this.rand()*6)]);if(f.spawned)for(const e of f.entities)if(e.enemy)e.restless++;this.log('Spawn queue: '+f.queue.join(' · '));}
- beginRound(){if(this.s.mode==='result')return;const f=this.s.field;f.round++;f.stage='player';f.moves=this.bonuses().movement;for(const e of f.entities)if(e.type==='Gold')e.value-=5;f.entities=f.entities.filter(e=>e.type!=='Gold'||e.value>0);this.s.mode='field';if(f.spawned<16){if(!f.queue.length)this.batch();const type=f.queue.shift();f.spawned++;const die=()=>Math.floor(this.rand()*6);const e={uid:this.uid(),type,x:type==='Archon'?5:die()+die(),y:type==='Archon'?5:die()+die(),restless:0,born:f.round};if(['Mote','Eidolon','Archon'].includes(type)){if(type==='Archon')e.enemy=this.s.archon;else{let d=this.s.enemyDecks[type];if(!d.length)this.s.enemyDecks[type]=d=this.shuffle(Object.values(enemies).filter(x=>x.tier===type&&!x.summonOnly).map(x=>x.id));e.enemy=d.pop();}}if(type==='Gold')e.value=Math.max(10,(die()+die())*10);f.entities.push(e);this.log(`${e.enemy?enemies[e.enemy].name:type} appears at ${e.x+1}, ${e.y+1}.`);if(!f.queue.length&&f.spawned<16)this.batch();}this.resolveTile();}
- resolveTile(){const s=this.s,f=s.field,here=f.entities.filter(e=>e.x===f.x&&e.y===f.y),foes=here.filter(e=>e.enemy);if(foes.length){this.beginBattle(foes);return;}const e=here[0];if(e){f.entities=f.entities.filter(x=>x.uid!==e.uid);if(e.type==='Gold'){this.gainGold(e.value);this.log(`Collected ${e.value} Gold.`);return this.resolveTile();}if(e.type==='Item'){const options=[this.drawDeck('itemDeck',Object.keys(items))];if(this.rand()<.35)for(let i=0,n=1+Math.floor(this.rand()*3);i<n;i++)options.push(this.drawDeck('itemDeck',Object.keys(items)));s.mode='item';s.itemOffer=options;return;}if(e.type==='Event'){s.event=s.quest?'shrine':this.drawDeck('eventDeck',events.filter(x=>x.id!=='shrine').map(x=>x.id));s.quest=false;s.mode='event';return;}if(e.type==='Tavern'){this.openTavern();return;}}s.mode='field';if(f.stage==='enemyDone')this.beginRound();else if(f.moves<=0)this.endMovement();}
- endMovement(){const f=this.s.field;f.moves=0;f.stage='enemyDone';const reaching=new Set();const move=(e,n,dx,dy)=>{for(let k=0;k<n;k++){if(e.x===f.x&&e.y===f.y)break;e.x=clamp(e.x+dx(e),0,10);e.y=clamp(e.y+dy(e),0,10);}if(e.x===f.x&&e.y===f.y&&!reaching.has(e.uid)){reaching.add(e.uid);for(const mate of f.entities.filter(x=>x.enemy&&x.uid!==e.uid)){const d=enemies[mate.enemy];if(d.pack&&enemies[e.enemy].name.includes(d.pack)&&!(mate.x===f.x&&mate.y===f.y))move(mate,2,x=>Math.sign(f.x-x.x),x=>Math.sign(f.y-x.y));}}};for(const e of f.entities.filter(e=>e.enemy)){const d=enemies[e.enemy];let n=(d.speed||2)+e.restless,type=d.movement;if(type==='Archon'){const age=f.round-e.born+1;if(age>=6||(d.bossMode==='hunter'&&age>=5))type='Hunter';else if(d.bossMode==='hunter'||d.bossMode==='sentinel'&&age<=3)n=0;else n=age-1;type=type==='Hunter'?type:'Stalker';}if(type==='Hunter'){e.x=f.x;e.y=f.y;move(e,0,()=>0,()=>0);}else if(type==='Sentinel'){}else if(type==='Wanderer'){const dx=Math.floor(this.rand()*3)-1,dy=Math.floor(this.rand()*3)-1;move(e,n,()=>dx,()=>dy);}else move(e,n,x=>Math.sign(f.x-x.x)*(type==='Skittish'?-1:1),x=>Math.sign(f.y-x.y)*(type==='Skittish'?-1:1));}this.resolveTile();}
- instance(c){const d=cards[c.id];return {...c,used:0,charge:0,hp:d.hp?d.hp+(c.upgrade?d.upgrade?.bonus||0:0):0,ward:d.ward||0,element:d.element,placed:++this.s.battle.order,lock:false,sever:false,freeze:0,zeroWard:false,status:blankStatus()};}
- beginBattle(entities){const s=this.s;delete s.checkpoint;s.mode='battle';s.battle={turn:0,phase:'place',grid:Array.from({length:20},()=>[]),deck:clone(s.deck),hand:[],discard:[],destroyed:[],enemies:entities.map(e=>({...e,...enemies[e.enemy],entityUid:e.uid,uid:e.uid,hp:enemies[e.enemy].hp,maxHp:enemies[e.enemy].hp,cycle:0,buff:0,guard:0,status:blankStatus()})),order:0,permanent:{focus:0},next:{focus:0,insight:0},shields:[],bracelets:[],jobs:[],reaction:null,relief:0,mirror:false};s.status=blankStatus();const b=s.battle;for(const e of this.equipped())for(const k of ['burn','poison','corrode'])s.status[k]+=e.definition.effect[k]||0;for(const x of s.inventory)if(x.id==='curseGem'&&!s.inventory.some(a=>a.gem===x.uid))s.status.poison++;if(s.deck.some(x=>x.id==='rust'))s.status.corrode++;for(const c of [...b.deck])if(cards[c.id].opening){b.deck=b.deck.filter(x=>x.uid!==c.uid);b.grid[b.grid.findIndex(x=>!x.length)].push(this.instance(c));b.next.focus++;}this.log('Battle: '+b.enemies.map(e=>e.name).join(', '));s.stats.encounters.push({round:s.field.round,enemies:b.enemies.map(e=>e.name),outcome:'in progress',hpStart:s.hp});this.beginTurn();s.checkpoint=clone({...s,checkpoint:undefined});}
- neighbors(i){const b=this.s.battle,c=top(b.grid[i]);if(c?.sever)return [];return adjacent(i).filter(j=>top(b.grid[j])&&!top(b.grid[j]).sever);}
- allowance(c,i){const b=this.s.battle,d=cards[c.id];if(d.limit<0)return Infinity;const plus=b.grid.some((x,j)=>cards[top(x)?.id]?.keystone&&corner(j)&&(j%5===i%5||Math.floor(j/5)===Math.floor(i/5)))?1:0;return Math.max(0,d.limit+plus-c.used);}
- recallCost(slot){const d=cards[top(slot)?.id];if(!d||slot.some(c=>c.lock))return null;if(d.recallWhole!=null)return d.recallWhole;if(slot.some(c=>cards[c.id].recall==null))return null;return Math.max(0,slot.reduce((n,c)=>n+cards[c.id].recall,0)-this.bonuses().recall);}
- condition(c,i){const d=cards[c.id],ns=this.neighbors(i);return !d.condition||(d.condition==='isolated'?ns.length===0:d.condition==='corner'?corner(i):ns.some(j=>top(this.s.battle.grid[j]).element===d.condition));}
- canStack(c,slot){if(!slot.length)return true;const d=cards[c.id],t=cards[top(slot).id];return d.stack==='supersede'||d.stack==='recall'||d.stack==='pile'&&c.id===top(slot).id||d.stack==='tower'&&t.tower||d.stack==='fusion'&&t.type==='Spell'&&['Water','Earth'].includes(top(slot).element);}
- beginTurn(){const s=this.s,b=s.battle;b.turn++;b.phase='start';s.hp=Math.min(s.maxHp,s.hp+this.bonuses().heal);for(const slot of b.grid)for(const c of slot)if(c.freeze&&c.freeze<b.turn)c.freeze=0;for(let i=0;i<20;i++){const c=top(b.grid[i]);if(!c)continue;if(cards[c.id].growth)c.hp+=this.neighbors(i).length;for(const k of ['burn','poison','corrode']){c.hp-=c.status[k]||0;if(c.status[k])c.status[k]=k==='burn'?c.status[k]-1:k==='corrode'?c.status[k]+1:c.status[k];}if(cards[c.id].type==='Ally'&&c.hp<=0)this.destroyCard(i,c.uid);}if(s.deck.some(c=>c.id==='itch')&&b.turn>b.relief){s.hp--;s.stats.damageTaken++;this.log('Burning Itch: lose 1 HP.');}if(s.hp<=0)return this.finish(false,'Burning Itch');b.jobs=[];for(const k of ['burn','poison','corrode'])if(s.status[k]){b.jobs.push({kind:'hit',damage:s.status[k],element:'Arcane',statusHit:true,name:k});s.status[k]=k==='burn'?s.status[k]-1:k==='corrode'?s.status[k]+1:s.status[k];}b.jobs.push({kind:'reveal'});this.pump();}
- reveal(){const b=this.s.battle,bonus=this.bonuses();b.phase='place';b.focus=bonus.focus+b.permanent.focus+b.next.focus;b.channel=bonus.channel;b.insight=Math.max(1,bonus.insight+b.next.insight-(b.discard.some(x=>x.id==='fog')?1:0));if(b.discard.some(c=>c.id==='bone'))b.focus=Math.max(1,Math.floor(b.focus/2));b.focus=Math.max(1,b.focus);b.next={focus:0,insight:0};b.hand=[];for(let n=0;n<b.insight;n++){if(!b.deck.length){b.deck=b.discard;b.discard=[];}if(!b.deck.length)break;const at=Math.floor(this.rand()*b.deck.length);b.hand.push(b.deck.splice(at,1)[0]);}b.milky=b.hand.some(c=>c.id==='milky');this.log(`Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`);}
- tell(e){const d=enemies[e.id],t=clone(d.rotation[e.cycle%d.rotation.length]);t.damage=(t.damage||0)+(t.damage?Math.floor(e.cycle/d.rotation.length)+(e.restless||0)+e.buff+(e.tier==='Archon'&&e.hp<=e.maxHp/2?3:0):0);return t;}
- endTurn(){const b=this.s.battle;b.discard.push(...b.hand);b.hand=[];b.phase='enemy';b.bracelets=this.equipped().filter(x=>x.definition.effect.block).map(x=>({uid:x.uid,block:x.definition.effect.block,element:x.element,name:x.definition.name}));b.jobs=[];for(const e of b.enemies){for(const k of ['burn','poison','corrode'])if(e.status[k]){b.jobs.push({kind:'enemyStatus',uid:e.uid,damage:e.status[k]});e.status[k]=k==='burn'?e.status[k]-1:k==='corrode'?e.status[k]+1:e.status[k];}b.jobs.push({kind:'enemyAction',uid:e.uid});}b.jobs.push({kind:'nextTurn'});this.pump();}
- pump(){const s=this.s,b=s.battle;while(s.mode==='battle'&&!b.reaction&&b.jobs.length){const j=b.jobs.shift();if(j.kind==='reveal'){this.reveal();continue;}if(j.kind==='nextTurn'){b.shields=[];this.beginTurn();return;}if(j.kind==='enemyStatus'){const e=b.enemies.find(x=>x.uid===j.uid);if(e){e.hp-=j.damage;s.stats.damageDealt+=j.damage;}this.checkBattle();continue;}if(j.kind==='enemyAction'){const e=b.enemies.find(x=>x.uid===j.uid&&x.hp>0);if(!e)continue;const t=this.tell(e);e.cycle++;this.log(e.name+': '+t.name+(t.damage?` · ${t.damage} ${t.element}${t.hits?' ×'+t.hits:''}`:''));if(e.id==='hart'&&e.hp<=e.maxHp/2)s.status.burn++;if(e.id==='choir'&&e.hp<=e.maxHp/2&&e.cycle%4===1)e.guard+=8;if(t.grid)this.gridAttack(t);if(t.insight)b.next.insight+=t.insight;if(t.howl)for(const wolf of b.enemies)if(wolf.name.includes('Wolf'))wolf.buff+=t.howl;if(t.guard)e.guard+=t.guard;if(t.flicker)e.flicker=true;
- if(!t.damage)for(const k of ['burn','poison','corrode'])if(t[k]){const allies=b.grid.map((x,i)=>({c:top(x),i})).filter(x=>cards[x.c?.id]?.type==='Ally').sort((a,z)=>a.c.placed-z.c.placed);if(t.allyStatus&&allies.length)allies[0].c.status[k]+=t[k];else s.status[k]+=t[k];}if(t.damage)b.jobs.unshift(...Array.from({length:t.hits||1},()=>({kind:'hit',...t,source:e.uid})));continue;}if(j.kind==='hit'){b.reaction={...j,stage:j.statusHit||j.pierce?'bracelet':j.cull?'ally':'ward',intercepted:[]};this.advanceHit();}}}
- activeWards(){return this.s.battle.grid.flatMap((slot,i)=>slot.filter((c,k)=>cards[c.id].type==='Ward'&&c.ward>0&&(k===slot.length-1||cards[top(slot)?.id]?.coveredWards)).map(c=>({c,i}))).sort((a,z)=>a.c.placed-z.c.placed);}
- allies(){return this.s.battle.grid.map((x,i)=>({c:top(x),i})).filter(x=>cards[x.c?.id]?.type==='Ally'&&x.c.hp>0);}
- advanceHit(){const s=this.s,b=s.battle,h=b.reaction;if(!h)return;if(h.damage<=0){this.finishHit();return;}if(h.stage==='ward'){for(const {c}of this.activeWards()){const n=Math.min(c.ward,h.damage);c.ward-=n;h.damage-=n;if(c.ward===0)c.zeroWard=true;if(!h.damage)break;}h.stage='shield';}if(h.damage<=0){this.finishHit();return;}if(h.stage==='shield'){if(b.shields.some(p=>p.block>0&&top(b.grid[p.slot])?.uid===p.owner))return;h.stage='ally';}if(h.stage==='ally'){const allies=this.allies().filter(x=>!h.intercepted.includes(x.c.uid));if(h.weakest&&allies.length){this.intercept(allies.sort((a,z)=>a.c.hp-z.c.hp||a.i-z.i)[0].i);return;}const taunt=allies.find(x=>x.c.taunt);if(taunt){this.intercept(taunt.i);return;}if(allies.length)return;h.stage='bracelet';}if(h.stage==='bracelet'){if(b.bracelets.some(x=>x.block>0))return;h.stage='player';}if(h.stage==='player'){let damage=h.damage;const armor=this.equipped().find(x=>x.slot==='torso');if(armor?.definition.effect.reflect&&!b.mirror&&!h.statusHit){b.mirror=true;const e=b.enemies.find(x=>x.uid===h.source);if(e){e.hp-=damage;s.stats.damageDealt+=damage;}damage=0;}if(armor?.definition.effect.resist===h.element)damage=Math.ceil(damage/2);damage=Math.max(0,damage-this.bonuses().armor);s.hp-=damage;s.stats.damageTaken+=damage;if(damage)this.log(`${h.name}: you take ${damage} damage.`);this.finishHit();if(s.hp<=0)this.finish(false,h.name);}}
- finishHit(){const b=this.s.battle,h=b.reaction;if(!h)return;if(!h.statusHit)for(const k of ['burn','poison','corrode'])if(h[k])this.s.status[k]+=h[k];b.reaction=null;this.checkBattle();}
- intercept(i){const b=this.s.battle,h=b.reaction,c=top(b.grid[i]);const damage=offense(h.damage,h.element,c.element),taken=Math.min(c.hp,damage);c.hp-=damage;h.damage=cards[c.id].swallow?0:Math.max(0,damage-taken);h.intercepted.push(c.uid);if(c.hp<=0)this.destroyCard(i,c.uid);this.advanceHit();}
- destroyCard(i,uid){const b=this.s.battle,j=b.grid[i].findIndex(c=>c.uid===uid);if(j>=0)b.destroyed.push(...b.grid[i].splice(j,1));}
- gridAttack(t){const b=this.s.battle,occupied=b.grid.map((slot,i)=>({slot,i,c:top(slot)})).filter(x=>x.c);let targets=[];if(t.grid==='row'||t.grid==='column'){const col=t.grid==='column',count=col?5:4;let best=0,max=-1;for(let k=0;k<count;k++){const n=occupied.filter(x=>col?x.i%5===k:Math.floor(x.i/5)===k).reduce((n,x)=>n+x.slot.length,0);if(n>max){max=n;best=k;}}targets=occupied.filter(x=>col?x.i%5===best:Math.floor(x.i/5)===best);}else{const score=x=>t.target==='newest'?-x.c.placed:t.target==='oldest'?x.c.placed:t.target==='tallest'?-x.slot.length:t.target==='connected'?-this.neighbors(x.i).length:x.i;targets=occupied.sort((a,z)=>score(a)-score(z)||a.i-z.i).slice(0,t.count||1);}for(const x of targets){if(['destroy','row','column'].includes(t.grid)){b.destroyed.push(...x.slot);b.grid[x.i]=[];}else if(t.grid==='siphon')x.c.used++;else if(t.grid==='freeze')x.c.freeze=b.turn+1;else x.c[t.grid]=true;this.log(`${t.name} targets slot ${x.i+1}.`);}}
- damageEnemy(e,n,element,activation){if(!e||e.hp<=0||activation.blocked?.has(e.uid))return;const s=this.s,b=s.battle;let d=offense(n,element,e.element);if(e.resist===element)d=Math.ceil(d/2);if(e.wisp)d=Math.ceil(d*(element==='Arcane'?.5:2));const guard=Math.min(d,e.guard);e.guard-=guard;d-=guard;e.hp-=d;s.stats.damageDealt+=Math.min(d,Math.max(0,e.hp+d));if(e.id==='colossus'&&element==='Chaos'&&!activation.summoned){activation.summoned=true;const def=enemies.mini;b.enemies.push({...def,uid:this.uid(),entityUid:null,maxHp:def.hp,hp:def.hp,cycle:0,buff:0,restless:0,guard:0,status:blankStatus()});this.log('A Mini-Void tears free.');}}
- cardPower(c,i){const d=cards[c.id],f=d.effects,b=this.s.battle;let n=(f.hpDamage?c.hp:f.damage||0)+(c.upgrade?d.upgrade?.bonus||0:0);if(f.row)n+=b.grid.reduce((sum,slot,j)=>sum+(j!==i&&Math.floor(j/5)===Math.floor(i/5)&&top(slot)?.element===c.element&&!top(slot).sever&&!c.sever?f.row:0),0);if(f.adj)n+=this.neighbors(i).length*f.adj;if(f.square&&!c.sever)for(const origin of [i,i-1,i-5,i-6])if(origin>=0&&origin%5<4&&origin<15&&[origin,origin+1,origin+5,origin+6].every(j=>top(b.grid[j])&&!top(b.grid[j]).sever)){n*=2;break;}const level=b.grid[i].indexOf(c)+1;for(let j=0;j<20;j++)if(j!==i){const tower=top(b.grid[j]);if(tower?.magnified&&b.grid[j].length===level)n*=2;}return n;}
- applyCard(c,i,target,element,a={},context={}){const s=this.s,b=s.battle,d=cards[c.id],f=d.effects,bonus=c.upgrade?d.upgrade?.bonus||0:0;if(c.freeze>=b.turn||!this.allowance(c,i)||c.zeroWard)return;c.used++;if(d.charge){c.charge++;if(c.charge<d.charge)return;c.charge-=d.charge;}
- if(f.transmute){const victim=top(b.grid[a.cardTarget]);if(victim)victim.element=a.newElement;}if(f.shift){const moved=b.grid[a.cardTarget];b.grid[a.destination]=moved;b.grid[a.cardTarget]=[];if(this.neighbors(a.destination).some(j=>top(b.grid[j]).element===top(moved).element))b.next.focus++;}if(f.unbind)for(const slot of b.grid)for(const x of slot){x.lock=false;x.sever=false;x.freeze=0;}if(f.taunt){for(const x of this.allies())x.c.taunt=false;c.taunt=true;}if(f.magnify&&b.grid[i].length>=2){if(c.lastActivated===b.turn-1)c.magnified=true;c.lastActivated=b.turn;}if(f.ward)c.ward+=f.ward+bonus;if(f.shield)b.shields.push({uid:this.uid(),slot:i,owner:c.uid,block:f.shield+bonus+(d.name.includes('Shield')?this.bonuses().shield:0),element});if(f.heal)s.hp=Math.min(s.maxHp,s.hp+f.heal+bonus+(f.adjHeal||0)*this.neighbors(i).length);if(f.allyHeal){const ally=top(b.grid[a.cardTarget]);if(ally)ally.hp+=f.allyHeal;}if(f.cleanse)s.status=blankStatus();if(f.relief)b.relief=b.turn+f.relief;if(f.reliefRust)s.status.corrode=0;if(f.insight)b.next.insight+=f.insight;if(f.focus)b.next.focus+=f.focus;if(f.focusPermanent)b.permanent.focus+=f.focusPermanent;if(f.channel)b.channel+=f.channel;
- if(f.damage||f.hpDamage||f.randomDamage||f.burn||f.poison||f.corrode){const targets=f.all?b.enemies.filter(x=>x.hp>0):[f.randomDamage||d.stack==='pile'?this.pick(b.enemies.filter(x=>x.hp>0)):b.enemies.find(x=>x.uid===target)];for(const e of targets){if(!e||e.hp<=0)continue;if(e.flicker){e.flicker=false;context.blocked??=new Set();context.blocked.add(e.uid);this.log(e.name+' wastes the activation.');continue;}if(context.blocked?.has(e.uid))continue;const old=e.hp;let n=f.randomDamage?1+Math.floor(this.rand()*f.randomDamage):this.cardPower(c,i);if(d.stack==='pile')n+=a.pileBonus||0;if(n){const prism=f.prism&&['Fire','Earth','Wind','Water'].every(el=>this.neighbors(i).some(j=>top(b.grid[j]).element===el));for(const el of prism?['Fire','Earth','Wind','Water']:[element])this.damageEnemy(e,n,el,context);for(const gear of this.equipped())if(gear.definition.effect.damage)this.damageEnemy(e,gear.definition.effect.damage,gear.element,context);}for(const k of ['burn','poison','corrode'])if(f[k])e.status[k]+=f[k]+bonus;if(old>0&&e.hp<=0&&f.killChannel)b.channel+=f.killChannel;}}
- }
- activate(a){const b=this.s.battle,slot=b.grid[a.slot],c=top(slot),d=cards[c.id];b.channel-=d.channel;const ctx={};if(d.stack==='pile'){let order=0;for(const ball of [...slot].reverse())if(ball.id===c.id&&this.allowance(ball,a.slot)){this.applyCard(ball,a.slot,a.target,a.element,{...a,pileBonus:order*2},ctx);order++;}}else{this.applyCard(c,a.slot,a.target,a.element,a,ctx);if(d.stack==='fusion'&&slot.length>1){const under=slot.at(-2),u=cards[under.id];if(u.type==='Spell'&&['Water','Earth'].includes(under.element)&&this.allowance(under,a.slot)){this.applyCard(under,a.slot,a.target,under.element,a,ctx);const e=b.enemies.find(x=>x.uid===a.target);if(e&&!ctx.blocked?.has(e.uid))e.status.burn+=6;}}}this.log('Activated '+d.name+'.');this.checkBattle();}
- checkBattle(){const s=this.s,b=s.battle;if(s.mode!=='battle')return;if(s.hp<=0){this.finish(false,'Battle damage');return;}if(b.enemies.every(e=>e.hp<=0)){const encounter=s.stats.encounters.at(-1);encounter.outcome='victory';encounter.turns=b.turn;encounter.hpEnd=s.hp;const original=b.enemies.filter(e=>e.entityUid);if(original.some(e=>e.herald))s.revealedArchon=s.archon;const boss=original.some(e=>e.tier==='Archon'),elite=original.some(e=>e.tier==='Eidolon'),skittish=original.some(e=>e.movement==='Skittish');this.gainGold(boss?120:elite||skittish?45:18*original.length);s.field.entities=s.field.entities.filter(e=>!original.some(x=>x.entityUid===e.uid));s.status=blankStatus();s.mode='reward';s.reward={cards:boss?this.shuffle(this.pool('rare').map(c=>c.id)).slice(0,3):this.offer(elite||skittish),boss,gem:boss||elite||(this.rand()<(skittish?.65:.12)),setting:boss};delete s.checkpoint;this.log('Victory. Choose a card or skip.');}}
- finish(win,cause=''){const s=this.s;if(s.mode==='result')return;s.mode='result';s.outcome=win?'win':'loss';s.cause=cause;s.hp=Math.max(0,s.hp);s.status=blankStatus();delete s.checkpoint;const encounter=s.stats.encounters.at(-1);if(encounter?.outcome==='in progress'){encounter.outcome='loss';encounter.hpEnd=s.hp;encounter.turns=s.battle?.turn;}this.log(win?'Stratum 1 Complete.':'You Died: '+cause);}
- openTavern(){this.s.mode='tavern';this.s.shop={stock:[...this.offer(true).map(id=>'card:'+id),...this.shuffle(Object.keys(items).filter(id=>!items[id].cursed)).slice(0,6)],healer:this.rand()<.75,healerPrice:this.pick([35,50,80]),healUsed:false};}
- equipChoices(add){const s=this.s;for(const item of s.inventory){const d=items[item.id];if(d.slot==='gem')continue;for(const slot of Object.keys(s.equipment).filter(k=>k.startsWith(d.slot))){const worn=this.getItem(s.equipment[slot]);if(s.equipment[slot]===item.uid||worn&&items[worn.id].cursed)continue;add('equip',`Equip ${d.name} · ${slot}`,{item:item.uid,slot},{gear:d.effect});}}}
- legal(){const s=this.s,b=s.battle,actions=[];const add=(type,label,p={},effects={},costs={})=>{const a={type,...p,label,effects,costs};a.key=JSON.stringify([type,p]);actions.push(a);};
- if(s.mode==='result')return [];
- if(s.pendingArmor){for(const old of s.inventory.filter(x=>items[x.id].slot==='torso'&&!items[x.id].cursed))add('replaceArmor','Replace '+items[old.id].name,{old:old.uid},{gear:items[s.pendingArmor].effect});add('declineArmor','Leave '+items[s.pendingArmor].name);return actions;}
- if(s.mode==='class'){add('chooseClass','Druid · Growth and pattern',{}, {progress:1});return actions;}
- if(s.mode==='gem'){for(const slot of ['wrist1','finger1'])add('startGem',`Socket ${items[s.startGem].name} into ${slot==='wrist1'?'Bracelet':'Ring'}`,{slot},{defense:slot==='wrist1'?3:0,damage:slot==='finger1'?1:0});return actions;}
- if(s.mode==='intro'){add('begin','Enter the Ashen Weald',{}, {progress:1});return actions;}
- if(s.mode==='field'){if(s.field.moves>0)for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if((dx||dy)&&s.field.x+dx>=0&&s.field.x+dx<=10&&s.field.y+dy>=0&&s.field.y+dy<=10){const x=s.field.x+dx,y=s.field.y+dy,there=s.field.entities.filter(e=>e.x===x&&e.y===y);add('move',`Move to ${x+1}, ${y+1}`,{x,y},{movement:1,occupants:there.map(e=>e.enemy?enemies[e.enemy].tier:e.type)});}add('wait','End movement',{}, {progress:1});this.equipChoices(add);return actions;}
- if(s.mode==='item'){s.itemOffer.forEach((id,index)=>add('takeItem',id.startsWith('card:')?'Take '+cards[id.slice(5)].name:'Take '+items[id].name,{index},{item:id}));return actions;}
- if(s.mode==='event'){const event=events.find(x=>x.id===s.event);event.choices.forEach((c,index)=>{if((c.cost||0)>s.gold||c.tradeWrist&&!this.equipped().some(x=>x.slot.startsWith('wrist')&&!x.definition.cursed))return;add('eventChoice',c.label,{index},{...c},{gold:c.cost||0});});return actions;}
- if(s.mode==='reward'){if(s.reward.cards){for(const id of s.reward.cards)add('rewardCard','Take '+cards[id].name,{id},{card:id});add('skipReward','Skip card');}else if(s.reward.gem){for(const id of ['ruby','emerald','topaz','sapphire','focusGem','channelGem','insightGem'])add('rewardGem','Take '+items[id].name,{id},{gear:items[id].effect});}else if(s.reward.setting){for(const id of ['silver','channelRing','focusRing','necklace'])add('rewardSetting','Take '+items[id].name,{id},{gear:items[id].effect});}else add('continueReward',s.reward.boss?'Complete Stratum 1':'Return to the Field',{}, {progress:1});return actions;}
- if(s.mode==='tavern'){const shop=s.shop;add('leave','Leave the Lantern Rest',{}, {progress:1});if(s.gold>=20&&!shop.healUsed&&s.hp<s.maxHp)add('heal','Rest · heal 20 HP · 20 Gold',{}, {heal:Math.min(20,s.maxHp-s.hp)},{gold:20});if(s.gold>=15&&!s.revealedArchon)add('gossip','Gossip · reveal the Archon · 15 Gold',{}, {information:1},{gold:15});for(let index=0;index<shop.stock.length;index++){const id=shop.stock[index],d=id.startsWith('card:')?cards[id.slice(5)]:items[id],price=d.worth||({common:30,rare:65,legendary:120}[d.rarity]);if(s.gold>=price)add('buy',`Buy ${d.name} · ${price} Gold`,{index,price},{item:id},{gold:price});}
- this.equipChoices(add);for(const inst of s.inventory){const d=items[inst.id];if(!s.inventory.some(x=>x.gem===inst.uid)){const value=Math.floor(d.worth/2);if(!d.cursed||s.gold>=value)add('sell',`${d.cursed?'Remove':'Sell'} ${d.name} · ${d.cursed?'-':'+'}${value} Gold`,{uid:inst.uid,value},{sale:value,cursed:!!d.cursed});}if(d.socket){if(inst.gem)add('unsocket','Unsocket '+d.name,{uid:inst.uid});for(const gem of s.inventory.filter(x=>items[x.id].slot==='gem'&&!s.inventory.some(i=>i.gem===x.uid)))if(!d.forbid?.includes(gem.id))add('socket',`Socket ${items[gem.id].name} into ${d.name}`,{uid:inst.uid,gem:gem.uid},{gear:items[gem.id].effect});}}
- for(const c of s.deck){const d=cards[c.id],up=d.upgrade;if(s.gold>=40&&d.type!=='Hex')add('remove',`Remove ${d.name} · 40 Gold`,{uid:c.uid},{thin:1},{gold:40});if(d.type==='Hex'&&shop.healer&&s.gold>=shop.healerPrice)add('removeHex',`Healer: remove ${d.name} · ${shop.healerPrice} Gold`,{uid:c.uid},{cleanse:true},{gold:shop.healerPrice});if(up&&!c.upgrade&&s.gold>=(up.gold||0)&&s.hp>(up.hp||0)&&(!up.element||this.equipped().some(e=>e.element===up.element))){if(up.sacrifice){for(const other of s.deck.filter(x=>x.uid!==c.uid&&cards[x.id].rarity===d.rarity))add('upgrade',`Upgrade ${d.name} · sacrifice ${cards[other.id].name}`,{uid:c.uid,sacrifice:other.uid},{upgrade:1});}else add('upgrade',`Upgrade ${d.name} · ${up.gold?up.gold+' Gold':up.hp+' HP'}`,{uid:c.uid},{upgrade:1},{gold:up.gold||0,hp:up.hp||0});}}return actions;}
- if(s.mode==='battle'){const h=b.reaction;if(h){if(h.stage==='shield')for(const p of b.shields.filter(p=>p.block>0&&top(b.grid[p.slot])?.uid===p.owner))add('block',`${p.element} Shield · ${p.block} block`,{uid:p.uid},{block:p.block,element:p.element});if(h.stage==='ally'){for(const x of this.allies().filter(x=>!h.intercepted.includes(x.c.uid)))add('intercept',`${cards[x.c.id].name} intercepts · ${x.c.hp} HP`,{slot:x.i},{allyHp:x.c.hp,element:x.c.element,swallow:!!cards[x.c.id].swallow});add('takeHit','Let it reach your equipment',{}, {takeDamage:h.damage});}if(h.stage==='bracelet')for(const p of b.bracelets.filter(x=>x.block>0))add('bracelet',`${p.name} · ${p.element} · ${p.block} block`,{uid:p.uid},{block:p.block,element:p.element});return actions;}
- if(b.phase==='place'){for(const c of b.hand){const d=cards[c.id],cost=d.focus+(b.milky?1:0);if(d.unplaceable||cost>b.focus)continue;for(let i=0;i<20;i++)if(this.canStack(c,b.grid[i]))add('place',`Place ${d.name} · slot ${i+1}`,{uid:c.uid,slot:i},{card:c.id,neighbors:this.neighbors(i).length,level:b.grid[i].length+1},{focus:cost});}for(let i=0;i<20;i++){const cost=this.recallCost(b.grid[i]);if(cost!=null&&cost<=b.focus)add('recall',`Recall slot ${i+1} · ${cost} Focus`,{slot:i},{spent:this.allowance(top(b.grid[i]),i)===0},{focus:cost});}add('activatePhase','Begin activation',{}, {progress:1});}
- if(b.phase==='activate'){for(let i=0;i<20;i++){const c=top(b.grid[i]);if(!c)continue;const d=cards[c.id],f=d.effects;if(d.channel>b.channel||!this.allowance(c,i)||c.freeze>=b.turn||c.zeroWard||!this.condition(c,i))continue;let els=d.attune?[...new Set(this.neighbors(i).map(j=>top(b.grid[j]).element).filter(x=>x!=='Arcane'))]:[c.element];if(!els.length)els=['Arcane'];const targets=f.all||f.randomDamage||d.stack==='pile'||!(f.damage||f.hpDamage||f.burn||f.poison||f.corrode)?[null]:b.enemies.filter(e=>e.hp>0).map(e=>e.uid);let extras=[{}];if(f.transmute)extras=b.grid.flatMap((slot,j)=>top(slot)?ELEMENTS.filter(el=>el!==top(slot).element).map(newElement=>({cardTarget:j,newElement})):[]);if(f.shift)extras=b.grid.flatMap((slot,j)=>slot.length&&!slot.some(x=>x.lock)?b.grid.flatMap((dest,k)=>!dest.length?[{cardTarget:j,destination:k}]:[]):[]);if(f.allyHeal)extras=this.neighbors(i).filter(j=>cards[top(b.grid[j])?.id]?.type==='Ally').map(cardTarget=>({cardTarget}));for(const element of els)for(const target of targets)for(const ex of extras)add('activate',`${d.name} · ${element}${target?' → '+b.enemies.find(e=>e.uid===target).name:''}${ex.cardTarget!=null?' · slot '+(ex.cardTarget+1):''}${ex.newElement?' → '+ex.newElement:''}${ex.destination!=null?' → slot '+(ex.destination+1):''}`,{slot:i,target,element,...ex},{...f,damage:this.cardPower(c,i),card:c.id,charge:d.charge?d.charge-c.charge:0},{channel:d.channel});}add('endTurn','End turn',{}, {progress:1});}return actions;}
- throw Error('No decision defined for '+s.mode);
- }
- act(action){const a=typeof action==='string'?this.legal().find(x=>x.key===action):this.legal().find(x=>x.key===action.key);if(!a)throw Error('Illegal action');const s=this.s,b=s.battle;s.steps++;s.history.push(a.key);switch(a.type){
- case 'chooseClass':s.mode='gem';break;
- case 'startGem':this.getItem(s.equipment[a.slot]).gem=s.inventory.find(x=>x.id===s.startGem).uid;s.mode='intro';break;
- case 'begin':this.beginRound();break;
- case 'move':s.field.x=a.x;s.field.y=a.y;s.field.moves--;if(s.field.entities.some(e=>e.x===a.x&&e.y===a.y))s.field.moves=0;this.resolveTile();break;
- case 'wait':this.endMovement();break;
- case 'equip':for(const k of Object.keys(s.equipment))if(s.equipment[k]===a.item)s.equipment[k]=null;s.equipment[a.slot]=a.item;break;
- case 'takeItem':{const id=s.itemOffer[a.index];if(id.startsWith('card:'))this.addCard(id.slice(5));else this.addItem(id);this.resolveTile();break;}
- case 'replaceArmor':{const id=s.pendingArmor;delete s.pendingArmor;this.removeItem(a.old);this.addItem(id);break;}
- case 'declineArmor':delete s.pendingArmor;break;
- case 'eventChoice':{const c=events.find(e=>e.id===s.event).choices[a.index];if(c.cost)this.spend(c.cost);if(c.hp){s.hp+=c.hp;s.stats.damageTaken+=Math.max(0,-c.hp);}if(c.heal)s.hp=Math.min(s.maxHp,s.hp+c.heal);if(c.gold)this.gainGold(c.gold);if(c.card)this.addCard(c.card);if(c.hex)this.addCard(c.hex);if(c.item)this.addItem(c.item);if(c.quest)s.quest=true;if(c.tradeWrist){const gear=this.equipped().find(x=>x.slot.startsWith('wrist')&&!x.definition.cursed);this.removeItem(gear.uid);}if(c.clean||c.cleanHex)s.deck=s.deck.filter(x=>cards[x.id].type!=='Hex');if(c.clean)for(const x of [...s.inventory])if(items[x.id].cursed)this.removeItem(x.uid);if(s.hp<=0)this.finish(false,events.find(e=>e.id===s.event).name);else if(c.fight)this.beginBattle([{uid:this.uid(),enemy:c.fight,restless:0}]);else this.resolveTile();break;}
- case 'rewardCard':this.addCard(a.id);s.reward.cards=null;break;
- case 'skipReward':s.reward.cards=null;break;
- case 'rewardGem':this.addItem(a.id);s.reward.gem=false;break;
- case 'rewardSetting':this.addItem(a.id);s.reward.setting=false;break;
- case 'continueReward':if(s.reward.boss)this.finish(true);else this.resolveTile();break;
- case 'leave':this.resolveTile();break;
- case 'heal':this.spend(20);s.hp=Math.min(s.maxHp,s.hp+20);s.shop.healUsed=true;break;
- case 'gossip':this.spend(15);s.revealedArchon=s.archon;this.log('The traveler names '+enemies[s.archon].name+'.');break;
- case 'buy':{const id=s.shop.stock.splice(a.index,1)[0];this.spend(a.price);s.stats.purchases.push(id);if(id.startsWith('card:'))this.addCard(id.slice(5));else this.addItem(id);break;}
- case 'sell':{const item=this.getItem(a.uid);if(items[item.id].cursed)this.spend(a.value);else this.gainGold(a.value);s.stats.sales.push(item.id);this.removeItem(a.uid);break;}
- case 'socket':this.getItem(a.uid).gem=a.gem;break;
- case 'unsocket':this.getItem(a.uid).gem=null;break;
- case 'remove':this.spend(40);s.deck=s.deck.filter(x=>x.uid!==a.uid);break;
- case 'removeHex':this.spend(s.shop.healerPrice);s.deck=s.deck.filter(x=>x.uid!==a.uid);break;
- case 'upgrade':{const c=s.deck.find(x=>x.uid===a.uid),u=cards[c.id].upgrade;if(u.gold)this.spend(u.gold);if(u.hp){s.hp-=u.hp;s.stats.damageTaken+=u.hp;}if(a.sacrifice)s.deck=s.deck.filter(x=>x.uid!==a.sacrifice);c.upgrade=true;break;}
- case 'place':{const c=b.hand.find(x=>x.uid===a.uid),d=cards[c.id];b.hand=b.hand.filter(x=>x.uid!==a.uid);b.focus-=a.costs.focus;b.milky=false;const slot=b.grid[a.slot];if(d.stack==='recall'&&slot.length){for(let i=slot.length-1;i>=0;i--)if(cards[slot[i].id].recall!=null&&!slot[i].lock)b.discard.push(...slot.splice(i,1).map(x=>({uid:x.uid,id:x.id,upgrade:x.upgrade})));}const inst=this.instance(c);slot.push(inst);if(d.bondHP&&this.neighbors(a.slot).some(j=>top(b.grid[j]).element==='Earth'))inst.hp+=d.bondHP;if(d.onPlaceCharge)inst.charge+=this.neighbors(a.slot).filter(j=>top(b.grid[j]).element==='Fire').length;if(d.onPlaceFocus)b.focus+=d.onPlaceFocus;break;}
- case 'recall':b.focus-=a.costs.focus;b.discard.push(...b.grid[a.slot].map(c=>({uid:c.uid,id:c.id,upgrade:c.upgrade})));b.grid[a.slot]=[];break;
- case 'activatePhase':b.discard.push(...b.hand);b.hand=[];b.phase='activate';break;
- case 'activate':this.activate(a);break;
- case 'endTurn':this.endTurn();break;
- case 'block':case 'bracelet':{const p=(a.type==='block'?b.shields:b.bracelets).find(x=>x.uid===a.uid);const r=blockHit(p.block,p.element,b.reaction.damage,b.reaction.element);p.block=r.block;b.reaction.damage=r.remaining;this.advanceHit();this.pump();break;}
- case 'intercept':this.intercept(a.slot);this.pump();break;
- case 'takeHit':b.reaction.stage='bracelet';this.advanceHit();this.pump();break;
- }return this.observe();}
- removeItem(uid){const s=this.s;for(const k of Object.keys(s.equipment))if(s.equipment[k]===uid)s.equipment[k]=null;for(const x of s.inventory)if(x.gem===uid)x.gem=null;s.inventory=s.inventory.filter(x=>x.uid!==uid);}
- observe(){const s=this.s;const o={version:VERSION,mode:s.mode,classId:s.classId,hp:s.hp,maxHp:s.maxHp,gold:s.gold,deck:clone(s.deck),inventory:clone(s.inventory),equipment:clone(s.equipment),bonuses:this.bonuses(),status:clone(s.status),field:clone(s.field),log:s.log.slice(-30),steps:s.steps,stats:clone(s.stats),startGem:s.startGem,archon:s.revealedArchon?enemies[s.revealedArchon].name:null,pendingArmor:s.pendingArmor};if(s.mode==='battle'){o.battle=clone(s.battle);delete o.battle.jobs;o.battle.deck.sort((a,b)=>a.id.localeCompare(b.id)||a.uid-b.uid);o.battle.enemies=o.battle.enemies.filter(e=>e.hp>0).map(e=>({...e,tell:this.tell(e)}));}if(s.mode==='event')o.event=events.find(e=>e.id===s.event);if(s.mode==='tavern')o.shop=clone(s.shop);if(s.mode==='item')o.itemOffer=clone(s.itemOffer);if(s.mode==='reward')o.reward=clone(s.reward);if(s.mode==='result'){o.outcome=s.outcome;o.cause=s.cause;o.seed=s.seed;o.history=clone(s.history);}return o;}
- save(){return clone(this.s.mode==='battle'&&this.s.checkpoint?this.s.checkpoint:this.s);}
+import {
+  cards,
+  items,
+  enemies,
+  events,
+  starter,
+  ELEMENTS,
+  cycle,
+  VERSION,
+} from "./content.mjs";
+export const clone = (x) => structuredClone(x);
+export function offense(n, from, to) {
+  return Math.ceil(
+    n *
+      (from === "Arcane" || to === "Arcane"
+        ? 1
+        : cycle[from] === to
+          ? 1.5
+          : cycle[to] === from
+            ? 0.5
+            : 1),
+  );
+}
+export function defenseRate(def, attack) {
+  return def === "Arcane" || attack === "Arcane"
+    ? 1
+    : def === attack
+      ? 2
+      : cycle[attack] === def
+        ? 0.5
+        : 1;
+}
+export function blockHit(block, element, damage, attack) {
+  const rate = defenseRate(element, attack),
+    effective = Math.ceil(block * rate),
+    stopped = Math.min(effective, damage);
+  return {
+    remaining: damage - stopped,
+    block: Math.floor((effective - stopped) / rate),
+  };
+}
+export function adjacent(i) {
+  return [
+    i % 5 ? i - 1 : -1,
+    i % 5 < 4 ? i + 1 : -1,
+    i >= 5 ? i - 5 : -1,
+    i < 15 ? i + 5 : -1,
+  ].filter((x) => x >= 0);
+}
+const corner = (i) => [0, 4, 15, 19].includes(i),
+  top = (slot) => slot?.at(-1),
+  blankStatus = () => ({ burn: 0, poison: 0, corrode: 0 }),
+  clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+export class Game {
+  constructor(seed = Date.now(), saved = null) {
+    if (saved) {
+      if (saved.version?.rules !== VERSION.rules)
+        throw Error("This save uses an incompatible rules version.");
+      this.s = clone(saved);
+      if (this.s.mode === "battle") this.s.checkpoint = clone(saved);
+      return;
+    }
+    this.s = {
+      version: VERSION,
+      seed: Number(seed) >>> 0,
+      rng: Number(seed) >>> 0 || 1,
+      uid: 0,
+      mode: "class",
+      classId: "druid",
+      hp: 65,
+      maxHp: 65,
+      gold: 0,
+      deck: [],
+      inventory: [],
+      equipment: {
+        head: null,
+        neck: null,
+        torso: null,
+        wrist1: null,
+        wrist2: null,
+        finger1: null,
+        finger2: null,
+      },
+      field: {
+        round: 0,
+        spawned: 0,
+        queue: [],
+        entities: [],
+        x: 5,
+        y: 5,
+        moves: 2,
+        stage: "player",
+      },
+      status: blankStatus(),
+      log: [],
+      history: [],
+      stats: {
+        damageDealt: 0,
+        damageTaken: 0,
+        goldEarned: 0,
+        goldSpent: 0,
+        cardsGained: [],
+        itemsGained: [],
+        purchases: [],
+        sales: [],
+        encounters: [],
+      },
+      steps: 0,
+    };
+    for (let warmup = 0; warmup < 8; warmup++) this.rand();
+    this.s.archon = this.pick(
+      Object.values(enemies)
+        .filter((e) => e.tier === "Archon")
+        .map((e) => e.id),
+    );
+    this.s.enemyDecks = {
+      Mote: this.shuffle(
+        Object.values(enemies)
+          .filter((e) => e.tier === "Mote" && !e.summonOnly)
+          .flatMap((e) => (e.movement === "Skittish" ? [e.id] : [e.id, e.id])),
+      ),
+      Eidolon: this.shuffle(
+        Object.values(enemies)
+          .filter((e) => e.tier === "Eidolon")
+          .map((e) => e.id),
+      ),
+    };
+    this.s.eventDeck = this.shuffle(
+      events.filter((e) => e.id !== "shrine").map((e) => e.id),
+    );
+    this.s.itemDeck = this.shuffle([
+      ...Object.keys(items),
+      ...Object.keys(cards)
+        .filter((id) => !starter.includes(id))
+        .map((id) => "card:" + id),
+    ]);
+    for (const id of starter) this.s.deck.push(this.newCard(id));
+    this.addItem("bronze");
+    this.addItem("ring");
+    this.s.startGem = this.pick(["ruby", "emerald", "topaz", "sapphire"]);
+    this.addItem(this.s.startGem);
+    this.s.equipment.wrist1 = this.s.inventory[0].uid;
+    this.s.equipment.finger1 = this.s.inventory[1].uid;
+  }
+  rand() {
+    let x = this.s.rng;
+    x ^= x << 13;
+    x ^= x >>> 17;
+    x ^= x << 5;
+    this.s.rng = x >>> 0;
+    return this.s.rng / 4294967296;
+  }
+  pick(xs) {
+    return xs[Math.floor(this.rand() * xs.length)];
+  }
+  shuffle(xs) {
+    const a = [...xs];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(this.rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  uid() {
+    return ++this.s.uid;
+  }
+  newCard(id, upgrade = false) {
+    return { uid: this.uid(), id, upgrade };
+  }
+  addCard(id) {
+    const c = this.newCard(id);
+    this.s.deck.push(c);
+    this.s.stats.cardsGained.push(cards[id].name);
+    this.log("Gained " + cards[id].name);
+    return c;
+  }
+  addItem(id) {
+    if (
+      items[id].slot === "torso" &&
+      this.s.inventory.filter((x) => items[x.id].slot === "torso").length >= 3
+    ) {
+      this.s.pendingArmor = id;
+      return null;
+    }
+    const c = { uid: this.uid(), id, gem: null };
+    this.s.inventory.push(c);
+    this.s.stats.itemsGained.push(items[id].name);
+    if (items[id].cursed && items[id].slot !== "gem") {
+      const slots = Object.keys(this.s.equipment).filter((k) =>
+        k.startsWith(items[id].slot),
+      );
+      const free =
+        slots.find((k) => !this.s.equipment[k]) ||
+        slots.find((k) => !items[this.getItem(this.s.equipment[k]).id].cursed);
+      if (free) this.s.equipment[free] = c.uid;
+      else c.unequippedCurse = true;
+    }
+    return c;
+  }
+  getItem(uid) {
+    return this.s.inventory.find((x) => x.uid === uid);
+  }
+  log(msg) {
+    this.s.log.push(msg);
+    if (this.s.log.length > 120) this.s.log.shift();
+  }
+  gainGold(n) {
+    this.s.gold += n;
+    this.s.stats.goldEarned += n;
+  }
+  spend(n) {
+    this.s.gold -= n;
+    this.s.stats.goldSpent += n;
+  }
+  bonuses() {
+    const sum = {
+      insight: 3,
+      focus: 1,
+      channel: 1,
+      movement: 2,
+      damage: 0,
+      shield: 0,
+      heal: 0,
+      armor: 0,
+      recall: 0,
+    };
+    for (const uid of Object.values(this.s.equipment)) {
+      const inst = this.getItem(uid);
+      if (!inst) continue;
+      const d = items[inst.id];
+      for (const [k, v] of Object.entries(d.effect))
+        if (typeof v === "number") sum[k] = (sum[k] || 0) + v;
+      if (inst.gem) {
+        const g = items[this.getItem(inst.gem)?.id];
+        if (g)
+          for (const [k, v] of Object.entries(g.effect))
+            if (typeof v === "number") sum[k] = (sum[k] || 0) + v;
+        if (d.synergy === g?.id) sum.heal++;
+      }
+    }
+    for (const inst of this.s.inventory)
+      if (items[inst.id].cursed && inst.unequippedCurse) sum.movement--;
+    for (const k of ["insight", "focus", "channel", "movement"])
+      sum[k] = Math.max(1, Math.floor(sum[k]));
+    return sum;
+  }
+  equipped() {
+    return Object.entries(this.s.equipment).flatMap(([slot, uid]) => {
+      const x = this.getItem(uid);
+      return x
+        ? [
+            {
+              ...x,
+              slot,
+              definition: items[x.id],
+              element: items[this.getItem(x.gem)?.id]?.element || "Arcane",
+            },
+          ]
+        : [];
+    });
+  }
+  pool(rarity = "common") {
+    return Object.values(cards).filter(
+      (c) =>
+        c.type !== "Hex" && c.rarity === rarity && !["surge"].includes(c.id),
+    );
+  }
+  offer(rare = false) {
+    const common = this.shuffle(this.pool().map((c) => c.id)).slice(
+      0,
+      rare ? 2 : 3,
+    );
+    return rare
+      ? [...common, this.pick(this.pool("rare").map((c) => c.id))]
+      : common;
+  }
+  drawDeck(key, source) {
+    let a = this.s[key];
+    if (!a.length) this.s[key] = a = this.shuffle(source);
+    return a.pop();
+  }
+  batch() {
+    const f = this.s.field;
+    f.queue = Array.from({ length: Math.min(4, 16 - f.spawned) }, (_, i) =>
+      f.spawned + i === 15
+        ? "Archon"
+        : [
+            "Mote",
+            f.spawned === 0 ? "Mote" : "Eidolon",
+            "Gold",
+            "Item",
+            "Event",
+            "Tavern",
+          ][Math.floor(this.rand() * 6)],
+    );
+    if (f.spawned) for (const e of f.entities) if (e.enemy) e.restless++;
+    this.log("Spawn queue: " + f.queue.join(" · "));
+  }
+  beginRound() {
+    if (this.s.mode === "result") return;
+    const f = this.s.field;
+    f.round++;
+    f.stage = "player";
+    f.moves = this.bonuses().movement;
+    for (const e of f.entities) if (e.type === "Gold") e.value -= 5;
+    f.entities = f.entities.filter((e) => e.type !== "Gold" || e.value > 0);
+    this.s.mode = "field";
+    if (f.spawned < 16) {
+      if (!f.queue.length) this.batch();
+      const type = f.queue.shift();
+      f.spawned++;
+      const die = () => Math.floor(this.rand() * 6);
+      const e = {
+        uid: this.uid(),
+        type,
+        x: type === "Archon" ? 5 : die() + die(),
+        y: type === "Archon" ? 5 : die() + die(),
+        restless: 0,
+        born: f.round,
+      };
+      if (["Mote", "Eidolon", "Archon"].includes(type)) {
+        if (type === "Archon") e.enemy = this.s.archon;
+        else {
+          let d = this.s.enemyDecks[type];
+          if (!d.length)
+            this.s.enemyDecks[type] = d = this.shuffle(
+              Object.values(enemies)
+                .filter((x) => x.tier === type && !x.summonOnly)
+                .map((x) => x.id),
+            );
+          e.enemy = d.pop();
+        }
+      }
+      if (type === "Gold") e.value = Math.max(10, (die() + die()) * 10);
+      f.entities.push(e);
+      this.log(
+        `${e.enemy ? enemies[e.enemy].name : type} appears at ${e.x + 1}, ${e.y + 1}.`,
+      );
+      if (!f.queue.length && f.spawned < 16) this.batch();
+    }
+    this.resolveTile();
+  }
+  resolveTile() {
+    if (this.s.pendingArmor) {
+      this.s.pendingTile = true;
+      return;
+    }
+    const s = this.s,
+      f = s.field,
+      here = f.entities.filter((e) => e.x === f.x && e.y === f.y),
+      foes = here.filter((e) => e.enemy);
+    if (foes.length) {
+      this.beginBattle(foes);
+      return;
+    }
+    const e = here[0];
+    if (e) {
+      f.entities = f.entities.filter((x) => x.uid !== e.uid);
+      if (e.type === "Gold") {
+        this.gainGold(e.value);
+        this.log(`Collected ${e.value} Gold.`);
+        return this.resolveTile();
+      }
+      if (e.type === "Item") {
+        const options = [this.drawDeck("itemDeck", Object.keys(items))];
+        if (this.rand() < 0.35)
+          for (let i = 0, n = 1 + Math.floor(this.rand() * 3); i < n; i++)
+            options.push(this.drawDeck("itemDeck", Object.keys(items)));
+        s.mode = "item";
+        s.itemOffer = options;
+        return;
+      }
+      if (e.type === "Event") {
+        s.event = s.quest
+          ? "shrine"
+          : this.drawDeck(
+              "eventDeck",
+              events.filter((x) => x.id !== "shrine").map((x) => x.id),
+            );
+        s.quest = false;
+        s.mode = "event";
+        return;
+      }
+      if (e.type === "Tavern") {
+        this.openTavern();
+        return;
+      }
+    }
+    s.mode = "field";
+    if (f.stage === "enemyDone") this.beginRound();
+    else if (f.moves <= 0) this.endMovement();
+  }
+  endMovement() {
+    const f = this.s.field;
+    f.moves = 0;
+    f.stage = "enemyDone";
+    const reaching = new Set();
+    const move = (e, n, dx, dy) => {
+      for (let k = 0; k < n; k++) {
+        if (e.x === f.x && e.y === f.y) break;
+        e.x = clamp(e.x + dx(e), 0, 10);
+        e.y = clamp(e.y + dy(e), 0, 10);
+      }
+      if (e.x === f.x && e.y === f.y && !reaching.has(e.uid)) {
+        reaching.add(e.uid);
+        for (const mate of f.entities.filter(
+          (x) => x.enemy && x.uid !== e.uid,
+        )) {
+          const d = enemies[mate.enemy];
+          if (
+            d.pack &&
+            enemies[e.enemy].name.includes(d.pack) &&
+            !(mate.x === f.x && mate.y === f.y)
+          )
+            move(
+              mate,
+              2,
+              (x) => Math.sign(f.x - x.x),
+              (x) => Math.sign(f.y - x.y),
+            );
+        }
+      }
+    };
+    for (const e of f.entities.filter((e) => e.enemy)) {
+      const d = enemies[e.enemy];
+      let n = (d.speed || 2) + e.restless,
+        type = d.movement;
+      if (type === "Archon") {
+        const age = f.round - e.born + 1;
+        if (age >= 6 || (d.bossMode === "hunter" && age >= 5)) type = "Hunter";
+        else if (
+          d.bossMode === "hunter" ||
+          (d.bossMode === "sentinel" && age <= 3)
+        )
+          n = 0;
+        else n = age - 1;
+        type = type === "Hunter" ? type : "Stalker";
+      }
+      if (type === "Hunter") {
+        e.x = f.x;
+        e.y = f.y;
+        move(
+          e,
+          0,
+          () => 0,
+          () => 0,
+        );
+      } else if (type === "Sentinel") {
+      } else if (type === "Wanderer") {
+        const dx = Math.floor(this.rand() * 3) - 1,
+          dy = Math.floor(this.rand() * 3) - 1;
+        move(
+          e,
+          n,
+          () => dx,
+          () => dy,
+        );
+      } else
+        move(
+          e,
+          n,
+          (x) => Math.sign(f.x - x.x) * (type === "Skittish" ? -1 : 1),
+          (x) => Math.sign(f.y - x.y) * (type === "Skittish" ? -1 : 1),
+        );
+    }
+    this.resolveTile();
+  }
+  instance(c) {
+    const d = cards[c.id];
+    return {
+      ...c,
+      used: 0,
+      charge: 0,
+      hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
+      ward: d.ward || 0,
+      element: d.element,
+      placed: ++this.s.battle.order,
+      lock: false,
+      sever: false,
+      freeze: 0,
+      zeroWard: false,
+      status: blankStatus(),
+    };
+  }
+  beginBattle(entities) {
+    const s = this.s;
+    delete s.checkpoint;
+    s.mode = "battle";
+    s.battle = {
+      turn: 0,
+      phase: "place",
+      grid: Array.from({ length: 20 }, () => []),
+      deck: clone(s.deck),
+      hand: [],
+      discard: [],
+      destroyed: [],
+      enemies: entities.map((e) => ({
+        ...e,
+        ...enemies[e.enemy],
+        entityUid: e.uid,
+        uid: e.uid,
+        hp: enemies[e.enemy].hp,
+        maxHp: enemies[e.enemy].hp,
+        cycle: 0,
+        buff: 0,
+        guard: 0,
+        status: blankStatus(),
+      })),
+      order: 0,
+      permanent: { focus: 0 },
+      next: { focus: 0, insight: 0 },
+      shields: [],
+      bracelets: [],
+      jobs: [],
+      reaction: null,
+      relief: 0,
+      mirror: false,
+    };
+    s.status = blankStatus();
+    const b = s.battle;
+    for (const e of this.equipped())
+      for (const k of ["burn", "poison", "corrode"])
+        s.status[k] += e.definition.effect[k] || 0;
+    for (const x of s.inventory)
+      if (x.id === "curseGem" && !s.inventory.some((a) => a.gem === x.uid))
+        s.status.poison++;
+    if (s.deck.some((x) => x.id === "rust")) s.status.corrode++;
+    for (const c of [...b.deck])
+      if (cards[c.id].opening) {
+        b.deck = b.deck.filter((x) => x.uid !== c.uid);
+        b.grid[b.grid.findIndex((x) => !x.length)].push(this.instance(c));
+        b.next.focus++;
+      }
+    this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));
+    s.stats.encounters.push({
+      round: s.field.round,
+      enemies: b.enemies.map((e) => e.name),
+      outcome: "in progress",
+      hpStart: s.hp,
+    });
+    this.beginTurn();
+    s.checkpoint = clone({ ...s, checkpoint: undefined });
+  }
+  neighbors(i) {
+    const b = this.s.battle,
+      c = top(b.grid[i]);
+    if (c?.sever) return [];
+    return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
+  }
+  allowance(c, i) {
+    const b = this.s.battle,
+      d = cards[c.id];
+    if (d.limit < 0) return Infinity;
+    const plus = b.grid.some(
+      (x, j) =>
+        cards[top(x)?.id]?.keystone &&
+        corner(j) &&
+        (j % 5 === i % 5 || Math.floor(j / 5) === Math.floor(i / 5)),
+    )
+      ? 1
+      : 0;
+    return Math.max(0, d.limit + plus - c.used);
+  }
+  recallCost(slot) {
+    const d = cards[top(slot)?.id];
+    if (!d || slot.some((c) => c.lock)) return null;
+    if (d.recallWhole != null) return d.recallWhole;
+    if (slot.some((c) => cards[c.id].recall == null)) return null;
+    return Math.max(
+      0,
+      slot.reduce((n, c) => n + cards[c.id].recall, 0) - this.bonuses().recall,
+    );
+  }
+  condition(c, i) {
+    const d = cards[c.id],
+      ns = this.neighbors(i);
+    return (
+      !d.condition ||
+      (d.condition === "isolated"
+        ? ns.length === 0
+        : d.condition === "corner"
+          ? corner(i)
+          : ns.some((j) => top(this.s.battle.grid[j]).element === d.condition))
+    );
+  }
+  canStack(c, slot) {
+    if (!slot.length) return true;
+    const d = cards[c.id],
+      t = cards[top(slot).id];
+    return (
+      d.stack === "supersede" ||
+      d.stack === "recall" ||
+      (d.stack === "pile" && c.id === top(slot).id) ||
+      (d.stack === "tower" && t.tower) ||
+      (d.stack === "fusion" &&
+        t.type === "Spell" &&
+        ["Water", "Earth"].includes(top(slot).element))
+    );
+  }
+  beginTurn() {
+    const s = this.s,
+      b = s.battle;
+    b.turn++;
+    b.phase = "start";
+    s.hp = Math.min(s.maxHp, s.hp + this.bonuses().heal);
+    for (const slot of b.grid)
+      for (const c of slot) if (c.freeze && c.freeze < b.turn) c.freeze = 0;
+    for (let i = 0; i < 20; i++) {
+      const c = top(b.grid[i]);
+      if (!c) continue;
+      if (cards[c.id].growth) c.hp += this.neighbors(i).length;
+      for (const k of ["burn", "poison", "corrode"]) {
+        c.hp -= c.status[k] || 0;
+        if (c.status[k])
+          c.status[k] =
+            k === "burn"
+              ? c.status[k] - 1
+              : k === "corrode"
+                ? c.status[k] + 1
+                : c.status[k];
+      }
+      if (cards[c.id].type === "Ally" && c.hp <= 0) this.destroyCard(i, c.uid);
+    }
+    if (s.deck.some((c) => c.id === "itch") && b.turn > b.relief) {
+      s.hp--;
+      s.stats.damageTaken++;
+      this.log("Burning Itch: lose 1 HP.");
+    }
+    if (s.hp <= 0) return this.finish(false, "Burning Itch");
+    b.jobs = [];
+    for (const k of ["burn", "poison", "corrode"])
+      if (s.status[k]) {
+        b.jobs.push({
+          kind: "hit",
+          damage: s.status[k],
+          element: "Arcane",
+          statusHit: true,
+          name: k,
+        });
+        s.status[k] =
+          k === "burn"
+            ? s.status[k] - 1
+            : k === "corrode"
+              ? s.status[k] + 1
+              : s.status[k];
+      }
+    b.jobs.push({ kind: "reveal" });
+    this.pump();
+  }
+  reveal() {
+    const b = this.s.battle,
+      bonus = this.bonuses();
+    b.phase = "place";
+    b.focus = bonus.focus + b.permanent.focus + b.next.focus;
+    b.channel = bonus.channel;
+    b.insight = Math.max(
+      1,
+      bonus.insight +
+        b.next.insight -
+        (b.discard.some((x) => x.id === "fog") ? 1 : 0),
+    );
+    if (b.discard.some((c) => c.id === "bone"))
+      b.focus = Math.max(1, Math.floor(b.focus / 2));
+    b.focus = Math.max(1, b.focus);
+    b.next = { focus: 0, insight: 0 };
+    b.hand = [];
+    for (let n = 0; n < b.insight; n++) {
+      if (!b.deck.length) {
+        b.deck = b.discard;
+        b.discard = [];
+      }
+      if (!b.deck.length) break;
+      const at = Math.floor(this.rand() * b.deck.length);
+      b.hand.push(b.deck.splice(at, 1)[0]);
+    }
+    b.milky = b.hand.some((c) => c.id === "milky");
+    this.log(
+      `Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`,
+    );
+  }
+  tell(e) {
+    const d = enemies[e.id],
+      t = clone(d.rotation[e.cycle % d.rotation.length]);
+    t.damage =
+      (t.damage || 0) +
+      (t.damage
+        ? Math.floor(e.cycle / d.rotation.length) +
+          (e.restless || 0) +
+          e.buff +
+          (e.tier === "Archon" && e.hp <= e.maxHp / 2 ? 3 : 0)
+        : 0);
+    return t;
+  }
+  endTurn() {
+    const b = this.s.battle;
+    b.discard.push(...b.hand);
+    b.hand = [];
+    b.phase = "enemy";
+    b.bracelets = this.equipped()
+      .filter((x) => x.definition.effect.block)
+      .map((x) => ({
+        uid: x.uid,
+        block: x.definition.effect.block,
+        element: x.element,
+        name: x.definition.name,
+      }));
+    b.jobs = [];
+    for (const e of b.enemies) {
+      for (const k of ["burn", "poison", "corrode"])
+        if (e.status[k]) {
+          b.jobs.push({ kind: "enemyStatus", uid: e.uid, damage: e.status[k] });
+          e.status[k] =
+            k === "burn"
+              ? e.status[k] - 1
+              : k === "corrode"
+                ? e.status[k] + 1
+                : e.status[k];
+        }
+      b.jobs.push({ kind: "enemyAction", uid: e.uid });
+    }
+    b.jobs.push({ kind: "nextTurn" });
+    this.pump();
+  }
+  pump() {
+    const s = this.s,
+      b = s.battle;
+    while (s.mode === "battle" && !b.reaction && b.jobs.length) {
+      const j = b.jobs.shift();
+      if (j.kind === "reveal") {
+        this.reveal();
+        continue;
+      }
+      if (j.kind === "nextTurn") {
+        b.shields = [];
+        this.beginTurn();
+        return;
+      }
+      if (j.kind === "enemyStatus") {
+        const e = b.enemies.find((x) => x.uid === j.uid);
+        if (e) {
+          e.hp -= j.damage;
+          s.stats.damageDealt += j.damage;
+        }
+        this.checkBattle();
+        continue;
+      }
+      if (j.kind === "enemyAction") {
+        const e = b.enemies.find((x) => x.uid === j.uid && x.hp > 0);
+        if (!e) continue;
+        const t = this.tell(e);
+        e.cycle++;
+        this.log(
+          e.name +
+            ": " +
+            t.name +
+            (t.damage
+              ? ` · ${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}`
+              : ""),
+        );
+        if (e.id === "hart" && e.hp <= e.maxHp / 2) s.status.burn++;
+        if (e.id === "choir" && e.hp <= e.maxHp / 2 && e.cycle % 4 === 1)
+          e.guard += 8;
+        if (t.grid) this.gridAttack(t);
+        if (t.insight) b.next.insight += t.insight;
+        if (t.howl)
+          for (const wolf of b.enemies)
+            if (wolf.name.includes("Wolf")) wolf.buff += t.howl;
+        if (t.guard) e.guard += t.guard;
+        if (t.flicker) e.flicker = true;
+        if (!t.damage)
+          for (const k of ["burn", "poison", "corrode"])
+            if (t[k]) {
+              const allies = b.grid
+                .map((x, i) => ({ c: top(x), i }))
+                .filter((x) => cards[x.c?.id]?.type === "Ally")
+                .sort((a, z) => a.c.placed - z.c.placed);
+              if (t.allyStatus && allies.length) allies[0].c.status[k] += t[k];
+              else s.status[k] += t[k];
+            }
+        if (t.damage)
+          b.jobs.unshift(
+            ...Array.from({ length: t.hits || 1 }, () => ({
+              kind: "hit",
+              ...t,
+              source: e.uid,
+            })),
+          );
+        continue;
+      }
+      if (j.kind === "hit") {
+        b.reaction = {
+          ...j,
+          stage:
+            j.statusHit || j.pierce ? "bracelet" : j.cull ? "ally" : "ward",
+          intercepted: [],
+        };
+        this.advanceHit();
+      }
+    }
+  }
+  activeWards() {
+    return this.s.battle.grid
+      .flatMap((slot, i) =>
+        slot
+          .filter(
+            (c, k) =>
+              cards[c.id].type === "Ward" &&
+              c.ward > 0 &&
+              (k === slot.length - 1 || cards[top(slot)?.id]?.coveredWards),
+          )
+          .map((c) => ({ c, i })),
+      )
+      .sort((a, z) => a.c.placed - z.c.placed);
+  }
+  allies() {
+    return this.s.battle.grid
+      .map((x, i) => ({ c: top(x), i }))
+      .filter((x) => cards[x.c?.id]?.type === "Ally" && x.c.hp > 0);
+  }
+  advanceHit() {
+    const s = this.s,
+      b = s.battle,
+      h = b.reaction;
+    if (!h) return;
+    if (h.damage <= 0) {
+      this.finishHit();
+      return;
+    }
+    if (h.stage === "ward") {
+      for (const { c } of this.activeWards()) {
+        const n = Math.min(c.ward, h.damage);
+        c.ward -= n;
+        h.damage -= n;
+        if (c.ward === 0) c.zeroWard = true;
+        if (!h.damage) break;
+      }
+      h.stage = "shield";
+    }
+    if (h.damage <= 0) {
+      this.finishHit();
+      return;
+    }
+    if (h.stage === "shield") {
+      if (
+        b.shields.some(
+          (p) => p.block > 0 && top(b.grid[p.slot])?.uid === p.owner,
+        )
+      )
+        return;
+      h.stage = "ally";
+    }
+    if (h.stage === "ally") {
+      const allies = this.allies().filter(
+        (x) => !h.intercepted.includes(x.c.uid),
+      );
+      if (h.weakest && allies.length) {
+        this.intercept(
+          allies.sort((a, z) => a.c.hp - z.c.hp || a.i - z.i)[0].i,
+        );
+        return;
+      }
+      const taunt = allies.find((x) => x.c.taunt);
+      if (taunt) {
+        this.intercept(taunt.i);
+        return;
+      }
+      if (allies.length) return;
+      h.stage = "bracelet";
+    }
+    if (h.stage === "bracelet") {
+      if (b.bracelets.some((x) => x.block > 0)) return;
+      h.stage = "player";
+    }
+    if (h.stage === "player") {
+      let damage = h.damage;
+      const armor = this.equipped().find((x) => x.slot === "torso");
+      if (armor?.definition.effect.reflect && !b.mirror && !h.statusHit) {
+        b.mirror = true;
+        const e = b.enemies.find((x) => x.uid === h.source);
+        if (e) {
+          e.hp -= damage;
+          s.stats.damageDealt += damage;
+        }
+        damage = 0;
+      }
+      if (armor?.definition.effect.resist === h.element)
+        damage = Math.ceil(damage / 2);
+      damage = Math.max(0, damage - this.bonuses().armor);
+      s.hp -= damage;
+      s.stats.damageTaken += damage;
+      if (damage) this.log(`${h.name}: you take ${damage} damage.`);
+      this.finishHit();
+      if (s.hp <= 0) this.finish(false, h.name);
+    }
+  }
+  finishHit() {
+    const b = this.s.battle,
+      h = b.reaction;
+    if (!h) return;
+    if (!h.statusHit)
+      for (const k of ["burn", "poison", "corrode"])
+        if (h[k]) this.s.status[k] += h[k];
+    b.reaction = null;
+    this.checkBattle();
+  }
+  intercept(i) {
+    const b = this.s.battle,
+      h = b.reaction,
+      c = top(b.grid[i]);
+    const damage = offense(h.damage, h.element, c.element),
+      taken = Math.min(c.hp, damage);
+    c.hp -= damage;
+    h.damage = cards[c.id].swallow ? 0 : Math.max(0, damage - taken);
+    h.intercepted.push(c.uid);
+    if (c.hp <= 0) this.destroyCard(i, c.uid);
+    this.advanceHit();
+  }
+  destroyCard(i, uid) {
+    const b = this.s.battle,
+      j = b.grid[i].findIndex((c) => c.uid === uid);
+    if (j >= 0) b.destroyed.push(...b.grid[i].splice(j, 1));
+  }
+  gridAttack(t) {
+    const b = this.s.battle,
+      occupied = b.grid
+        .map((slot, i) => ({ slot, i, c: top(slot) }))
+        .filter((x) => x.c);
+    let targets = [];
+    if (t.grid === "row" || t.grid === "column") {
+      const col = t.grid === "column",
+        count = col ? 5 : 4;
+      let best = 0,
+        max = -1;
+      for (let k = 0; k < count; k++) {
+        const n = occupied
+          .filter((x) => (col ? x.i % 5 === k : Math.floor(x.i / 5) === k))
+          .reduce((n, x) => n + x.slot.length, 0);
+        if (n > max) {
+          max = n;
+          best = k;
+        }
+      }
+      targets = occupied.filter((x) =>
+        col ? x.i % 5 === best : Math.floor(x.i / 5) === best,
+      );
+    } else {
+      const score = (x) =>
+        t.target === "newest"
+          ? -x.c.placed
+          : t.target === "oldest"
+            ? x.c.placed
+            : t.target === "tallest"
+              ? -x.slot.length
+              : t.target === "connected"
+                ? -this.neighbors(x.i).length
+                : x.i;
+      targets = occupied
+        .sort((a, z) => score(a) - score(z) || a.i - z.i)
+        .slice(0, t.count || 1);
+    }
+    for (const x of targets) {
+      if (["destroy", "row", "column"].includes(t.grid)) {
+        b.destroyed.push(...x.slot);
+        b.grid[x.i] = [];
+      } else if (t.grid === "siphon") x.c.used++;
+      else if (t.grid === "freeze") x.c.freeze = b.turn + 1;
+      else x.c[t.grid] = true;
+      this.log(`${t.name} targets slot ${x.i + 1}.`);
+    }
+  }
+  damageEnemy(e, n, element, activation) {
+    if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
+    const s = this.s,
+      b = s.battle;
+    let d = offense(n, element, e.element);
+    if (e.resist === element) d = Math.ceil(d / 2);
+    if (e.wisp) d = Math.ceil(d * (element === "Arcane" ? 0.5 : 2));
+    const guard = Math.min(d, e.guard);
+    e.guard -= guard;
+    d -= guard;
+    e.hp -= d;
+    s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
+    if (e.id === "colossus" && element === "Chaos" && !activation.summoned) {
+      activation.summoned = true;
+      const def = enemies.mini;
+      b.enemies.push({
+        ...def,
+        uid: this.uid(),
+        entityUid: null,
+        maxHp: def.hp,
+        hp: def.hp,
+        cycle: 0,
+        buff: 0,
+        restless: 0,
+        guard: 0,
+        status: blankStatus(),
+      });
+      this.log("A Mini-Void tears free.");
+    }
+  }
+  cardPower(c, i) {
+    const d = cards[c.id],
+      f = d.effects,
+      b = this.s.battle;
+    let n = f.hpDamage
+      ? c.hp
+      : f.damage
+        ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
+        : 0;
+    if (f.row)
+      n += b.grid.reduce(
+        (sum, slot, j) =>
+          sum +
+          (j !== i &&
+          Math.floor(j / 5) === Math.floor(i / 5) &&
+          top(slot)?.element === c.element &&
+          !top(slot).sever &&
+          !c.sever
+            ? f.row
+            : 0),
+        0,
+      );
+    if (f.adj) n += this.neighbors(i).length * f.adj;
+    if (f.square && !c.sever)
+      for (const origin of [i, i - 1, i - 5, i - 6])
+        if (
+          origin >= 0 &&
+          origin % 5 < 4 &&
+          origin < 15 &&
+          [origin, origin + 1, origin + 5, origin + 6].every(
+            (j) => top(b.grid[j]) && !top(b.grid[j]).sever,
+          )
+        ) {
+          n *= 2;
+          break;
+        }
+    const level = b.grid[i].indexOf(c) + 1;
+    for (let j = 0; j < 20; j++)
+      if (j !== i) {
+        const tower = top(b.grid[j]);
+        if (tower?.magnified && b.grid[j].length === level) n *= 2;
+      }
+    return n;
+  }
+  applyCard(c, i, target, element, a = {}, context = {}) {
+    const s = this.s,
+      b = s.battle,
+      d = cards[c.id],
+      f = d.effects,
+      bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
+    if (c.freeze >= b.turn || !this.allowance(c, i) || c.zeroWard) return;
+    c.used++;
+    if (d.charge) {
+      c.charge++;
+      if (c.charge < d.charge) return;
+      c.charge -= d.charge;
+    }
+    if (f.transmute) {
+      const victim = top(b.grid[a.cardTarget]);
+      if (victim) victim.element = a.newElement;
+    }
+    if (f.shift) {
+      const moved = b.grid[a.cardTarget];
+      b.grid[a.destination] = moved;
+      b.grid[a.cardTarget] = [];
+      if (
+        this.neighbors(a.destination).some(
+          (j) => top(b.grid[j]).element === top(moved).element,
+        )
+      )
+        b.next.focus++;
+    }
+    if (f.unbind)
+      for (const slot of b.grid)
+        for (const x of slot) {
+          x.lock = false;
+          x.sever = false;
+          x.freeze = 0;
+        }
+    if (f.taunt) {
+      for (const x of this.allies()) x.c.taunt = false;
+      c.taunt = true;
+    }
+    if (f.magnify && b.grid[i].length >= 2) {
+      if (c.lastActivated === b.turn - 1) c.magnified = true;
+      c.lastActivated = b.turn;
+    }
+    if (f.ward) c.ward += f.ward + bonus;
+    if (f.shield)
+      b.shields.push({
+        uid: this.uid(),
+        slot: i,
+        owner: c.uid,
+        block:
+          f.shield +
+          bonus +
+          (d.name.includes("Shield") ? this.bonuses().shield : 0),
+        element,
+      });
+    if (f.heal)
+      s.hp = Math.min(
+        s.maxHp,
+        s.hp + f.heal + bonus + (f.adjHeal || 0) * this.neighbors(i).length,
+      );
+    if (f.allyHeal) {
+      const ally = top(b.grid[a.cardTarget]);
+      if (ally) ally.hp += f.allyHeal;
+    }
+    if (f.cleanse) s.status = blankStatus();
+    if (f.relief) b.relief = b.turn + f.relief;
+    if (f.reliefRust) s.status.corrode = 0;
+    if (f.insight) b.next.insight += f.insight;
+    if (f.focus) b.next.focus += f.focus;
+    if (f.focusPermanent) b.permanent.focus += f.focusPermanent;
+    if (f.channel) b.channel += f.channel;
+    if (
+      f.damage ||
+      f.hpDamage ||
+      f.randomDamage ||
+      f.burn ||
+      f.poison ||
+      f.corrode
+    ) {
+      const targets = f.all
+        ? b.enemies.filter((x) => x.hp > 0)
+        : [
+            f.randomDamage || d.stack === "pile"
+              ? this.pick(b.enemies.filter((x) => x.hp > 0))
+              : b.enemies.find((x) => x.uid === target),
+          ];
+      for (const e of targets) {
+        if (!e || e.hp <= 0) continue;
+        if (e.flicker) {
+          e.flicker = false;
+          context.blocked ??= new Set();
+          context.blocked.add(e.uid);
+          this.log(e.name + " wastes the activation.");
+          continue;
+        }
+        if (context.blocked?.has(e.uid)) continue;
+        const old = e.hp;
+        let n = f.randomDamage
+          ? 1 + Math.floor(this.rand() * f.randomDamage)
+          : this.cardPower(c, i);
+        if (d.stack === "pile") n += a.pileBonus || 0;
+        if (n) {
+          const prism =
+            f.prism &&
+            ["Fire", "Earth", "Wind", "Water"].every((el) =>
+              this.neighbors(i).some((j) => top(b.grid[j]).element === el),
+            );
+          for (const el of prism
+            ? ["Fire", "Earth", "Wind", "Water"]
+            : [element])
+            this.damageEnemy(e, n, el, context);
+          for (const gear of this.equipped())
+            if (gear.definition.effect.damage)
+              this.damageEnemy(
+                e,
+                gear.definition.effect.damage,
+                gear.element,
+                context,
+              );
+        }
+        for (const k of ["burn", "poison", "corrode"])
+          if (f[k]) e.status[k] += f[k] + bonus;
+        if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
+      }
+    }
+  }
+  activate(a) {
+    const b = this.s.battle,
+      slot = b.grid[a.slot],
+      c = top(slot),
+      d = cards[c.id];
+    b.channel -= d.channel;
+    const ctx = {};
+    if (d.stack === "pile") {
+      let order = 0;
+      for (const ball of [...slot].reverse())
+        if (ball.id === c.id && this.allowance(ball, a.slot)) {
+          this.applyCard(
+            ball,
+            a.slot,
+            a.target,
+            a.element,
+            { ...a, pileBonus: order * 2 },
+            ctx,
+          );
+          order++;
+        }
+    } else {
+      this.applyCard(c, a.slot, a.target, a.element, a, ctx);
+      if (d.stack === "fusion" && slot.length > 1) {
+        const under = slot.at(-2),
+          u = cards[under.id];
+        if (
+          u.type === "Spell" &&
+          ["Water", "Earth"].includes(under.element) &&
+          this.allowance(under, a.slot)
+        ) {
+          this.applyCard(under, a.slot, a.target, under.element, a, ctx);
+          const e = b.enemies.find((x) => x.uid === a.target);
+          if (e && !ctx.blocked?.has(e.uid)) e.status.burn += 6;
+        }
+      }
+    }
+    this.log("Activated " + d.name + ".");
+    this.checkBattle();
+  }
+  checkBattle() {
+    const s = this.s,
+      b = s.battle;
+    if (s.mode !== "battle") return;
+    if (s.hp <= 0) {
+      this.finish(false, "Battle damage");
+      return;
+    }
+    if (b.enemies.every((e) => e.hp <= 0)) {
+      const encounter = s.stats.encounters.at(-1);
+      encounter.outcome = "victory";
+      encounter.turns = b.turn;
+      encounter.hpEnd = s.hp;
+      const original = b.enemies.filter((e) => e.entityUid);
+      if (original.some((e) => e.herald)) s.revealedArchon = s.archon;
+      const boss = original.some((e) => e.tier === "Archon"),
+        elite = original.some((e) => e.tier === "Eidolon"),
+        skittish = original.some((e) => e.movement === "Skittish");
+      this.gainGold(boss ? 120 : elite || skittish ? 45 : 18 * original.length);
+      s.field.entities = s.field.entities.filter(
+        (e) => !original.some((x) => x.entityUid === e.uid),
+      );
+      s.status = blankStatus();
+      s.mode = "reward";
+      s.reward = {
+        cards: boss
+          ? this.shuffle(this.pool("rare").map((c) => c.id)).slice(0, 3)
+          : this.offer(elite || skittish),
+        boss,
+        gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
+        setting: boss,
+      };
+      delete s.checkpoint;
+      this.log("Victory. Choose a card or skip.");
+    }
+  }
+  finish(win, cause = "") {
+    const s = this.s;
+    if (s.mode === "result") return;
+    s.mode = "result";
+    s.outcome = win ? "win" : "loss";
+    s.cause = cause;
+    s.hp = Math.max(0, s.hp);
+    s.status = blankStatus();
+    delete s.checkpoint;
+    const encounter = s.stats.encounters.at(-1);
+    if (encounter?.outcome === "in progress") {
+      encounter.outcome = "loss";
+      encounter.hpEnd = s.hp;
+      encounter.turns = s.battle?.turn;
+    }
+    this.log(win ? "Stratum 1 Complete." : "You Died: " + cause);
+  }
+  openTavern() {
+    this.s.mode = "tavern";
+    this.s.shop = {
+      stock: [
+        ...this.offer(true).map((id) => "card:" + id),
+        ...this.shuffle(
+          Object.keys(items).filter((id) => !items[id].cursed),
+        ).slice(0, 6),
+      ],
+      healer: this.rand() < 0.75,
+      healerPrice: this.pick([35, 50, 80]),
+      healUsed: false,
+    };
+  }
+  equipChoices(add) {
+    const s = this.s;
+    for (const item of s.inventory) {
+      const d = items[item.id];
+      if (d.slot === "gem") continue;
+      for (const slot of Object.keys(s.equipment).filter((k) =>
+        k.startsWith(d.slot),
+      )) {
+        const worn = this.getItem(s.equipment[slot]);
+        if (s.equipment[slot] === item.uid || (worn && items[worn.id].cursed))
+          continue;
+        add(
+          "equip",
+          `Equip ${d.name} · ${slot}`,
+          { item: item.uid, slot },
+          { gear: d.effect },
+        );
+      }
+    }
+  }
+  legal() {
+    const s = this.s,
+      b = s.battle,
+      actions = [];
+    const add = (type, label, p = {}, effects = {}, costs = {}) => {
+      const a = { type, ...p, label, effects, costs };
+      a.key = JSON.stringify([type, p]);
+      actions.push(a);
+    };
+    if (s.mode === "result") return [];
+    if (s.pendingArmor) {
+      for (const old of s.inventory.filter(
+        (x) => items[x.id].slot === "torso" && !items[x.id].cursed,
+      ))
+        add(
+          "replaceArmor",
+          "Replace " + items[old.id].name,
+          { old: old.uid },
+          { gear: items[s.pendingArmor].effect },
+        );
+      add("declineArmor", "Leave " + items[s.pendingArmor].name);
+      return actions;
+    }
+    if (s.mode === "class") {
+      add("chooseClass", "Druid · Growth and pattern", {}, { progress: 1 });
+      return actions;
+    }
+    if (s.mode === "gem") {
+      for (const slot of ["wrist1", "finger1"])
+        add(
+          "startGem",
+          `Socket ${items[s.startGem].name} into ${slot === "wrist1" ? "Bracelet" : "Ring"}`,
+          { slot },
+          {
+            defense: slot === "wrist1" ? 3 : 0,
+            damage: slot === "finger1" ? 1 : 0,
+          },
+        );
+      return actions;
+    }
+    if (s.mode === "intro") {
+      add("begin", "Enter the Ashen Weald", {}, { progress: 1 });
+      return actions;
+    }
+    if (s.mode === "field") {
+      if (s.field.moves > 0)
+        for (let dy = -1; dy <= 1; dy++)
+          for (let dx = -1; dx <= 1; dx++)
+            if (
+              (dx || dy) &&
+              s.field.x + dx >= 0 &&
+              s.field.x + dx <= 10 &&
+              s.field.y + dy >= 0 &&
+              s.field.y + dy <= 10
+            ) {
+              const x = s.field.x + dx,
+                y = s.field.y + dy,
+                there = s.field.entities.filter((e) => e.x === x && e.y === y);
+              add(
+                "move",
+                `Move to ${x + 1}, ${y + 1}`,
+                { x, y },
+                {
+                  movement: 1,
+                  occupants: there.map((e) =>
+                    e.enemy ? enemies[e.enemy].tier : e.type,
+                  ),
+                },
+              );
+            }
+      add("wait", "End movement", {}, { progress: 1 });
+      this.equipChoices(add);
+      return actions;
+    }
+    if (s.mode === "item") {
+      s.itemOffer.forEach((id, index) =>
+        add(
+          "takeItem",
+          id.startsWith("card:")
+            ? "Take " + cards[id.slice(5)].name
+            : "Take " + items[id].name,
+          { index },
+          { item: id },
+        ),
+      );
+      return actions;
+    }
+    if (s.mode === "event") {
+      const event = events.find((x) => x.id === s.event);
+      event.choices.forEach((c, index) => {
+        if (
+          (c.cost || 0) > s.gold ||
+          (c.tradeWrist &&
+            !this.equipped().some(
+              (x) => x.slot.startsWith("wrist") && !x.definition.cursed,
+            ))
+        )
+          return;
+        add("eventChoice", c.label, { index }, { ...c }, { gold: c.cost || 0 });
+      });
+      return actions;
+    }
+    if (s.mode === "reward") {
+      if (s.reward.cards) {
+        for (const id of s.reward.cards)
+          add("rewardCard", "Take " + cards[id].name, { id }, { card: id });
+        add("skipReward", "Skip card");
+      } else if (s.reward.gem) {
+        for (const id of [
+          "ruby",
+          "emerald",
+          "topaz",
+          "sapphire",
+          "focusGem",
+          "channelGem",
+          "insightGem",
+        ])
+          add(
+            "rewardGem",
+            "Take " + items[id].name,
+            { id },
+            { gear: items[id].effect },
+          );
+      } else if (s.reward.setting) {
+        for (const id of ["silver", "channelRing", "focusRing", "necklace"])
+          add(
+            "rewardSetting",
+            "Take " + items[id].name,
+            { id },
+            { gear: items[id].effect },
+          );
+      } else
+        add(
+          "continueReward",
+          s.reward.boss ? "Complete Stratum 1" : "Return to the Field",
+          {},
+          { progress: 1 },
+        );
+      return actions;
+    }
+    if (s.mode === "tavern") {
+      const shop = s.shop;
+      add("leave", "Leave the Lantern Rest", {}, { progress: 1 });
+      if (s.gold >= 20 && !shop.healUsed && s.hp < s.maxHp)
+        add(
+          "heal",
+          "Rest · heal 20 HP · 20 Gold",
+          {},
+          { heal: Math.min(20, s.maxHp - s.hp) },
+          { gold: 20 },
+        );
+      if (s.gold >= 15 && !s.revealedArchon)
+        add(
+          "gossip",
+          "Gossip · reveal the Archon · 15 Gold",
+          {},
+          { information: 1 },
+          { gold: 15 },
+        );
+      for (let index = 0; index < shop.stock.length; index++) {
+        const id = shop.stock[index],
+          d = id.startsWith("card:") ? cards[id.slice(5)] : items[id],
+          price = d.worth || { common: 30, rare: 65, legendary: 120 }[d.rarity];
+        if (s.gold >= price)
+          add(
+            "buy",
+            `Buy ${d.name} · ${price} Gold`,
+            { index, price },
+            { item: id },
+            { gold: price },
+          );
+      }
+      this.equipChoices(add);
+      for (const inst of s.inventory) {
+        const d = items[inst.id];
+        if (!s.inventory.some((x) => x.gem === inst.uid)) {
+          const value = Math.floor(d.worth / 2);
+          if (!d.cursed || s.gold >= value)
+            add(
+              "sell",
+              `${d.cursed ? "Remove" : "Sell"} ${d.name} · ${d.cursed ? "-" : "+"}${value} Gold`,
+              { uid: inst.uid, value },
+              { sale: value, cursed: !!d.cursed },
+            );
+        }
+        if (d.socket) {
+          if (inst.gem)
+            add("unsocket", "Unsocket " + d.name, { uid: inst.uid });
+          for (const gem of s.inventory.filter(
+            (x) =>
+              items[x.id].slot === "gem" &&
+              !s.inventory.some((i) => i.gem === x.uid),
+          ))
+            if (!d.forbid?.includes(gem.id))
+              add(
+                "socket",
+                `Socket ${items[gem.id].name} into ${d.name}`,
+                { uid: inst.uid, gem: gem.uid },
+                { gear: items[gem.id].effect },
+              );
+        }
+      }
+      for (const c of s.deck) {
+        const d = cards[c.id],
+          up = d.upgrade;
+        if (s.gold >= 40 && d.type !== "Hex")
+          add(
+            "remove",
+            `Remove ${d.name} · 40 Gold`,
+            { uid: c.uid },
+            { thin: 1 },
+            { gold: 40 },
+          );
+        if (d.type === "Hex" && shop.healer && s.gold >= shop.healerPrice)
+          add(
+            "removeHex",
+            `Healer: remove ${d.name} · ${shop.healerPrice} Gold`,
+            { uid: c.uid },
+            { cleanse: true },
+            { gold: shop.healerPrice },
+          );
+        if (
+          up &&
+          !c.upgrade &&
+          s.gold >= (up.gold || 0) &&
+          s.hp > (up.hp || 0) &&
+          (!up.element || this.equipped().some((e) => e.element === up.element))
+        ) {
+          if (up.sacrifice) {
+            for (const other of s.deck.filter(
+              (x) => x.uid !== c.uid && cards[x.id].rarity === d.rarity,
+            ))
+              add(
+                "upgrade",
+                `Upgrade ${d.name} · sacrifice ${cards[other.id].name}`,
+                { uid: c.uid, sacrifice: other.uid },
+                { upgrade: 1 },
+              );
+          } else
+            add(
+              "upgrade",
+              `Upgrade ${d.name} · ${up.gold ? up.gold + " Gold" : up.hp + " HP"}`,
+              { uid: c.uid },
+              { upgrade: 1 },
+              { gold: up.gold || 0, hp: up.hp || 0 },
+            );
+        }
+      }
+      return actions;
+    }
+    if (s.mode === "battle") {
+      const h = b.reaction;
+      if (h) {
+        if (h.stage === "shield")
+          for (const p of b.shields.filter(
+            (p) => p.block > 0 && top(b.grid[p.slot])?.uid === p.owner,
+          ))
+            add(
+              "block",
+              `${p.element} Shield · ${p.block} block`,
+              { uid: p.uid },
+              { block: p.block, element: p.element },
+            );
+        if (h.stage === "ally") {
+          for (const x of this.allies().filter(
+            (x) => !h.intercepted.includes(x.c.uid),
+          ))
+            add(
+              "intercept",
+              `${cards[x.c.id].name} intercepts · ${x.c.hp} HP`,
+              { slot: x.i },
+              {
+                allyHp: x.c.hp,
+                element: x.c.element,
+                swallow: !!cards[x.c.id].swallow,
+              },
+            );
+          add(
+            "takeHit",
+            "Let it reach your equipment",
+            {},
+            { takeDamage: h.damage },
+          );
+        }
+        if (h.stage === "bracelet")
+          for (const p of b.bracelets.filter((x) => x.block > 0))
+            add(
+              "bracelet",
+              `${p.name} · ${p.element} · ${p.block} block`,
+              { uid: p.uid },
+              { block: p.block, element: p.element },
+            );
+        return actions;
+      }
+      if (b.phase === "place") {
+        for (const c of b.hand) {
+          const d = cards[c.id],
+            cost = d.focus + (b.milky ? 1 : 0);
+          if (d.unplaceable || cost > b.focus) continue;
+          for (let i = 0; i < 20; i++)
+            if (
+              this.canStack(c, b.grid[i]) &&
+              (d.type !== "Hex" ||
+                d.condition !== "isolated" ||
+                this.neighbors(i).length === 0)
+            )
+              add(
+                "place",
+                `Place ${d.name} · slot ${i + 1}`,
+                { uid: c.uid, slot: i },
+                {
+                  card: c.id,
+                  neighbors: this.neighbors(i).length,
+                  level: b.grid[i].length + 1,
+                },
+                { focus: cost },
+              );
+        }
+        for (let i = 0; i < 20; i++) {
+          const cost = this.recallCost(b.grid[i]);
+          if (cost != null && cost <= b.focus)
+            add(
+              "recall",
+              `Recall slot ${i + 1} · ${cost} Focus`,
+              { slot: i },
+              { spent: this.allowance(top(b.grid[i]), i) === 0 },
+              { focus: cost },
+            );
+        }
+        add("activatePhase", "Begin activation", {}, { progress: 1 });
+      }
+      if (b.phase === "activate") {
+        for (let i = 0; i < 20; i++) {
+          const c = top(b.grid[i]);
+          if (!c) continue;
+          const d = cards[c.id],
+            f = d.effects;
+          if (
+            d.channel > b.channel ||
+            !this.allowance(c, i) ||
+            c.freeze >= b.turn ||
+            c.zeroWard ||
+            !this.condition(c, i)
+          )
+            continue;
+          let els = d.attune
+            ? [
+                ...new Set(
+                  this.neighbors(i)
+                    .map((j) => top(b.grid[j]).element)
+                    .filter((x) => x !== "Arcane"),
+                ),
+              ]
+            : [c.element];
+          if (!els.length) els = ["Arcane"];
+          const targets =
+            f.all ||
+            f.randomDamage ||
+            d.stack === "pile" ||
+            !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode)
+              ? [null]
+              : b.enemies.filter((e) => e.hp > 0).map((e) => e.uid);
+          let extras = [{}];
+          if (f.transmute)
+            extras = b.grid.flatMap((slot, j) =>
+              top(slot)
+                ? ELEMENTS.filter((el) => el !== top(slot).element).map(
+                    (newElement) => ({ cardTarget: j, newElement }),
+                  )
+                : [],
+            );
+          if (f.shift)
+            extras = b.grid.flatMap((slot, j) =>
+              slot.length && !slot.some((x) => x.lock)
+                ? b.grid.flatMap((dest, k) =>
+                    !dest.length ? [{ cardTarget: j, destination: k }] : [],
+                  )
+                : [],
+            );
+          if (f.allyHeal)
+            extras = this.neighbors(i)
+              .filter((j) => cards[top(b.grid[j])?.id]?.type === "Ally")
+              .map((cardTarget) => ({ cardTarget }));
+          for (const element of els)
+            for (const target of targets)
+              for (const ex of extras)
+                add(
+                  "activate",
+                  `${d.name} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  { slot: i, target, element, ...ex },
+                  {
+                    ...f,
+                    damage: this.cardPower(c, i),
+                    card: c.id,
+                    charge: d.charge ? d.charge - c.charge : 0,
+                  },
+                  { channel: d.channel },
+                );
+        }
+        add("endTurn", "End turn", {}, { progress: 1 });
+      }
+      return actions;
+    }
+    throw Error("No decision defined for " + s.mode);
+  }
+  act(action) {
+    const a =
+      typeof action === "string"
+        ? this.legal().find((x) => x.key === action)
+        : this.legal().find((x) => x.key === action.key);
+    if (!a) throw Error("Illegal action");
+    const s = this.s,
+      b = s.battle;
+    s.steps++;
+    s.history.push(a.key);
+    switch (a.type) {
+      case "chooseClass":
+        s.mode = "gem";
+        break;
+      case "startGem":
+        this.getItem(s.equipment[a.slot]).gem = s.inventory.find(
+          (x) => x.id === s.startGem,
+        ).uid;
+        s.mode = "intro";
+        break;
+      case "begin":
+        this.beginRound();
+        break;
+      case "move":
+        s.field.x = a.x;
+        s.field.y = a.y;
+        s.field.moves--;
+        if (s.field.entities.some((e) => e.x === a.x && e.y === a.y))
+          s.field.moves = 0;
+        this.resolveTile();
+        break;
+      case "wait":
+        this.endMovement();
+        break;
+      case "equip":
+        for (const k of Object.keys(s.equipment))
+          if (s.equipment[k] === a.item) s.equipment[k] = null;
+        s.equipment[a.slot] = a.item;
+        break;
+      case "takeItem": {
+        const id = s.itemOffer[a.index];
+        if (id.startsWith("card:")) this.addCard(id.slice(5));
+        else this.addItem(id);
+        this.resolveTile();
+        break;
+      }
+      case "replaceArmor": {
+        const id = s.pendingArmor;
+        delete s.pendingArmor;
+        this.removeItem(a.old);
+        this.addItem(id);
+        if (s.pendingTile) {
+          delete s.pendingTile;
+          this.resolveTile();
+        }
+        break;
+      }
+      case "declineArmor":
+        delete s.pendingArmor;
+        if (s.pendingTile) {
+          delete s.pendingTile;
+          this.resolveTile();
+        }
+        break;
+      case "eventChoice": {
+        const c = events.find((e) => e.id === s.event).choices[a.index];
+        if (c.cost) this.spend(c.cost);
+        if (c.hp) {
+          s.hp += c.hp;
+          s.stats.damageTaken += Math.max(0, -c.hp);
+        }
+        if (c.heal) s.hp = Math.min(s.maxHp, s.hp + c.heal);
+        if (c.gold) this.gainGold(c.gold);
+        if (c.card) this.addCard(c.card);
+        if (c.hex) this.addCard(c.hex);
+        if (c.item) this.addItem(c.item);
+        if (c.quest) s.quest = true;
+        if (c.tradeWrist) {
+          const gear = this.equipped().find(
+            (x) => x.slot.startsWith("wrist") && !x.definition.cursed,
+          );
+          this.removeItem(gear.uid);
+        }
+        if (c.clean || c.cleanHex)
+          s.deck = s.deck.filter((x) => cards[x.id].type !== "Hex");
+        if (c.clean)
+          for (const x of [...s.inventory])
+            if (items[x.id].cursed) this.removeItem(x.uid);
+        if (s.hp <= 0)
+          this.finish(false, events.find((e) => e.id === s.event).name);
+        else if (c.fight)
+          this.beginBattle([{ uid: this.uid(), enemy: c.fight, restless: 0 }]);
+        else this.resolveTile();
+        break;
+      }
+      case "rewardCard":
+        this.addCard(a.id);
+        s.reward.cards = null;
+        break;
+      case "skipReward":
+        s.reward.cards = null;
+        break;
+      case "rewardGem":
+        this.addItem(a.id);
+        s.reward.gem = false;
+        break;
+      case "rewardSetting":
+        this.addItem(a.id);
+        s.reward.setting = false;
+        break;
+      case "continueReward":
+        if (s.reward.boss) this.finish(true);
+        else this.resolveTile();
+        break;
+      case "leave":
+        this.resolveTile();
+        break;
+      case "heal":
+        this.spend(20);
+        s.hp = Math.min(s.maxHp, s.hp + 20);
+        s.shop.healUsed = true;
+        break;
+      case "gossip":
+        this.spend(15);
+        s.revealedArchon = s.archon;
+        this.log("The traveler names " + enemies[s.archon].name + ".");
+        break;
+      case "buy": {
+        const id = s.shop.stock.splice(a.index, 1)[0];
+        this.spend(a.price);
+        s.stats.purchases.push(id);
+        if (id.startsWith("card:")) this.addCard(id.slice(5));
+        else this.addItem(id);
+        break;
+      }
+      case "sell": {
+        const item = this.getItem(a.uid);
+        if (items[item.id].cursed) this.spend(a.value);
+        else this.gainGold(a.value);
+        s.stats.sales.push(item.id);
+        this.removeItem(a.uid);
+        break;
+      }
+      case "socket":
+        this.getItem(a.uid).gem = a.gem;
+        break;
+      case "unsocket":
+        this.getItem(a.uid).gem = null;
+        break;
+      case "remove":
+        this.spend(40);
+        s.deck = s.deck.filter((x) => x.uid !== a.uid);
+        break;
+      case "removeHex":
+        this.spend(s.shop.healerPrice);
+        s.deck = s.deck.filter((x) => x.uid !== a.uid);
+        break;
+      case "upgrade": {
+        const c = s.deck.find((x) => x.uid === a.uid),
+          u = cards[c.id].upgrade;
+        if (u.gold) this.spend(u.gold);
+        if (u.hp) {
+          s.hp -= u.hp;
+          s.stats.damageTaken += u.hp;
+        }
+        if (a.sacrifice) s.deck = s.deck.filter((x) => x.uid !== a.sacrifice);
+        c.upgrade = true;
+        break;
+      }
+      case "place": {
+        const c = b.hand.find((x) => x.uid === a.uid),
+          d = cards[c.id];
+        b.hand = b.hand.filter((x) => x.uid !== a.uid);
+        b.focus -= a.costs.focus;
+        b.milky = false;
+        const slot = b.grid[a.slot];
+        if (d.stack === "recall" && slot.length) {
+          for (let i = slot.length - 1; i >= 0; i--)
+            if (cards[slot[i].id].recall != null && !slot[i].lock)
+              b.discard.push(
+                ...slot
+                  .splice(i, 1)
+                  .map((x) => ({ uid: x.uid, id: x.id, upgrade: x.upgrade })),
+              );
+        }
+        const inst = this.instance(c);
+        slot.push(inst);
+        if (
+          d.bondHP &&
+          this.neighbors(a.slot).some((j) => top(b.grid[j]).element === "Earth")
+        )
+          inst.hp += d.bondHP;
+        if (d.onPlaceCharge)
+          inst.charge += this.neighbors(a.slot).filter(
+            (j) => top(b.grid[j]).element === "Fire",
+          ).length;
+        if (d.onPlaceFocus) b.focus += d.onPlaceFocus;
+        break;
+      }
+      case "recall":
+        b.focus -= a.costs.focus;
+        b.discard.push(
+          ...b.grid[a.slot].map((c) => ({
+            uid: c.uid,
+            id: c.id,
+            upgrade: c.upgrade,
+          })),
+        );
+        b.grid[a.slot] = [];
+        break;
+      case "activatePhase":
+        b.discard.push(...b.hand);
+        b.hand = [];
+        b.phase = "activate";
+        break;
+      case "activate":
+        this.activate(a);
+        break;
+      case "endTurn":
+        this.endTurn();
+        break;
+      case "block":
+      case "bracelet": {
+        const p = (a.type === "block" ? b.shields : b.bracelets).find(
+          (x) => x.uid === a.uid,
+        );
+        const r = blockHit(
+          p.block,
+          p.element,
+          b.reaction.damage,
+          b.reaction.element,
+        );
+        p.block = r.block;
+        b.reaction.damage = r.remaining;
+        this.advanceHit();
+        this.pump();
+        break;
+      }
+      case "intercept":
+        this.intercept(a.slot);
+        this.pump();
+        break;
+      case "takeHit":
+        b.reaction.stage = "bracelet";
+        this.advanceHit();
+        this.pump();
+        break;
+    }
+    return this.observe();
+  }
+  removeItem(uid) {
+    const s = this.s;
+    for (const k of Object.keys(s.equipment))
+      if (s.equipment[k] === uid) s.equipment[k] = null;
+    for (const x of s.inventory) if (x.gem === uid) x.gem = null;
+    s.inventory = s.inventory.filter((x) => x.uid !== uid);
+  }
+  observe() {
+    const s = this.s;
+    const o = {
+      version: VERSION,
+      mode: s.mode,
+      classId: s.classId,
+      hp: s.hp,
+      maxHp: s.maxHp,
+      gold: s.gold,
+      deck: clone(s.deck),
+      inventory: clone(s.inventory),
+      equipment: clone(s.equipment),
+      bonuses: this.bonuses(),
+      status: clone(s.status),
+      field: clone(s.field),
+      log: s.log.slice(-30),
+      steps: s.steps,
+      stats: clone(s.stats),
+      startGem: s.startGem,
+      archon: s.revealedArchon ? enemies[s.revealedArchon].name : null,
+      pendingArmor: s.pendingArmor,
+    };
+    if (s.mode === "battle") {
+      o.battle = clone(s.battle);
+      delete o.battle.jobs;
+      o.battle.deck.sort((a, b) => a.id.localeCompare(b.id) || a.uid - b.uid);
+      o.battle.enemies = o.battle.enemies
+        .filter((e) => e.hp > 0)
+        .map((e) => ({ ...e, tell: this.tell(e) }));
+    }
+    if (s.mode === "event") o.event = events.find((e) => e.id === s.event);
+    if (s.mode === "tavern") o.shop = clone(s.shop);
+    if (s.mode === "item") o.itemOffer = clone(s.itemOffer);
+    if (s.mode === "reward") o.reward = clone(s.reward);
+    if (s.mode === "result") {
+      o.outcome = s.outcome;
+      o.cause = s.cause;
+      o.seed = s.seed;
+      o.history = clone(s.history);
+    }
+    return o;
+  }
+  save() {
+    return clone(
+      this.s.mode === "battle" && this.s.checkpoint
+        ? this.s.checkpoint
+        : this.s,
+    );
+  }
 }

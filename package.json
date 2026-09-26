@@ -1,1 +1,42 @@
-{"name":"astrata","version":"1.0.0","description":"A spatial spell-grid roguelike","author":"Jonathan","private":true,"type":"module","main":"desktop.cjs","scripts":{"start":"electron .","test":"node --test tests/*.test.mjs","batch":"node tools/batch.mjs","art":"node tools/art.mjs","package":"electron-builder --win dir"},"build":{"appId":"games.blackfractal.astrata","productName":"Astrata","directories":{"output":"release"},"files":["src/**/*","assets/**/*","index.html","desktop.cjs","preload.cjs","package.json"],"win":{"target":"dir","signAndEditExecutable":false}},"devDependencies":{"electron":"^44.4.5","electron-builder":"^26.15.3"}}
+{
+  "name": "astrata",
+  "version": "1.0.0",
+  "description": "A spatial spell-grid roguelike",
+  "author": "Jonathan",
+  "private": true,
+  "type": "module",
+  "main": "desktop.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.mjs",
+    "batch": "node tools/batch.mjs",
+    "art": "node tools/art.mjs",
+    "package": "node tools/package.mjs",
+    "test:gui": "node tools/gui-test.mjs",
+    "art:revise": "node tools/revise-art.mjs"
+  },
+  "build": {
+    "appId": "games.blackfractal.astrata",
+    "productName": "Astrata",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "index.html",
+      "desktop.cjs",
+      "preload.cjs",
+      "package.json"
+    ],
+    "win": {
+      "target": "dir",
+      "signAndEditExecutable": false
+    }
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "electron": "^44.4.5",
+    "prettier": "^3.9.9"
+  }
+}
