@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.5",
           "1.3.4",
           "1.3.3",
           "1.3.2",
@@ -579,6 +580,7 @@ export class Game {
     return {
       ...c,
       used: 0,
+      lastActivatedTurn: 0,
       charge: 0,
       hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       ward: d.ward || 0,
@@ -675,6 +677,15 @@ export class Game {
       ? 1
       : 0;
     return Math.max(0, d.limit + plus - c.used);
+  }
+  activationAvailable(c, i) {
+    return (
+      !!c &&
+      this.allowance(c, i) > 0 &&
+      !c.zeroWard &&
+      c.freeze < this.s.battle.turn &&
+      (cards[c.id].blink === true || c.lastActivatedTurn !== this.s.battle.turn)
+    );
   }
   recallCost(slot) {
     const d = cards[top(slot)?.id];
@@ -1231,7 +1242,8 @@ export class Game {
       d = cards[c.id],
       f = d.effects,
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
-    if (c.freeze >= b.turn || !this.allowance(c, i) || c.zeroWard) return;
+    if (!this.activationAvailable(c, i)) return;
+    c.lastActivatedTurn = b.turn;
     c.used++;
     if (d.charge) {
       c.charge++;
@@ -1353,13 +1365,14 @@ export class Game {
       slot = b.grid[a.slot],
       c = top(slot),
       d = cards[c.id];
+    if (!this.activationAvailable(c, a.slot)) return;
     this.present("activate", { slot: a.slot, name: d.name });
     b.channel -= d.channel;
     const ctx = {};
     if (d.stack === "pile") {
       let order = 0;
       for (const ball of [...slot].reverse())
-        if (ball.id === c.id && this.allowance(ball, a.slot)) {
+        if (ball.id === c.id && this.activationAvailable(ball, a.slot)) {
           this.applyCard(
             ball,
             a.slot,
@@ -1378,7 +1391,7 @@ export class Game {
         if (
           u.type === "Spell" &&
           ["Water", "Earth"].includes(under.element) &&
-          this.allowance(under, a.slot)
+          this.activationAvailable(under, a.slot)
         ) {
           this.applyCard(under, a.slot, a.target, under.element, a, ctx);
           const e = b.enemies.find((x) => x.uid === a.target);
@@ -1871,9 +1884,7 @@ export class Game {
             f = d.effects;
           if (
             d.channel > b.channel ||
-            !this.allowance(c, i) ||
-            c.freeze >= b.turn ||
-            c.zeroWard ||
+            !this.activationAvailable(c, i) ||
             !this.condition(c, i)
           )
             continue;

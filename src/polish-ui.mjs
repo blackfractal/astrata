@@ -74,6 +74,8 @@ function whyDisabled(ctx, c, i) {
   if (c.zeroWard) return "Ward depleted";
   if (!remaining(ctx, c, i)) return "Activation allowance exhausted";
   if (c.freeze >= b.turn) return "Frozen";
+  if (!d.blink && c.lastActivatedTurn === b.turn)
+    return "Already activated this turn";
   if (b.reaction) return "Resolve the incoming attack first";
   if (b.phase !== "activate") return "Available during activation";
   if (d.channel > b.channel)
@@ -156,7 +158,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${d.name}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[d.type === "Ally" ? "HP " + c.hp : null, d.type === "Ward" ? "Ward " + c.ward : null, c.charge ? "Charge " + c.charge : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
+    `<h2>${d.name}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[d.type === "Ally" ? "HP " + c.hp : null, d.type === "Ward" ? "Ward " + c.ward : null, c.charge ? "Charge " + c.charge : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
   );
   const context = ctx.modal.querySelector(".card-context");
   if (slot != null) {
@@ -715,7 +717,7 @@ export function enhance(ctx) {
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
         const nums = el.querySelector(".nums");
-        nums.innerHTML = `${d.type === "Ally" ? "♥ " + c.hp + " · " : d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
+        nums.innerHTML = `${d.type === "Ally" ? "♥ " + c.hp + " · " : d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${!d.blink && c.lastActivatedTurn === b.turn ? " · Used this turn" : ""}${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
         el.insertAdjacentHTML(
           "beforeend",
           `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">Activate · ${effect(c, i, ctx)}</button>`,

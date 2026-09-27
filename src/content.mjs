@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.5",
-  content: "1.1.4",
+  rules: "1.3.6",
+  content: "1.1.5",
   observation: 1,
   actions: 1,
 };
@@ -1431,7 +1431,10 @@ export const glossary = {
   Attune:
     "On activation choose an adjacent element. Existing Shield portions retain their elements.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
-  Channel: "Activation budget. Unspent Channel is lost.",
+  Channel:
+    "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
+  Blink:
+    "May activate repeatedly this turn, paying Channel each time and respecting total activation allowance.",
   Insight: "Cards revealed at the start of your turn.",
   Recall:
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",

@@ -1,3 +1,13 @@
+# Once-per-turn activation — rules 1.3.6, content 1.1.5
+
+Five sequential seeds 825183–825187: **3 wins / 2 losses**, unchanged weighted-druid-v1.5. Outcomes (HP / round): **win 51/20, win 7/19, loss 0/20, win 60/19, loss 0/19**. Losses occurred against Cinder Hart and Void-Colossus respectively. Full logs: `reports/activation-turn-evaluation/`. Every run ended normally; none stalled. The policy receives the restricted legal action set and needs no special-case bypass. No tuning was applied to force victories. Five runs are insufficient for a reliable win-rate estimate.
+
+The once-per-turn/Blink requirement is now implemented. Each card tracks current-turn use independently of its total allowance; unlimited cards, Charge, and covered Pile/Fusion activations follow the same default. No current card gained Blink; a temporary printed-Blink rules fixture verifies paid repeat activation and allowance/resource limits.
+
+All 78 rules tests pass. The packaged UI test verifies disabled activation despite surplus Channel and total uses, Used this turn, automatic forward-arrow prompting, popup details, next-turn availability, and permanent exhaustion after the final total use, with no renderer errors. See `reports/activation-turn-verification.json` and screenshot. Current verification is targeted graphical interaction plus five full headless runs, not a new full graphical playthrough. Older sections below retain their historical pending-rule descriptions and results.
+
+---
+
 # Druid starter and Insight — rules 1.3.5, content 1.1.4
 
 Five sequential seeds 825183–825187: **5 wins / 0 losses**, unchanged weighted-druid-v1.5. Final HP / round: **25/19, 23/19, 29/20, 49/20, 62/19**. Logs: `reports/druid-start-evaluation/`. The new 12-card deck (four Blasts/four Shields plus four other starters) and base Insight 4 change draw frequency, random consumption, and later routes. This small combined-change sample does not isolate a balance effect.

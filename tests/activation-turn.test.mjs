@@ -1,0 +1,112 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { Game } from "../src/engine.mjs";
+import { cards } from "../src/content.mjs";
+function setup(id = "blast") {
+  const g = new Game(10);
+  g.s.equipment = {};
+  g.s.inventory = [];
+  g.beginBattle([{ uid: g.uid(), enemy: "colossus", restless: 0 }]);
+  const b = g.s.battle,
+    c = g.instance(g.newCard(id));
+  b.grid[0] = [c];
+  b.phase = "activate";
+  b.channel = 4;
+  return { g, b, c };
+}
+function action(g, slot = 0) {
+  return g.legal().find((a) => a.type === "activate" && a.slot === slot);
+}
+test("ordinary cards reject repeated activation despite Channel and remaining total allowance", () => {
+  const { g, b, c } = setup();
+  const a = action(g);
+  g.act(a);
+  assert.equal(b.channel, 3);
+  assert.equal(g.allowance(c, 0), 1);
+  assert.equal(c.lastActivatedTurn, b.turn);
+  assert.equal(action(g), undefined);
+  const snapshot = structuredClone(g.s);
+  assert.throws(() => g.act(a), /Illegal action/);
+  assert.deepEqual(g.s, snapshot);
+  g.endTurn();
+  b.phase = "activate";
+  assert.ok(action(g));
+  assert.equal(c.used, 1);
+  g.act(action(g));
+  assert.equal(c.used, 2);
+  g.endTurn();
+  b.phase = "activate";
+  assert.equal(action(g), undefined);
+});
+test("unlimited Shield still activates only once per turn without Blink", () => {
+  const { g, b, c } = setup("shield");
+  g.act(action(g));
+  assert.equal(g.allowance(c, 0), Infinity);
+  assert.equal(action(g), undefined);
+  g.beginTurn();
+  b.phase = "activate";
+  assert.ok(action(g));
+  assert.equal(c.used, 1);
+});
+test("Blink permits paid repeats while respecting allowance and Channel", () => {
+  cards.testblink = {
+    ...cards.blast,
+    id: "testblink",
+    blink: true,
+    text: "Blink. Deal 5 damage.",
+  };
+  try {
+    const { g, b, c } = setup("testblink");
+    b.channel = 1;
+    g.act(action(g));
+    assert.equal(b.channel, 0);
+    assert.equal(action(g), undefined);
+    b.channel = 1;
+    assert.ok(action(g));
+    g.act(action(g));
+    assert.equal(c.used, 2);
+    assert.equal(b.channel, 0);
+    b.channel = 4;
+    assert.equal(action(g), undefined);
+  } finally {
+    delete cards.testblink;
+  }
+});
+test("stack-triggered cards each consume their own per-turn opportunity", () => {
+  const { g, b, c } = setup("plasma");
+  const lower = g.instance(g.newCard("plasma"));
+  b.grid[0].unshift(lower);
+  g.act(action(g));
+  assert.equal(c.used, 1);
+  assert.equal(lower.used, 1);
+  const extra = g.instance(g.newCard("plasma"));
+  b.grid[0].push(extra);
+  const before = b.enemies[0].hp;
+  g.act(action(g));
+  assert.equal(c.used, 1);
+  assert.equal(lower.used, 1);
+  assert.equal(extra.used, 1);
+  assert.equal(before - b.enemies[0].hp, 10);
+});
+test("moving a used card and restoring its exact state cannot refresh the turn opportunity", () => {
+  const { g, b, c } = setup();
+  g.act(action(g));
+  b.grid[4] = b.grid[0];
+  b.grid[0] = [];
+  assert.equal(action(g, 4), undefined);
+  const restored = new Game(0, structuredClone(g.s));
+  assert.equal(action(restored, 4), undefined);
+  assert.equal(restored.s.battle.grid[4][0].used, 1);
+});
+test("Charge-building activation also consumes the turn opportunity", () => {
+  const { g, b, c } = setup("kiln");
+  g.act(action(g));
+  assert.equal(c.charge, 1);
+  assert.equal(c.used, 1);
+  assert.equal(action(g), undefined);
+  g.beginTurn();
+  b.phase = "activate";
+  g.act(action(g));
+  assert.equal(c.charge, 2);
+  assert.equal(c.used, 2);
+});

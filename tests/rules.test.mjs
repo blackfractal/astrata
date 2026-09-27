@@ -307,6 +307,8 @@ test("Fusion spends the covered Spell allowance; top spent never exposes it", ()
   act(g, "activate");
   assert.equal(under.used, 1);
   assert.equal(g.s.battle.enemies[0].status.burn, 8);
+  assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 0));
+  g.s.battle.turn++;
   act(g, "activate");
   assert.equal(heat.used, 2);
   assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 0));
