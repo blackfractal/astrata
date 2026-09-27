@@ -2025,3 +2025,64 @@ header {
     padding: 4px;
   }
 }
+
+.queue {
+  flex-wrap: wrap;
+}
+.queue .spawn-pair {
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+  border: 1px solid #59634c;
+  background: #182a21;
+}
+.queue .spawn-pair > small {
+  padding: 3px 8px;
+  color: #a9b49b;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.queue .spawn-pair > span {
+  border: 0;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.queue .spawn-pair:first-child {
+  border-color: #d6bb7c;
+  box-shadow: inset 0 2px #d6bb7c;
+}
+.tile .count {
+  min-width: 22px;
+  background: #ecd193;
+  color: #142019;
+  font-weight: bold;
+  border: 1px solid #fff0c9;
+  z-index: 4;
+}
+
+/* Keep all four pair previews visible without compressing their labels. */
+.field-wrap {
+  width: min(100%, calc(100vh - 295px));
+}
+.field-wrap > .row.spread {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+.field-wrap .queue {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.field-wrap .spawn-pair {
+  min-width: 0;
+}
+.field-wrap .spawn-pair > span {
+  font-size: 11px;
+  padding: 5px;
+}
+.field-wrap > .row.spread > button {
+  justify-self: end;
+  padding: 7px 14px;
+}

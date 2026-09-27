@@ -114,20 +114,23 @@ test("ordinary card removal is once per Tavern and resets at the next Tavern", (
   assert.equal(g.s.shop.removeUsed, false);
   assert.ok(g.legal().some((a) => a.type === "remove"));
 });
-test("each new Stratum schedules exactly one Tavern at 8 and an Archon at 16", () => {
+test("each Stratum previews four stable pairs, with one Tavern in pair 8 and Archon in pair 16", () => {
   for (let seed = 1; seed <= 100; seed++) {
     const g = new Game(seed),
       sequence = [];
-    for (const spawned of [0, 4, 8, 12]) {
+    for (let spawned = 0; spawned < 32; spawned += 2) {
       g.s.field.spawned = spawned;
+      const before = [...g.s.field.queue];
       g.batch();
-      sequence.push(...g.s.field.queue);
+      assert.deepEqual(g.s.field.queue.slice(0, before.length), before);
+      assert.equal(g.s.field.queue.length, Math.min(8, 32 - spawned));
+      sequence.push(...g.s.field.queue.splice(0, 2));
     }
-    assert.equal(sequence[7], "Tavern");
-    assert.equal(sequence[15], "Archon");
+    assert.equal(sequence[15], "Tavern");
+    assert.equal(sequence[31], "Archon");
     assert.equal(sequence.filter((x) => x === "Tavern").length, 1);
     assert.equal(sequence.filter((x) => x === "Archon").length, 1);
-    assert.ok(!sequence.slice(0, 4).includes("Eidolon"));
+    assert.ok(!sequence.slice(0, 8).includes("Eidolon"));
   }
 });
 test("two-stage physical dice exactly realize 40:10:15:10:20 relative weights", () => {

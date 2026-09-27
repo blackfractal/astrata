@@ -1,3 +1,25 @@
+# Paired spawns and 2 Channel — rules 1.3.0
+
+Five complete headless runs used weighted-druid-v1.3, content 1.1.0, and unchanged default numeric weights. **5 wins / 0 losses.** These are sequential seeds selected before running, not a selection of winning seeds. Raw actions, reasons, and encounter results are in `reports/pairs-evaluation/`.
+
+| Seed | Outcome / final HP | Final round | Observation from the run |
+|---|---|---|---|
+| 825183 | Win / 44 | 19 | Survived Ashling + Dervish, then Shard-Walker + Pale Weaver. Sapling was activated 13 times. Hart took 5 turns. |
+| 825184 | Win / 47 | 20 | Three Bats fought together in round 11: 2 turns and 5 HP lost. Colossus took 5 turns. |
+| 825185 | Win / 35 | 19 | Two Ink Leeches plus Fire Wolf cost 28 HP over 5 turns. Recovered to 65 before the 7-turn Hart fight. |
+| 825186 | Win / 56 | 20 | Two Ashlings plus Fire Wolf cost 8 HP over 4 turns. Finished Hart with more HP than it entered, indicating meaningful sustain. |
+| 825187 | Win / 43 | 19 | Ink Leech + Wolf cost 3 HP; Colossus took 6 turns. Blast remained the main activation, used 15 times. |
+
+The 100-run robustness set, seeds 971010–971109, completed with **80 wins / 20 losses**, no stalled or illegal-action run. 92 runs faced a multi-enemy battle; 62 faced one of the authored numbered groups. Largest observed battle: 5 enemies. Fourteen losses involved an Archon; six ended in non-Archon encounters, including a two-Bat group, a four-enemy mix, and stacked status-heavy enemies. Detailed logs are in `reports/pairs-robustness/`.
+
+Interpretation: this combination is substantially more successful for the current bot than the preceding 49/100 sample. Extra Channel allows more offense or defense while extra encounters also offer more growth and recovery opportunities. Those are plausible explanations, not isolated causal results: spawn structure, grouping, policy threat scoring, and random-number consumption also changed. Equal seeds do not create matched encounters across these versions. A controlled experiment would vary those changes separately. No additional damage, HP, reward, or spawn-weight nerfs were made to force a target win rate.
+
+Grouped targets work mechanically and the easiest setting remains beatable, but concentrated multi-enemy status damage deserves further human playtesting. No enemy cap was silently introduced. The bot reads visible group sizes when evaluating travel risk and handles all individual battle targets through the normal legal-action API.
+
+Packaged verification: the Field displays four ordered pairs and group counts, without page scrolling at 1280×800. A real seeded three-Bat encounter shows three independently inspectable targets and 2 Channel. The full graphical run at seed 825184 reached the win screen at 47 HP, round 20, with no renderer errors; results/history and finished-save deletion passed. `reports/pairs-playthrough.json` records the 88-second run, started from an untouched initial class-selection state and played through ordinary controls plus Watch AI. All 54 rules tests pass. Earlier reports below retain their original versions and results.
+
+---
+
 # Optional pickup verification — rules 1.2.1
 
 Five complete headless runs used weighted-druid-v1.2 and seeds 825183–825187. Results: **2 wins / 3 losses**, no stalled or illegal-action run. Final HP: 0, 49, 0, 39, 0 respectively. Raw actions, reasons and encounter summaries are in `reports/item-pickup-evaluation/`.

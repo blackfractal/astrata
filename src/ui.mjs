@@ -235,7 +235,7 @@ function render(frame = null) {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">65 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Ashen Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 16 spawns</small></div></div><div class="field-wrap"><div class="field">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Ashen Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16</small></div></div><div class="field-wrap"><div class="field">${Array.from(
       { length: 121 },
       (_, i) => {
         const x = i % 11,
@@ -245,11 +245,18 @@ function render(frame = null) {
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
           e = foe || entities[0];
-        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : e ? `<span class="glyph">${{ Gold: "◈", Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? '<span class="player-mark">✦</span>' : ""}${entities.length > 1 ? `<span class="count">${entities.length}</span>` : ""}</button>`;
+        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : e ? `<span class="glyph">${{ Gold: "◈", Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? '<span class="player-mark">✦</span>' : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
       },
-    ).join(
-      "",
-    )}</div><div class="row spread"><div class="queue">${f.queue.map((t) => `<span title="Upcoming spawn type">${t}</span>`).join("") || "<small>The Archon has arrived.</small>"}</div>${actions
+    ).join("")}</div><div class="row spread"><div class="queue">${
+      Array.from(
+        { length: Math.ceil(f.queue.length / 2) },
+        (_, i) =>
+          `<div class="spawn-pair" title="Upcoming pair ${f.spawned / 2 + i + 1}"><small>Pair ${f.spawned / 2 + i + 1}</small><span>${f.queue
+            .slice(i * 2, i * 2 + 2)
+            .map(esc)
+            .join(" + ")}</span></div>`,
+      ).join("") || "<small>The Archon has arrived.</small>"
+    }</div>${actions
       .filter((a) => a.type === "wait")
       .map((a) => actionButton(a, "primary"))
       .join(
@@ -568,7 +575,12 @@ function bind(root = app) {
   root.querySelectorAll("[data-enemy]").forEach(
     (el) =>
       (el.onclick = () => {
-        const e = enemies[el.dataset.enemy];
+        const e =
+          game
+            .observe()
+            .battle?.enemies.find(
+              (enemy) => enemy.uid === Number(el.dataset.enemyUid),
+            ) || enemies[el.dataset.enemy];
         dialog(
           "<h2>" +
             e.name +
@@ -661,7 +673,7 @@ function bind(root = app) {
           );
         if (entities.length)
           dialog(
-            `<h2>Across the Weald</h2>${entities.map((e) => (e.enemy ? `<div class="row" style="margin:20px 0">${img("enemy-" + e.enemy)}<div><h3>${enemies[e.enemy].name}</h3><p>${enemies[e.enemy].movement} · ${enemies[e.enemy].schedule || ""} · Restless ${e.restless}</p><p>${enemies[e.enemy].signature}</p><small>${enemies[e.enemy].counter}</small></div></div>` : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`)).join("")}`,
+            `<h2>Across the Weald</h2>${entities.map((e) => (e.enemy ? `<div class="row" style="margin:20px 0">${img("enemy-" + e.enemy)}<div><h3>${enemies[e.enemy].name}${(e.count || 1) > 1 ? " ×" + e.count : ""}</h3><p>${enemies[e.enemy].movement} · ${enemies[e.enemy].schedule || ""} · Restless ${e.restless}</p><p>${enemies[e.enemy].signature}</p><small>${enemies[e.enemy].counter}</small></div></div>` : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`)).join("")}`,
           );
       }),
   );

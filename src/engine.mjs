@@ -55,7 +55,7 @@ export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
       if (
-        ![VERSION.rules, "1.2.0", "1.1.0", "1.0.0"].includes(
+        ![VERSION.rules, "1.2.1", "1.2.0", "1.1.0", "1.0.0"].includes(
           saved.version?.rules,
         )
       )
@@ -63,6 +63,7 @@ export class Game {
       this.s = clone(saved);
       this.s.version = VERSION;
       this.normalizeRewards();
+      this.normalizeSpawns();
       if (this.s.mode === "battle") this.s.checkpoint = clone(this.s);
       return;
     }
@@ -90,6 +91,7 @@ export class Game {
       field: {
         round: 0,
         spawned: 0,
+        spawnWidth: 2,
         queue: [],
         entities: [],
         x: 5,
@@ -252,7 +254,7 @@ export class Game {
     const sum = {
       insight: 3,
       focus: 1,
-      channel: 1,
+      channel: 2,
       movement: 2,
       damage: 0,
       shield: 0,
@@ -330,16 +332,35 @@ export class Game {
       return 1 + Math.floor(this.rand() * 10) <= 6 ? "Gold" : "Item";
     return "Event";
   }
+  normalizeSpawns() {
+    const f = this.s.field;
+    if (f.spawnWidth === 2) return;
+    // Retain each already revealed legacy entry as the second member of its pair.
+    f.spawned *= 2;
+    f.queue = f.queue.flatMap((type, i) => [
+      this.rollSpawn(f.spawned / 2 + i < 4),
+      type,
+    ]);
+    f.spawnWidth = 2;
+    if (this.s.mode === "battle") this.s.battle.channel++;
+    this.batch();
+  }
   batch() {
     const f = this.s.field;
-    f.queue = Array.from({ length: Math.min(4, 16 - f.spawned) }, (_, i) => {
-      const number = f.spawned + i + 1;
-      if (number === 8) return "Tavern";
-      if (number === 16) return "Archon";
-      return this.rollSpawn(number <= 4);
-    });
-    if (f.spawned) for (const e of f.entities) if (e.enemy) e.restless++;
-    this.log("Spawn queue: " + f.queue.join(" · "));
+    while (f.queue.length < Math.min(8, 32 - f.spawned)) {
+      const number = f.spawned + f.queue.length + 1;
+      f.queue.push(
+        number === 16
+          ? "Tavern"
+          : number === 32
+            ? "Archon"
+            : this.rollSpawn(number <= 8),
+      );
+    }
+  }
+  groupSize(id, round) {
+    if (!enemies[id].grouped || round <= 4) return 1;
+    return (round <= 10 ? 1 : 2) + Math.floor(this.rand() * 2);
   }
   beginRound() {
     if (this.s.mode === "result") return;
@@ -350,38 +371,44 @@ export class Game {
     for (const e of f.entities) if (e.type === "Gold") e.value -= 5;
     f.entities = f.entities.filter((e) => e.type !== "Gold" || e.value > 0);
     this.s.mode = "field";
-    if (f.spawned < 16) {
-      if (!f.queue.length) this.batch();
-      const type = f.queue.shift();
-      f.spawned++;
-      const die = () => Math.floor(this.rand() * 6);
-      const e = {
-        uid: this.uid(),
-        type,
-        x: type === "Archon" ? 5 : die() + die(),
-        y: type === "Archon" ? 5 : die() + die(),
-        restless: 0,
-        born: f.round,
-      };
-      if (["Mote", "Eidolon", "Archon"].includes(type)) {
-        if (type === "Archon") e.enemy = this.s.archon;
-        else {
-          let d = this.s.enemyDecks[type];
-          if (!d.length)
-            this.s.enemyDecks[type] = d = this.shuffle(
-              Object.values(enemies)
-                .filter((x) => x.tier === type && !x.summonOnly)
-                .map((x) => x.id),
-            );
-          e.enemy = d.pop();
+    if (f.spawned < 32) {
+      this.batch();
+      // Place the complete pair before resolving collisions with the player.
+      for (const type of f.queue.splice(0, 2)) {
+        f.spawned++;
+        const die = () => Math.floor(this.rand() * 6);
+        const e = {
+          uid: this.uid(),
+          type,
+          x: type === "Archon" ? 5 : die() + die(),
+          y: type === "Archon" ? 5 : die() + die(),
+          restless: 0,
+          born: f.round,
+        };
+        if (["Mote", "Eidolon", "Archon"].includes(type)) {
+          if (type === "Archon") e.enemy = this.s.archon;
+          else {
+            let d = this.s.enemyDecks[type];
+            if (!d.length)
+              this.s.enemyDecks[type] = d = this.shuffle(
+                Object.values(enemies)
+                  .filter((x) => x.tier === type && !x.summonOnly)
+                  .map((x) => x.id),
+              );
+            e.enemy = d.pop();
+          }
+          e.count = this.groupSize(e.enemy, f.round);
         }
+        if (type === "Gold") e.value = Math.max(10, (die() + die()) * 10);
+        f.entities.push(e);
+        this.log(
+          `${e.enemy ? enemies[e.enemy].name + (e.count > 1 ? " ×" + e.count : "") : type} appears at ${e.x + 1}, ${e.y + 1}.`,
+        );
       }
-      if (type === "Gold") e.value = Math.max(10, (die() + die()) * 10);
-      f.entities.push(e);
-      this.log(
-        `${e.enemy ? enemies[e.enemy].name : type} appears at ${e.x + 1}, ${e.y + 1}.`,
-      );
-      if (!f.queue.length && f.spawned < 16) this.batch();
+      // Four-pair blocks retain the old four-round Restlessness cadence.
+      if (f.spawned < 32 && f.spawned % 8 === 0)
+        for (const e of f.entities) if (e.enemy) e.restless++;
+      this.batch();
     }
     this.resolveTile();
   }
@@ -556,18 +583,23 @@ export class Game {
       hand: [],
       discard: [],
       destroyed: [],
-      enemies: entities.map((e) => ({
-        ...e,
-        ...enemies[e.enemy],
-        entityUid: e.uid,
-        uid: e.uid,
-        hp: enemies[e.enemy].hp,
-        maxHp: enemies[e.enemy].hp,
-        cycle: 0,
-        buff: 0,
-        guard: 0,
-        status: blankStatus(),
-      })),
+      enemies: entities.flatMap((e) =>
+        Array.from({ length: e.count || 1 }, (_, member) => ({
+          ...e,
+          ...enemies[e.enemy],
+          entityUid: e.uid,
+          uid: member === 0 ? e.uid : this.uid(),
+          name:
+            enemies[e.enemy].name +
+            ((e.count || 1) > 1 ? " " + (member + 1) : ""),
+          hp: enemies[e.enemy].hp,
+          maxHp: enemies[e.enemy].hp,
+          cycle: 0,
+          buff: 0,
+          guard: 0,
+          status: blankStatus(),
+        })),
+      ),
       order: 0,
       permanent: { focus: 0 },
       next: { focus: 0, insight: 0 },

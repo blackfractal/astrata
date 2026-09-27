@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.2";
+    this.id = "weighted-druid-v1.3";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -121,6 +121,7 @@ export class WeightedPolicy {
                           ? -12
                           : 9
                       : 0;
+          if (e.enemy) value -= ((e.count || 1) - 1) * 5;
           const d = dist(p, e),
             old = dist(o.field, e);
           return { e, score: value / (d + 1) + (old - d) * 3 };
@@ -128,6 +129,7 @@ export class WeightedPolicy {
         n = targets.length ? Math.max(...targets.map((x) => x.score)) : 0;
         for (const e of o.field.entities.filter((x) => x.enemy)) {
           if (dist(p, e) === 0) {
+            n -= ((e.count || 1) - 1) * (o.hp < 30 ? 8 : 3);
             const tier = enemies[e.enemy].tier;
             n -=
               tier === "Eidolon"

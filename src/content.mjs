@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.2.1",
-  content: "1.0.0",
+  rules: "1.3.0",
+  content: "1.1.0",
   observation: 1,
   actions: 1,
 };
@@ -915,6 +915,7 @@ function enemy(
     signature,
     counter,
     nemesis: "Slow decks",
+    grouped: ["bat", "beetle", "ashling"].includes(id),
     ...extra,
   };
 }

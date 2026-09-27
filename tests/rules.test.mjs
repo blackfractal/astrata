@@ -208,7 +208,7 @@ test("Archons cannot evade past sixth Field round", () => {
     g.s.mode = "field";
     g.s.field = {
       round: 21,
-      spawned: 16,
+      spawned: 32,
       queue: [],
       x: 10,
       y: 10,
@@ -432,7 +432,7 @@ test("Wanderer completes its rolled path even when passing through the player", 
   g.s.mode = "field";
   g.s.field = {
     round: 17,
-    spawned: 16,
+    spawned: 32,
     queue: [],
     x: 5,
     y: 5,
