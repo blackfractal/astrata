@@ -1,6 +1,6 @@
 import { enhance, showCard, showEquipment } from "./polish-ui.mjs";
 import { playFrames, installTooltips } from "./presentation.mjs";
-import { Game } from "./engine.mjs";
+import { Game, incomingDamageText } from "./engine.mjs";
 import { cards, items, enemies, glossary, VERSION } from "./content.mjs";
 import { artPaths } from "./art-paths.mjs";
 import { WeightedPolicy } from "./policy.mjs";
@@ -295,7 +295,7 @@ function render(frame = null) {
       })
       .join("")}</div>${
       b.reaction
-        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${b.reaction.damage} ${b.reaction.element} damage remaining</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "Bracelet") + " absorbs this hit."}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
+        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "Bracelet") + " absorbs this hit."}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
         : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
     }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,

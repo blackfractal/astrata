@@ -1,3 +1,21 @@
+# Elemental Ally spillover correction — package 1.3.12
+
+Rules 1.3.9/content 1.1.8; weighted-druid-v1.6. Ally interception separates base damage and a defender-specific weakness bonus. The policy now evaluates interception using the same calculation, valuing base damage prevented rather than inflated Ally HP damage. No weight training or broader tuning was performed. Logs: `reports/spillover-evaluation/`.
+
+| Seed | Outcome | Final HP | Field round | Last encounter |
+| --- | --- | --- | --- | --- |
+| 825183 | loss | 0 | 20 | The Cinder Hart |
+| 825184 | win | 4 | 19 | Void-Colossus |
+| 825185 | loss | 0 | 14 | Bell Beetle 1, Bell Beetle 2, Fire Wolf, Shard-Walker, Needle Imp |
+| 825186 | loss | 0 | 12 | Fire Wolf, Dervish Hunter |
+| 825187 | win | 15 | 19 | Void-Colossus |
+
+Two wins and three losses; all runs terminate normally. Seed 825187 ends at 15 HP instead of 6; seed 825185 reaches round 14 instead of 11. These are examples of changed play under corrected interception and policy evaluation, not an isolated balance estimate. The small sample does not establish win rate.
+
+All 100 rules tests pass, including the approved 6/5/2 player-damage examples, bonus-first absorption, bonus exhaustion without regeneration, both elemental cycles, neutral/resistant transitions, odd-number rounding, save/load, Guardian, Taunt, equipment and separate hits. Real packaged UI interactions verify preview and actual HP for each approved example with no renderer errors. Incoming inspection shows remaining base/bonus separately; screenshots inspected. Evidence: `reports/spillover-verification.json`, `reports/screenshots/spillover/`, `tests/spillover.test.mjs`. These are targeted graphical tests, not a new full graphical playthrough.
+
+---
+
 # Resonance placement cost — package 1.3.11
 
 Content 1.1.8, unchanged rules 1.3.8 and weighted-druid-v1.5. Resonance placement is now 1 Focus. Its zero-Channel activation, +1 Channel gain, single use, Recall/extra-use restrictions, and turn-end destruction are unchanged. All 92 existing rules tests pass. A direct packaged-engine check verifies placement with exactly 1 Focus, spending it, activating from 0 Channel exactly once, and destruction at turn end. See `reports/resonance-cost-verification.json`.

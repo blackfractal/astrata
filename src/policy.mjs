@@ -1,5 +1,5 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
-import { offense, defenseRate, adjacent } from "./engine.mjs";
+import { offense, defenseRate, adjacent, allyHit } from "./engine.mjs";
 export const defaultWeights = {
   damage: 1,
   survival: 1.4,
@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.5";
+    this.id = "weighted-druid-v1.6";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -272,12 +272,12 @@ export class WeightedPolicy {
       case "intercept": {
         const c = b.grid[a.slot].at(-1),
           d = cards[c.id],
-          damage = offense(b.reaction.damage, b.reaction.element, c.element);
+          result = allyHit(b.reaction, c.element, c.hp, f.swallow);
         return [
-          Math.min(damage, c.hp) * w.survival -
+          (b.reaction.damage - result.remaining) * w.survival -
             (d.growth ? 8 : 0) -
             (d.effects.heal ? 5 : 0) +
-            (f.swallow ? damage : 0),
+            (f.swallow ? b.reaction.damage : 0),
           "Protect player HP while retaining valuable growing Allies when possible.",
         ];
       }

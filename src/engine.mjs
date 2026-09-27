@@ -21,6 +21,38 @@ export function offense(n, from, to) {
             : 1),
   );
 }
+// Resolve elemental damage locally; only unmodified base damage travels onward.
+// A surviving weakness bonus may travel only to a defender with the same weakness.
+export function allyHit(hit, element, hp, swallow = false) {
+  const base = hit.damage;
+  const weak = hit.element !== "Arcane" && cycle[hit.element] === element;
+  const resistant =
+    !weak && element !== "Arcane" && cycle[element] === hit.element;
+  const bonus = weak
+    ? hit.weaknessElement === element
+      ? (hit.weaknessBonus ?? 0)
+      : Math.ceil(base / 2)
+    : 0;
+  const damage = weak ? base + bonus : resistant ? Math.ceil(base / 2) : base;
+  const absorbed = Math.min(hp, damage);
+  const remaining = swallow
+    ? 0
+    : weak
+      ? Math.max(0, base - Math.max(0, hp - bonus))
+      : resistant
+        ? Math.min(base, Math.max(0, damage - hp) * 2)
+        : Math.max(0, base - hp);
+  return {
+    damage,
+    absorbed,
+    remaining,
+    weaknessBonus: weak && !swallow ? Math.max(0, bonus - hp) : 0,
+    weaknessElement: weak && !swallow ? element : null,
+  };
+}
+export function incomingDamageText(hit) {
+  return `${hit.damage} ${hit.element} base damage remaining${hit.stage === "ally" && hit.weaknessBonus ? ` + ${hit.weaknessBonus} weakness bonus against ${hit.weaknessElement}` : ""}`;
+}
 export function defenseRate(def, attack) {
   return def === "Arcane" || attack === "Arcane"
     ? 1
@@ -57,6 +89,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.8",
           "1.3.7",
           "1.3.6",
           "1.3.5",
@@ -1045,6 +1078,8 @@ export class Game {
       h.stage = "bracelet";
     }
     if (h.stage === "bracelet") {
+      h.weaknessBonus = 0;
+      h.weaknessElement = null;
       if (b.bracelets.some((x) => x.block > 0)) return;
       h.stage = "player";
     }
@@ -1091,10 +1126,12 @@ export class Game {
     const b = this.s.battle,
       h = b.reaction,
       c = top(b.grid[i]);
-    const damage = offense(h.damage, h.element, c.element),
-      taken = Math.min(c.hp, damage);
+    const result = allyHit(h, c.element, c.hp, cards[c.id].swallow);
+    const damage = result.damage;
     c.hp -= damage;
-    h.damage = cards[c.id].swallow ? 0 : Math.max(0, damage - taken);
+    h.damage = result.remaining;
+    h.weaknessBonus = result.weaknessBonus;
+    h.weaknessElement = result.weaknessElement;
     h.intercepted.push(c.uid);
     this.present("hit", {
       target: "card",

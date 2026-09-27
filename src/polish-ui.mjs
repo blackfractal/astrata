@@ -1,5 +1,5 @@
 import { cards, items, enemies } from "./content.mjs";
-import { blockHit, offense, adjacent } from "./engine.mjs";
+import { blockHit, allyHit, incomingDamageText, adjacent } from "./engine.mjs";
 const slotNames = {
   head: "Head",
   neck: "Neck",
@@ -663,14 +663,19 @@ function incomingDetails(ctx) {
         note = ` → ${result.remaining} damage continues`;
       }
       if (a.type === "intercept") {
-        const damage = offense(h.damage, h.element, a.effects.element);
-        note = ` → ${Math.min(damage, a.effects.allyHp)} Ally HP, ${a.effects.swallow ? 0 : Math.max(0, damage - a.effects.allyHp)} damage continues`;
+        const result = allyHit(
+          h,
+          a.effects.element,
+          a.effects.allyHp,
+          a.effects.swallow,
+        );
+        note = ` → ${result.absorbed} Ally HP, ${result.remaining} base damage continues${result.weaknessBonus ? ` + ${result.weaknessBonus} bonus only against ${result.weaknessElement}` : ""}`;
       }
       return button(ctx, { ...a, label: a.label + note });
     })
     .join("");
   ctx.dialog(
-    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${h.damage} ${h.element} damage remaining</p><p>Defense stage: ${h.stage}</p><div class="choices">${choices}</div>`,
+    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Defense stage: ${h.stage}</p><div class="choices">${choices}</div>`,
   );
   bindActions(ctx, ctx.modal);
 }
