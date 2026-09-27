@@ -144,3 +144,18 @@ Graphical checks caught and fixed: the first layout pushed the player below the 
 Assessment: the requested actions and constraints are materially more visible, and the full run still works. Combat uses lightweight projectiles, impact flashes and dissolve effects rather than bespoke character animation. The Tavern uses highlighted service areas over generated interior art. Remaining balancing questions and bot strategy improvements are recorded in AI_REPORT.md; they are not blockers for this polish delivery.
 
 Verification recorded at 2026-09-27T00:24:48.266481+00:00. Estimated additional active implementation/QA time for this polish: **35–40 minutes across two working sessions**, separate from the original v1 build. First logged session: 17:39–18:04 EDT; resumed work approximately 20:14 EDT through delivery. The roughly two-hour response gap is not counted as implementation time. Total elapsed round time is about 2 hours 45 minutes. Token usage for this polish is estimated at 35k–55k; no authoritative token meter is available. One agent; no delegation. Final packaging and local commit follow; no push.
+
+
+## Post-build polish — optional Field item pickups, round 2
+
+Jonathan requested the ability to refuse ordinary item pickups, while Events may make receipt compulsory or optional according to their authored outcome. Updated the main design to v4.36 using fresh, guarded replacements, and implemented Collect / Leave item in v1.
+
+Decisions: leaving permanently forfeits this revealed pickup without adding the item/card or applying a Curse/Hex. It does not refund the movement used to enter an occupied tile; other tile contents and the normal round flow still resolve. Event consequences retain their authored choices. Gem/Setting battle rewards retain their existing collection flow. A pending pickup in an older save gains the decline option without rerolling.
+
+Rules/package 1.2.1; policy weighted-druid-v1.2 scores declining at zero against the existing item value/risk estimate. Action and observation schema versions remain 1. Accepts saves from 1.0.0, 1.1.0, and 1.2.0.
+
+Validation: 48 tests pass, including refusal without curse effects, normal forced equip when accepted, continued tile/round resolution, old-save stability, Item Deck Hex refusal, and unchanged Event consequences. Packaged UI checks exercised both buttons with an explicitly constructed cursed-pickup save, verified persisted state, and found no renderer errors; screenshot reviewed. Five full headless seeded runs completed (2 wins / 3 losses); one used Leave item. Detailed evidence is in reports/item-pickup-verification.json and reports/item-pickup-evaluation/. Prior 100-run and full graphical victory reports are retained as 1.2.0 evidence, not relabeled as 1.2.1.
+
+The first regression compared generated entity IDs across collecting versus declining; collecting correctly consumes an additional UID, so the comparison now checks gameplay state without those IDs. Full runtime recopy was blocked by a loaded DLL while the game was open. Added an explicit --app-only packaging option and updated the existing code/assets without terminating Jonathan's game; a newly launched packaged instance passed both interaction checks. Reopen the game to load the update.
+
+Additional implementation/verification time: approximately 5 minutes, starting about 21:17 EDT on 2026-09-26; final archive refresh and local commit follow this entry. No push.

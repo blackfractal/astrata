@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.35. This is v1 polish round 1 (rules/package 1.2.0).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.36. This is v1 with optional Field item pickups (rules/package 1.2.1).
 
 ## Play
 
@@ -52,4 +52,4 @@ npm run test:gui
 
 The source design document was not modified. Git commits remain local; nothing has been pushed.
 
-Existing 1.0.0/1.1.0 saves remain loadable. Already spawned entities and revealed queues are retained; the new fixed schedule governs newly rolled batches. A fresh run receives the exact new one-Tavern schedule. Old exact replays require their original rules version.
+Existing 1.0.0/1.1.0/1.2.0 saves remain loadable. Already spawned entities and revealed queues are retained; the new fixed schedule governs newly rolled batches. A fresh run receives the exact new one-Tavern schedule. Old exact replays require their original rules version.

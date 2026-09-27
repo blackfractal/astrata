@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.1";
+    this.id = "weighted-druid-v1.2";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -281,6 +281,8 @@ export class WeightedPolicy {
           this.cardValue(a.id, o) - (o.deck.length > 20 ? 6 : 0),
           "Choose a card by its damage, defense, economy, and growth features.",
         ];
+      case "leaveItem":
+        return [0, "Leave an unwanted item without accepting its effects."];
       case "skipReward":
         return [0, "Skip a card that would dilute the deck."];
       case "rewardGem":

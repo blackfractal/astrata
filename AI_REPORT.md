@@ -1,3 +1,13 @@
+# Optional pickup verification — rules 1.2.1
+
+Five complete headless runs used weighted-druid-v1.2 and seeds 825183–825187. Results: **2 wins / 3 losses**, no stalled or illegal-action run. Final HP: 0, 49, 0, 39, 0 respectively. Raw actions, reasons and encounter summaries are in `reports/item-pickup-evaluation/`.
+
+The bot declined one pickup on seed 825187, round 5. Other encountered pickups were accepted, including Earth Armor on 825184 and six equipment/card pickups on 825186. All five terminal outcomes and final HP match the previous 1.2.0 sample. This confirms the added decision is handled; five runs are not evidence of a balance improvement. The focused cursed-item test separately verifies that the policy prefers refusal over accepting the curse. Earlier balance observations below remain applicable to these repeated outcomes.
+
+The packaged UI was checked for both Collect and Leave item using explicit saved fixtures; these are interaction tests, not five graphical playthroughs. All 48 rules tests pass. Older reports below retain their original rules versions.
+
+---
+
 # AI playability and five-run report
 
 ## Current polish evaluation — rules 1.2.0

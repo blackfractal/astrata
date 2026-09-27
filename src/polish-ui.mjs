@@ -792,7 +792,7 @@ export function enhance(ctx) {
     const title = app.querySelector(".layout>section>h2");
     title?.insertAdjacentHTML(
       "afterend",
-      `<p class="reward-rule">${o.reward?.cards ? "Choose ONE card · the other cards are left behind" : o.mode === "item" || o.reward?.gem || o.reward?.setting ? "Your reward · collect this item" : "All rewards collected"}</p>`,
+      `<p class="reward-rule">${o.reward?.cards ? "Choose ONE card · the other cards are left behind" : o.mode === "item" ? "Collect or leave this item" : o.reward?.gem || o.reward?.setting ? "Your reward · collect this item" : "All rewards collected"}</p>`,
     );
     app.querySelectorAll(".catalog [data-action]").forEach((el) => {
       const a = actions.find((a) => a.key === el.dataset.action);

@@ -54,7 +54,11 @@ const corner = (i) => [0, 4, 15, 19].includes(i),
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
-      if (![VERSION.rules, "1.1.0", "1.0.0"].includes(saved.version?.rules))
+      if (
+        ![VERSION.rules, "1.2.0", "1.1.0", "1.0.0"].includes(
+          saved.version?.rules,
+        )
+      )
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
       this.s.version = VERSION;
@@ -1495,6 +1499,7 @@ export class Game {
           { item: id },
         ),
       );
+      add("leaveItem", "Leave item", {}, { skip: true });
       return actions;
     }
     if (s.mode === "event") {
@@ -1892,6 +1897,17 @@ export class Game {
         const id = s.itemOffer[a.index];
         if (id.startsWith("card:")) this.addCard(id.slice(5));
         else this.addItem(id);
+        delete s.itemOffer;
+        this.resolveTile();
+        break;
+      }
+      case "leaveItem": {
+        const id = s.itemOffer[0];
+        const name = id.startsWith("card:")
+          ? cards[id.slice(5)].name
+          : items[id].name;
+        this.log(`Left ${name} behind.`);
+        delete s.itemOffer;
         this.resolveTile();
         break;
       }

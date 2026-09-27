@@ -317,7 +317,9 @@ function render(frame = null) {
         return `<div>${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div style="margin-top:12px">${actionButton(a, "primary")}</div></div>`;
       })
       .join("")}</div><div class="row" style="margin-top:30px">${actions
-      .filter((a) => ["skipReward", "continueReward"].includes(a.type))
+      .filter((a) =>
+        ["skipReward", "continueReward", "leaveItem"].includes(a.type),
+      )
       .map((a) => actionButton(a))
       .join("")}</div></section>${sidebar(o)}</div>`;
   } else if (o.mode === "result") {

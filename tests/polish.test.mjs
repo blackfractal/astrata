@@ -37,8 +37,11 @@ test("item spawn yields one fixed collectible; repeated observation never reroll
   assert.equal(g.s.itemOffer.length, 1);
   const rng = g.s.rng,
     legal = g.legal();
-  assert.equal(legal.length, 1);
-  assert.equal(legal[0].type, "takeItem");
+  assert.equal(legal.length, 2);
+  assert.deepEqual(
+    legal.map((a) => a.type),
+    ["takeItem", "leaveItem"],
+  );
   assert.deepEqual(g.legal(), legal);
   assert.equal(g.s.rng, rng);
 });

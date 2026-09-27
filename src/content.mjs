@@ -1,5 +1,5 @@
 export const VERSION = {
-  rules: "1.2.0",
+  rules: "1.2.1",
   content: "1.0.0",
   observation: 1,
   actions: 1,

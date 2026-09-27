@@ -4,16 +4,20 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dest = path.join(root, "release", "Astrata");
 await fs.mkdir(dest, { recursive: true });
-await fs.cp(path.join(root, "node_modules", "electron", "dist"), dest, {
-  recursive: true,
-});
-try {
-  await fs.rename(
-    path.join(dest, "electron.exe"),
-    path.join(dest, "Astrata.exe"),
-  );
-} catch (e) {
-  if (e.code !== "EEXIST") throw e;
+if (process.argv.includes("--app-only")) {
+  await fs.access(path.join(dest, "Astrata.exe"));
+} else {
+  await fs.cp(path.join(root, "node_modules", "electron", "dist"), dest, {
+    recursive: true,
+  });
+  try {
+    await fs.rename(
+      path.join(dest, "electron.exe"),
+      path.join(dest, "Astrata.exe"),
+    );
+  } catch (e) {
+    if (e.code !== "EEXIST") throw e;
+  }
 }
 const app = path.join(dest, "resources", "app");
 await fs.mkdir(app, { recursive: true });
@@ -29,7 +33,7 @@ await fs.writeFile(
   path.join(app, "package.json"),
   JSON.stringify({
     name: "astrata",
-    version: "1.2.0",
+    version: "1.2.1",
     main: "desktop.cjs",
     type: "module",
   }),
@@ -46,6 +50,8 @@ await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "evaluation",
   "polish-evaluation",
+  "item-pickup-evaluation",
+  "item-pickup-verification.json",
   "polish-robustness",
   "store-verification.json",
   "healer-verification.json",
