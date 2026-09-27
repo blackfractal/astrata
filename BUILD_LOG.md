@@ -222,3 +222,16 @@ Main design updated to v4.43 with fresh guarded edits. Package/rules 1.3.2, cont
 Verification: 62 passing rules tests, with new symmetry, live-layout, elemental-order, stored-block, and exclusion cases. Packaged UI shows both rows as 6/7/6, executes a 7-damage Blast, activates a boosted Shield, spends Channel, and pulses the Enemy arrow at zero Channel without renderer errors. Screenshot reviewed. All five full headless runs win; final HP 55, 29, 25, 65, 25. Current evidence is in reports/adjacency-evaluation/ and reports/adjacency-verification.json. The earlier full graphical victory retains its rules 1.3.1 attribution rather than being relabeled.
 
 Additional implementation and verification time for this follow-up: approximately 5 minutes, including final archive/commit work. Preceding round 5 took approximately 12 minutes. One agent. Final distribution includes all notes completed in this working turn; local commit only, no push.
+
+
+## Post-build polish — stop enemies on the player, round 7
+
+2026-09-26, approximately 22:03–22:09 EDT. Jonathan requested implementation of design v4.44: enemies must stop on first reaching the player, let other enemies finish, then begin one battle against all arrivals.
+
+Removed the Wanderer-only exception that allowed passing through the player. Every step-based move now stops at contact, including extra movement from Restlessness. Existing Pack arrival tracking keeps arrivals on the player through later triggers and normal movement without retriggering on the same arrival. Collision resolution remains after the entire enemy phase. Existing presentation frames show the actual shortened path and pause on arrival before other enemies continue; no animation rewrite was needed.
+
+Package/rules 1.3.3, content 1.1.2, policy weighted-druid-v1.4. Saves from 1.3.2 and earlier supported versions load. The main design was already updated to v4.44 in the preceding documentation-only turn and required no further edits. Blink/once-per-turn remains a separate pending gameplay requirement.
+
+Verification: all 66 rules tests pass. Updated the prior pass-through test and added first-contact/Restlessness, later-enemy completion, Pack chaining, diagonal contact, captured/headless state equality, and 1.3.2 save compatibility coverage. A packaged UI fixture confirms a Bat remains on the player while a Hunter moves through its remaining cells, then both enter the same battle; no renderer errors. Screenshots inspected. Five full headless runs all won, ending at 55, 29, 25, 65, and 25 HP (rounds 20, 19, 20, 19, 19). These outcomes match the previous sample, so they do not demonstrate a balance change; the targeted fixture directly exercises the changed rule. Evidence: reports/movement-stop-verification.json, reports/screenshots/movement-stop/, and reports/movement-stop-evaluation/.
+
+Additional implementation, verification, and packaging time: approximately 6 minutes. Refreshed the runnable distribution and ZIP using --app-only to preserve the open user session. Local commit only, no push.

@@ -427,7 +427,7 @@ test("gossip predicts the next Tavern healer truthfully and only once per visit"
   assert.equal(g.s.shop.healer, hint);
   assert.equal(g.observe().nextHealerHint, undefined);
 });
-test("Wanderer completes its rolled path even when passing through the player", () => {
+test("Wanderer stops on the player instead of completing its rolled path", () => {
   const g = new Game(9);
   g.s.mode = "field";
   g.s.field = {
@@ -443,7 +443,7 @@ test("Wanderer completes its rolled path even when passing through the player", 
   let n = 0;
   g.rand = () => (n++ % 2 === 0 ? 0.9 : 0.5);
   g.endMovement();
-  assert.equal(g.s.mode, "field");
-  assert.equal(g.s.field.entities[0].x, 6);
+  assert.equal(g.s.mode, "battle");
+  assert.equal(g.s.field.entities[0].x, 5);
   assert.equal(g.s.field.entities[0].y, 5);
 });

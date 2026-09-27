@@ -1,3 +1,13 @@
+# Stop-on-player movement — rules 1.3.3, content 1.1.2
+
+Five sequential seeds 825183–825187: **5 wins / 0 losses**, weighted-druid-v1.4. Final HP / round: **55/20, 29/19, 25/20, 65/19, 25/19**. Raw logs: `reports/movement-stop-evaluation/`. These outcomes match the prior five-run sample; this is regression evidence, not a measured balance effect.
+
+All 66 rules tests pass. Targeted tests exercise a Restless Wanderer reaching the player before spending its movement, subsequent enemies completing their moves, Pack chains retaining arrivals, diagonal contact, and existing-save compatibility. The packaged UI fixture visibly holds the Bat on the player while the Hunter moves, then opens one battle containing both enemies, with no renderer errors. See `reports/movement-stop-verification.json` and its screenshots. Current graphical verification is a targeted interaction, not a newly recorded full graphical playthrough.
+
+The design-only Blink/once-per-turn gameplay requirement remains pending.
+
+---
+
 # Matching starter-card adjacency — rules 1.3.2, content 1.1.2
 
 Final five sequential seeds 825183–825187: **5 wins / 0 losses**, using weighted-druid-v1.4. Final HP / Field round: **55/20, 29/19, 25/20, 65/19, 25/19**. Raw logs are in `reports/adjacency-evaluation/`. The policy rewards placement next to matching exposed cards and reads the actual Shield block value from legal-action effects.

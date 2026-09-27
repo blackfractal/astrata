@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.2",
           "1.3.1",
           "1.3.0",
           "1.2.1",
@@ -500,10 +501,10 @@ export class Game {
           );
       }
     };
-    const move = (e, n, dx, dy, stopAtPlayer = true) => {
+    const move = (e, n, dx, dy) => {
       arrive(e);
       for (let k = 0; k < n; k++) {
-        if (stopAtPlayer && e.x === f.x && e.y === f.y) break;
+        if (e.x === f.x && e.y === f.y) break;
         const from = { x: e.x, y: e.y };
         e.x = clamp(e.x + dx(e), 0, 10);
         e.y = clamp(e.y + dy(e), 0, 10);
@@ -560,7 +561,6 @@ export class Game {
           n,
           () => dx,
           () => dy,
-          false,
         );
       } else
         move(
