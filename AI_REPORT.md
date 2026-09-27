@@ -1,3 +1,11 @@
+# Resonance placement cost — package 1.3.11
+
+Content 1.1.8, unchanged rules 1.3.8 and weighted-druid-v1.5. Resonance placement is now 1 Focus. Its zero-Channel activation, +1 Channel gain, single use, Recall/extra-use restrictions, and turn-end destruction are unchanged. All 92 existing rules tests pass. A direct packaged-engine check verifies placement with exactly 1 Focus, spending it, activating from 0 Channel exactly once, and destruction at turn end. See `reports/resonance-cost-verification.json`.
+
+Five complete headless runs (825183–825187) retain two wins/three losses and the same final HP/rounds as the previous sample: 0/20, 4/19, 0/11, 0/12, 6/19. Logs: `reports/resonance-cost-evaluation/`. This is regression evidence, not a balance estimate for Resonance. No new graphical test was needed for this data-only cost change.
+
+---
+
 # Starting equipment and +50% enemy HP — package 1.3.10
 
 Rules 1.3.8/content 1.1.7; unchanged weighted-druid-v1.5. Bronze Bracelet refills 2 block; Rootbound Ring fires one separate 2-damage hit on the first damaging attack per player turn. All 23 enemy HP definitions are 50% above package 1.3.9, rounded up, including summons. Complete logs: `reports/equipment-balance-evaluation/`.

@@ -336,3 +336,12 @@ Package 1.3.10, rules 1.3.8, content 1.1.7. All 92 rules tests pass. Packaged UI
 Five complete headless games with unchanged weighted-druid-v1.5: two wins/three losses. HP/rounds: 0/20, 4/19, 0/11, 0/12, 6/19. Narrow victories and earlier grouped-enemy losses suggest higher survival pressure in this small sample, not statistical balance proof. No full graphical playthrough is claimed. Evidence: tests/equipment-balance.test.mjs, reports/equipment-balance-evaluation/, reports/equipment-balance-verification.json, reports/screenshots/equipment-balance/, AI_REPORT.md.
 
 Additional implementation, verification and packaging time: approximately 12 minutes. Refreshed runnable distribution and CRC-verified ZIP with --app-only, without closing Jonathan's existing session. Local commit only; no push.
+
+
+## Post-build balance — Resonance placement cost, round 15
+
+2026-09-27. Jonathan requested Resonance placement cost reduced from 2 to 1 because it is a one-use card. Changed only its placement cost; zero-Channel activation, +1 Channel effect, Isolated requirement, single use, no Recall/extra uses, and destruction at player-turn end remain intact. Fresh-read main design updated minimally to v4.52; README synchronized.
+
+Package 1.3.11/content 1.1.8; rules remain 1.3.8. All 92 existing rules tests pass, including Resonance restrictions and expiry. Direct check imports the packaged engine and verifies legal placement at exactly 1 Focus, cost payment, activation from 0 Channel, no second use, and turn-end destruction. Five full AI runs retain the prior two wins/three losses and identical final HP/rounds. Evidence: reports/resonance-cost-verification.json and reports/resonance-cost-evaluation/. No new graphical playthrough or balance estimate is claimed.
+
+Additional implementation, verification and packaging time: approximately 3 minutes. Runnable release and CRC-verified ZIP refreshed without closing Jonathan's game. Local commit only; no push.

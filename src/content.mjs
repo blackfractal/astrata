@@ -1,6 +1,6 @@
 export const VERSION = {
   rules: "1.3.8",
-  content: "1.1.7",
+  content: "1.1.8",
   observation: 1,
   actions: 1,
 };
@@ -295,7 +295,7 @@ card(
   "Resonance",
   "Arcane",
   "Object",
-  2,
+  1,
   1,
   { channel: 1 },
   "Isolated. Gain 1 Channel this turn. Costs 0 Channel. Single use; cannot gain extra uses or Recall. Destroyed at the end of the player turn, even unused.",

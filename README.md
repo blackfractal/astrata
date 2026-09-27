@@ -1,12 +1,12 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.51. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.10; rules 1.3.8).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.52. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.11; rules 1.3.8).
 
 Blast starts at 4 damage and Shield at 4 block, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 block each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
 
 Enemies stop immediately on reaching the player and remain there while the other enemies finish moving, including Pack Movement. Battle begins at the end of the enemy movement phase.
 
-Mind Grid slots have no visible indices. Inventory separates Equipped from Satchel and supports dragging equipment in both directions. Resonance costs 2 Focus to place and 0 Channel to activate for +1 Channel, requires Isolated placement, has one use with no Recall or extra uses, and goes to Destroyed at player-turn end (returning next battle).
+Mind Grid slots have no visible indices. Inventory separates Equipped from Satchel and supports dragging equipment in both directions. Resonance costs 1 Focus to place and 0 Channel to activate for +1 Channel, requires Isolated placement, has one use with no Recall or extra uses, and goes to Destroyed at player-turn end (returning next battle).
 
 New Druid runs start with 12 cards: four Blasts, four Shields, Familiar, Clear Mind, Focus Energy, and Sapling. Existing saves retain their acquired/removed cards; the new base Insight applies at the next Reveal.
 
