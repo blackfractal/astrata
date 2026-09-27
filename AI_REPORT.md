@@ -1,3 +1,5 @@
+Package 1.3.7 adds only Druid card backs and faster overlapping Reveal to rules 1.3.6/content 1.1.5. The gameplay results below remain current. Packaged presentation tests preserve revealed card identities/order across Normal, Fast, Skip, and reduced-motion modes; normal four-card Reveal measured 1,778 ms. See `reports/druid-reveal-verification.json`.
+
 # Once-per-turn activation — rules 1.3.6, content 1.1.5
 
 Five sequential seeds 825183–825187: **3 wins / 2 losses**, unchanged weighted-druid-v1.5. Outcomes (HP / round): **win 51/20, win 7/19, loss 0/20, win 60/19, loss 0/19**. Losses occurred against Cinder Hart and Void-Colossus respectively. Full logs: `reports/activation-turn-evaluation/`. Every run ended normally; none stalled. The policy receives the restricted legal action set and needs no special-case bypass. No tuning was applied to force victories. Five runs are insufficient for a reliable win-rate estimate.

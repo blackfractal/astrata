@@ -157,53 +157,85 @@ export async function playFrames(before, frames, after, render, isFast) {
           const back = document.createElement("div");
           back.className = "reveal-back";
           back.setAttribute("aria-hidden", "true");
-          back.innerHTML =
-            '<span class="back-seal">✧</span><span>ASTRATA</span>';
+          back.innerHTML = `<svg class="druid-seal" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="43" fill="none" stroke="currentColor" stroke-width="1"/>
+            <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" stroke-width=".5" stroke-dasharray="2 5"/>
+            <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M50 76V25 M50 52L32 38V27 M50 52L68 38V27 M50 65L25 52V40 M50 65L75 52V40 M50 74L35 83 M50 74L65 83 M50 74V87"/>
+              <path d="M32 38L21 33 M68 38L79 33 M25 52L17 48 M75 52L83 48"/>
+            </g>
+            <g fill="currentColor">
+              <path d="M50 34C36 27 42 17 50 12C58 17 64 27 50 34Z M32 32C20 29 22 20 25 16C33 17 39 24 32 32Z M68 32C80 29 78 20 75 16C67 17 61 24 68 32Z M25 48C13 45 14 37 17 33C25 34 31 40 25 48Z M75 48C87 45 86 37 83 33C75 34 69 40 75 48Z"/>
+            </g>
+          </svg>`;
           el.append(back);
         }
-        // Deal all cards face down, then turn each card over in draw order.
-        for (const el of hand) {
-          if (skip) break;
-          el.style.visibility = "visible";
-          const deal = el.animate(
-            [
-              { opacity: 0, transform: reduced ? "none" : "translateY(20px)" },
-              { opacity: 1, transform: "none" },
-            ],
-            { duration: ms(160), fill: "forwards", easing: "ease-out" },
-          );
-          await pause(160);
-          deal.cancel();
+        // Overlap neighboring animations while exposing card faces in draw order.
+        async function animateCard(el, keyframes, duration, easing) {
+          const animation = el.animate(keyframes, {
+            duration: ms(duration),
+            fill: "forwards",
+            easing,
+          });
+          try {
+            await pause(duration);
+          } finally {
+            animation.cancel();
+          }
         }
-        await pause(200);
-        for (const el of hand) {
-          if (skip) break;
-          if (!reduced) {
-            const close = el.animate(
+        const deals = [];
+        for (let i = 0; i < hand.length && !skip; i++) {
+          const el = hand[i];
+          el.style.visibility = "visible";
+          deals.push(
+            animateCard(
+              el,
+              [
+                {
+                  opacity: 0,
+                  transform: reduced ? "none" : "translateY(20px)",
+                },
+                { opacity: 1, transform: "none" },
+              ],
+              120,
+              "ease-out",
+            ),
+          );
+          if (i < hand.length - 1) await pause(70);
+        }
+        await Promise.all(deals);
+        await pause(100);
+        const opens = [];
+        for (let i = 0; i < hand.length && !skip; i++) {
+          const el = hand[i];
+          if (!reduced)
+            await animateCard(
+              el,
               [
                 { transform: "perspective(700px) rotateY(0deg)" },
                 { transform: "perspective(700px) rotateY(90deg)" },
               ],
-              { duration: ms(180), fill: "forwards", easing: "ease-in" },
+              140,
+              "ease-in",
             );
-            await pause(180);
-            close.cancel();
-          }
           el.classList.remove("face-down");
           el.removeAttribute("aria-label");
-          if (!reduced) {
-            const open = el.animate(
-              [
-                { transform: "perspective(700px) rotateY(-90deg)" },
-                { transform: "perspective(700px) rotateY(0deg)" },
-              ],
-              { duration: ms(180), fill: "forwards", easing: "ease-out" },
+          if (!reduced)
+            opens.push(
+              animateCard(
+                el,
+                [
+                  { transform: "perspective(700px) rotateY(-90deg)" },
+                  { transform: "perspective(700px) rotateY(0deg)" },
+                ],
+                140,
+                "ease-out",
+              ),
             );
-            await pause(180);
-            open.cancel();
-          }
-          await pause(260);
+          if (i < hand.length - 1) await pause(reduced ? 200 : 60);
         }
+        await Promise.all(opens);
+        await pause(300);
         if (!skip) render(frame.state);
       } else if (frame.kind === "move") {
         if (!find(".field")) {

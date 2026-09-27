@@ -278,3 +278,14 @@ Package/rules 1.3.6, content 1.1.5, unchanged weighted-druid-v1.5. Saves through
 Five full headless runs reached terminal outcomes: 3 wins / 2 losses. Seeds 825183–825187: win 51 HP/round 20; win 7/19; loss 0/20 against Cinder Hart; win 60/19; loss 0/19 against Void-Colossus. No balance or policy tuning was added to force wins. Evidence: reports/activation-turn-evaluation/, reports/activation-turn-verification.json, reports/screenshots/activation-turn/.
 
 Additional implementation, verification, and packaging time: approximately 7 minutes. Updated runnable distribution and ZIP using --app-only to preserve the open user session. Local commit only, no push.
+
+
+## Post-build polish — Druid card backs and faster overlapping Reveal, round 11
+
+2026-09-27. While the activation-rule update was being packaged, Jonathan requested removing the game title from card backs, replacing it with something representing the Druid, approximately doubling Reveal speed, and making card animations shorter with overlap.
+
+Replaced the ornamental star and ASTRATA lettering with an inline gold tree-and-roots emblem, retaining the green/gold frame. Used a code-native vector to match the existing ornamental card-back design; no new raster generation was needed. Deal animation is now 120 ms with a 70 ms stagger; each flip half is 140 ms and the next card starts after a short 60 ms gap following face exposure, overlapping the previous opening. Expose faces strictly in draw order and await all pending animations before leaving Reveal. A short final readability hold remains. Fast/Skip remain responsive, all running card animations are canceled on completion, and reduced motion reveals sequentially without 3D rotation.
+
+Package 1.3.7; rules remain 1.3.6 and content 1.1.5 because this is presentation-only. The preceding once-per-turn rule is included. Main design updated minimally to v4.48 with the emblem, pace, and overlap requirements. The four-card normal Reveal measured 1,778 ms versus the prior roughly 3,320 ms nominal sequential schedule; two deals and two flips overlap. Packaged tests pass for Normal, Fast, Skip, reduced motion, and a subsequent battle turn, preserving card UIDs/order, input locking, and automatic Placement. No renderer errors. Screenshots inspected. Evidence: reports/druid-reveal-verification.json and reports/screenshots/druid-reveal/.
+
+The 78 passing rules tests and five-run results from the preceding gameplay update remain applicable; no engine/policy changes were made in this follow-up. Additional implementation, verification, and packaging time: approximately 4 minutes. Refreshed the runnable distribution and ZIP without closing the user's existing game. Local commit only; no push.
