@@ -105,6 +105,21 @@ function card(c, { select = false } = {}) {
 function actionButton(a, cls = "") {
   return `<button class="${cls}" data-action="${esc(a.key)}">${esc(a.label)}</button>`;
 }
+function phaseBar(b, actions) {
+  const arrow = (type, label, hint) => {
+    const action = actions.find((a) => a.type === type);
+    return `<button class="phase-arrow ${action ? "primary available" : ""}" aria-label="${label}" title="${hint}" ${action ? `data-action="${esc(action.key)}"` : "disabled"}><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M3 12h24M18 3l9 9-9 9" /></svg></button>`;
+  };
+  return `<nav class="phasebar" aria-label="Battle phases">
+    <span class="phase-step ${b.phase === "start" && !b.reaction ? "active" : "completed"}">1 · Reveal</span>
+    <span class="phase-arrow automatic" role="img" aria-label="Reveal to placement advances automatically" title="Reveal advances to Placement automatically"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M3 12h24M18 3l9 9-9 9" /></svg></span>
+    <span class="phase-step ${b.phase === "place" ? "active" : ""}">2 · Placement</span>
+    ${arrow("activatePhase", "Begin activation", "Finish placement and begin activation. You cannot return to placement this turn.")}
+    <span class="phase-step ${b.phase === "activate" ? "active" : ""}">3 · Activation</span>
+    ${arrow("endTurn", "End turn", "Finish activation and let enemies act.")}
+    <span class="phase-step ${b.phase === "enemy" || b.reaction ? "active" : ""}">4 · Enemy</span>
+  </nav>`;
+}
 function header(o) {
   return `<header><span class="brand">ASTRATA</span><div class="row stats"><span><b class="hp">${o.hp}</b> / ${o.maxHp} HP</span><span><b class="gold">${o.gold}</b> Gold</span><span>Stratum <b>1</b> · Round <b>${o.field.round || "—"}</b></span></div><div class="row"><button data-ui="grimoire">Grimoire</button><button data-ui="inventory">Inventory</button><button data-ui="pause">☰ Menu</button></div></header>`;
 }
@@ -258,9 +273,7 @@ function render(frame = null) {
               " · ",
             )}${e.flicker ? " · Negates next activation" : ""}${e.guard ? " · Guard " + e.guard : ""}</small></div></article>`,
       )
-      .join(
-        "",
-      )}</div><div class="phasebar"><span>1 · Reveal</span><span class="${b.phase === "place" ? "active" : ""}">2 · Placement</span><span class="${b.phase === "activate" ? "active" : ""}">3 · Activation</span><span class="${b.phase === "enemy" || b.reaction ? "active" : ""}">4 · Enemy</span></div><div class="mind">${b.grid
+      .join("")}</div>${phaseBar(b, actions)}<div class="mind">${b.grid
       .map((slot, i) => {
         const c = slot.at(-1),
           d = cards[c?.id],
@@ -276,12 +289,7 @@ function render(frame = null) {
       .join("")}</div>${
       b.reaction
         ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${b.reaction.damage} ${b.reaction.element} damage remaining</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "Bracelet") + " absorbs this hit."}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
-        : `<div class="row spread" style="margin-top:12px"><small>${b.phase === "place" ? "Choose a revealed card, then a lit slot. Click a placed card to Recall." : "Click a placed card, then choose its activation and target."}</small>${actions
-            .filter((a) => ["activatePhase", "endTurn"].includes(a.type))
-            .map((a) => actionButton(a, "primary"))
-            .join(
-              "",
-            )}</div><div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
+        : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
     }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,
     )

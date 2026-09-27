@@ -464,7 +464,7 @@ header button {
   background: #1a2a22;
   border: 1px solid #475540;
 }
-.phasebar span {
+.phasebar > .phase-step {
   flex: 1;
   text-align: center;
   padding: 7px;
@@ -909,7 +909,7 @@ header {
   .health-track {
     margin: 4px 0;
   }
-  .phasebar span {
+  .phasebar > .phase-step {
     padding: 4px;
   }
   .phasebar {
@@ -1966,4 +1966,62 @@ header {
 }
 .market-tabs {
   margin-bottom: 12px;
+}
+
+/* Phase transitions are the turn controls. */
+.phasebar {
+  align-items: stretch;
+}
+.phasebar > .phase-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.phasebar .phase-arrow {
+  flex: 0 0 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: 0;
+  border-inline: 1px solid #475540;
+  border-radius: 0;
+  color: #526253;
+  background: #122019;
+}
+.phase-arrow svg {
+  width: 28px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.phasebar .phase-arrow.automatic {
+  color: #aa9a6c;
+}
+.phasebar button.phase-arrow.available {
+  color: #142017;
+  background: #d9bd7b;
+  cursor: pointer;
+}
+.phasebar button.phase-arrow.available:hover {
+  background: #f0d99b;
+}
+.phasebar button.phase-arrow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.phasebar button.phase-arrow:focus-visible {
+  outline: 3px solid #fff0bd;
+  outline-offset: 3px;
+  z-index: 1;
+}
+@media (max-width: 1100px) {
+  .phasebar .phase-arrow {
+    flex-basis: 34px;
+    padding: 4px;
+  }
 }

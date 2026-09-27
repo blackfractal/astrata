@@ -159,3 +159,14 @@ Validation: 48 tests pass, including refusal without curse effects, normal force
 The first regression compared generated entity IDs across collecting versus declining; collecting correctly consumes an additional UID, so the comparison now checks gameplay state without those IDs. Full runtime recopy was blocked by a loaded DLL while the game was open. Added an explicit --app-only packaging option and updated the existing code/assets without terminating Jonathan's game; a newly launched packaged instance passed both interaction checks. Reopen the game to load the update.
 
 Additional implementation/verification time: approximately 5 minutes, starting about 21:17 EDT on 2026-09-26; final archive refresh and local commit follow this entry. No push.
+
+
+## Post-build polish — phase-arrow controls, round 3
+
+Jonathan requested replacing the separate Begin Activation and End Turn buttons with arrows between the phases at the top of battle. Implemented automatic Reveal → Placement as a noninteractive arrow, a player-clicked Placement → Activation arrow, and a player-clicked Activation → Enemy arrow. Only the legal forward control is enabled. It is highlighted, pulses when no actions remain, supports keyboard focus/Enter, and provides a temporary hover/focus explanation. The current phase remains highlighted. No backward phase navigation or automatic ending of the player's decision phases was introduced.
+
+Updated the main design to v4.37 with guarded, fresh-read edits. Package version is 1.2.2; rules remain 1.2.1 because this change affects presentation only. Existing rules, save compatibility, and AI action names remain unchanged, so the prior five-run AI report still applies to the same engine and policy.
+
+Packaged verification: mouse advancement, disabled future/past arrows, removal of standalone text buttons, automatic next-turn Reveal/Placement, disabled controls during enemy playback, actual enemy damage, and keyboard Enter all passed without renderer errors. Placement and Activation screenshots were captured and the Placement layout visually reviewed. Evidence: reports/phase-arrow-verification.json and reports/screenshots/phase-arrows/. The test initially read the battle-start autosave expecting a live turn; corrected the test to check live UI turn/HP, preserving the designed restart-battle save behavior.
+
+Additional implementation and verification time: approximately 6 minutes, starting 21:23:53 EDT on 2026-09-26, including the final archive refresh. Runtime files are retained using --app-only packaging to avoid interrupting an open game. Local commit only; no push.

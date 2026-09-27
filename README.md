@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.36. This is v1 with optional Field item pickups (rules/package 1.2.1).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.37. This is v1 with optional Field item pickups and phase-arrow controls (package 1.2.2; rules 1.2.1).
 
 ## Play
 

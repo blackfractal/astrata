@@ -33,7 +33,7 @@ await fs.writeFile(
   path.join(app, "package.json"),
   JSON.stringify({
     name: "astrata",
-    version: "1.2.1",
+    version: "1.2.2",
     main: "desktop.cjs",
     type: "module",
   }),
@@ -52,6 +52,7 @@ for (const name of [
   "polish-evaluation",
   "item-pickup-evaluation",
   "item-pickup-verification.json",
+  "phase-arrow-verification.json",
   "polish-robustness",
   "store-verification.json",
   "healer-verification.json",
