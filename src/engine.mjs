@@ -54,10 +54,12 @@ const corner = (i) => [0, 4, 15, 19].includes(i),
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
-      if (saved.version?.rules !== VERSION.rules)
+      if (![VERSION.rules, "1.1.0", "1.0.0"].includes(saved.version?.rules))
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
-      if (this.s.mode === "battle") this.s.checkpoint = clone(saved);
+      this.s.version = VERSION;
+      this.normalizeRewards();
+      if (this.s.mode === "battle") this.s.checkpoint = clone(this.s);
       return;
     }
     this.s = {
@@ -141,6 +143,36 @@ export class Game {
     this.addItem(this.s.startGem);
     this.s.equipment.wrist1 = this.s.inventory[0].uid;
     this.s.equipment.finger1 = this.s.inventory[1].uid;
+  }
+  normalizeRewards() {
+    const s = this.s;
+    if (s.mode === "item" && s.itemOffer?.length > 1)
+      s.itemOffer = [s.itemOffer[0]];
+    if (s.reward?.gem === true)
+      s.reward.gem = this.pick([
+        "ruby",
+        "emerald",
+        "topaz",
+        "sapphire",
+        "focusGem",
+        "channelGem",
+        "insightGem",
+      ]);
+    if (s.reward?.setting === true)
+      s.reward.setting = this.pick([
+        "silver",
+        "channelRing",
+        "focusRing",
+        "necklace",
+      ]);
+  }
+  present(kind, detail = {}) {
+    if (this.capturePresentation)
+      (this.presentation ??= []).push({
+        kind,
+        ...detail,
+        state: this.observe(),
+      });
   }
   rand() {
     let x = this.s.rng;
@@ -279,20 +311,29 @@ export class Game {
     if (!a.length) this.s[key] = a = this.shuffle(source);
     return a.pop();
   }
+  rollSpawn(opening = false) {
+    // d20: 1–10 enemy, 11–15 loot, 16–19 Event, 20 reroll.
+    // Taverns are scheduled, not random. Subtypes use a separate d10.
+    let category;
+    do {
+      category = 1 + Math.floor(this.rand() * 20);
+    } while (category === 20);
+    if (category <= 10) {
+      const subtype = 1 + Math.floor(this.rand() * 10);
+      return opening || subtype <= 8 ? "Mote" : "Eidolon";
+    }
+    if (category <= 15)
+      return 1 + Math.floor(this.rand() * 10) <= 6 ? "Gold" : "Item";
+    return "Event";
+  }
   batch() {
     const f = this.s.field;
-    f.queue = Array.from({ length: Math.min(4, 16 - f.spawned) }, (_, i) =>
-      f.spawned + i === 15
-        ? "Archon"
-        : [
-            "Mote",
-            f.spawned === 0 ? "Mote" : "Eidolon",
-            "Gold",
-            "Item",
-            "Event",
-            "Tavern",
-          ][Math.floor(this.rand() * 6)],
-    );
+    f.queue = Array.from({ length: Math.min(4, 16 - f.spawned) }, (_, i) => {
+      const number = f.spawned + i + 1;
+      if (number === 8) return "Tavern";
+      if (number === 16) return "Archon";
+      return this.rollSpawn(number <= 4);
+    });
     if (f.spawned) for (const e of f.entities) if (e.enemy) e.restless++;
     this.log("Spawn queue: " + f.queue.join(" · "));
   }
@@ -363,9 +404,6 @@ export class Game {
       }
       if (e.type === "Item") {
         const options = [this.drawDeck("itemDeck", Object.keys(items))];
-        if (this.rand() < 0.35)
-          for (let i = 0, n = 1 + Math.floor(this.rand() * 3); i < n; i++)
-            options.push(this.drawDeck("itemDeck", Object.keys(items)));
         s.mode = "item";
         s.itemOffer = options;
         return;
@@ -417,8 +455,16 @@ export class Game {
       arrive(e);
       for (let k = 0; k < n; k++) {
         if (stopAtPlayer && e.x === f.x && e.y === f.y) break;
+        const from = { x: e.x, y: e.y };
         e.x = clamp(e.x + dx(e), 0, 10);
         e.y = clamp(e.y + dy(e), 0, 10);
+        if (e.x !== from.x || e.y !== from.y)
+          this.present("move", {
+            uid: e.uid,
+            enemy: e.enemy,
+            from,
+            to: { x: e.x, y: e.y },
+          });
         arrive(e);
       }
     };
@@ -438,8 +484,18 @@ export class Game {
         type = type === "Hunter" ? type : "Stalker";
       }
       if (type === "Hunter") {
-        e.x = f.x;
-        e.y = f.y;
+        // Hunter traversal is visual only; arrival effects occur at its destination.
+        while (e.x !== f.x || e.y !== f.y) {
+          const from = { x: e.x, y: e.y };
+          e.x += Math.sign(f.x - e.x);
+          e.y += Math.sign(f.y - e.y);
+          this.present("move", {
+            uid: e.uid,
+            enemy: e.enemy,
+            from,
+            to: { x: e.x, y: e.y },
+          });
+        }
         move(
           e,
           0,
@@ -741,6 +797,13 @@ export class Game {
         const e = b.enemies.find((x) => x.uid === j.uid);
         if (e) {
           e.hp -= j.damage;
+          this.present("hit", {
+            target: "enemy",
+            uid: e.uid,
+            amount: j.damage,
+            element: "Arcane",
+            dead: e.hp <= 0,
+          });
           s.stats.damageDealt += j.damage;
         }
         this.checkBattle();
@@ -796,6 +859,12 @@ export class Game {
             j.statusHit || j.pierce ? "bracelet" : j.cull ? "ally" : "ward",
           intercepted: [],
         };
+        this.present("incoming", {
+          source: j.source,
+          amount: j.damage,
+          element: j.element,
+          name: j.name,
+        });
         this.advanceHit();
       }
     }
@@ -829,11 +898,12 @@ export class Game {
       return;
     }
     if (h.stage === "ward") {
-      for (const { c } of this.activeWards()) {
+      for (const { c, i } of this.activeWards()) {
         const n = Math.min(c.ward, h.damage);
         c.ward -= n;
         h.damage -= n;
         if (c.ward === 0) c.zeroWard = true;
+        this.present("defend", { slot: i, amount: n, name: "Ward absorbs" });
         if (!h.damage) break;
       }
       h.stage = "shield";
@@ -889,6 +959,13 @@ export class Game {
         damage = Math.ceil(damage / 2);
       damage = Math.max(0, damage - this.bonuses().armor);
       s.hp -= damage;
+      this.present("hit", {
+        target: "player",
+        amount: damage,
+        element: h.element,
+        name: h.name,
+        armor: armor?.uid,
+      });
       s.stats.damageTaken += damage;
       if (damage) this.log(`${h.name}: you take ${damage} damage.`);
       this.finishHit();
@@ -914,6 +991,13 @@ export class Game {
     c.hp -= damage;
     h.damage = cards[c.id].swallow ? 0 : Math.max(0, damage - taken);
     h.intercepted.push(c.uid);
+    this.present("hit", {
+      target: "card",
+      slot: i,
+      amount: damage,
+      dead: c.hp <= 0,
+      element: h.element,
+    });
     if (c.hp <= 0) this.destroyCard(i, c.uid);
     this.advanceHit();
   }
@@ -967,6 +1051,12 @@ export class Game {
       } else if (t.grid === "siphon") x.c.used++;
       else if (t.grid === "freeze") x.c.freeze = b.turn + 1;
       else x.c[t.grid] = true;
+      this.present("hit", {
+        target: "card",
+        slot: x.i,
+        name: t.name,
+        dead: ["destroy", "row", "column"].includes(t.grid),
+      });
       this.log(`${t.name} targets slot ${x.i + 1}.`);
     }
   }
@@ -981,6 +1071,13 @@ export class Game {
     e.guard -= guard;
     d -= guard;
     e.hp -= d;
+    this.present("hit", {
+      target: "enemy",
+      uid: e.uid,
+      amount: d,
+      element,
+      dead: e.hp <= 0,
+    });
     s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
     if (e.id === "colossus" && element === "Chaos" && !activation.summoned) {
       activation.summoned = true;
@@ -1175,6 +1272,7 @@ export class Game {
       slot = b.grid[a.slot],
       c = top(slot),
       d = cards[c.id];
+    this.present("activate", { slot: a.slot, name: d.name });
     b.channel -= d.channel;
     const ctx = {};
     if (d.stack === "pile") {
@@ -1242,6 +1340,7 @@ export class Game {
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
         setting: boss,
       };
+      this.normalizeRewards();
       delete s.checkpoint;
       this.log("Victory. Choose a card or skip.");
     }
@@ -1275,6 +1374,18 @@ export class Game {
       healer: this.s.nextTavernHealer ?? this.rand() < 0.75,
       healerPrice: this.pick([35, 50, 80]),
       healUsed: false,
+      removeUsed: false,
+    };
+    const kind = this.pick(["gold", "hp", "hpGold", "allyGold", "item"]);
+    this.s.shop.hexPrice = {
+      kind,
+      gold:
+        kind === "gold"
+          ? this.s.shop.healerPrice
+          : ["hpGold", "allyGold"].includes(kind)
+            ? Math.ceil(this.s.shop.healerPrice / 2)
+            : 0,
+      hp: kind === "hp" ? 12 : kind === "hpGold" ? 6 : 0,
     };
     delete this.s.nextTavernHealer;
     delete this.s.nextHealerHint;
@@ -1407,15 +1518,7 @@ export class Game {
           add("rewardCard", "Take " + cards[id].name, { id }, { card: id });
         add("skipReward", "Skip card");
       } else if (s.reward.gem) {
-        for (const id of [
-          "ruby",
-          "emerald",
-          "topaz",
-          "sapphire",
-          "focusGem",
-          "channelGem",
-          "insightGem",
-        ])
+        for (const id of [s.reward.gem])
           add(
             "rewardGem",
             "Take " + items[id].name,
@@ -1423,7 +1526,7 @@ export class Game {
             { gear: items[id].effect },
           );
       } else if (s.reward.setting) {
-        for (const id of ["silver", "channelRing", "focusRing", "necklace"])
+        for (const id of [s.reward.setting])
           add(
             "rewardSetting",
             "Take " + items[id].name,
@@ -1504,7 +1607,7 @@ export class Game {
       for (const c of s.deck) {
         const d = cards[c.id],
           up = d.upgrade;
-        if (s.gold >= 40 && d.type !== "Hex")
+        if (!shop.removeUsed && s.gold >= 40 && d.type !== "Hex")
           add(
             "remove",
             `Remove ${d.name} · 40 Gold`,
@@ -1512,14 +1615,52 @@ export class Game {
             { thin: 1 },
             { gold: 40 },
           );
-        if (d.type === "Hex" && shop.healer && s.gold >= shop.healerPrice)
-          add(
-            "removeHex",
-            `Healer: remove ${d.name} · ${shop.healerPrice} Gold`,
-            { uid: c.uid },
-            { cleanse: true },
-            { gold: shop.healerPrice },
-          );
+        if (d.type === "Hex" && shop.healer) {
+          const price = shop.hexPrice || {
+            kind: "gold",
+            gold: shop.healerPrice,
+            hp: 0,
+          };
+          const extras =
+            price.kind === "allyGold"
+              ? s.deck
+                  .filter((x) => cards[x.id].type === "Ally")
+                  .map((x) => ({
+                    sacrificeCard: x.uid,
+                    name: cards[x.id].name,
+                  }))
+              : price.kind === "item"
+                ? s.inventory
+                    .filter(
+                      (x) =>
+                        !items[x.id].cursed &&
+                        !x.gem &&
+                        !s.inventory.some((i) => i.gem === x.uid),
+                    )
+                    .map((x) => ({
+                      sacrificeItem: x.uid,
+                      name: items[x.id].name,
+                    }))
+                : [{ name: null }];
+          if (s.gold >= price.gold && s.hp > price.hp)
+            for (const extra of extras) {
+              const { name, ...payment } = extra;
+              const cost = [
+                price.gold ? price.gold + " Gold" : null,
+                price.hp ? price.hp + " HP" : null,
+                name ? "sacrifice " + name : null,
+              ]
+                .filter(Boolean)
+                .join(" + ");
+              add(
+                "removeHex",
+                `Healer: remove ${d.name} · ${cost}`,
+                { uid: c.uid, ...payment },
+                { cleanse: true },
+                { gold: price.gold, hp: price.hp, ...payment },
+              );
+            }
+        }
         if (
           up &&
           !c.upgrade &&
@@ -1712,6 +1853,7 @@ export class Game {
     if (!a) throw Error("Illegal action");
     const s = this.s,
       b = s.battle;
+    this.presentation = [];
     s.steps++;
     s.history.push(a.key);
     switch (a.type) {
@@ -1727,14 +1869,17 @@ export class Game {
       case "begin":
         this.beginRound();
         break;
-      case "move":
+      case "move": {
+        const from = { x: s.field.x, y: s.field.y };
         s.field.x = a.x;
         s.field.y = a.y;
         s.field.moves--;
         if (s.field.entities.some((e) => e.x === a.x && e.y === a.y))
           s.field.moves = 0;
+        this.present("move", { player: true, from, to: { x: a.x, y: a.y } });
         this.resolveTile();
         break;
+      }
       case "wait":
         this.endMovement();
         break;
@@ -1863,11 +2008,20 @@ export class Game {
         break;
       case "remove":
         this.spend(40);
+        s.shop.removeUsed = true;
         s.deck = s.deck.filter((x) => x.uid !== a.uid);
         break;
       case "removeHex":
-        this.spend(s.shop.healerPrice);
-        s.deck = s.deck.filter((x) => x.uid !== a.uid);
+        if (a.costs.gold) this.spend(a.costs.gold);
+        if (a.costs.hp) {
+          s.hp -= a.costs.hp;
+          s.stats.damageTaken += a.costs.hp;
+        }
+        s.deck = s.deck.filter(
+          (x) => x.uid !== a.uid && x.uid !== a.sacrificeCard,
+        );
+        if (a.sacrificeItem) this.removeItem(a.sacrificeItem);
+        this.log(a.label);
         break;
       case "upgrade": {
         const c = s.deck.find((x) => x.uid === a.uid),
@@ -1944,8 +2098,15 @@ export class Game {
           b.reaction.damage,
           b.reaction.element,
         );
+        const stopped = b.reaction.damage - r.remaining;
         p.block = r.block;
         b.reaction.damage = r.remaining;
+        this.present("defend", {
+          slot: a.type === "block" ? p.slot : null,
+          item: a.type === "bracelet" ? a.uid : null,
+          amount: stopped,
+          name: "Blocked",
+        });
         this.advanceHit();
         this.pump();
         break;

@@ -124,5 +124,7 @@ export const artPaths = {
   "location-field": "assets/location-field.png",
   "location-mind": "assets/location-mind.png",
   "location-tavern": "assets/location-tavern.png",
-  "location-druid": "assets/location-druid.png"
+  "location-druid": "assets/location-druid.png",
+  "location-field-topdown": "assets/location-field-topdown.png",
+  "location-tavern-interior": "assets/location-tavern-interior.png"
 };

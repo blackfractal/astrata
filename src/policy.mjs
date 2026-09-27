@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1";
+    this.id = "weighted-druid-v1.1";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -336,8 +336,19 @@ export class WeightedPolicy {
           8 - (a.costs.gold || 0) * 0.06 - (a.costs.hp || 0) * 0.7,
           "Improve a card when the cost is affordable.",
         ];
-      case "removeHex":
-        return [25, "Remove a persistent penalty."];
+      case "removeHex": {
+        const lostCard = o.deck.find((c) => c.uid === a.sacrificeCard);
+        const lostItem = o.inventory.find((x) => x.uid === a.sacrificeItem);
+        const hpCost = a.costs.hp || 0;
+        return [
+          25 -
+            hpCost * (o.hp < 25 ? 2 : 0.8) -
+            (a.costs.gold || 0) * 0.06 -
+            (lostCard ? this.cardValue(lostCard.id, o) : 0) -
+            (lostItem ? this.gearValue(items[lostItem.id].effect) : 0),
+          "Weigh Hex relief against the displayed HP, Gold, or sacrifice cost.",
+        ];
+      }
       case "sell":
         return [
           f.cursed ? 10 : -30,

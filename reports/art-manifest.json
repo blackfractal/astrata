@@ -23540,5 +23540,197 @@
     "file": "assets/item-curseNeck-v3.png",
     "generatedAt": "2026-09-26T20:01:50.925Z",
     "revision": 3
+  },
+  {
+    "id": "location-field-topdown",
+    "name": "Top-down grassy Field",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 9261701,
+    "prompt": "Traditional hand painted dark fantasy game terrain, strictly overhead top down aerial view looking straight down at a flat grassy meadow floor, moss green grass, small clover patches and tiny scattered stones, subtle worn footpaths, even readable daylight, no horizon, no sky, no buildings, no trees, no creatures, flat terrain texture filling the entire square image, painterly gouache brushwork, muted natural greens and warm ochre, high detail",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional hand painted dark fantasy game terrain, strictly overhead top down aerial view looking straight down at a flat grassy meadow floor, moss green grass, small clover patches and tiny scattered stones, subtle worn footpaths, even readable daylight, no horizon, no sky, no buildings, no trees, no creatures, flat terrain texture filling the entire square image, painterly gouache brushwork, muted natural greens and warm ochre, high detail",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "horizon, sky, landscape vista, perspective, side view, mountains, trees, forest, buildings, people, text, grid, letters, watermark, dark black background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 1024,
+          "height": 1024,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 9261701,
+          "steps": 24,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/location-field-topdown"
+        }
+      }
+    },
+    "file": "assets/location-field-topdown.png",
+    "generatedAt": "2026-09-26T21:45:39.150Z"
+  },
+  {
+    "id": "location-tavern-interior",
+    "name": "Lantern Rest interior",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 9261702,
+    "prompt": "Wide interior scene of a warm dark fantasy tavern inside an enormous hollow tree, eye level dollhouse cutaway composition, golden lantern light, shelves of bottles and books, distinct service stations: a hooded scribe at a desk on the far left, innkeeper behind a wooden bar in the center back, robed healer seated on the right, market stall with arranged wares in the lower left foreground, a cloaked traveler seated at a central table in the lower center, jeweler workbench covered in gems in the lower right. Spacious rustic timber room, human figures small but distinct, readable silhouettes, painterly oil and gouache, muted jade shadows and warm amber, cozy shelter, no text, no letters",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Wide interior scene of a warm dark fantasy tavern inside an enormous hollow tree, eye level dollhouse cutaway composition, golden lantern light, shelves of bottles and books, distinct service stations: a hooded scribe at a desk on the far left, innkeeper behind a wooden bar in the center back, robed healer seated on the right, market stall with arranged wares in the lower left foreground, a cloaked traveler seated at a central table in the lower center, jeweler workbench covered in gems in the lower right. Spacious rustic timber room, human figures small but distinct, readable silhouettes, painterly oil and gouache, muted jade shadows and warm amber, cozy shelter, no text, no letters",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "outdoors, forest clearing, sky, horizon, text, letters, watermark, modern furniture, photograph, blurry, empty room",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 1024,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 9261702,
+          "steps": 24,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/location-tavern-interior"
+        }
+      }
+    },
+    "file": "assets/location-tavern-interior.png",
+    "generatedAt": "2026-09-26T21:53:41.269Z"
   }
 ]

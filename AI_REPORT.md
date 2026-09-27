@@ -1,5 +1,27 @@
 # AI playability and five-run report
 
+## Current polish evaluation — rules 1.2.0
+
+Policy: weighted-druid-v1.1; content 1.0.0; observation/action interfaces 1. Seeds 825183–825187 were rerun after fixed item rewards, the scheduled midpoint Tavern, weighted spawns, once-per-Tavern pruning, and variable Hex payments. Logs: `reports/polish-evaluation/`. The policy now values HP and sacrifice costs when evaluating Hex treatment. It remains a naive weighted policy, not a trained model.
+
+| Seed | Result | Endpoint | Interpretation from the recorded choices |
+|---|---|---|---|
+| 825183 | Loss | Round 16, Cinder Hart after 10 turns | Nine earlier fights reduced HP, followed by upgrades and recovery. Entered the boss at 50 HP; limited Channel and repeated Earth attacks into Fire did not finish quickly enough. Mixed draw/opportunity luck and policy sequencing, not an identified rules exploit. |
+| 825184 | Win, 49 HP | Round 19, Void-Colossus in 10 turns | Bought and socketed Storm Opal at the Tavern, gaining Channel. Upgraded Blast and Sapling, then used multiple activations and Recall to keep offense available. A useful strategy supported by available gear; the packaged graphical run reproduces this result. |
+| 825185 | Loss | Round 19, Cinder Hart after 12 turns | Reached the boss at 42 HP after several fights. Rest and upgrades helped, but the late log still shows only one activation per turn. The acquired Storm Opal was not socketed before the Tavern closed. Opportunity timing and weak action economy contributed. |
+| 825186 | Win, 39 HP | Round 18, Cinder Hart in 9 turns | Bought/socketed Storm Opal and imbued a Gold Bracelet with Ruby. Extra Channel plus strong Fire defense supported repeated Palimpsest activations. Both defense and sustained offense mattered. |
+| 825187 | Loss | Round 18, Void-Colossus after 10 turns | Husk Armor imposed the persistent Corrode burden. The bot bought Palimpsest but lacked the Channel development of the wins; its final turns relied on one Cinder Snap activation and limited defense. Cursed-gear luck and policy development both contributed. |
+
+**Two wins, three losses.** These five seeds illustrate behavior, not a calibrated win-rate estimate. The additional 100-run robustness batch (971010–971109) completed **49 wins / 51 losses**, with every run terminal and no illegal-action or nontermination failure. The logs are in `reports/polish-robustness/`.
+
+No new broken rules exploit was established. The existing recommendation to improve the bot's handling of spent cards, elemental matchups, and future action economy remains deferred: this pass changes visibility and the explicitly requested rules, rather than tuning enemies around a weak policy. A fixed Tavern spawn does not guarantee the bot visits it promptly; logged visits occur after round 8 when travel takes time.
+
+A packaged UI playthrough of seed 825184 reached the win screen at 49 HP, round 19, with no renderer errors; history and save deletion passed. Focus/drag/drop, spent allowances, attack/disintegration timing, movement paths, all six Tavern areas, all five Healer cost types, and store inspection have separate graphical checks. Targeted edge-case fixtures are labeled as such and are not presented as natural full runs.
+
+Earlier evaluation below is retained as the original v1 baseline. Changing rules and random draws changes these seeds' trajectories; it is not an isolated balance comparison.
+
+## Original v1 evaluation — rules 1.0.0
+
 Evaluation: Druid, rules/content 1.0.0, observation/action interfaces 1, weighted-druid-v1. Seeds 825183–825187. All five runs were actually executed headlessly; complete decisions, public action descriptions, templated reasons, weights, and encounter records are in `reports/evaluation/`. No search, training, hidden-state access, or scripted victories were used.
 
 | Seed | Result | Endpoint | Causal interpretation |

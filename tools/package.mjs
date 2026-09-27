@@ -29,7 +29,7 @@ await fs.writeFile(
   path.join(app, "package.json"),
   JSON.stringify({
     name: "astrata",
-    version: "1.0.0",
+    version: "1.2.0",
     main: "desktop.cjs",
     type: "module",
   }),
@@ -45,6 +45,13 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "evaluation",
+  "polish-evaluation",
+  "polish-robustness",
+  "store-verification.json",
+  "healer-verification.json",
+  "polish-ui-verification.json",
+  "polish-edge-verification.json",
+  "polish-playthrough.json",
   "gui-verification.json",
   "manual-controls-verification.json",
   "content-audit.json",

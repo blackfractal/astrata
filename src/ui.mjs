@@ -1,3 +1,5 @@
+import { enhance, showCard, showEquipment } from "./polish-ui.mjs";
+import { playFrames, installTooltips } from "./presentation.mjs";
 import { Game } from "./engine.mjs";
 import { cards, items, enemies, glossary, VERSION } from "./content.mjs";
 import { artPaths } from "./art-paths.mjs";
@@ -43,6 +45,7 @@ let settings = {
   fullscreen: false,
   music: 50,
   effects: 50,
+  fast: false,
   ...data.settings,
 };
 const policy = new WeightedPolicy();
@@ -132,7 +135,7 @@ function sidebar(o) {
 function menu() {
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}<button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1.0 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}<button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
   bind();
 }
 async function persist() {
@@ -152,11 +155,20 @@ async function act(a) {
   if (busy) return;
   busy = true;
   try {
+    const before = game.observe();
+    game.capturePresentation = true;
     game.act(a);
     audio.emit("decision");
     selectedHand = null;
     selectedSlot = null;
     await persist();
+    await playFrames(
+      before,
+      game.presentation || [],
+      game.observe(),
+      render,
+      () => settings.fast,
+    );
     render();
   } catch (e) {
     toast(e.message);
@@ -185,10 +197,10 @@ async function stepBot() {
   reason = d.reason;
   await act(d.action);
 }
-function render() {
+function render(frame = null) {
   if (!game) return menu();
-  const o = game.observe(),
-    actions = game.legal();
+  const o = frame || game.observe(),
+    actions = frame ? [] : game.legal();
   let body = "";
   if (o.pendingArmor) {
     body = `<div class="result"><h2>Three Armors, one traveler</h2><p>Choose what to keep.</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div></div>`;
@@ -279,29 +291,7 @@ function render() {
   } else if (o.mode === "event") {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/event-${o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in the Weald</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
   } else if (o.mode === "tavern") {
-    const filters = {
-      shop: ["buy", "heal", "gossip"],
-      equipment: ["equip", "socket", "unsocket", "sell"],
-      grimoire: ["upgrade", "remove", "removeHex"],
-    };
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Shelter beneath the roots</div><h2>The Lantern Rest</h2></div>${actions
-      .filter((a) => a.type === "leave")
-      .map((a) => actionButton(a, "primary"))
-      .join(
-        "",
-      )}</div><img src="assets/location-tavern.png" alt="The warm Lantern Rest tavern" style="width:100%;height:220px;object-fit:cover;margin-bottom:20px"><div class="toolbar">${Object.keys(
-      filters,
-    )
-      .map(
-        (x) =>
-          `<button data-service="${x}" class="${service === x ? "active" : ""}">${x === "shop" ? "Market & rest" : x === "equipment" ? "Equipment & sockets" : "Grimoire & healer"}</button>`,
-      )
-      .join("")}</div><div class="service-list">${
-      actions
-        .filter((a) => filters[service].includes(a.type))
-        .map((a) => actionButton(a))
-        .join("") || "<p>No affordable services in this category.</p>"
-    }</div><p class="muted">${o.shop.healer ? "A healer is here. Hex removal costs " + o.shop.healerPrice + " Gold." : "No healer is visiting today."} Socketing is free. Gem restrictions are printed on Settings.</p></section>${sidebar(o)}</div>`;
+    body = `<div class="layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {
     const title =
       o.mode === "item"
@@ -340,6 +330,37 @@ function render() {
   app.innerHTML =
     (o.mode === "result" && !resultsShown ? "" : header(o)) + body;
   bind();
+  enhance({
+    game,
+    o,
+    actions,
+    frame,
+    app,
+    modal,
+    settings,
+    act,
+    render,
+    dialog,
+    close,
+    img,
+    esc,
+    text,
+    card,
+    actionButton,
+    busy: () => busy,
+    select: (uid) => {
+      selectedHand = uid;
+      selectedSlot = null;
+    },
+    inspect: inspectCard,
+    saveSettings: () => storage.settings(settings),
+    service,
+    setService: (value) => {
+      service = value;
+      render();
+    },
+  });
+  app.classList.toggle("presenting", !!frame);
 }
 function botControls() {
   return `<div class="row" style="margin-top:20px"><button data-ui="botStep" class="quiet">AI step</button><button data-ui="botToggle" class="quiet">${auto ? "Stop AI" : "Watch AI"}</button></div>`;
@@ -350,6 +371,7 @@ function resultMarkup(o) {
 }
 function dialog(html) {
   modal.innerHTML = `<section class="dialog"><button class="dialog-close quiet" data-close aria-label="Close">✕</button>${html}</section>`;
+  modal.classList.remove("card-peek");
   modal.hidden = false;
   clearTimeout(autoTimer);
   bind(modal);
@@ -357,32 +379,39 @@ function dialog(html) {
 }
 function close() {
   modal.hidden = true;
+  modal.classList.remove("card-peek");
   modal.innerHTML = "";
   schedule();
 }
+function polishContext() {
+  return {
+    game,
+    o: game?.observe(),
+    actions: game?.legal() || [],
+    app,
+    modal,
+    settings,
+    act,
+    render,
+    dialog,
+    close,
+    img,
+    esc,
+    text,
+    card,
+    actionButton,
+    busy: () => busy,
+    select: (uid) => {
+      selectedHand = uid;
+      selectedSlot = null;
+    },
+  };
+}
 function inspectCard(id) {
-  const d = cards[id];
-  dialog(
-    `<h2>${d.name}</h2><div class="row">${card({ id })}<div style="max-width:350px"><p>${text(d.text)}</p><p>${d.upgrade ? text(d.upgrade.text) : "This card has no upgrade."}</p><small>${d.element} · ${d.type} · ${d.rarity}</small></div></div>`,
-  );
+  showCard(polishContext(), { id });
 }
 function inventory() {
-  const o = game.observe(),
-    acts = game
-      .legal()
-      .filter((a) => ["equip", "socket", "unsocket", "sell"].includes(a.type));
-  dialog(
-    `<h2>Belongings</h2><p>Seven equipment slots. Armor swaps on the Field. Socket Gems at Taverns.</p><div class="inventory-list">${o.inventory
-      .map((x) => {
-        const d = items[x.id],
-          slot = Object.entries(o.equipment).find(([k, v]) => v === x.uid)?.[0],
-          gem = o.inventory.find((g) => g.uid === x.gem);
-        return `<div class="item-view">${img("item-" + x.id)}<div><b>${d.name}</b><small> ${slot || ""}</small><p>${text(d.text)}${d.forbid ? " Cannot socket: " + d.forbid.map((id) => items[id].name).join(", ") : ""}${gem ? "<br>Socket: " + items[gem.id].name : ""}</p></div></div>`;
-      })
-      .join(
-        "",
-      )}</div><div class="choices" style="margin-top:20px">${acts.map((a) => actionButton(a)).join("")}</div>`,
-  );
+  showEquipment(polishContext());
 }
 function showSettings() {
   dialog(
@@ -398,10 +427,11 @@ function showSettings() {
       )
       .join(
         "",
-      )}</select></label><label>Music <input id="music" type="range" min="0" max="100" value="${settings.music}"></label><label>Effects <input id="effects" type="range" min="0" max="100" value="${settings.effects}"></label><small>This edition is silent. Volume settings are retained for future audio.</small><div style="margin-top:20px"><button class="primary" data-ui="applySettings">Apply</button></div>`,
+      )}</select></label><label>Fast animations <input id="fast" type="checkbox" ${settings.fast ? "checked" : ""}></label><label>Music <input id="music" type="range" min="0" max="100" value="${settings.music}"></label><label>Effects <input id="effects" type="range" min="0" max="100" value="${settings.effects}"></label><small>This edition is silent. Volume settings are retained for future audio.</small><div style="margin-top:20px"><button class="primary" data-ui="applySettings">Apply</button></div>`,
   );
 }
 async function ui(name) {
+  if (busy) return;
   switch (name) {
     case "new":
       if (data.save) {
@@ -448,6 +478,7 @@ async function ui(name) {
       settings = {
         width,
         height,
+        fast: modal.querySelector("#fast").checked,
         fullscreen: modal.querySelector("#display").value === "fullscreen",
         music: Number(modal.querySelector("#music").value),
         effects: Number(modal.querySelector("#effects").value),
@@ -558,6 +589,7 @@ function bind(root = app) {
   root.querySelectorAll("[data-action]").forEach(
     (el) =>
       (el.onclick = async () => {
+        if (busy) return;
         const wasOpen = !modal.hidden;
         if (wasOpen) close();
         await act(el.dataset.action);
@@ -625,6 +657,7 @@ function bind(root = app) {
   );
 }
 document.addEventListener("keydown", (e) => {
+  if (busy) return;
   if (e.key === "Escape") {
     e.preventDefault();
     if (!modal.hidden) close();
@@ -643,4 +676,5 @@ document.addEventListener("keydown", (e) => {
 window.addEventListener("error", (e) =>
   toast("Unexpected error: " + e.message),
 );
+installTooltips();
 menu();
