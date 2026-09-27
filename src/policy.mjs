@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.3";
+    this.id = "weighted-druid-v1.4";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -177,6 +177,11 @@ export class WeightedPolicy {
         )
           n -= 20;
         if (e.adj) n += ns.length * 2;
+        if (e.matchingDamage || e.matchingShield)
+          n +=
+            ns.filter(
+              (i) => b.grid[i].at(-1).id === c.id && !b.grid[i].at(-1).sever,
+            ).length * 2;
         if (c.attune)
           n += ns.some((i) => b.grid[i].at(-1).element !== "Arcane") ? 1 : 0;
         for (const i of ns) if (cards[b.grid[i].at(-1).id].growth) n += 3;

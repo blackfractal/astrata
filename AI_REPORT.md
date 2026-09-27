@@ -1,3 +1,29 @@
+# Matching starter-card adjacency — rules 1.3.2, content 1.1.2
+
+Final five sequential seeds 825183–825187: **5 wins / 0 losses**, using weighted-druid-v1.4. Final HP / Field round: **55/20, 29/19, 25/20, 65/19, 25/19**. Raw logs are in `reports/adjacency-evaluation/`. The policy rewards placement next to matching exposed cards and reads the actual Shield block value from legal-action effects.
+
+Both bonuses are position-dependent: adjacent Blasts gain damage and adjacent Shields gain block when activated. Direct tests and the packaged UI verify 6/7/6 for a row of three. Elemental conversion occurs after the bonus, and stored Shield block is not retroactively recalculated when neighbors change. Coverage includes diagonals, row edges, covered cards, Sever, and exposed spent neighbors.
+
+All five seeds still win, but seed 825184 ends at 29 HP instead of the prior 40 HP. Altered placement scores and combat choices mean that a stronger card interaction need not improve every route. This small sample is not a balance estimate. No further tuning was made to chase a win rate. **62 rules tests pass**, and packaged adjacency/activation/pulse checks have no renderer errors. The prior full graphical victory belongs to rules 1.3.1; this final patch was checked with targeted packaged interactions and five full headless runs.
+
+The design-only Blink/once-per-turn requirement remains pending in gameplay. These results use the existing repeat-activation rule, with zero-Focus Clear Mind/Rain Lantern/Tide Memory, no Blast/Shield rewards, and the new adjacency bonuses enabled.
+
+---
+
+# Reveal and economy-card update — rules 1.3.1, content 1.1.1
+
+The final five sequential seeds 825183–825187 all completed: **5 wins / 0 losses**, using weighted-druid-v1.3. Final HP / Field round were 55/20, 40/19, 25/20, 65/19, and 25/19. Logs and individual encounter results are in `reports/reveal-evaluation/`. This supersedes the earlier same-turn diagnostic run before the zero-Focus economy-card changes.
+
+Blast and Shield never appeared among selected rewards; direct generation tests over 100 seeds verify they are excluded from normal/rare reward offers. Existing copies and shop stock remain valid. The five runs used Clear Mind 0, 1, 1, 2, and 1 times respectively; none activated Rain Lantern or Tide Memory. Therefore this sample verifies completion but offers little evidence about Rain Lantern/Tide Memory balance. Their zero placement cost, Channel payment, and next-turn-only resource timing are checked directly in the rules tests. The bot still favors immediate offense over future draw, which may underuse these cards.
+
+Seed 825183 dipped to 29 HP but finished at 55; 825186 never dropped below 57 and finished at full health. Recovery remains powerful in some routes. No balance conclusion should be attributed solely to the reward exclusion or cheaper utility cards, because reward shuffling changes later random outcomes too. The earlier 80/100 result remains evidence for rules 1.3.0/content 1.1.0, not this update.
+
+Reveal animation is presentation-only: the captured draw order matches the headless engine, and a full-run invariance regression still passes. Normal/Fast/Skip/reduced-motion packaged checks confirm ordered reveals and automatic Placement. Movement brightness and arrow-pulse fixtures pass. **58 rules tests pass.** The final packaged full run (seed 825184) won at 40 HP, round 19, in 102 seconds; results/history, completed-save deletion, and zero renderer errors are recorded in `reports/reveal-playthrough.json`.
+
+Scope boundary: the once-per-turn/Blink rule requested specifically for the design document is recorded in design v4.41, but is not implemented in this package. These AI results still use the previous repeat-activation behavior. Design v4.42's zero-Focus Clear Mind, Rain Lantern, and Tide Memory costs are implemented.
+
+---
+
 # Paired spawns and 2 Channel — rules 1.3.0
 
 Five complete headless runs used weighted-druid-v1.3, content 1.1.0, and unchanged default numeric weights. **5 wins / 0 losses.** These are sequential seeds selected before running, not a selection of winning seeds. Raw actions, reasons, and encounter results are in `reports/pairs-evaluation/`.

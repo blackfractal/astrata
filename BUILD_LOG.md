@@ -189,3 +189,36 @@ Verification: **54 passing rules tests**. New regressions cover 100 preview sche
 Packaged graphical checks use policy-reached snapshots from seeds 825183/825184 for four-pair preview, group badge, three-Bat encounter, 2 Channel, and member inspection; no renderer errors or missing images. Visual review caught wrapping that pushed the fourth pair below the viewport. The Field now reserves room for one row of all four pair previews plus movement controls; 1280×800 fits without page scrolling. No new art identities were needed; repeated creatures use their existing art. The complete packaged run, initial seed 825184 through Watch AI, won at 47 HP in round 20; results, history, and save deletion passed in 88 seconds. Reports are in reports/pairs-*.
 
 Additional active implementation/verification time: approximately **10 minutes**, including final report/package/archive work. One agent, no delegation. Runtime reused with --app-only to avoid interrupting an open game; local commit follows, no push.
+
+
+## Post-build polish — movement visibility, phase pulses, Reveal, and card rewards/costs, round 5
+
+Started 2026-09-26 21:45 EDT. Jonathan requested no whole-grid/icon darkening during movement and prominent forward-arrow pulses at exhausted Focus/Channel or when no corresponding actions remain. During implementation he added face-down dealing followed by individual flips during Reveal, exclusion of Blast/Shield from card rewards, a design-document once-per-turn/Blink rule, and free placement for Rain Lantern-like next-turn economy Objects.
+
+Implemented:
+- Input remains locked during presentation, but Field tiles/markers and player/equipment visuals retain their opacity. The same opacity preservation covers battle-grid cards during Reveal/other presentation.
+- Placement-to-Activation pulses when Focus is zero OR no legal placement remains. Activation-to-Enemy pulses when Channel is zero OR no legal activation remains. A 1.2-second gold pulse and arrow nudge make the control conspicuous; the phase label itself no longer pulses. Legal zero-cost actions remain usable. Reduced motion uses a steady outline.
+- Reveal captures the drawn hand as a presentation event without altering RNG/game state. Cards deal face down, then flip individually in drawn order. Reveal stays highlighted and controls locked until it finishes, then Placement begins automatically. Fast/Skip work; reduced motion retains sequential reveals without 3D rotation. Card backs use a local CSS ornamental design rather than a new raster asset.
+- Blast and Shield are excluded from card reward pools. The starting deck and shop pools retain them. Pending older-save rewards replace only banned entries with deterministic, nonduplicate eligible cards of the same rarity, preserving other choices without consuming RNG.
+- Rain Lantern, Clear Mind, and Tide Memory now cost 0 Focus to place. Rain Lantern's existing effect is +2 Focus next turn; it was not converted into draw. Clear Mind gives +2 Insight and Tide Memory +3 Insight next turn. Their activation costs and limits remain unchanged, and permanent Focus Energy still costs Focus.
+
+Design updates are v4.39–v4.42, using fresh guarded edits each time. The once-per-turn default and printed Blink exception are **documentation-only in this update**, matching Jonathan's explicit design-doc wording; executable activation rules remain unchanged. The design distinguishes total activation allowance from per-turn availability, defines paid repeat activation with Blink, and reconciles Shield, Attune, and Cinder Snap examples. README and AI_REPORT flag this implementation boundary explicitly.
+
+Package/rules 1.3.1, content 1.1.1, policy weighted-druid-v1.3. Saves through 1.3.0 load. Validation: 58 rules tests pass, including reward exclusion/migration, captured reveal order, state/RNG invariance, and zero-Focus placement with delayed bonuses and Channel costs. Packaged fixtures verify movement opacity for all 121 tiles during player and enemy movement, six pulse/nonpulse resource cases, free-card usability at zero Focus, reduced motion, all four reveal modes, next-turn Reveal, and automatic phase progression. Screenshots reviewed. Final five headless runs all won; no Rain Lantern/Tide Memory activation occurred in this small sample, so no balance claim is made for those cards.
+
+Additional active implementation/verification time: approximately 12 minutes including the final graphical run and archive refresh. Runtime reused with --app-only to preserve the open user session. Reports are reports/readability-verification.json, reports/reveal-verification.json, reports/reveal-evaluation/, and the final graphical report. Local commit only, no push.
+
+Final packaged verification: seed 825184 reached Stratum 1 Complete at 40 HP, round 19, in 102 seconds with no renderer errors. Results/history and completed-save deletion passed. See reports/reveal-playthrough.json. Final archive refreshed after this record.
+
+
+## Post-build polish — matching Blast/Shield adjacency, round 6
+
+Started 2026-09-26 21:57 EDT, while the preceding polish was being packaged. Jonathan requested +1 block for each Shield next to another Shield and +1 damage for each Blast next to another Blast. He also repeated the request for zero-cost Clear Mind; it was already included and remains 0 Focus / 1 Channel / +2 Insight next turn / total limit 1.
+
+Implemented +1 per orthogonally adjacent exposed matching card, symmetrically: a pair gives +1 each; a row of three gives +1/+2/+1. Evaluate when activated, before elemental math and existing damage multipliers. Stored Shield block keeps its activation-time value. Exposed spent matching cards still contribute; diagonal, row-wrapped, covered, or Severed cards do not. Card text, on-grid activation values, detail controls, public legal-action effects, and policy placement scoring reflect the bonus. No printed activation limits or costs changed.
+
+Main design updated to v4.43 with fresh guarded edits. Package/rules 1.3.2, content 1.1.2, policy weighted-druid-v1.4. Saves through 1.3.1 load. The pending documentation-only once-per-turn/Blink change is still clearly marked in README and AI_REPORT; it was not silently implemented as part of adjacency.
+
+Verification: 62 passing rules tests, with new symmetry, live-layout, elemental-order, stored-block, and exclusion cases. Packaged UI shows both rows as 6/7/6, executes a 7-damage Blast, activates a boosted Shield, spends Channel, and pulses the Enemy arrow at zero Channel without renderer errors. Screenshot reviewed. All five full headless runs win; final HP 55, 29, 25, 65, 25. Current evidence is in reports/adjacency-evaluation/ and reports/adjacency-verification.json. The earlier full graphical victory retains its rules 1.3.1 attribution rather than being relabeled.
+
+Additional implementation and verification time for this follow-up: approximately 5 minutes, including final archive/commit work. Preceding round 5 took approximately 12 minutes. One agent. Final distribution includes all notes completed in this working turn; local commit only, no push.

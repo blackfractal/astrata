@@ -1,5 +1,5 @@
 import { cards, items, enemies } from "./content.mjs";
-import { blockHit, offense } from "./engine.mjs";
+import { blockHit, offense, adjacent } from "./engine.mjs";
 const slotNames = {
   head: "Head",
   neck: "Neck",
@@ -30,19 +30,30 @@ function bindActions(c, root) {
       }),
   );
 }
-function effect(c, slot) {
+function effect(c, slot, ctx) {
   const d = cards[c.id],
     f = d.effects || {};
+  const matching = c.sever
+    ? 0
+    : adjacent(slot).filter((i) => {
+        const other = ctx.o.battle.grid[i].at(-1);
+        return other?.id === c.id && !other.sever;
+      }).length;
   return (
     [
       f.damage
-        ? "Deal " + (f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0))
+        ? "Deal " +
+          (f.damage +
+            (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+            (f.matchingDamage || 0) * matching)
         : f.hpDamage
           ? "Deal current HP"
           : f.randomDamage
             ? "Deal 1–" + f.randomDamage
             : null,
-      f.shield ? `Shield ${f.shield}` : null,
+      f.shield
+        ? `Shield ${f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching + (d.name.includes("Shield") ? ctx.o.bonuses.shield : 0)}`
+        : null,
       f.ward ? `Ward +${f.ward}` : null,
       f.heal ? `Heal ${f.heal}` : null,
       f.poison ? `Poison ${f.poison}` : null,
@@ -152,7 +163,7 @@ export function showCard(ctx, c, slot = null) {
     const a = ctx.game
       .legal()
       .filter((a) => a.slot === slot && actTypes.includes(a.type));
-    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">Activate · ${effect(c, slot)}</button>${a
+    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">Activate · ${effect(c, slot, ctx)}</button>${a
       .filter((a) => a.type === "recall")
       .map((a) => button(ctx, a))
       .join("")}`;
@@ -618,13 +629,11 @@ export function enhance(ctx) {
       const a = actions.find((a) => a.key === el.dataset.action);
       if (
         a &&
-        ((a.type === "activatePhase" && !placement) ||
-          (a.type === "endTurn" && !activation))
+        ((a.type === "activatePhase" && (b.focus <= 0 || !placement)) ||
+          (a.type === "endTurn" && (b.channel <= 0 || !activation)))
       )
         el.classList.add("next-choice");
     });
-    if (b.phase === "place")
-      app.querySelector(".phasebar .active")?.classList.add("next-choice");
     app.querySelectorAll("[data-hand]").forEach((el) => {
       const c = b.hand.find((c) => c.uid === Number(el.dataset.hand)),
         d = cards[c.id],
@@ -694,7 +703,7 @@ export function enhance(ctx) {
         nums.innerHTML = `${d.type === "Ally" ? "♥ " + c.hp + " · " : d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
         el.insertAdjacentHTML(
           "beforeend",
-          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">Activate · ${effect(c, i)}</button>`,
+          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">Activate · ${effect(c, i, ctx)}</button>`,
         );
         el.querySelector(".slot-activate").onclick = (e) => {
           stop(e);

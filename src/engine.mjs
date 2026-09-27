@@ -55,9 +55,15 @@ export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
       if (
-        ![VERSION.rules, "1.2.1", "1.2.0", "1.1.0", "1.0.0"].includes(
-          saved.version?.rules,
-        )
+        ![
+          VERSION.rules,
+          "1.3.1",
+          "1.3.0",
+          "1.2.1",
+          "1.2.0",
+          "1.1.0",
+          "1.0.0",
+        ].includes(saved.version?.rules)
       )
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
@@ -152,6 +158,16 @@ export class Game {
   }
   normalizeRewards() {
     const s = this.s;
+    if (s.reward?.cards) {
+      s.reward.cards = [...s.reward.cards];
+      for (let i = 0; i < s.reward.cards.length; i++) {
+        const id = s.reward.cards[i];
+        if (["blast", "shield"].includes(id))
+          s.reward.cards[i] = this.pool(cards[id].rarity, true).find(
+            (c) => !s.reward.cards.includes(c.id),
+          ).id;
+      }
+    }
     if (s.mode === "item" && s.itemOffer?.length > 1)
       s.itemOffer = [s.itemOffer[0]];
     if (s.reward?.gem === true)
@@ -297,19 +313,21 @@ export class Game {
         : [];
     });
   }
-  pool(rarity = "common") {
+  pool(rarity = "common", reward = false) {
     return Object.values(cards).filter(
       (c) =>
-        c.type !== "Hex" && c.rarity === rarity && !["surge"].includes(c.id),
+        c.type !== "Hex" &&
+        c.rarity === rarity &&
+        !["surge"].includes(c.id) &&
+        (!reward || !["blast", "shield"].includes(c.id)),
     );
   }
-  offer(rare = false) {
-    const common = this.shuffle(this.pool().map((c) => c.id)).slice(
-      0,
-      rare ? 2 : 3,
-    );
+  offer(rare = false, reward = true) {
+    const common = this.shuffle(
+      this.pool("common", reward).map((c) => c.id),
+    ).slice(0, rare ? 2 : 3);
     return rare
-      ? [...common, this.pick(this.pool("rare").map((c) => c.id))]
+      ? [...common, this.pick(this.pool("rare", reward).map((c) => c.id))]
       : common;
   }
   drawDeck(key, source) {
@@ -771,6 +789,7 @@ export class Game {
     this.log(
       `Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`,
     );
+    this.present("reveal", { name: "Reveal", cards: b.hand.map((c) => c.uid) });
   }
   tell(e) {
     const d = enemies[e.id],
@@ -1133,6 +1152,21 @@ export class Game {
       this.log("A Mini-Void tears free.");
     }
   }
+  matchingNeighbors(c, i) {
+    if (c.sever || top(this.s.battle.grid[i])?.uid !== c.uid) return 0;
+    return this.neighbors(i).filter(
+      (j) => top(this.s.battle.grid[j]).id === c.id,
+    ).length;
+  }
+  shieldPower(c, i) {
+    const d = cards[c.id];
+    return (
+      (d.effects.shield || 0) +
+      (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+      (d.effects.matchingShield || 0) * this.matchingNeighbors(c, i) +
+      (d.name.includes("Shield") ? this.bonuses().shield : 0)
+    );
+  }
   cardPower(c, i) {
     const d = cards[c.id],
       f = d.effects,
@@ -1156,6 +1190,7 @@ export class Game {
         0,
       );
     if (f.adj) n += this.neighbors(i).length * f.adj;
+    if (f.matchingDamage) n += this.matchingNeighbors(c, i) * f.matchingDamage;
     if (f.square && !c.sever)
       for (const origin of [i, i - 1, i - 5, i - 6])
         if (
@@ -1226,10 +1261,7 @@ export class Game {
         uid: this.uid(),
         slot: i,
         owner: c.uid,
-        block:
-          f.shield +
-          bonus +
-          (d.name.includes("Shield") ? this.bonuses().shield : 0),
+        block: this.shieldPower(c, i),
         element,
       });
     if (f.heal)
@@ -1370,7 +1402,7 @@ export class Game {
       s.mode = "reward";
       s.reward = {
         cards: boss
-          ? this.shuffle(this.pool("rare").map((c) => c.id)).slice(0, 3)
+          ? this.shuffle(this.pool("rare", true).map((c) => c.id)).slice(0, 3)
           : this.offer(elite || skittish),
         boss,
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
@@ -1402,7 +1434,7 @@ export class Game {
     this.s.mode = "tavern";
     this.s.shop = {
       stock: [
-        ...this.offer(true).map((id) => "card:" + id),
+        ...this.offer(true, false).map((id) => "card:" + id),
         ...this.shuffle(
           Object.keys(items).filter((id) => !items[id].cursed),
         ).slice(0, 6),
@@ -1870,6 +1902,7 @@ export class Game {
                   {
                     ...f,
                     damage: this.cardPower(c, i),
+                    ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
                     card: c.id,
                     charge: d.charge ? d.charge - c.charge : 0,
                   },

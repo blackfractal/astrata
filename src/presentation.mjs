@@ -140,7 +140,72 @@ export async function playFrames(before, frames, after, render, isFast) {
               activate: "Activation",
             }[frame.kind] ||
             "Resolving";
-      if (frame.kind === "move") {
+      if (frame.kind === "reveal") {
+        const masked = structuredClone(frame.state);
+        masked.battle.phase = "start";
+        render(masked);
+        const hand = [
+          ...document.querySelectorAll(".revealed-hand [data-hand]"),
+        ];
+        for (const el of hand) {
+          el.classList.remove("unavailable");
+          el.classList.add("deal-card", "face-down");
+          el.style.visibility = "hidden";
+          el.removeAttribute("title");
+          el.removeAttribute("data-tooltip");
+          el.setAttribute("aria-label", "Face-down card");
+          const back = document.createElement("div");
+          back.className = "reveal-back";
+          back.setAttribute("aria-hidden", "true");
+          back.innerHTML =
+            '<span class="back-seal">✧</span><span>ASTRATA</span>';
+          el.append(back);
+        }
+        // Deal all cards face down, then turn each card over in draw order.
+        for (const el of hand) {
+          if (skip) break;
+          el.style.visibility = "visible";
+          const deal = el.animate(
+            [
+              { opacity: 0, transform: reduced ? "none" : "translateY(20px)" },
+              { opacity: 1, transform: "none" },
+            ],
+            { duration: ms(160), fill: "forwards", easing: "ease-out" },
+          );
+          await pause(160);
+          deal.cancel();
+        }
+        await pause(200);
+        for (const el of hand) {
+          if (skip) break;
+          if (!reduced) {
+            const close = el.animate(
+              [
+                { transform: "perspective(700px) rotateY(0deg)" },
+                { transform: "perspective(700px) rotateY(90deg)" },
+              ],
+              { duration: ms(180), fill: "forwards", easing: "ease-in" },
+            );
+            await pause(180);
+            close.cancel();
+          }
+          el.classList.remove("face-down");
+          el.removeAttribute("aria-label");
+          if (!reduced) {
+            const open = el.animate(
+              [
+                { transform: "perspective(700px) rotateY(-90deg)" },
+                { transform: "perspective(700px) rotateY(0deg)" },
+              ],
+              { duration: ms(180), fill: "forwards", easing: "ease-out" },
+            );
+            await pause(180);
+            open.cancel();
+          }
+          await pause(260);
+        }
+        if (!skip) render(frame.state);
+      } else if (frame.kind === "move") {
         if (!find(".field")) {
           const initial = structuredClone(frame.state);
           initial.mode = "field";

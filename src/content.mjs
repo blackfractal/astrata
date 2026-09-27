@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.0",
-  content: "1.1.0",
+  rules: "1.3.2",
+  content: "1.1.2",
   observation: 1,
   actions: 1,
 };
@@ -56,8 +56,8 @@ card(
   "Spell",
   1,
   2,
-  hit(5),
-  "Attune. Deal 5 damage.",
+  { damage: 5, matchingDamage: 1 },
+  "Attune. Deal 5 damage, +1 per adjacent Blast.",
   { attune: true },
 );
 card(
@@ -67,8 +67,8 @@ card(
   "Object",
   1,
   -1,
-  { shield: 5 },
-  "Attune. Add 5 block until the enemy turn ends.",
+  { shield: 5, matchingShield: 1 },
+  "Attune. Add 5 block, +1 per adjacent Shield, until the enemy turn ends.",
   { attune: true },
 );
 card(
@@ -87,7 +87,7 @@ card(
   "Clear Mind",
   "Arcane",
   "Object",
-  1,
+  0,
   1,
   { insight: 2 },
   "+2 Insight next turn.",
@@ -420,7 +420,7 @@ card(
   "Rain Lantern",
   "Water",
   "Object",
-  1,
+  0,
   2,
   { focus: 2 },
   "+2 Focus next turn.",
@@ -516,7 +516,7 @@ card(
   "Tide Memory",
   "Water",
   "Object",
-  1,
+  0,
   2,
   { insight: 3 },
   "+3 Insight next turn.",

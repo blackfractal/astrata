@@ -2086,3 +2086,94 @@ header {
   justify-self: end;
   padding: 7px 14px;
 }
+
+/* Playback locks input without fading the Field or its markers. */
+.presenting:has(.field) button:disabled {
+  opacity: 1;
+}
+/* Pulse the actual forward control when its resource or actions run out. */
+.phasebar .phase-arrow.next-choice {
+  position: relative;
+  z-index: 1;
+  animation: phase-ready 1.2s ease-in-out infinite;
+}
+.phasebar .phase-arrow.next-choice svg {
+  animation: phase-nudge 1.2s ease-in-out infinite;
+}
+@keyframes phase-ready {
+  0%,
+  100% {
+    background: #d9bd7b;
+    box-shadow:
+      inset 0 0 0 1px #f5dea0,
+      0 0 0 0 #f2d17c00;
+  }
+  50% {
+    background: #ffedb1;
+    box-shadow:
+      inset 0 0 0 2px #fff8df,
+      0 0 0 3px #f2d17c90,
+      0 0 20px #f2d17c80;
+  }
+}
+@keyframes phase-nudge {
+  0%,
+  100% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phasebar .phase-arrow.next-choice {
+    outline: 3px solid #fff0bb;
+    outline-offset: 1px;
+  }
+}
+
+/* Face-down dealing uses the normal hand layout, keeping the grid readable. */
+.presenting .revealed-hand .deal-card:disabled {
+  opacity: 1;
+}
+.deal-card {
+  position: relative;
+  transform-origin: center;
+}
+.deal-card.face-down > :not(.reveal-back) {
+  visibility: hidden;
+}
+.reveal-back {
+  display: none;
+}
+.deal-card.face-down .reveal-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  gap: 8px;
+  color: #e2c991;
+  font:
+    11px Georgia,
+    serif;
+  letter-spacing: 4px;
+  border: 3px double #a38b56;
+  outline: 1px solid #d9be7c;
+  outline-offset: -9px;
+  background:
+    repeating-linear-gradient(45deg, #d4b7790b 0 1px, transparent 1px 12px),
+    #142e25;
+}
+.reveal-back .back-seal {
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.presenting .slot:disabled,
+.presenting .player-portrait:disabled,
+.presenting [data-item-detail]:disabled {
+  opacity: 1;
+}
