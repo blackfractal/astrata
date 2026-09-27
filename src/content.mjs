@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.7",
-  content: "1.1.6",
+  rules: "1.3.8",
+  content: "1.1.7",
   observation: 1,
   actions: 1,
 };
@@ -708,9 +708,9 @@ item(
   "bronze",
   "Bronze Bracelet",
   "wrist",
-  { block: 3 },
+  { block: 2 },
   40,
-  "Refill 3 block each enemy turn.",
+  "Refill 2 block each enemy turn.",
   { socket: true },
 );
 item(
@@ -735,9 +735,9 @@ item(
   "ring",
   "Rootbound Ring",
   "finger",
-  { damage: 1 },
+  { damage: 2, firstAttackOnly: true },
   40,
-  "After a damaging activation: a separate 1-damage hit, imbued with the socketed element.",
+  "Once per player turn, after your first damaging attack activation: a separate 2-damage hit on its first target, imbued with the socketed element. A negated attack spends the trigger. Charge-building and status-only activations do not.",
   { socket: true },
 );
 item(
@@ -945,7 +945,7 @@ enemy(
   "Bat",
   "Mote",
   "Wind",
-  10,
+  15,
   "Wanderer",
   [
     attack("Flit", 4, "Wind"),
@@ -960,7 +960,7 @@ enemy(
   "Sludge",
   "Mote",
   "Water",
-  12,
+  18,
   "Sentinel",
   [
     attack("Slap", 6, "Water"),
@@ -976,7 +976,7 @@ enemy(
   "Wolf",
   "Mote",
   "Earth",
-  11,
+  17,
   "Stalker",
   [
     attack("Claw", 5, "Earth"),
@@ -992,7 +992,7 @@ enemy(
   "Fire Wolf",
   "Mote",
   "Fire",
-  11,
+  17,
   "Stalker",
   [attack("Claw", 5, "Fire"), attack("Fire Bite", 10, "Fire", { burn: 4 })],
   "Burn persists past interception.",
@@ -1004,7 +1004,7 @@ enemy(
   "Spark-Wisp",
   "Mote",
   "Fire",
-  7,
+  11,
   "Skittish",
   [attack("Spark", 3, "Fire"), effect("Flicker", { flicker: true })],
   "Wastes the next attack activation.",
@@ -1015,7 +1015,7 @@ enemy(
   "Bell Beetle",
   "Mote",
   "Earth",
-  14,
+  21,
   "Wanderer",
   [
     attack("Chime", 4, "Earth"),
@@ -1031,7 +1031,7 @@ enemy(
   "Ink Leech",
   "Mote",
   "Water",
-  13,
+  20,
   "Stalker",
   [
     attack("Sip", 3, "Water", { poison: 1 }),
@@ -1047,7 +1047,7 @@ enemy(
   "Veil Moth",
   "Mote",
   "Light",
-  9,
+  14,
   "Skittish",
   [
     effect("Dazzle", { grid: "freeze", target: "newest" }),
@@ -1061,7 +1061,7 @@ enemy(
   "Needle Imp",
   "Mote",
   "Chaos",
-  12,
+  18,
   "Hunter",
   [
     attack("Needle", 3, "Chaos", { pierce: true }),
@@ -1075,7 +1075,7 @@ enemy(
   "Lichen Eye",
   "Mote",
   "Earth",
-  15,
+  23,
   "Sentinel",
   [
     effect("Gaze", { grid: "sever", target: "connected" }),
@@ -1090,7 +1090,7 @@ enemy(
   "Glass Eel",
   "Mote",
   "Water",
-  10,
+  15,
   "Wanderer",
   [attack("Current", 3, "Water", { hits: 2 }), effect("Coil", { guard: 3 })],
   "Small repeated hits consume shields.",
@@ -1101,7 +1101,7 @@ enemy(
   "Ashling",
   "Mote",
   "Fire",
-  12,
+  18,
   "Stalker",
   [effect("Ash breath", { burn: 2 }), attack("Coal", 5, "Fire")],
   "Opens with Burn.",
@@ -1113,7 +1113,7 @@ enemy(
   "Dervish Hunter",
   "Eidolon",
   "Wind",
-  35,
+  53,
   "Hunter",
   [
     attack("Slice", 8, "Wind"),
@@ -1129,7 +1129,7 @@ enemy(
   "Shard-Walker",
   "Eidolon",
   "Earth",
-  29,
+  44,
   "Stalker",
   [
     attack("Shard", 9, "Earth"),
@@ -1145,7 +1145,7 @@ enemy(
   "Undead Fire Wolf",
   "Eidolon",
   "Fire",
-  33,
+  50,
   "Stalker",
   [
     attack("Bite", 7, "Fire"),
@@ -1162,7 +1162,7 @@ enemy(
   "Dark Sentinel",
   "Eidolon",
   "Chaos",
-  37,
+  56,
   "Sentinel",
   [
     attack("Bell toll", 7, "Chaos"),
@@ -1178,7 +1178,7 @@ enemy(
   "Pale Weaver",
   "Eidolon",
   "Light",
-  30,
+  45,
   "Stalker",
   [
     effect("Unweave", { grid: "sever", target: "connected" }),
@@ -1194,7 +1194,7 @@ enemy(
   "Elemental Wisp",
   "Eidolon",
   "Arcane",
-  28,
+  42,
   "Skittish",
   [
     attack("Prismatic lash", 8, "Fire"),
@@ -1210,7 +1210,7 @@ enemy(
   "Hollow Mason",
   "Eidolon",
   "Earth",
-  40,
+  60,
   "Wanderer",
   [
     attack("Hammer", 7, "Earth"),
@@ -1225,7 +1225,7 @@ enemy(
   "Void-Colossus",
   "Archon",
   "Chaos",
-  115,
+  173,
   "Archon",
   [
     attack("Void fist", 10, "Chaos"),
@@ -1244,7 +1244,7 @@ enemy(
   "The Cinder Hart",
   "Archon",
   "Fire",
-  102,
+  153,
   "Archon",
   [
     attack("Antler", 9, "Fire"),
@@ -1261,7 +1261,7 @@ enemy(
   "The Glass Choir",
   "Archon",
   "Wind",
-  106,
+  159,
   "Archon",
   [
     effect("Shatter hymn", { grid: "destroy", target: "tallest" }),
@@ -1278,7 +1278,7 @@ enemy(
   "Mini-Void",
   "Mote",
   "Chaos",
-  7,
+  11,
   "Sentinel",
   [attack("Gnaw", 2, "Chaos"), attack("Gnaw", 3, "Chaos")],
   "Summoned by Chaos striking Void-Colossus.",

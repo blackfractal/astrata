@@ -56,7 +56,7 @@ test("matching Blast damage is included before elemental multipliers and reflect
   );
   const enemy = b.enemies[0];
   g.applyCard(a, 0, enemy.uid, "Fire", {}, {});
-  assert.equal(enemy.hp, 6);
+  assert.equal(enemy.hp, 13);
 });
 test("Shield previews and stored block include adjacency at activation time, with ordinary attuned defense", () => {
   const g = setup(),

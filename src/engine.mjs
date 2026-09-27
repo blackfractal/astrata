@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.7",
           "1.3.6",
           "1.3.5",
           "1.3.4",
@@ -644,6 +645,7 @@ export class Game {
         })),
       ),
       order: 0,
+      firstAttackTurn: 0,
       permanent: { focus: 0 },
       next: { focus: 0, insight: 0 },
       shields: [],
@@ -1347,6 +1349,13 @@ export class Game {
               ? this.pick(b.enemies.filter((x) => x.hp > 0))
               : b.enemies.find((x) => x.uid === target),
           ];
+      const firstTarget = targets.find((e) => e?.hp > 0);
+      const damaging = !!(f.damage || f.hpDamage || f.randomDamage);
+      const firstAttack =
+        damaging && firstTarget && b.firstAttackTurn !== b.turn;
+      // Claim before Flicker/guard so a negated opening attack cannot bank the Ring.
+      // All targets, Pile members and Fusion effects share this turn marker.
+      if (firstAttack) b.firstAttackTurn = b.turn;
       for (const e of targets) {
         if (!e || e.hp <= 0) continue;
         if (e.flicker) {
@@ -1373,7 +1382,11 @@ export class Game {
             : [element])
             this.damageEnemy(e, n, el, context);
           for (const gear of this.equipped())
-            if (gear.definition.effect.damage)
+            if (
+              gear.definition.effect.damage &&
+              (!gear.definition.effect.firstAttackOnly ||
+                (firstAttack && e === firstTarget))
+            )
               this.damageEnemy(
                 e,
                 gear.definition.effect.damage,
@@ -1578,8 +1591,8 @@ export class Game {
           `Socket ${items[s.startGem].name} into ${slot === "wrist1" ? "Bracelet" : "Ring"}`,
           { slot },
           {
-            defense: slot === "wrist1" ? 3 : 0,
-            damage: slot === "finger1" ? 1 : 0,
+            defense: slot === "wrist1" ? items.bronze.effect.block : 0,
+            damage: slot === "finger1" ? items.ring.effect.damage : 0,
           },
         );
       return actions;

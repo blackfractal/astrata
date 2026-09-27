@@ -32,7 +32,7 @@ test("a full pair lands before collision resolution and produces unique independ
   const [a, b] = g.s.battle.enemies;
   a.hp = 0;
   a.status.burn = 3;
-  assert.equal(b.hp, 10);
+  assert.equal(b.hp, 15);
   assert.equal(b.status.burn, 0);
   g.checkBattle();
   assert.equal(g.s.mode, "battle");

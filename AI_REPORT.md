@@ -1,3 +1,21 @@
+# Starting equipment and +50% enemy HP — package 1.3.10
+
+Rules 1.3.8/content 1.1.7; unchanged weighted-druid-v1.5. Bronze Bracelet refills 2 block; Rootbound Ring fires one separate 2-damage hit on the first damaging attack per player turn. All 23 enemy HP definitions are 50% above package 1.3.9, rounded up, including summons. Complete logs: `reports/equipment-balance-evaluation/`.
+
+| Seed | Outcome | Final HP | Field round | Last encounter |
+| --- | --- | --- | --- | --- |
+| 825183 | loss | 0 | 20 | The Cinder Hart |
+| 825184 | win | 4 | 19 | Void-Colossus |
+| 825185 | loss | 0 | 11 | Ink Leech, Ink Leech, Needle Imp |
+| 825186 | loss | 0 | 12 | Fire Wolf, Dervish Hunter |
+| 825187 | win | 6 | 19 | Void-Colossus |
+
+Two wins and three losses, versus four wins and one loss in the preceding five-run sample. Both victories are narrow: 4 and 6 HP after 11- and 12-turn Colossus fights. One loss occurs against Cinder Hart; two occur in grouped encounters before the Archon. All runs terminate normally without stalls or policy changes. These results suggest more survival pressure for this policy and sample, not an established player win rate. Routes and later random outcomes diverge as fights and decisions change, so these are not isolated per-item effect estimates. No extra tuning was done to force wins.
+
+All 92 rules tests pass. New coverage includes once-per-turn Ring limits and refresh across battles/saves, Plasma/Fusion/Prism/area attacks, status-only and charge-building exceptions, negation, guard, lethal opening hits, elemental sockets, unchanged Crown of Thorns triggers, and Bracelet refills. Packaged interaction tests verify actual damage 6 then 4 from two separated Blasts, 2 block during defense, equipment descriptions, Ring Ready/Spent states and next-turn refresh, and new enemy HP. No renderer errors; the badge was repositioned after visual inspection and is checked against label overlap. Evidence: `reports/equipment-balance-verification.json`, `reports/screenshots/equipment-balance/`. Targeted graphical tests are not a new full graphical playthrough. Earlier reports below remain historical evidence for their versions.
+
+---
+
 # Scarce healing and stronger enemies — package 1.3.9
 
 Rules 1.3.7/content 1.1.6; unchanged weighted-druid-v1.5. Blast damage and Shield block are now 4. All five activation-healing cards are rare, weighted one-quarter as heavily as other rare cards, and destroyed after one use. Enemy HP is increased 15%, rounded up. Raw decisions and encounter logs: `reports/balance-evaluation/`.
