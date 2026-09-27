@@ -291,7 +291,7 @@ function render(frame = null) {
                 a.type === "place" && a.uid === selectedHand && a.slot === i,
             ),
           spent = c && (c.zeroWard || game.allowance(c, i) === 0);
-        return `<button class="slot ${c ? "" : "empty"} ${valid ? "valid" : ""} ${selectedSlot === i ? "chosen" : ""} ${spent ? "spent" : ""}" data-slot="${i}" title="${esc(c ? d.name + ": " + d.text : "Empty slot " + (i + 1))}">${c ? `${img("card-" + c.id)}<span class="level">${slot.length > 1 ? "Lv " + slot.length + " · " : ""}${i + 1}</span><span class="overlay"><span class="name">${d.name}${c.upgrade ? " +" : ""}</span><span class="nums">${d.type === "Ally" ? "♥ " + c.hp + " · " : ""}${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}${d.limit < 0 ? "∞" : game.allowance(c, i)} acts${c.charge ? " · ⚡" + c.charge : ""}${c.lock ? " · Lock" : ""}${c.sever ? " · Sever" : ""}${c.freeze >= b.turn ? " · Freeze" : ""}</span></span>` : i + 1}</button>`;
+        return `<button class="slot ${c ? "" : "empty"} ${valid ? "valid" : ""} ${selectedSlot === i ? "chosen" : ""} ${spent ? "spent" : ""}" data-slot="${i}" title="${esc(c ? d.name + ": " + d.text : "Empty slot " + (i + 1))}">${c ? `${img("card-" + c.id)}${slot.length > 1 ? `<span class="level">Lv ${slot.length}</span>` : ""}<span class="overlay"><span class="name">${d.name}${c.upgrade ? " +" : ""}</span><span class="nums">${d.type === "Ally" ? "♥ " + c.hp + " · " : ""}${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}${d.limit < 0 ? "∞" : game.allowance(c, i)} acts${c.charge ? " · ⚡" + c.charge : ""}${c.lock ? " · Lock" : ""}${c.sever ? " · Sever" : ""}${c.freeze >= b.turn ? " · Freeze" : ""}</span></span>` : ""}</button>`;
       })
       .join("")}</div>${
       b.reaction

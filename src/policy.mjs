@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.4";
+    this.id = "weighted-druid-v1.5";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -83,6 +83,11 @@ export class WeightedPolicy {
         return [
           f.defense ? 10 : 4,
           "Imbue the starting Bracelet for passive protection.",
+        ];
+      case "unequip":
+        return [
+          -25,
+          "Keep equipped gear unless replacing it with better gear.",
         ];
       case "equip": {
         const inst = o.inventory.find((x) => x.uid === a.item),

@@ -214,7 +214,11 @@ function playerMarkup(ctx, battle = false) {
 }
 function equipmentBody(ctx) {
   return `${gearMarkup(ctx, true)}<h3 class="stash-label">Satchel</h3><div class="satchel" data-unsocket-drop>${ctx.o.inventory
-    .filter((x) => !ctx.o.inventory.some((g) => g.gem === x.uid))
+    .filter(
+      (x) =>
+        !Object.values(ctx.o.equipment).includes(x.uid) &&
+        !ctx.o.inventory.some((g) => g.gem === x.uid),
+    )
     .map(
       (x) =>
         `<button class="stash-item" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(items[x.id].text)}">${ctx.img("item-" + x.id)}<span>${items[x.id].name}</span></button>`,
@@ -235,11 +239,11 @@ function itemDetails(ctx, uid) {
     );
   ctx.dialog(
     `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}<div class="item-options">${
-      ["equip", "socket", "unsocket", "sell"]
+      ["equip", "unequip", "socket", "unsocket", "sell"]
         .map((type) => {
           const list = choices.filter((a) => a.type === type);
           return list.length
-            ? `<details><summary>${{ equip: "Equip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
+            ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
             : "";
         })
         .join("") || "<p>No changes available here.</p>"
@@ -306,7 +310,9 @@ function bindEquipment(ctx, root) {
     }
     if (el.hasAttribute("data-unsocket-drop"))
       return current().find(
-        (a) => a.type === "unsocket" && a.uid === drag.setting,
+        (a) =>
+          (a.type === "unsocket" && a.uid === drag.setting) ||
+          (a.type === "unequip" && a.item === drag.item),
       );
   }
   function markDrops() {
@@ -323,12 +329,21 @@ function bindEquipment(ctx, root) {
           stop(e);
         }
       };
-      el.ondrop = (e) => {
+      el.ondrop = async (e) => {
         e.preventDefault();
         stop(e);
         const a = dropAction(el);
         drag = null;
-        if (a) run(ctx, a);
+        if (a) {
+          const keepOpen = root === ctx.modal;
+          await run(ctx, a);
+          if (keepOpen)
+            showEquipment({
+              ...ctx,
+              o: ctx.game.observe(),
+              actions: ctx.game.legal(),
+            });
+        }
       };
     });
   root.querySelectorAll("[data-socket]").forEach(
@@ -347,7 +362,7 @@ function bindEquipment(ctx, root) {
   };
 }
 export function showEquipment(ctx) {
-  ctx.dialog(`<h2>Belongings</h2>${equipmentBody(ctx)}`);
+  ctx.dialog(`<h2>Equipped</h2>${equipmentBody(ctx)}`);
   bindEquipment(ctx, ctx.modal);
 }
 function tavern(ctx) {
@@ -378,7 +393,7 @@ function tavern(ctx) {
     .forEach((el) => (el.onclick = () => ctx.setService(el.dataset.tavern)));
   const content = host.querySelector(".service-content");
   if (service === "equipment") {
-    content.innerHTML = equipmentBody(ctx);
+    content.innerHTML = `<h3>Equipped</h3>${equipmentBody(ctx)}`;
     bindEquipment(ctx, content);
   } else if (service === "market") {
     content.insertAdjacentHTML(

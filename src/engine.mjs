@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.3",
           "1.3.2",
           "1.3.1",
           "1.3.0",
@@ -662,6 +663,7 @@ export class Game {
   allowance(c, i) {
     const b = this.s.battle,
       d = cards[c.id];
+    if (d.singleUse) return Math.max(0, 1 - c.used);
     if (d.limit < 0) return Infinity;
     const plus = b.grid.some(
       (x, j) =>
@@ -675,7 +677,7 @@ export class Game {
   }
   recallCost(slot) {
     const d = cards[top(slot)?.id];
-    if (!d || slot.some((c) => c.lock)) return null;
+    if (!d || slot.some((c) => c.lock || cards[c.id].singleUse)) return null;
     if (d.recallWhole != null) return d.recallWhole;
     if (slot.some((c) => cards[c.id].recall == null)) return null;
     return Math.max(
@@ -808,6 +810,16 @@ export class Game {
     const b = this.s.battle;
     b.discard.push(...b.hand);
     b.hand = [];
+    for (const [i, slot] of b.grid.entries())
+      for (const c of [...slot])
+        if (cards[c.id].expiresAtTurnEnd) {
+          this.present("activate", {
+            slot: i,
+            name: cards[c.id].name + " fades",
+          });
+          this.destroyCard(i, c.uid);
+          this.log(cards[c.id].name + " is Destroyed at turn end.");
+        }
     b.phase = "enemy";
     b.bracelets = this.equipped()
       .filter((x) => x.definition.effect.block)
@@ -1460,6 +1472,16 @@ export class Game {
   }
   equipChoices(add) {
     const s = this.s;
+    for (const [slot, uid] of Object.entries(s.equipment)) {
+      const item = this.getItem(uid);
+      if (item && !items[item.id].cursed)
+        add(
+          "unequip",
+          `Unequip ${items[item.id].name}`,
+          { item: uid, slot },
+          { unequip: true },
+        );
+    }
     for (const item of s.inventory) {
       const d = items[item.id];
       if (d.slot === "gem") continue;
@@ -1952,6 +1974,9 @@ export class Game {
       }
       case "wait":
         this.endMovement();
+        break;
+      case "unequip":
+        s.equipment[a.slot] = null;
         break;
       case "equip":
         for (const k of Object.keys(s.equipment))

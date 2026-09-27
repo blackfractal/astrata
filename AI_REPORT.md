@@ -1,3 +1,13 @@
+# Resonance and equipment — rules 1.3.4, content 1.1.3
+
+Five seeds 825183–825187: **5 wins / 0 losses**, policy weighted-druid-v1.5. Final HP / round: **55/20, 29/19, 25/20, 65/19, 25/19**. Logs: `reports/resonance-equipment-evaluation/`. None acquired Resonance, so this sample checks run completion and the new unequip action without measuring Resonance balance. The policy explicitly avoids unequipping useful gear merely to re-equip it.
+
+All 70 rules tests pass. Direct tests verify Resonance's net +1 Channel from zero, single use without Recall or extra allowance, and expiration into Destroyed, including covered/unused copies. Packaged UI tests verify those interactions plus actual equipment dragging in both directions, no duplicates across Equipped/Satchel, and unnumbered grid cells, with no renderer errors. See `reports/resonance-equipment-verification.json` and screenshots. No new full graphical playthrough is claimed for this patch.
+
+General once-per-turn/Blink gameplay remains pending; Resonance's printed single-use restriction is implemented.
+
+---
+
 # Stop-on-player movement — rules 1.3.3, content 1.1.2
 
 Five sequential seeds 825183–825187: **5 wins / 0 losses**, weighted-druid-v1.4. Final HP / round: **55/20, 29/19, 25/20, 65/19, 25/19**. Raw logs: `reports/movement-stop-evaluation/`. These outcomes match the prior five-run sample; this is regression evidence, not a measured balance effect.

@@ -1,8 +1,10 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.44. This is v1 with 2 starting Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.3; rules 1.3.3).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.45. This is v1 with 2 starting Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.4; rules 1.3.4).
 
 Enemies stop immediately on reaching the player and remain there while the other enemies finish moving, including Pack Movement. Battle begins at the end of the enemy movement phase.
+
+Mind Grid slots have no visible indices. Inventory separates Equipped from Satchel and supports dragging equipment in both directions. Resonance costs 2 Focus to place and 0 Channel to activate for +1 Channel, requires Isolated placement, has one use with no Recall or extra uses, and goes to Destroyed at player-turn end (returning next battle).
 
 ## Play
 
@@ -54,6 +56,6 @@ npm run test:gui
 
 The shared source design is updated through v4.42; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
 
-Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
+Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
 
-Design status: v4.41's once-per-turn default and Blink keyword are documented for a subsequent gameplay update; this package still uses the prior repeat-activation rules. v4.42's zero-Focus Clear Mind, Rain Lantern, and Tide Memory costs are implemented (content 1.1.2).
+Design status: v4.41's once-per-turn default and Blink keyword are documented for a subsequent gameplay update; this package still uses the prior repeat-activation rules. v4.42's zero-Focus Clear Mind, Rain Lantern, and Tide Memory costs are implemented (content 1.1.3).

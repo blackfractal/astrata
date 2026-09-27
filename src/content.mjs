@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.3",
-  content: "1.1.2",
+  rules: "1.3.4",
+  content: "1.1.3",
   observation: 1,
   actions: 1,
 };
@@ -283,10 +283,16 @@ card(
   "Arcane",
   "Object",
   2,
-  2,
+  1,
   { channel: 1 },
-  "Isolated. Gain 1 Channel this turn.",
-  { condition: "isolated" },
+  "Isolated. Gain 1 Channel this turn. Costs 0 Channel. Single use; cannot gain extra uses or Recall. Destroyed at the end of the player turn, even unused.",
+  {
+    condition: "isolated",
+    channel: 0,
+    recall: null,
+    singleUse: true,
+    expiresAtTurnEnd: true,
+  },
 );
 card(
   "keystone",
