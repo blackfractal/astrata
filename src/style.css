@@ -2178,3 +2178,90 @@ header {
 .presenting [data-item-detail]:disabled {
   opacity: 1;
 }
+
+/* Ally vitality and direct battlefield activation choices. */
+.ally-health {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 46%;
+  min-width: 62px;
+  height: 13px;
+  margin-right: 5px;
+  background: #171f19;
+  border: 1px solid #aec7a5;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ally-health i {
+  display: block;
+  height: 100%;
+  background: #4c9f6b;
+  transition: width 0.2s ease;
+}
+.ally-health.wounded i {
+  background: #b88e3c;
+}
+.ally-health.critical i {
+  background: #bc594d;
+}
+.ally-health span {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  font-size: 10px;
+  line-height: 11px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  font-weight: 700;
+}
+.ally-slot .level {
+  top: 22px;
+}
+.targeting-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 9px 12px;
+  margin: 7px 0;
+  color: #f1dfab;
+  background: #193d30;
+  border: 1px solid #c7ad6c;
+}
+.targeting-bar > span {
+  flex: 1;
+}
+.targeting-bar button {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+.target-elements {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.target-source {
+  outline: 2px solid #8dcba6;
+  outline-offset: -3px;
+}
+.target-option {
+  outline: 3px solid #ffda86 !important;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 18px #f0c26055;
+  cursor: crosshair !important;
+}
+.target-option:hover {
+  outline-color: #fff3cd !important;
+  box-shadow: inset 0 0 24px #ffe6a17a;
+}
+.slot[draggable="true"] {
+  cursor: grab;
+}

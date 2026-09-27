@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.48. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.7; rules 1.3.6).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.49. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.8; rules 1.3.6).
 
 Enemies stop immediately on reaching the player and remain there while the other enemies finish moving, including Pack Movement. Battle begins at the end of the enemy movement phase.
 
@@ -15,7 +15,9 @@ Card backs show a Druid tree-and-roots emblem without the game title. Reveal use
 Open `release/Astrata/Astrata.exe` by double-clicking it. Keep the entire `Astrata` folder together. No installation, development server, editor, network connection, or manually installed runtime is required.
 
 - Click a revealed card to inspect its full art and details, then click a lit Mind Grid slot to place it; dragging also works. Placed cards have visible activation buttons and remaining allowances. Click their surface for full details and Recall.
-- Enter confirms the main choice. Escape opens or closes the pause menu.
+- Activate a placed card, then click highlighted attunement cards and enemies, or drag the activating card onto each highlighted choice. The last required selection commits the activation; Cancel or Escape spends nothing. Healing, Shift, and Transmute also use on-board choices. Clicking a card outside targeting still opens full details.
+- Allies show health bars with current HP and the highest HP reached during that placement; growth/healing can raise this display scale without introducing a health cap.
+- Enter confirms the main choice. Escape cancels targeting first, or otherwise opens/closes the pause menu.
 - Hover keywords for explanations. The Rules & keywords button contains the full quick reference.
 - Read enemy Tells before ending a turn. Each defense selection absorbs as much of the hit as it can.
 - Inventory is available throughout. Equip before or between Field movement steps, or at a Tavern. Drag equipment into slots and Gems into/out of sockets; Gem changes are Tavern-only.
@@ -58,7 +60,7 @@ npm run test:gui
 - `tools/art.mjs` / `tools/revise-art.mjs`: ComfyUI generation, machine/model/workflow/prompt/seed records.
 - `tests/rules.test.mjs`: focused rules and replay regression tests.
 
-The shared source design is updated through v4.48; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
+The shared source design is updated through v4.49; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
 
 Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3/1.3.4/1.3.5 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
 

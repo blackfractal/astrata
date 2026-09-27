@@ -289,3 +289,20 @@ Replaced the ornamental star and ASTRATA lettering with an inline gold tree-and-
 Package 1.3.7; rules remain 1.3.6 and content 1.1.5 because this is presentation-only. The preceding once-per-turn rule is included. Main design updated minimally to v4.48 with the emblem, pace, and overlap requirements. The four-card normal Reveal measured 1,778 ms versus the prior roughly 3,320 ms nominal sequential schedule; two deals and two flips overlap. Packaged tests pass for Normal, Fast, Skip, reduced motion, and a subsequent battle turn, preserving card UIDs/order, input locking, and automatic Placement. No renderer errors. Screenshots inspected. Evidence: reports/druid-reveal-verification.json and reports/screenshots/druid-reveal/.
 
 The 78 passing rules tests and five-run results from the preceding gameplay update remain applicable; no engine/policy changes were made in this follow-up. Additional implementation, verification, and packaging time: approximately 4 minutes. Refreshed the runnable distribution and ZIP without closing the user's existing game. Local commit only; no push.
+
+
+## Post-build polish — Ally life bars and battlefield targeting, round 12
+
+2026-09-27. Jonathan requested visible Ally life bars and direct attunement/enemy selection by clicking or dragging highlighted battlefield objects instead of using a separate chooser window.
+
+Added numeric, colored life bars beside the activation allowance on exposed Allies, leaving names/actions clear. Visual maximum tracks the highest HP reached during that placement, including initial upgrade/Bonded bonuses, growth, and healing. This is display metadata only: actual HP and uncapped healing/growth rules are unchanged. Legacy instances without metadata infer a display maximum from current and printed/upgraded HP; historical peaks cannot be recovered from those saves.
+
+Replaced the activation modal with a temporary choice strip and highlighted battlefield targets. Attunement selects an eligible adjacent card; the selected element remains visible while choosing an enemy. Click highlighted objects or drag the activating card to each choice. Ally healing and Shift select grid cards/destinations the same way. Transmute uses inline element buttons for the abstract element choice. All choices are derived from the current legal actions; resource spending occurs only at final selection. Invalid selections do not inspect or act. Cancel/Escape spends nothing. Full card inspection remains available outside targeting and can initiate the same selection flow. Render cleanup removes pending highlights/listeners, and once-per-turn gating remains engine-owned.
+
+Visual/interaction verification caught two issues before release: inserting a choice strip into document flow shifted drag destinations, so the strip is now anchored outside layout flow; the first life-bar position covered Ally names, so bars now share the numeric row. Test fixture gear was removed after its legitimate extra damage killed the intended test target, and the Shift fixture was corrected to the authored Quicksilver ID.
+
+Package 1.3.8, unchanged rules 1.3.6/content 1.1.5 and weighted-druid-v1.5. Main design updated to v4.49 with minimal guarded edits. Frontend-design skill applied to match the existing green/gold interface. All 80 rules tests pass, including growth/healing scale and legacy metadata coverage. Packaged tests pass real clicks and drags through both attunement/enemy steps, canceled/invalid selection, HP bars without name overlap, healing updates, Shift destinations, and Transmute followed by attunement to the newly chosen element. No renderer errors; screenshots inspected.
+
+Five refreshed headless runs retain the prior 3 wins / 2 losses, same HP/rounds: 51/20, 7/19, 0/20, 60/19, 0/19. Evidence: reports/battle-targeting-verification.json, reports/screenshots/battle-targeting/, reports/battle-targeting-evaluation/. No new full graphical playthrough is claimed.
+
+Additional implementation, verification, and packaging time: approximately 14 minutes. Refreshed runnable distribution and ZIP with --app-only while preserving the user's open session. Local commit only, no push.

@@ -72,6 +72,12 @@ export class Game {
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
       this.s.version = VERSION;
+      for (const c of this.s.battle?.grid?.flat() || [])
+        if (cards[c.id].type === "Ally" && c.maxHp == null)
+          c.maxHp = Math.max(
+            c.hp,
+            cards[c.id].hp + (c.upgrade ? cards[c.id].upgrade?.bonus || 0 : 0),
+          );
       this.normalizeRewards();
       this.normalizeSpawns();
       if (this.s.mode === "battle") this.s.checkpoint = clone(this.s);
@@ -583,6 +589,7 @@ export class Game {
       lastActivatedTurn: 0,
       charge: 0,
       hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
+      maxHp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       ward: d.ward || 0,
       element: d.element,
       placed: ++this.s.battle.order,
@@ -734,7 +741,10 @@ export class Game {
     for (let i = 0; i < 20; i++) {
       const c = top(b.grid[i]);
       if (!c) continue;
-      if (cards[c.id].growth) c.hp += this.neighbors(i).length;
+      if (cards[c.id].growth) {
+        c.hp += this.neighbors(i).length;
+        c.maxHp = Math.max(c.maxHp || 0, c.hp);
+      }
       for (const k of ["burn", "poison", "corrode"]) {
         c.hp -= c.status[k] || 0;
         if (c.status[k])
@@ -1296,7 +1306,10 @@ export class Game {
       );
     if (f.allyHeal) {
       const ally = top(b.grid[a.cardTarget]);
-      if (ally) ally.hp += f.allyHeal;
+      if (ally) {
+        ally.hp += f.allyHeal;
+        ally.maxHp = Math.max(ally.maxHp || 0, ally.hp);
+      }
     }
     if (f.cleanse) s.status = blankStatus();
     if (f.relief) b.relief = b.turn + f.relief;
@@ -2176,6 +2189,7 @@ export class Game {
           this.neighbors(a.slot).some((j) => top(b.grid[j]).element === "Earth")
         )
           inst.hp += d.bondHP;
+        inst.maxHp = Math.max(inst.maxHp, inst.hp);
         if (d.onPlaceCharge)
           inst.charge += this.neighbors(a.slot).filter(
             (j) => top(b.grid[j]).element === "Fire",

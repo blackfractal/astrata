@@ -1,3 +1,11 @@
+# Ally vitality and battlefield targeting — package 1.3.8
+
+Rules 1.3.6/content 1.1.5 and weighted-druid-v1.5 remain unchanged. Added Ally maximum-HP display metadata without capping or changing HP calculations. Five refreshed seeds 825183–825187 end identically to the preceding gameplay evaluation: **3 wins / 2 losses**, HP/rounds **51/20, 7/19, 0/20, 60/19, 0/19**. Logs: `reports/battle-targeting-evaluation/`.
+
+All 80 rules tests pass. Packaged human-interface tests cover real clicks and drags for adjacent-card attunement and enemy selection, cancel/invalid actions without resource spending, healing a selected Ally with an updated life bar, Shift destinations, and inline Transmute element choices that affect subsequent attunement. No renderer errors. See `reports/battle-targeting-verification.json` and screenshots. The AI continues to submit complete legal actions directly; no policy adaptation was needed for this UI change. Targeted packaged interaction testing is not a new full graphical playthrough.
+
+---
+
 Package 1.3.7 adds only Druid card backs and faster overlapping Reveal to rules 1.3.6/content 1.1.5. The gameplay results below remain current. Packaged presentation tests preserve revealed card identities/order across Normal, Fast, Skip, and reduced-motion modes; normal four-card Reveal measured 1,778 ms. See `reports/druid-reveal-verification.json`.
 
 # Once-per-turn activation — rules 1.3.6, content 1.1.5

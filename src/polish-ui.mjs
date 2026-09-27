@@ -82,67 +82,182 @@ function whyDisabled(ctx, c, i) {
     return `Needs ${d.channel} Channel; ${b.channel} remaining`;
   return "Card condition or target unavailable";
 }
-function activationChooser(ctx, slot) {
+let targetingCleanup = null;
+let targetingSlot = null;
+function clearTargeting() {
+  targetingCleanup?.();
+  targetingCleanup = null;
+  targetingSlot = null;
+}
+function activationChooser(ctx, slot, dragging = false) {
+  if (ctx.busy()) return;
+  if (dragging && targetingSlot === slot) return;
   const choices = ctx.game
     .legal()
     .filter((a) => a.type === "activate" && a.slot === slot);
   if (!choices.length) return;
-  if (choices.length === 1) return run(ctx, choices[0]);
-  const c = ctx.game.s.battle.grid[slot].at(-1),
-    d = cards[c.id];
-  ctx.dialog(
-    `<h2>${d.name}</h2><p>${ctx.text(d.text)}</p><div class="activation-options"></div><button class="primary" data-confirm-activation>Activate</button>`,
-  );
-  const host = ctx.modal.querySelector(".activation-options");
-  let filtered = choices;
-  function rebuild(selections = {}) {
-    filtered = choices;
-    host.innerHTML = "";
-    for (const [field, label] of [
-      ["element", "Attunement"],
-      ["target", "Enemy"],
-      ["cardTarget", "Card"],
-      ["newElement", "New element"],
-      ["destination", "Destination"],
+  clearTargeting();
+  targetingSlot = slot;
+  ctx.close();
+  const controller = new AbortController(),
+    signal = controller.signal;
+  const source = ctx.app.querySelector(`[data-slot="${slot}"]`);
+  const bar = document.createElement("div");
+  bar.className = "targeting-bar";
+  bar.setAttribute("role", "status");
+  ctx.app.querySelector(".mind").before(bar);
+  let filtered = choices,
+    stage,
+    options = new Map();
+  const selected = new Set();
+  function cleanHighlights() {
+    ctx.app
+      .querySelectorAll(".target-option,.target-source,.target-selected")
+      .forEach((el) => {
+        el.classList.remove(
+          "target-option",
+          "target-source",
+          "target-selected",
+        );
+        el.removeAttribute("data-target-choice");
+      });
+  }
+  targetingCleanup = () => {
+    controller.abort();
+    cleanHighlights();
+    bar.remove();
+  };
+  function select(value) {
+    if (ctx.busy()) return;
+    filtered = filtered.filter((a) => a[stage] === value);
+    selected.add(stage);
+    rebuild();
+  }
+  function rebuild() {
+    cleanHighlights();
+    options = new Map();
+    source?.classList.add("target-source");
+    stage = null;
+    for (const field of [
+      "element",
+      "cardTarget",
+      "newElement",
+      "destination",
+      "target",
     ]) {
+      if (selected.has(field)) continue;
       const values = [...new Set(filtered.map((a) => a[field]))].filter(
         (v) => v != null,
       );
-      if (!values.length) continue;
-      let value =
-        values.find((v) => String(v) === String(selections[field])) ??
-        values[0];
-      const text = (v) =>
-        field === "target"
-          ? ctx.o.battle.enemies.find((e) => e.uid === v)?.name || v
-          : ["cardTarget", "destination"].includes(field)
-            ? `Slot ${Number(v) + 1}${ctx.game.s.battle.grid[v]?.length ? " · " + cards[ctx.game.s.battle.grid[v].at(-1).id].name : ""}`
-            : v;
-      const row = document.createElement("label");
-      row.textContent = label + " ";
-      const select = document.createElement("select");
-      select.dataset.field = field;
-      for (const v of values) {
-        const opt = new Option(text(v), String(v));
-        opt.selected = v === value;
-        select.add(opt);
+      if (!values.length || (field === "element" && values.length === 1)) {
+        selected.add(field);
+        continue;
       }
-      row.append(select);
-      host.append(row);
-      filtered = filtered.filter((a) => a[field] === value);
-      select.onchange = () => {
-        const next = {};
-        for (const el of host.querySelectorAll("select")) {
-          next[el.dataset.field] = el.value;
-          if (el === select) break;
-        }
-        rebuild(next);
-      };
+      stage = field;
+      break;
+    }
+    if (!stage) {
+      const action = filtered[0];
+      clearTargeting();
+      if (action && !dragging) run(ctx, action);
+      return;
+    }
+    const label = {
+      element: "Choose an attunement card",
+      target: "Choose an enemy",
+      cardTarget: "Choose a card",
+      destination: "Choose an empty slot",
+      newElement: "Choose an element",
+    }[stage];
+    const c = ctx.o.battle.grid[slot].at(-1);
+    bar.innerHTML = `<strong>${cards[c.id].name}${selected.has("element") && cards[c.id].attune ? " · " + filtered[0].element : ""}</strong><span>${label}</span><div class="target-elements"></div><button data-target-cancel>Cancel</button>`;
+    bar.querySelector("[data-target-cancel]").onclick = clearTargeting;
+    const values = [...new Set(filtered.map((a) => a[stage]))];
+    const mark = (el, value) => {
+      if (!el) return;
+      el.classList.add("target-option");
+      el.dataset.targetChoice = stage;
+      options.set(el, value);
+    };
+    if (stage === "element") {
+      for (const i of ctx.game.neighbors(slot)) {
+        const neighbor = ctx.o.battle.grid[i].at(-1);
+        if (values.includes(neighbor.element))
+          mark(ctx.app.querySelector(`[data-slot="${i}"]`), neighbor.element);
+      }
+    } else if (stage === "target") {
+      for (const value of values)
+        mark(ctx.app.querySelector(`[data-enemy-uid="${value}"]`), value);
+    } else if (stage === "newElement") {
+      for (const value of values) {
+        const el = document.createElement("button");
+        el.textContent = value;
+        bar.querySelector(".target-elements").append(el);
+        mark(el, value);
+      }
+    } else {
+      for (const value of values)
+        mark(ctx.app.querySelector(`[data-slot="${value}"]`), value);
     }
   }
+  const choiceAt = (target) =>
+    [...options.keys()].find((el) => el === target || el.contains(target));
+  ctx.app.addEventListener(
+    "click",
+    (e) => {
+      const choice = choiceAt(e.target);
+      if (choice) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        dragging = false;
+        select(options.get(choice));
+      } else if (e.target.closest(".slot,.enemy")) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      } else if (!bar.contains(e.target)) clearTargeting();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "dragover",
+    (e) => {
+      if (choiceAt(e.target) && drag?.activation === slot) e.preventDefault();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "drop",
+    (e) => {
+      if (drag?.activation !== slot) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const choice = choiceAt(e.target);
+      drag = null;
+      dragging = false;
+      if (choice) select(options.get(choice));
+    },
+    { capture: true, signal },
+  );
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        clearTargeting();
+      } else if (["Enter", " "].includes(e.key)) {
+        const choice = choiceAt(e.target);
+        if (choice) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          dragging = false;
+          select(options.get(choice));
+        }
+      }
+    },
+    { capture: true, signal },
+  );
   rebuild();
-  ctx.modal.querySelector("[data-confirm-activation]").onclick = () =>
-    run(ctx, filtered[0]);
 }
 export function showCard(ctx, c, slot = null) {
   const d = cards[c.id],
@@ -560,6 +675,7 @@ function incomingDetails(ctx) {
   bindActions(ctx, ctx.modal);
 }
 export function enhance(ctx) {
+  clearTargeting();
   const { o, actions, app, game } = ctx;
   const sidebar = app.querySelector(".sidebar");
   if (sidebar) {
@@ -717,7 +833,32 @@ export function enhance(ctx) {
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
         const nums = el.querySelector(".nums");
-        nums.innerHTML = `${d.type === "Ally" ? "♥ " + c.hp + " · " : d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${!d.blink && c.lastActivatedTurn === b.turn ? " · Used this turn" : ""}${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
+        nums.innerHTML = `${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${!d.blink && c.lastActivatedTurn === b.turn ? " · Used this turn" : ""}${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
+        if (d.type === "Ally") {
+          const maximum = Math.max(
+            c.hp,
+            c.maxHp || d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0),
+          );
+          const ratio = Math.max(0, c.hp / maximum);
+          el.classList.add("ally-slot");
+          nums.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="ally-health ${ratio <= 0.3 ? "critical" : ratio <= 0.6 ? "wounded" : ""}" role="meter" aria-label="${ctx.esc(d.name)} health" aria-valuemin="0" aria-valuemax="${maximum}" aria-valuenow="${Math.max(0, c.hp)}"><i style="width:${ratio * 100}%"></i><span>${c.hp} / ${maximum} HP</span></div>`,
+          );
+        }
+        el.draggable = can;
+        el.ondragstart = (e) => {
+          if (ctx.busy() || !can) {
+            e.preventDefault();
+            return;
+          }
+          drag = { activation: i };
+          e.dataTransfer.setData("text/plain", JSON.stringify(drag));
+          activationChooser(ctx, i, true);
+        };
+        el.ondragend = () => {
+          drag = null;
+        };
         el.insertAdjacentHTML(
           "beforeend",
           `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">Activate · ${effect(c, i, ctx)}</button>`,
