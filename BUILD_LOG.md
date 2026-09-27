@@ -306,3 +306,18 @@ Package 1.3.8, unchanged rules 1.3.6/content 1.1.5 and weighted-druid-v1.5. Main
 Five refreshed headless runs retain the prior 3 wins / 2 losses, same HP/rounds: 51/20, 7/19, 0/20, 60/19, 0/19. Evidence: reports/battle-targeting-verification.json, reports/screenshots/battle-targeting/, reports/battle-targeting-evaluation/. No new full graphical playthrough is claimed.
 
 Additional implementation, verification, and packaging time: approximately 14 minutes. Refreshed runnable distribution and ZIP with --app-only while preserving the user's open session. Local commit only, no push.
+
+
+## Post-build balance — scarce healing and stronger enemies, round 13
+
+2026-09-27. Jonathan requested Blast and Shield base strength 4 instead of 5, much rarer HP-healing cards that destroy themselves after one activation, and a modest increase to enemy life.
+
+Implemented Blast damage 4 and Shield block 4, preserving +1 matching-neighbor bonuses and elemental multipliers. Chosen enemy adjustment: +15% HP, rounded up, written into all 23 enemy definitions including grouped encounters and summons. This increases small enemies by 1–2 HP in most cases; Archons become 115/102/106 HP. Attack damage, rotations and movement are unchanged.
+
+Healing-card scope includes player and Ally activation healing: Soothe, Bloomcall, Sunfruit, Unbinding Dew and Aqua Veil. A central content rule makes these rare, single-use, unrecallable and immune to extra allowance. Resolve all effects, then immediately move the healer to Destroyed; using it at full health still consumes it. Fusion consumes only the covered healer and retains its covering card. Destroyed means unavailable until next battle, not permanent removal from ownership. Passive Ally growth, equipment healing and direct Event/Tavern recovery retain their existing behavior.
+
+Scarcity decisions: no common healing rewards; healing cards receive weight 1 versus weight 4 for other rare cards, sampled without replacement for rare offers and Tavern stock. Each has a 25% inclusion chance in a new Item Deck. Warm Spring offers Rain Lantern instead of guaranteed Soothe to close that acquisition shortcut. Existing owned cards, queued Item Decks and revealed offers are retained; the new single-use card rules apply to owned healers. Existing battle enemies keep saved HP; future encounters use the new definitions. Older saves through rules 1.3.6 load.
+
+Package 1.3.9, rules 1.3.7, content 1.1.6. Minimal fresh-read edits to main design v4.50 document the requirements and tuning decisions. All 86 rules tests pass. Two initial fixture failures were corrected: the restoration fixture must instantiate its deck card before reading battle-only fields, and a numeric expectation edit had accidentally changed a neighbor slot. The UI fixture's expected wording was corrected from “4 block” to the actual “Shield 4.” Packaged click/drag tests now pass with no renderer errors; screenshots inspected, including visible healed Ally HP and Destroyed count. Five complete headless AI runs: four wins/one loss, unchanged weighted-druid-v1.5; HP/rounds 6/18, 18/19, 41/20, 0/17, 38/19. Changed random acquisition paths prevent a controlled comparison with previous seeds. No full graphical playthrough or statistically established balance claim is made.
+
+Evidence: tests/balance.test.mjs, reports/balance-verification.json, reports/screenshots/balance/, reports/balance-evaluation/, AI_REPORT.md. Additional implementation, verification and packaging time: approximately 15 minutes. Refreshed runnable distribution and CRC-verified ZIP using --app-only without closing Jonathan's existing game. Local commit only; no push.

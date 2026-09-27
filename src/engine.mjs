@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.6",
           "1.3.5",
           "1.3.4",
           "1.3.3",
@@ -156,6 +157,7 @@ export class Game {
       ...Object.keys(items),
       ...Object.keys(cards)
         .filter((id) => !starter.includes(id))
+        .filter((id) => !cards[id].destroyAfterActivation || this.rand() < 0.25)
         .map((id) => "card:" + id),
     ]);
     for (const id of starter) this.s.deck.push(this.newCard(id));
@@ -332,13 +334,25 @@ export class Game {
         (!reward || !["blast", "shield"].includes(c.id)),
     );
   }
+  rareOffer(count = 1, reward = true) {
+    const pool = this.pool("rare", reward),
+      result = [];
+    while (result.length < count && pool.length) {
+      const tickets = pool.flatMap((c) => Array(c.offerWeight ?? 4).fill(c.id));
+      const id = this.pick(tickets);
+      result.push(id);
+      pool.splice(
+        pool.findIndex((c) => c.id === id),
+        1,
+      );
+    }
+    return result;
+  }
   offer(rare = false, reward = true) {
     const common = this.shuffle(
       this.pool("common", reward).map((c) => c.id),
     ).slice(0, rare ? 2 : 3);
-    return rare
-      ? [...common, this.pick(this.pool("rare", reward).map((c) => c.id))]
-      : common;
+    return rare ? [...common, ...this.rareOffer(1, reward)] : common;
   }
   drawDeck(key, source) {
     let a = this.s[key];
@@ -1372,6 +1386,11 @@ export class Game {
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
     }
+    if (d.destroyAfterActivation) {
+      this.present("activate", { slot: i, name: d.name + " is Destroyed" });
+      this.destroyCard(i, c.uid);
+      this.log(d.name + " is Destroyed after its single activation.");
+    }
   }
   activate(a) {
     const b = this.s.battle,
@@ -1440,9 +1459,7 @@ export class Game {
       s.status = blankStatus();
       s.mode = "reward";
       s.reward = {
-        cards: boss
-          ? this.shuffle(this.pool("rare", true).map((c) => c.id)).slice(0, 3)
-          : this.offer(elite || skittish),
+        cards: boss ? this.rareOffer(3, true) : this.offer(elite || skittish),
         boss,
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
         setting: boss,

@@ -23,12 +23,12 @@ test("Ally health scale tracks upgrades, growth and healing without capping HP",
   assert.equal(c.maxHp, 8);
   g.beginTurn();
   b.phase = "activate";
-  b.grid[1][0].used = 0;
+  b.grid[1] = [g.instance(g.newCard("aqua"))];
   g.applyCard(b.grid[1][0], 1, null, "Water", { cardTarget: 0 });
-  assert.equal(c.hp, 12);
-  assert.equal(c.maxHp, 12);
+  assert.equal(c.hp, 11);
+  assert.equal(c.maxHp, 11);
   c.hp = 2;
-  assert.equal(c.maxHp, 12);
+  assert.equal(c.maxHp, 11);
 });
 test("old Ally saves infer the visible HP scale without changing current HP", () => {
   const g = setup(),

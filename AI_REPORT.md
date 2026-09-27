@@ -1,3 +1,21 @@
+# Scarce healing and stronger enemies — package 1.3.9
+
+Rules 1.3.7/content 1.1.6; unchanged weighted-druid-v1.5. Blast damage and Shield block are now 4. All five activation-healing cards are rare, weighted one-quarter as heavily as other rare cards, and destroyed after one use. Enemy HP is increased 15%, rounded up. Raw decisions and encounter logs: `reports/balance-evaluation/`.
+
+| Seed | Outcome | Final HP | Field round | Last encounter |
+| --- | --- | --- | --- | --- |
+| 825183 | win | 6 | 18 | The Cinder Hart |
+| 825184 | win | 18 | 19 | Void-Colossus |
+| 825185 | win | 41 | 20 | The Cinder Hart |
+| 825186 | loss | 0 | 17 | Shard-Walker |
+| 825187 | win | 38 | 19 | Void-Colossus |
+
+Four wins, one loss; all five runs terminated normally without policy changes or stalls. The Cinder Hart win at 6 HP and the round-17 Shard-Walker loss show that survival pressure exists, but this sample does not estimate a reliable win rate or prove the intended difficulty. These seeds previously produced three wins/two losses; acquisition changes consume randomness differently, so routes, enemy draws, rewards, and later decisions differ. This is not a controlled before/after balance experiment. No extra tuning was performed to force favorable AI outcomes.
+
+All 86 rules tests pass. Focused coverage includes healing at full HP, player/Ally healing and secondary effects, Keystone/Recall restrictions, covered Fusion healing, restoration next battle, scarcity across offers and Item Decks, new HP values, and old-save retention. Targeted packaged tests verify reduced Blast damage, Shield 4, the printed single-use contract, Ally healing followed by visible Destroyed-pile removal, and continued click/drag targeting, Shift and Transmute. No renderer errors. See `reports/balance-verification.json` and `reports/screenshots/balance/`. This is not a new full graphical playthrough; older evaluations below remain historical evidence for their stated versions.
+
+---
+
 # Ally vitality and battlefield targeting — package 1.3.8
 
 Rules 1.3.6/content 1.1.5 and weighted-druid-v1.5 remain unchanged. Added Ally maximum-HP display metadata without capping or changing HP calculations. Five refreshed seeds 825183–825187 end identically to the preceding gameplay evaluation: **3 wins / 2 losses**, HP/rounds **51/20, 7/19, 0/20, 60/19, 0/19**. Logs: `reports/battle-targeting-evaluation/`.

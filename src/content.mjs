@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.6",
-  content: "1.1.5",
+  rules: "1.3.7",
+  content: "1.1.6",
   observation: 1,
   actions: 1,
 };
@@ -47,6 +47,19 @@ function card(
     rarity: "common",
     ...extra,
   };
+  if (effects.heal || effects.allyHeal) {
+    Object.assign(cards[id], {
+      rarity: "rare",
+      offerWeight: 1,
+      limit: 1,
+      recall: null,
+      singleUse: true,
+      destroyAfterActivation: true,
+      text:
+        text +
+        " Single use; Destroyed after activation. Cannot Recall or gain extra uses. Returns next battle.",
+    });
+  }
 }
 const hit = (n) => ({ damage: n });
 card(
@@ -56,8 +69,8 @@ card(
   "Spell",
   1,
   2,
-  { damage: 5, matchingDamage: 1 },
-  "Attune. Deal 5 damage, +1 per adjacent Blast.",
+  { damage: 4, matchingDamage: 1 },
+  "Attune. Deal 4 damage, +1 per adjacent Blast.",
   { attune: true },
 );
 card(
@@ -67,8 +80,8 @@ card(
   "Object",
   1,
   -1,
-  { shield: 5, matchingShield: 1 },
-  "Attune. Add 5 block, +1 per adjacent Shield, until the enemy turn ends.",
+  { shield: 4, matchingShield: 1 },
+  "Attune. Add 4 block, +1 per adjacent Shield, until the enemy turn ends.",
   { attune: true },
 );
 card(
@@ -932,7 +945,7 @@ enemy(
   "Bat",
   "Mote",
   "Wind",
-  8,
+  10,
   "Wanderer",
   [
     attack("Flit", 4, "Wind"),
@@ -947,7 +960,7 @@ enemy(
   "Sludge",
   "Mote",
   "Water",
-  10,
+  12,
   "Sentinel",
   [
     attack("Slap", 6, "Water"),
@@ -963,7 +976,7 @@ enemy(
   "Wolf",
   "Mote",
   "Earth",
-  9,
+  11,
   "Stalker",
   [
     attack("Claw", 5, "Earth"),
@@ -979,7 +992,7 @@ enemy(
   "Fire Wolf",
   "Mote",
   "Fire",
-  9,
+  11,
   "Stalker",
   [attack("Claw", 5, "Fire"), attack("Fire Bite", 10, "Fire", { burn: 4 })],
   "Burn persists past interception.",
@@ -991,7 +1004,7 @@ enemy(
   "Spark-Wisp",
   "Mote",
   "Fire",
-  6,
+  7,
   "Skittish",
   [attack("Spark", 3, "Fire"), effect("Flicker", { flicker: true })],
   "Wastes the next attack activation.",
@@ -1002,7 +1015,7 @@ enemy(
   "Bell Beetle",
   "Mote",
   "Earth",
-  12,
+  14,
   "Wanderer",
   [
     attack("Chime", 4, "Earth"),
@@ -1018,7 +1031,7 @@ enemy(
   "Ink Leech",
   "Mote",
   "Water",
-  11,
+  13,
   "Stalker",
   [
     attack("Sip", 3, "Water", { poison: 1 }),
@@ -1034,7 +1047,7 @@ enemy(
   "Veil Moth",
   "Mote",
   "Light",
-  7,
+  9,
   "Skittish",
   [
     effect("Dazzle", { grid: "freeze", target: "newest" }),
@@ -1048,7 +1061,7 @@ enemy(
   "Needle Imp",
   "Mote",
   "Chaos",
-  10,
+  12,
   "Hunter",
   [
     attack("Needle", 3, "Chaos", { pierce: true }),
@@ -1062,7 +1075,7 @@ enemy(
   "Lichen Eye",
   "Mote",
   "Earth",
-  13,
+  15,
   "Sentinel",
   [
     effect("Gaze", { grid: "sever", target: "connected" }),
@@ -1077,7 +1090,7 @@ enemy(
   "Glass Eel",
   "Mote",
   "Water",
-  8,
+  10,
   "Wanderer",
   [attack("Current", 3, "Water", { hits: 2 }), effect("Coil", { guard: 3 })],
   "Small repeated hits consume shields.",
@@ -1088,7 +1101,7 @@ enemy(
   "Ashling",
   "Mote",
   "Fire",
-  10,
+  12,
   "Stalker",
   [effect("Ash breath", { burn: 2 }), attack("Coal", 5, "Fire")],
   "Opens with Burn.",
@@ -1100,7 +1113,7 @@ enemy(
   "Dervish Hunter",
   "Eidolon",
   "Wind",
-  30,
+  35,
   "Hunter",
   [
     attack("Slice", 8, "Wind"),
@@ -1116,7 +1129,7 @@ enemy(
   "Shard-Walker",
   "Eidolon",
   "Earth",
-  25,
+  29,
   "Stalker",
   [
     attack("Shard", 9, "Earth"),
@@ -1132,7 +1145,7 @@ enemy(
   "Undead Fire Wolf",
   "Eidolon",
   "Fire",
-  28,
+  33,
   "Stalker",
   [
     attack("Bite", 7, "Fire"),
@@ -1149,7 +1162,7 @@ enemy(
   "Dark Sentinel",
   "Eidolon",
   "Chaos",
-  32,
+  37,
   "Sentinel",
   [
     attack("Bell toll", 7, "Chaos"),
@@ -1165,7 +1178,7 @@ enemy(
   "Pale Weaver",
   "Eidolon",
   "Light",
-  26,
+  30,
   "Stalker",
   [
     effect("Unweave", { grid: "sever", target: "connected" }),
@@ -1181,7 +1194,7 @@ enemy(
   "Elemental Wisp",
   "Eidolon",
   "Arcane",
-  24,
+  28,
   "Skittish",
   [
     attack("Prismatic lash", 8, "Fire"),
@@ -1197,7 +1210,7 @@ enemy(
   "Hollow Mason",
   "Eidolon",
   "Earth",
-  34,
+  40,
   "Wanderer",
   [
     attack("Hammer", 7, "Earth"),
@@ -1212,7 +1225,7 @@ enemy(
   "Void-Colossus",
   "Archon",
   "Chaos",
-  100,
+  115,
   "Archon",
   [
     attack("Void fist", 10, "Chaos"),
@@ -1231,7 +1244,7 @@ enemy(
   "The Cinder Hart",
   "Archon",
   "Fire",
-  88,
+  102,
   "Archon",
   [
     attack("Antler", 9, "Fire"),
@@ -1248,7 +1261,7 @@ enemy(
   "The Glass Choir",
   "Archon",
   "Wind",
-  92,
+  106,
   "Archon",
   [
     effect("Shatter hymn", { grid: "destroy", target: "tallest" }),
@@ -1265,7 +1278,7 @@ enemy(
   "Mini-Void",
   "Mote",
   "Chaos",
-  6,
+  7,
   "Sentinel",
   [attack("Gnaw", 2, "Chaos"), attack("Gnaw", 3, "Chaos")],
   "Summoned by Chaos striking Void-Colossus.",
@@ -1279,7 +1292,7 @@ export const events = [
     text: "Gold light gathers where the pale roots part. The water smells of rain.",
     choices: [
       { label: "Drink · recover 12 HP", heal: 12 },
-      { label: "Bottle a memory · gain a card", card: "soothe" },
+      { label: "Bottle the rain · gain Rain Lantern", card: "rain" },
     ],
   },
   {

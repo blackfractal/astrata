@@ -1,0 +1,17 @@
+{
+  "package": "1.3.9",
+  "rules": "1.3.7",
+  "checks": [
+    "click: choose Fire from an adjacent card, choose the correct enemy, spend one Channel, respect once-per-turn, no choice modal",
+    "drag: choose Fire from an adjacent card, choose the correct enemy, spend one Channel, respect once-per-turn, no choice modal",
+    "Healing card disappears into Destroyed immediately after the selected Ally recovers HP",
+    "Healing selects the highlighted Ally directly and updates its life bar",
+    "Shift selects a card then a highlighted destination without a modal",
+    "Transmute chooses its new element inline; later attunement uses that element and displays it while targeting",
+    "Shield shows base block 4; Soothe details explain destruction and its activation removes the card",
+    "Ally HP bars show current/peak health including grown Allies",
+    "Invalid choices and Escape spend no Channel"
+  ],
+  "errors": [],
+  "method": "Explicit packaged battle fixtures using real click and drag interactions"
+}

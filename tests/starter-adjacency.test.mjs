@@ -20,11 +20,11 @@ test("a row of three matching Blasts or Shields has +1/+2/+1, with symmetric pai
     const power = id === "blast" ? "cardPower" : "shieldPower";
     assert.deepEqual(
       cs.map((c, i) => g[power](c, i)),
-      [6, 7, 6],
+      [5, 6, 5],
     );
     g.s.battle.grid[2] = [];
-    assert.equal(g[power](cs[0], 0), 6);
-    assert.equal(g[power](cs[1], 1), 6);
+    assert.equal(g[power](cs[0], 0), 5);
+    assert.equal(g[power](cs[1], 1), 5);
   }
 });
 test("matching bonuses exclude diagonals, row wrapping, covered cards, and Sever but include exposed spent neighbors", () => {
@@ -32,15 +32,15 @@ test("matching bonuses exclude diagonals, row wrapping, covered cards, and Sever
     a = put(g, "blast", 4);
   put(g, "blast", 5);
   put(g, "blast", 8);
-  assert.equal(g.cardPower(a, 4), 5);
+  assert.equal(g.cardPower(a, 4), 4);
   const b = put(g, "blast", 9);
   b.used = 2;
-  assert.equal(g.cardPower(a, 4), 6);
-  b.sever = true;
   assert.equal(g.cardPower(a, 4), 5);
+  b.sever = true;
+  assert.equal(g.cardPower(a, 4), 4);
   b.sever = false;
   put(g, "heat", 9);
-  assert.equal(g.cardPower(a, 4), 5);
+  assert.equal(g.cardPower(a, 4), 4);
   put(g, "heat", 4);
   assert.equal(g.matchingNeighbors(a, 4), 0);
 });
@@ -52,11 +52,11 @@ test("matching Blast damage is included before elemental multipliers and reflect
   b.phase = "activate";
   assert.equal(
     g.legal().find((x) => x.type === "activate" && x.slot === 0).effects.damage,
-    6,
+    5,
   );
   const enemy = b.enemies[0];
   g.applyCard(a, 0, enemy.uid, "Fire", {}, {});
-  assert.equal(enemy.hp, 3);
+  assert.equal(enemy.hp, 6);
 });
 test("Shield previews and stored block include adjacency at activation time, with ordinary attuned defense", () => {
   const g = setup(),
@@ -66,12 +66,12 @@ test("Shield previews and stored block include adjacency at activation time, wit
   b.phase = "activate";
   assert.equal(
     g.legal().find((x) => x.type === "activate" && x.slot === 0).effects.shield,
-    6,
+    5,
   );
   g.applyCard(a, 0, null, "Fire", {}, {});
-  assert.equal(b.shields[0].block, 6);
+  assert.equal(b.shields[0].block, 5);
   b.grid[1] = [];
-  assert.equal(g.shieldPower(a, 0), 5);
-  assert.equal(b.shields[0].block, 6);
-  assert.equal(blockHit(b.shields[0].block, "Fire", 12, "Fire").remaining, 0);
+  assert.equal(g.shieldPower(a, 0), 4);
+  assert.equal(b.shields[0].block, 5);
+  assert.equal(blockHit(b.shields[0].block, "Fire", 10, "Fire").remaining, 0);
 });
