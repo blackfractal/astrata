@@ -57,6 +57,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.4",
           "1.3.3",
           "1.3.2",
           "1.3.1",
@@ -270,7 +271,7 @@ export class Game {
   }
   bonuses() {
     const sum = {
-      insight: 3,
+      insight: 4,
       focus: 1,
       channel: 2,
       movement: 2,

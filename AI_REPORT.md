@@ -1,3 +1,13 @@
+# Druid starter and Insight — rules 1.3.5, content 1.1.4
+
+Five sequential seeds 825183–825187: **5 wins / 0 losses**, unchanged weighted-druid-v1.5. Final HP / round: **25/19, 23/19, 29/20, 49/20, 62/19**. Logs: `reports/druid-start-evaluation/`. The new 12-card deck (four Blasts/four Shields plus four other starters) and base Insight 4 change draw frequency, random consumption, and later routes. This small combined-change sample does not isolate a balance effect.
+
+All 72 rules tests pass. Packaged UI shows four dealt/revealed cards, eight remaining in the Grimoire, and starting resources of 4 Insight / 1 Focus / 2 Channel, with no renderer errors. See `reports/druid-start-verification.json` and screenshot. Tests also verify reset behavior and preservation of existing saved decks. This is targeted graphical verification plus five full headless runs, not a new full graphical playthrough.
+
+General once-per-turn/Blink gameplay remains pending separately.
+
+---
+
 # Resonance and equipment — rules 1.3.4, content 1.1.3
 
 Five seeds 825183–825187: **5 wins / 0 losses**, policy weighted-druid-v1.5. Final HP / round: **55/20, 29/19, 25/20, 65/19, 25/19**. Logs: `reports/resonance-equipment-evaluation/`. None acquired Resonance, so this sample checks run completion and the new unequip action without measuring Resonance balance. The policy explicitly avoids unequipping useful gear merely to re-equip it.

@@ -250,3 +250,16 @@ Package/rules 1.3.4, content 1.1.3, policy weighted-druid-v1.5. Main design mini
 Verification: 70 passing rules tests; new cases cover zero-Channel activation, hard single-use allowance, no Recall, turn-end destruction including covered/unused cards, equipment ownership/Gem retention, movement timing, and Cursed equipment restrictions. Packaged UI verifies actual drag-and-drop in both directions, persistent inventory refresh, deduplication, Equipped label, unnumbered slots, Resonance's net Channel gain, exhausted action, and Destroyed pile at turn end. No renderer errors; screenshots inspected. Five full headless games all won (55, 29, 25, 65, 25 HP; rounds 20, 19, 20, 19, 19). Those runs did not acquire Resonance, so direct rules/UI tests establish its correctness; no balance claim is made. Evidence: reports/resonance-equipment-verification.json, reports/screenshots/resonance-equipment/, reports/resonance-equipment-evaluation/.
 
 Additional implementation, verification, and packaging time: approximately 6 minutes. Used the frontend-design skill for restrained changes matching the existing game UI. Refreshed runnable distribution and ZIP with --app-only, preserving the user's open session. Local commit only; no push.
+
+
+## Post-build polish — Druid starter and base Insight, round 9
+
+2026-09-26, approximately 22:16–22:21 EDT. Jonathan requested four Blasts and four Shields in the Druid starting deck, base Insight 4, and retaining Focus 1 / Channel 2.
+
+Added two Shields to new Druid runs, retaining Familiar, Clear Mind, Focus Energy, and Sapling, for 12 cards total. Raised base Insight from 3 to 4; Focus/Channel remain 1/2. Main design updated with fresh guarded edits to v4.46, specifying the Druid exception to the other classes' shared ten-card baseline. Existing saves keep their decks, including removals and rewards; base Insight changes on the next Reveal rather than retroactively redrawing an active hand. Start a new run for the new starter composition.
+
+Package/rules 1.3.5, content 1.1.4, unchanged policy weighted-druid-v1.5. Saves through 1.3.4 load. All 72 rules tests pass, including starter counts, four-card opening/repeated Reveal, resource reset across turns/battles, and preservation of existing decks. The initial new test paused at a normal Bracelet defense choice; its base-resource fixture now removes equipment before testing automatic turn progression. Updated the delayed-Insight expectation from 8 to 9 for the new base. Packaged UI verifies four cards deal/reveal, displays 4/1/2 resources, and leaves eight in the Grimoire, without renderer errors. Screenshot inspected.
+
+Five full AI runs all won: seeds 825183–825187 end at 25/19, 23/19, 29/20, 49/20, and 62/19 (HP/Field round). Extra draws and a larger deck change subsequent RNG consumption, routes, and choices, so these are not isolated estimates of either change's balance effect. Evidence: reports/druid-start-evaluation/, reports/druid-start-verification.json, reports/screenshots/druid-start/. General once-per-turn/Blink gameplay remains pending separately.
+
+Additional implementation, verification, and release work: approximately 5 minutes. Updated distribution/ZIP using --app-only to preserve the open game. Local commit only, no push.

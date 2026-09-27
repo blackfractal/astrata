@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.4",
-  content: "1.1.3",
+  rules: "1.3.5",
+  content: "1.1.4",
   observation: 1,
   actions: 1,
 };
@@ -678,6 +678,8 @@ export const starter = [
   "blast",
   "blast",
   "blast",
+  "shield",
+  "shield",
   "shield",
   "shield",
   "familiar",
