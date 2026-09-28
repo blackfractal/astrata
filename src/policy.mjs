@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.6";
+    this.id = "weighted-druid-v1.7";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -221,7 +221,8 @@ export class WeightedPolicy {
           b.shields.reduce((sum, p) => sum + p.block, 0) +
           o.bonuses.armor +
           3;
-        let damage = f.damage || (f.randomDamage && 6.5) || 0;
+        let damage =
+          f.damage || f.chargedDamage || (f.randomDamage && 6.5) || 0;
         if (f.charge > 1) damage /= f.charge;
         if (target) {
           damage = offense(damage, a.element, target.element);
@@ -236,6 +237,9 @@ export class WeightedPolicy {
         n +=
           damage * w.damage +
           (f.burn || 0) * 2 +
+          (f.burnAll || (f.chargedBurnAll || 0) / (f.charge || 1)) *
+            b.enemies.length *
+            2 +
           (f.poison || 0) * 3 +
           (f.corrode || 0) * 5;
         n += (f.channel || 0) > a.costs.channel ? 12 : 0;

@@ -1,3 +1,13 @@
+# Resource feedback and charged attacks — package 1.3.13
+
+Rules 1.3.10/content 1.1.9, weighted-druid-v1.7. Insight is spent by Reveal; counters refill as the player ends their turn. Charged-card actions explicitly distinguish charge-building (no enemy target or immediate damage) from release. The policy values their declared future damage/Burn without pretending the charge already hit an enemy. Kiln releases 30 targeted damage and Burn 2 to all enemies.
+
+All 107 rules tests pass. Packaged UI tests observe Insight 4→3→2→1→0 in Normal, Fast and reduced-motion modes; Skip finishes at 0. They verify two targetless Charge clicks, counters 0/0/0 before End Turn then 4/1/2 during enemy defense, and charged Kiln selecting one enemy, dealing exactly 30 to it, and applying Burn 2 to both. No renderer errors; screenshot inspected. Evidence: `reports/charge-resources-verification.json`, `reports/screenshots/charge-resources/`, `tests/charge-resources.test.mjs`.
+
+Five full headless runs (825183–825187) complete with the same two wins/three losses and final HP/rounds as the previous sample: 0/20, 4/19, 0/14, 0/12, 15/19. Logs: `reports/charge-resources-evaluation/`. These runs demonstrate regression stability, not Kiln balance or a reliable win rate. No new full graphical playthrough is claimed.
+
+---
+
 # Elemental Ally spillover correction — package 1.3.12
 
 Rules 1.3.9/content 1.1.8; weighted-druid-v1.6. Ally interception separates base damage and a defender-specific weakness bonus. The policy now evaluates interception using the same calculation, valuing base damage prevented rather than inflated Ally HP damage. No weight training or broader tuning was performed. Logs: `reports/spillover-evaluation/`.

@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.9",
-  content: "1.1.8",
+  rules: "1.3.10",
+  content: "1.1.9",
   observation: 1,
   actions: 1,
 };
@@ -176,8 +176,8 @@ card(
   "Spell",
   2,
   4,
-  { damage: 25 },
-  "Charge 3: deal 25. On place: +1 Charge per Fire neighbor.",
+  { damage: 30, burnAll: 2 },
+  "Charge 3: deal 30 to one enemy and apply Burn 2 to all enemies. Charging needs no target; choose an enemy only when firing. On place: +1 Charge per Fire neighbor.",
   { charge: 3, onPlaceCharge: true },
 );
 card(

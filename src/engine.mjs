@@ -89,6 +89,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.9",
           "1.3.8",
           "1.3.7",
           "1.3.6",
@@ -113,6 +114,13 @@ export class Game {
             c.hp,
             cards[c.id].hp + (c.upgrade ? cards[c.id].upgrade?.bonus || 0 : 0),
           );
+      if (
+        this.s.battle &&
+        ["place", "activate"].includes(this.s.battle.phase)
+      ) {
+        this.s.battle.revealInsight ??= this.s.battle.insight;
+        this.s.battle.insight = 0;
+      }
       this.normalizeRewards();
       this.normalizeSpawns();
       if (this.s.mode === "battle") this.s.checkpoint = clone(this.s);
@@ -784,6 +792,7 @@ export class Game {
       b = s.battle;
     b.turn++;
     b.phase = "start";
+    this.refillResources();
     s.hp = Math.min(s.maxHp, s.hp + this.bonuses().heal);
     for (const slot of b.grid)
       for (const c of slot) if (c.freeze && c.freeze < b.turn) c.freeze = 0;
@@ -832,10 +841,9 @@ export class Game {
     b.jobs.push({ kind: "reveal" });
     this.pump();
   }
-  reveal() {
+  refillResources() {
     const b = this.s.battle,
       bonus = this.bonuses();
-    b.phase = "place";
     b.focus = bonus.focus + b.permanent.focus + b.next.focus;
     b.channel = bonus.channel;
     b.insight = Math.max(
@@ -847,6 +855,12 @@ export class Game {
     if (b.discard.some((c) => c.id === "bone"))
       b.focus = Math.max(1, Math.floor(b.focus / 2));
     b.focus = Math.max(1, b.focus);
+  }
+  reveal() {
+    const b = this.s.battle;
+    this.refillResources();
+    b.phase = "place";
+    b.revealInsight = b.insight;
     b.next = { focus: 0, insight: 0 };
     b.hand = [];
     for (let n = 0; n < b.insight; n++) {
@@ -862,7 +876,12 @@ export class Game {
     this.log(
       `Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`,
     );
-    this.present("reveal", { name: "Reveal", cards: b.hand.map((c) => c.uid) });
+    b.insight = 0;
+    this.present("reveal", {
+      name: "Reveal",
+      insight: b.revealInsight,
+      cards: b.hand.map((c) => c.uid),
+    });
   }
   tell(e) {
     const d = enemies[e.id],
@@ -892,6 +911,8 @@ export class Game {
           this.log(cards[c.id].name + " is Destroyed at turn end.");
         }
     b.phase = "enemy";
+    this.refillResources();
+    this.present("resources", { name: "Resources refreshed" });
     b.bracelets = this.equipped()
       .filter((x) => x.definition.effect.block)
       .map((x) => ({
@@ -1436,6 +1457,24 @@ export class Game {
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
     }
+    if (f.burnAll) {
+      for (const e of b.enemies.filter((e) => e.hp > 0)) {
+        if (context.blocked?.has(e.uid)) continue;
+        if (e.flicker) {
+          e.flicker = false;
+          context.blocked ??= new Set();
+          context.blocked.add(e.uid);
+          this.log(e.name + " wastes the activation.");
+          continue;
+        }
+        e.status.burn += f.burnAll + bonus;
+        this.present("status", {
+          target: "enemy",
+          uid: e.uid,
+          name: `Burn +${f.burnAll + bonus}`,
+        });
+      }
+    }
     if (d.destroyAfterActivation) {
       this.present("activate", { slot: i, name: d.name + " is Destroyed" });
       this.destroyCard(i, c.uid);
@@ -1448,7 +1487,13 @@ export class Game {
       c = top(slot),
       d = cards[c.id];
     if (!this.activationAvailable(c, a.slot)) return;
-    this.present("activate", { slot: a.slot, name: d.name });
+    const charging = d.charge && c.charge + 1 < d.charge;
+    this.present("activate", {
+      slot: a.slot,
+      name: charging
+        ? `${d.name} · Charge ${c.charge + 1}/${d.charge}`
+        : d.name,
+    });
     b.channel -= d.channel;
     const ctx = {};
     if (d.stack === "pile") {
@@ -1978,7 +2023,9 @@ export class Game {
               ]
             : [c.element];
           if (!els.length) els = ["Arcane"];
+          const charging = !!(d.charge && c.charge + 1 < d.charge);
           const targets =
+            charging ||
             f.all ||
             f.randomDamage ||
             d.stack === "pile" ||
@@ -2011,11 +2058,18 @@ export class Game {
               for (const ex of extras)
                 add(
                   "activate",
-                  `${d.name} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  `${d.name}${charging ? " · Charge" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
-                    ...f,
-                    damage: this.cardPower(c, i),
+                    ...(charging
+                      ? {
+                          charging: true,
+                          chargeGain: 1,
+                          chargedDamage: this.cardPower(c, i),
+                          chargedBurnAll: f.burnAll || 0,
+                        }
+                      : f),
+                    damage: charging ? 0 : this.cardPower(c, i),
                     ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
                     card: c.id,
                     charge: d.charge ? d.charge - c.charge : 0,

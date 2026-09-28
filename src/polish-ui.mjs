@@ -33,6 +33,8 @@ function bindActions(c, root) {
 function effect(c, slot, ctx) {
   const d = cards[c.id],
     f = d.effects || {};
+  if (d.charge && c.charge + 1 < d.charge)
+    return `Charge ${c.charge + 1}/${d.charge}`;
   const matching = c.sever
     ? 0
     : adjacent(slot).filter((i) => {
@@ -58,6 +60,7 @@ function effect(c, slot, ctx) {
       f.heal ? `Heal ${f.heal}` : null,
       f.poison ? `Poison ${f.poison}` : null,
       f.burn ? `Burn ${f.burn}` : null,
+      f.burnAll ? `Burn ${f.burnAll} to all` : null,
       f.corrode ? `Corrode ${f.corrode}` : null,
       f.channel ? `Channel +${f.channel}` : null,
     ]

@@ -1,10 +1,12 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.53. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.12; rules 1.3.9).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.54. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.13; rules 1.3.10).
 
 Blast starts at 4 damage and Shield at 4 block, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 block each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
 
 Ally spillover separates base damage from weakness bonus. Consecutive weak Allies share the remaining bonus; a changed matchup discards it. Resistant Allies convert leftover damage back to base before passing it on. Incoming-attack previews show both parts.
+
+Insight counts down during Reveal and finishes at 0. Ending the player turn refills all counters for the next turn while enemies resolve. Charge-building activations need no enemy selection; targeting appears only when an attack will fire. Kiln releases 30 damage to one enemy and Burn 2 to all enemies.
 
 Enemies stop immediately on reaching the player and remain there while the other enemies finish moving, including Pack Movement. Battle begins at the end of the enemy movement phase.
 
@@ -66,6 +68,6 @@ npm run test:gui
 
 The shared source design is updated through v4.49; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
 
-Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3/1.3.4/1.3.5/1.3.6/1.3.7/1.3.8 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
+Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3/1.3.4/1.3.5/1.3.6/1.3.7/1.3.8/1.3.9 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
 
 Cards now activate once per turn by default, even with unused Channel or remaining total activations. The per-turn opportunity refreshes next player turn; total used allowance does not. Printed Blink supports repeated paid activation within the total limit. No existing card has been granted Blink in this update. Covered Pile/Fusion activations and Charge building also count. Card controls display Used this turn and disable until eligible again. The earlier documentation-only implementation gap is closed (content 1.1.5).

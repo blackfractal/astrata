@@ -15,13 +15,13 @@ test("Druid opens each battle with four revealed cards, one Focus, two Channel a
   for (let battle = 0; battle < 2; battle++) {
     g.beginBattle([{ uid: g.uid(), enemy: "bat", restless: 0 }]);
     const b = g.s.battle;
-    assert.deepEqual([b.insight, b.focus, b.channel], [4, 1, 2]);
+    assert.deepEqual([b.insight, b.focus, b.channel], [0, 1, 2]);
     assert.equal(b.hand.length, 4);
     assert.equal(b.deck.length, 8);
     b.channel = 0;
     b.focus = 0;
     g.endTurn();
-    assert.deepEqual([b.insight, b.focus, b.channel], [4, 1, 2]);
+    assert.deepEqual([b.insight, b.focus, b.channel], [0, 1, 2]);
     assert.equal(b.hand.length, 4);
   }
 });

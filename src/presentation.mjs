@@ -143,6 +143,10 @@ export async function playFrames(before, frames, after, render, isFast) {
       if (frame.kind === "reveal") {
         const masked = structuredClone(frame.state);
         masked.battle.phase = "start";
+        masked.battle.insight =
+          frame.insight ??
+          masked.battle.revealInsight ??
+          masked.battle.hand.length;
         render(masked);
         const hand = [
           ...document.querySelectorAll(".revealed-hand [data-hand]"),
@@ -218,6 +222,15 @@ export async function playFrames(before, frames, after, render, isFast) {
               140,
               "ease-in",
             );
+          const counter = find(".resources > span:first-child");
+          const remaining =
+            i === hand.length - 1
+              ? 0
+              : Math.max(0, masked.battle.insight - i - 1);
+          if (counter) {
+            counter.querySelector("b").textContent = remaining;
+            counter.classList.toggle("depleted", remaining === 0);
+          }
           el.classList.remove("face-down");
           el.removeAttribute("aria-label");
           if (!reduced)
@@ -237,6 +250,12 @@ export async function playFrames(before, frames, after, render, isFast) {
         await Promise.all(opens);
         await pause(300);
         if (!skip) render(frame.state);
+      } else if (frame.kind === "resources") {
+        render(frame.state);
+        await pause(220);
+      } else if (frame.kind === "status") {
+        await flash(enemy(frame.uid), frame.name);
+        render(frame.state);
       } else if (frame.kind === "move") {
         if (!find(".field")) {
           const initial = structuredClone(frame.state);

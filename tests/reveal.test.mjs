@@ -82,5 +82,6 @@ test("pure next-turn economy Objects place for zero Focus and still cost Channel
   assert.equal(b.focus, 0);
   g.endTurn();
   assert.equal(b.focus, 3);
-  assert.equal(b.insight, 9);
+  assert.equal(b.revealInsight, 9);
+  assert.equal(b.insight, 0);
 });
