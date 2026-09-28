@@ -386,7 +386,22 @@ function resultMarkup(o) {
   const st = o.stats;
   return `<section class="result"><div class="result-title"><div class="eyebrow">Druid · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? "Stratum 1 Complete" : esc(o.cause)} · Seed ${o.seed}</p></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
 }
+let backdropPressed = false;
+modal.addEventListener("pointerdown", (event) => {
+  backdropPressed = event.target === modal;
+});
+modal.addEventListener("pointercancel", () => {
+  backdropPressed = false;
+});
+modal.addEventListener("click", (event) => {
+  if (event.target === modal && backdropPressed) {
+    event.stopPropagation();
+    close();
+  }
+  backdropPressed = false;
+});
 function dialog(html) {
+  backdropPressed = false;
   modal.innerHTML = `<section class="dialog"><button class="dialog-close quiet" data-close aria-label="Close">✕</button>${html}</section>`;
   modal.classList.remove("card-peek");
   modal.hidden = false;

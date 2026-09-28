@@ -371,3 +371,12 @@ Every charged card now has targetless charging actions until its next activation
 Main design freshly read and updated minimally to v4.54. Package 1.3.13, rules 1.3.10/content 1.1.9. All 107 tests pass, including resource modifiers, enemy Insight changes, old saves, all charged cards, release targeting, on-place charge, kills and Flicker. Packaged graphical checks pass all four Reveal modes, zero counters and immediate refill during enemy defense, targetless Kiln/Patient Seed charging and targeted Kiln release with Burn on both enemies. No renderer errors; screenshot inspected. Five full headless runs retain two wins/three losses, final HP/rounds 0/20, 4/19, 0/14, 0/12, 15/19. No full graphical playthrough or statistical balance claim is made.
 
 Evidence: tests/charge-resources.test.mjs, reports/charge-resources-verification.json, reports/screenshots/charge-resources/, reports/charge-resources-evaluation/, AI_REPORT.md. Additional implementation, verification and packaging time: approximately 13 minutes. Runnable distribution and CRC-verified ZIP refreshed without closing Jonathan's running game. Local commit only; no push.
+
+
+## Post-build polish — click-outside dialog dismissal, round 18
+
+2026-09-28. Jonathan requested that Grimoire, Inventory and Menu close when clicking anywhere outside their window, in addition to the × button. Added shared backdrop dismissal for these and other dialogs. Only a click that begins on the backdrop and targets the backdrop closes it; interior clicks and drags from inside to outside remain active. Uses the existing close path, preserving Escape, × and AI pause/resume scheduling. Backdrop clicks do not activate underlying game controls.
+
+Package 1.3.14; unchanged rules 1.3.10/content 1.1.9 and weighted-druid-v1.7. Main design minimally updated to v4.55. Packaged UI checks pass for all three windows: backdrop dismissal, interior click, drag out, ×, Escape, unchanged underlying game, and Inventory item inspection. No renderer errors. Evidence: reports/dialog-dismiss-verification.json. The preceding 107 rules tests and five-run evaluation remain applicable; no rules/content/policy changes were made, and no redundant gameplay batch was run.
+
+Additional implementation, verification and packaging time: approximately 3 minutes. Runnable distribution and CRC-verified ZIP refreshed without closing Jonathan's running game. Local commit only; no push.

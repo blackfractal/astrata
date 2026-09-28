@@ -1,3 +1,9 @@
+# Dialog dismissal — package 1.3.14
+
+Presentation-only change: Grimoire, Inventory, Menu and other dialogs support backdrop dismissal. Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged; the 107-test and five-run results below remain applicable. Packaged UI checks verify backdrop/×/Escape closure, interior interaction and drag protection, Inventory inspection, and no underlying action or renderer errors. Evidence: `reports/dialog-dismiss-verification.json`. No new gameplay batch was needed.
+
+---
+
 # Resource feedback and charged attacks — package 1.3.13
 
 Rules 1.3.10/content 1.1.9, weighted-druid-v1.7. Insight is spent by Reveal; counters refill as the player ends their turn. Charged-card actions explicitly distinguish charge-building (no enemy target or immediate damage) from release. The policy values their declared future damage/Burn without pretending the charge already hit an enemy. Kiln releases 30 targeted damage and Burn 2 to all enemies.
