@@ -1,3 +1,9 @@
+# Keyword help — package 1.3.15
+
+Presentation/help-only change: shared keyword annotation across rendered text, expanded glossary and aliases, including Locked/Frozen/Severed. Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged. All 107 gameplay tests pass again. Packaged UI checks verify status and card-detail help, Ally HP, four-second expiry, valid Locked Corner Flame activation and once-per-turn gating, dialogs, 92 glossary terms/aliases, dynamic text replacement, safe text preservation and idempotent annotation. No renderer errors; screenshot inspected. Evidence: `reports/keyword-help-verification.json`, `reports/screenshots/keyword-help/`. Prior five-run results remain applicable; no new gameplay batch was needed.
+
+---
+
 # Dialog dismissal — package 1.3.14
 
 Presentation-only change: Grimoire, Inventory, Menu and other dialogs support backdrop dismissal. Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged; the 107-test and five-run results below remain applicable. Packaged UI checks verify backdrop/×/Escape closure, interior interaction and drag protection, Inventory inspection, and no underlying action or renderer errors. Evidence: `reports/dialog-dismiss-verification.json`. No new gameplay batch was needed.

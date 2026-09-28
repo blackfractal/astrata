@@ -1,5 +1,7 @@
+import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
 export function installTooltips() {
+  installKeywordHelp();
   const tip = document.createElement("div");
   tip.id = "hover-help";
   tip.setAttribute("role", "tooltip");

@@ -86,11 +86,7 @@ function tellText(t) {
 }
 const key = (s) =>
   `<span class="key" title="${esc(glossary[s] || s)}">${s}</span>`;
-const text = (s) =>
-  esc(s).replace(
-    /\b(Attune|Focus|Channel|Insight|Recall|Spent|Ward|Shield|Ally|Burn|Poison|Corrode|Lock|Freeze|Sever|Stack|Charge|Herald|Restless|Pierce|Cull|Taunt|Isolated|Cornerstone|Bonded|Tower)\b/g,
-    (w) => key(w),
-  );
+const text = (s) => esc(s);
 function toast(s) {
   const el = document.querySelector("#toast");
   el.textContent = s;

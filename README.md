@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.55. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.14; rules 1.3.10).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.56. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.15; rules 1.3.10).
 
 Blast starts at 4 damage and Shield at 4 block, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 block each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
 
@@ -25,7 +25,7 @@ Open `release/Astrata/Astrata.exe` by double-clicking it. Keep the entire `Astra
 - Allies show health bars with current HP and the highest HP reached during that placement; growth/healing can raise this display scale without introducing a health cap.
 - Close Grimoire, Inventory, Menu and other dialogs with ×, Escape, or a click outside the window.
 - Enter confirms the main choice. Escape cancels targeting first, or otherwise opens/closes the pause menu.
-- Hover keywords for explanations. The Rules & keywords button contains the full quick reference.
+- Hover keywords throughout card text, descriptions, status labels and dialogs for brief explanations, including variants such as Locked, Frozen and Severed. Locked prevents Recall and Shift but allows activation; Frozen prevents activation. The Rules & keywords button contains the full quick reference.
 - Read enemy Tells before ending a turn. Each defense selection absorbs as much of the hit as it can.
 - Inventory is available throughout. Equip before or between Field movement steps, or at a Tavern. Drag equipment into slots and Gems into/out of sockets; Gem changes are Tavern-only.
 - Click Tavern people/areas for services. The Market separates Buy from Sell/remove, with View controls before transactions. Ordinary paid card removal is once per Tavern; variable-cost Hex treatment is separate.

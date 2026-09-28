@@ -1448,7 +1448,8 @@ export const glossary = {
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
   Blink:
     "May activate repeatedly this turn, paying Channel each time and respecting total activation allowance.",
-  Insight: "Cards revealed at the start of your turn.",
+  Insight:
+    "Reveal budget. Counts down as cards turn face up and is zero after Reveal. Refills for the next turn when you end your turn.",
   Recall:
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
@@ -1460,13 +1461,14 @@ export const glossary = {
   Burn: "Damage at turn start; value decreases by one.",
   Poison: "Constant damage at turn start.",
   Corrode: "Damage at turn start; value increases by one.",
-  Lock: "Cannot Recall or Shift; can activate or be covered.",
-  Freeze: "Cannot activate until the indicated turn.",
+  Lock: "Locked cards cannot be Recalled or Shifted. They CAN still activate and can be covered by a legal stack. Lock does not disable abilities.",
+  Freeze:
+    "Frozen cards cannot activate. The effect lasts through the indicated turn; it does not prevent another card from covering them.",
   Sever: "Ignores and contributes no adjacency or patterns.",
   Stack:
     "Place onto a compatible occupied slot. Top card determines covered functionality.",
   Charge:
-    "Accumulates per activation, releases at the printed threshold. Recall resets it.",
+    "Builds through paid activations, once per turn unless Blink permits more. Charging needs no enemy target; choose a target only when the effect fires at its threshold. Recall resets Charge.",
   Herald: "Defeat to reveal this Stratum’s Archon.",
   Restless: "+1 movement and attack per batch survived.",
   Pierce: "Skips Wards, Shields and Allies. Equipment still protects.",
@@ -1476,4 +1478,106 @@ export const glossary = {
   Cornerstone: "Only functions in a grid corner.",
   Bonded: "Requires a neighbor of the printed element.",
   Tower: "All Wards and designated Objects. Supports Tower stacks.",
+  Siphon:
+    "Consumes one remaining activation allowance from the affected card. It does not activate that card or spend your Channel.",
+  Newest:
+    "The most recently placed exposed card. Ties use grid order, from top left.",
+  Oldest:
+    "The earliest placed exposed card. Ties use grid order, from top left.",
+  "Most Connected":
+    "The exposed card with the most orthogonal neighbors; Sever removes adjacency. Ties use grid order, from top left.",
+  Tallest: "The stack with the most cards. Ties use grid order, from top left.",
+  Weakest: "The eligible Ally with the lowest current HP.",
+  Guard:
+    "An enemy defense pool that absorbs damage before its HP. The displayed amount is what remains.",
+  Shift:
+    "Move a whole placed stack to an eligible empty Mind Grid slot. Locked stacks cannot Shift.",
+  Flicker:
+    "Negates the next offensive activation against this enemy, then ends. Other targets of that activation can still be affected.",
+  Resist:
+    "A printed resistance halves damage from its named element, rounded up. It is separate from the elemental cycle.",
+  Block:
+    "Temporary defense from Shields or Bracelets. Each portion keeps its element and remaining block; Shield block expires after the enemy turn, Bracelet block refills each enemy turn.",
+  Armor:
+    "Equipment that protects only the player, after grid defenses and Bracelets. Its printed effect determines the protection.",
+  Hex: "A harmful card in your Grimoire. Its printed text explains when it applies. Tavern Hex treatment is separate from ordinary card removal.",
+  Curse:
+    "A harmful item effect. Cursed equipment may be forced into a slot and cannot be freely removed; its treatment has a printed cost.",
+  Destroyed:
+    "Cards in this pile are unavailable for the rest of the battle and return next battle. This is different from permanent card removal or sacrifice.",
+  Discard:
+    "Cards waiting to return to the Grimoire after its remaining cards have been drawn.",
+  Grimoire:
+    "Your deck. Cards are drawn randomly from its remaining cards; when empty, the discard pile is recycled.",
+  Reveal:
+    "The first player phase: draw cards using Insight. It advances automatically to Placement when Reveal finishes.",
+  Placement:
+    "Spend Focus to place cards or Recall eligible stacks. Finish this phase with the arrow to Activation; phases do not go backward.",
+  Activation:
+    "Spend a card's printed Channel cost to use it. Each card normally activates once per turn, within its total activation allowance.",
+  "Activation allowance":
+    "The total uses remaining for this placed card. This is separate from the once-per-turn limit. Recall normally resets uses; single-use cards cannot gain extra uses.",
+  "Single use":
+    "Only one activation for this card, with no extra uses. Its text says when it is Destroyed; Destroyed cards return next battle.",
+  Adjacent:
+    "The four orthogonal neighbors: above, below, left and right. Diagonals do not count; Sever disables adjacency.",
+  "Mind Grid":
+    "The 5-by-4 battlefield where you arrange and activate cards. Covered cards function only as their top card allows.",
+  Pile: "A stacking rule that can activate eligible matching cards beneath the top card. Each card still respects its own activation limits.",
+  Fusion:
+    "A stacking rule that can also activate an eligible covered card. The top card's text states which cards and extra effects qualify.",
+  Supersede:
+    "A stacking rule that leaves covered cards inactive unless the top card says otherwise.",
+  Consecutive:
+    "Activated on consecutive player turns. The card's text states the benefit; Magnifying Glass Tower requires two such turns.",
+  Spell:
+    "A card with its printed activation effect and limits. It stays on the grid unless an effect, Recall or destruction removes it.",
+  Object:
+    "A card that remains on the grid and provides its printed activated or passive effect.",
+  HP: "Health points. At zero an Ally is Destroyed, an enemy is defeated, or the player's run ends. Player HP persists between battles.",
+  Gold: "Currency collected on the Field and through rewards. Spend it at Taverns on purchases, upgrades and services.",
+  Gem: "An item whose effect works while socketed into a Setting. Elemental Gems imbue that Setting; other Gems grant their printed bonuses.",
+  Socket:
+    "A Setting's Gem slot. Gems can be inserted or removed only at a Tavern.",
+  Setting:
+    "A Necklace, Bracelet or Ring with its own printed effect and one Gem socket.",
+  Bracelet:
+    "Passive equipment block protecting the player after Allies. Refills each enemy turn and requires no activation.",
+  Ring: "Equipment with a printed effect and a Gem socket. Rootbound Ring adds one separate hit on your first damaging activation each player turn.",
+  Necklace: "Equipment with a printed effect and a Gem socket.",
+  Crown: "Head equipment with a printed effect and no Gem socket.",
+  Tavern:
+    "A place for recovery, shopping, upgrades, card removal and Gem socketing. Ordinary paid card removal is once per visit; Hex treatment is separate.",
+  Mote: "An ordinary enemy encounter. Some icons contain a group of enemies.",
+  Eidolon:
+    "An elite enemy with a stronger rotation and richer rewards than a Mote.",
+  Archon:
+    "The Stratum's gatekeeper. Defeat the Stratum 1 Archon to complete this build's journey.",
+  Stratum:
+    "One Field journey ending with an Archon battle. This build contains Stratum 1.",
+  Tell: "An enemy's announced next action. Inspect it to plan for damage, element and other effects.",
+  Hunter:
+    "A Field movement pattern that moves directly onto the player when it pursues. Archon grace periods still apply.",
+  Stalker:
+    "A Field enemy that moves toward the player at its printed speed, stopping when it reaches them.",
+  Wanderer:
+    "A Field enemy that chooses a random direction for its movement, stopping when it reaches the player.",
+  Sentinel:
+    "A Field enemy that normally stays in place. Archons can begin moving when their grace period ends.",
+  Skittish:
+    "A Field enemy that moves away from the player. Catching one grants richer rewards.",
+  "Pack Movement":
+    "When a matching pack member arrives on the player, other pack members move toward the player too. Arriving enemies remain there until the battle begins.",
+  Arcane:
+    "No elemental matchup: Arcane damage receives no elemental-cycle bonus or penalty.",
+  Fire: "Fire deals +50% damage to Earth and -50% to Water, rounded up. Fire defense has its own Shield/equipment rules.",
+  Earth:
+    "Earth deals +50% damage to Wind and -50% to Fire, rounded up. Earth defense has its own Shield/equipment rules.",
+  Wind: "Wind deals +50% damage to Water and -50% to Earth, rounded up. Wind defense has its own Shield/equipment rules.",
+  Water:
+    "Water deals +50% damage to Fire and -50% to Wind, rounded up. Water defense has its own Shield/equipment rules.",
+  Chaos:
+    "Chaos and Light each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
+  Light:
+    "Light and Chaos each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
 };
