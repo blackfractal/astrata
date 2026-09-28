@@ -2378,3 +2378,74 @@ header {
 .slot.has-statuses .level {
   right: 73px;
 }
+
+/* Elemental spell collisions sit behind damage numbers and never capture input. */
+.attack-bolt {
+  transform: translate(-50%, -50%);
+  background: var(--hit-color, #c8cbd0);
+  box-shadow: 0 0 15px 5px var(--hit-color, #c8cbd0);
+}
+.spell-impact {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  z-index: 64;
+  color: var(--hit-color);
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+.spell-impact * {
+  pointer-events: none;
+}
+.impact-core {
+  width: 100%;
+  height: 100%;
+}
+.impact-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+}
+.spark-star {
+  clip-path: polygon(
+    50% 0,
+    60% 36%,
+    100% 50%,
+    60% 64%,
+    50% 100%,
+    40% 64%,
+    0 50%,
+    40% 36%
+  );
+}
+.spark-ember {
+  border-radius: 70% 10% 70% 50%;
+}
+.spark-drop {
+  border-radius: 80% 0 80% 80%;
+}
+.spark-shard {
+  clip-path: polygon(10% 10%, 80% 0, 100% 70%, 30% 100%);
+}
+.spark-slash {
+  width: 20px;
+  height: 4px;
+  border-radius: 80% 0;
+}
+.spark-ray {
+  width: 3px;
+  height: 18px;
+  border-radius: 2px;
+}
+.spell-impact[data-motion="reduced"] {
+  filter: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .impact {
+    animation: none !important;
+  }
+}

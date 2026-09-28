@@ -1,3 +1,11 @@
+# Elemental spell impacts — package 1.3.17
+
+Presentation-only change; rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged. Packaged graphical tests verify all seven element-specific bursts during actual attacks, the gray Arcane star, impact location and timing after projectile arrival, Ally interception, and correct cleanup. Fast, reduced-motion and Skip modes retain identical damage and final state. Reduced motion has no flying particles. No renderer errors; Arcane/Fire/Water screenshots inspected.
+
+Evidence: `reports/element-impact-verification.json`, `reports/screenshots/element-impact/`, `tools/element-impact-ui-test.mjs`. Previous 110-test and five-run gameplay results remain applicable; no redundant gameplay batch or rules test run was needed.
+
+---
+
 # Battle feedback and upgrade previews — package 1.3.16
 
 Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 remain unchanged. Combat power and elemental calculations were extracted into shared pure functions so the interface uses the same math as combat. No balance or policy changes. All 110 tests pass, including previews matching actual hits across weakness, strength, neutral, Resist, Guard, Flicker and Wisp cases, with no state/RNG mutation.

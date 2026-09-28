@@ -1,3 +1,4 @@
+import { spellImpact, impactStyles } from "./impact-effects.mjs";
 import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
 export function installTooltips() {
@@ -55,7 +56,10 @@ export async function playFrames(before, frames, after, render, isFast) {
     fast = false,
     previous = before,
     source = before.battle?.reaction?.source
-      ? { enemy: before.battle.reaction.source }
+      ? {
+          enemy: before.battle.reaction.source,
+          element: before.battle.reaction.element,
+        }
       : null;
   bar.querySelector("[data-skip]").onclick = () => (skip = true);
   bar.querySelector("[data-speed]").onclick = () => {
@@ -92,14 +96,17 @@ export async function playFrames(before, frames, after, render, isFast) {
     document.body.append(tag);
     return tag;
   }
-  async function flash(el, label, dead = false, from = null) {
-    const duration = ms(500);
+  async function flash(el, label, dead = false, from = null, element = null) {
     let projectile;
-    if (el && from && from !== el) {
+    if (el && from && from !== el && !reduced) {
       const a = from.getBoundingClientRect(),
         b = el.getBoundingClientRect();
       projectile = document.createElement("div");
       projectile.className = "attack-bolt";
+      projectile.style.setProperty(
+        "--hit-color",
+        (impactStyles[element] || impactStyles.Arcane).color,
+      );
       document.body.append(projectile);
       const animation = projectile.animate(
         [
@@ -119,11 +126,17 @@ export async function playFrames(before, frames, after, render, isFast) {
       await Promise.race([animation.finished, pause(350)]);
       projectile.remove();
     }
+    if (skip) return;
+    const burst = element
+      ? spellImpact(el, element, { duration: ms(500), reduced })
+      : null;
     el?.classList.add("impact");
     const tag = floating(el, label);
     await pause(550);
     el?.classList.remove("impact");
     tag?.remove();
+    burst?.remove();
+    if (skip) return;
     if (dead && el) {
       el.classList.add("disintegrating");
       await pause(600);
@@ -314,7 +327,7 @@ export async function playFrames(before, frames, after, render, isFast) {
         await flash(card(frame.slot), frame.name);
         render(frame.state);
       } else if (frame.kind === "incoming") {
-        source = { enemy: frame.source };
+        source = { enemy: frame.source, element: frame.element };
         const el = enemy(frame.source);
         await flash(
           el,
@@ -349,6 +362,9 @@ export async function playFrames(before, frames, after, render, isFast) {
             : frame.name || "Hit",
           frame.dead,
           from,
+          frame.amount != null
+            ? frame.element || source?.element || "Arcane"
+            : null,
         );
         render(frame.state);
       } else render(frame.state);
@@ -368,7 +384,7 @@ export async function playFrames(before, frames, after, render, isFast) {
   } finally {
     bar.remove();
     document
-      .querySelectorAll(".impact-number,.attack-bolt")
+      .querySelectorAll(".impact-number,.attack-bolt,.spell-impact")
       .forEach((el) => el.remove());
   }
 }
