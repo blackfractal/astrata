@@ -43,19 +43,19 @@ async function hover(selector, pattern) {
 try {
   await page.locator('[data-ui="continue"]').click();
   await hover(
-    '[data-slot="0"] .nums [data-keyword="Lock"]',
+    '[data-slot="0"] [data-card-status="Lock"]',
     /cannot be Recalled or Shifted.*CAN still activate/,
   );
   await fs.mkdir("reports/screenshots/keyword-help", { recursive: true });
   await page.screenshot({
     path: "reports/screenshots/keyword-help/locked.png",
   });
-  await page.locator('[data-slot="0"] .nums [data-keyword="Lock"]').click();
+  await page.locator('[data-slot="0"] [data-card-status="Lock"]').click();
   await hover('#modal .card-facts [data-keyword="Lock"]', /CAN still activate/);
   await hover('#modal [data-keyword="Cornerstone"]', /grid corner/);
   await page.locator(".dialog-close").click();
-  await hover('[data-slot="3"] [data-keyword="Freeze"]', /cannot activate/);
-  await hover('[data-slot="3"] [data-keyword="Sever"]', /no adjacency/);
+  await hover('[data-slot="3"] [data-card-status="Freeze"]', /cannot activate/);
+  await hover('[data-slot="3"] [data-card-status="Sever"]', /no adjacency/);
   await hover('.ally-health [data-keyword="HP"]', /Health points/);
   await page.locator("#hover-help").waitFor({ state: "hidden", timeout: 5500 });
   report.checks.push(
@@ -71,7 +71,7 @@ try {
     /91 \/ 100 HP/,
   );
   await hover(
-    '[data-slot="0"] .nums [data-keyword="Lock"]',
+    '[data-slot="0"] [data-card-status="Lock"]',
     /CAN still activate/,
   );
   assert.equal(

@@ -13,7 +13,9 @@ export function installTooltips() {
     clearTimeout(timer);
   };
   function show(e) {
-    const el = e.target.closest?.("[title],[data-tooltip]");
+    const el =
+      e.target.closest?.("[data-upgrade-preview]") ||
+      e.target.closest?.("[title],[data-tooltip]");
     if (!el) return;
     const value = el.getAttribute("title") || el.dataset.tooltip;
     if (!value) return;

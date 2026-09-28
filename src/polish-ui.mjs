@@ -1,3 +1,9 @@
+import {
+  damageMarkup,
+  targetPreview,
+  statusBadges,
+  upgradeHelp,
+} from "./battle-feedback.mjs";
 import { cards, items, enemies } from "./content.mjs";
 import { blockHit, allyHit, incomingDamageText, adjacent } from "./engine.mjs";
 const slotNames = {
@@ -19,7 +25,16 @@ function run(c, a) {
   return c.act(a);
 }
 function button(c, a, cls = "") {
-  return c.actionButton(a, cls);
+  const markup = c.actionButton(a, cls);
+  if (a.type !== "upgrade") return markup;
+  const owned = c.o.deck.find((x) => x.uid === a.uid);
+  const help = owned && upgradeHelp(cards[owned.id]);
+  return help
+    ? markup.replace(
+        "<button ",
+        `<button data-upgrade-preview data-tooltip="${c.esc(help)}" `,
+      )
+    : markup;
 }
 function bindActions(c, root) {
   root.querySelectorAll("[data-action]").forEach(
@@ -43,16 +58,11 @@ function effect(c, slot, ctx) {
       }).length;
   return (
     [
-      f.damage
-        ? "Deal " +
-          (f.damage +
-            (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
-            (f.matchingDamage || 0) * matching)
-        : f.hpDamage
-          ? "Deal current HP"
-          : f.randomDamage
-            ? "Deal 1–" + f.randomDamage
-            : null,
+      f.damage || f.hpDamage
+        ? damageMarkup(ctx.o.battle, c, slot)
+        : f.randomDamage
+          ? "Deal 1–" + f.randomDamage
+          : null,
       f.shield
         ? `Shield ${f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching + (d.name.includes("Shield") ? ctx.o.bonuses.shield : 0)}`
         : null,
@@ -113,7 +123,13 @@ function activationChooser(ctx, slot, dragging = false) {
     stage,
     options = new Map();
   const selected = new Set();
+  const preview = targetPreview(ctx, source, slot, (choice) =>
+    stage === "target" && choice
+      ? filtered.find((a) => a.target === options.get(choice))
+      : null,
+  );
   function cleanHighlights() {
+    preview.clear();
     ctx.app
       .querySelectorAll(".target-option,.target-source,.target-selected")
       .forEach((el) => {
@@ -224,10 +240,29 @@ function activationChooser(ctx, slot, dragging = false) {
   ctx.app.addEventListener(
     "dragover",
     (e) => {
-      if (choiceAt(e.target) && drag?.activation === slot) e.preventDefault();
+      if (drag?.activation !== slot) return;
+      const choice = choiceAt(e.target);
+      if (choice) e.preventDefault();
+      preview.show(choice);
     },
     { capture: true, signal },
   );
+  ctx.app.addEventListener("dragleave", preview.leave, {
+    capture: true,
+    signal,
+  });
+  ctx.app.addEventListener("dragend", preview.clear, { capture: true, signal });
+  ctx.app.addEventListener(
+    "pointerover",
+    (e) => {
+      if (!drag) preview.show(choiceAt(e.target));
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener("pointerout", preview.leave, {
+    capture: true,
+    signal,
+  });
   ctx.app.addEventListener(
     "drop",
     (e) => {
@@ -235,9 +270,11 @@ function activationChooser(ctx, slot, dragging = false) {
       e.preventDefault();
       e.stopImmediatePropagation();
       const choice = choiceAt(e.target);
+      preview.clear();
       drag = null;
       dragging = false;
       if (choice) select(options.get(choice));
+      else clearTargeting();
     },
     { capture: true, signal },
   );
@@ -759,11 +796,13 @@ export function enhance(ctx) {
       sidebar.prepend(wrap);
     }
     section.insertAdjacentHTML("beforeend", playerMarkup(ctx, true));
-    app
-      .querySelectorAll(".resources>span")
-      .forEach((el, i) =>
-        el.classList.toggle("depleted", !b[["insight", "focus", "channel"][i]]),
-      );
+    app.querySelectorAll(".resources>span").forEach((el, i) => {
+      el.classList.toggle("depleted", !b[["insight", "focus", "channel"][i]]);
+      const active =
+        !b.reaction && b.phase === ["start", "place", "activate"][i];
+      el.classList.toggle("resource-active", active);
+      if (active) el.setAttribute("aria-current", "step");
+    });
     const placement = actions.some((a) => a.type === "place"),
       activation = actions.some((a) => a.type === "activate");
     app.querySelectorAll("[data-action]").forEach((el) => {
@@ -840,8 +879,17 @@ export function enhance(ctx) {
         const d = cards[c.id],
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
+        const badges = statusBadges(ctx, c, i);
+        if (badges) {
+          el.classList.add("has-statuses");
+          el.insertAdjacentHTML("beforeend", badges);
+          el.style.setProperty(
+            "--status-rows",
+            Math.ceil(el.querySelectorAll(".card-status").length / 3),
+          );
+        }
         const nums = el.querySelector(".nums");
-        nums.innerHTML = `${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>${!d.blink && c.lastActivatedTurn === b.turn ? " · Used this turn" : ""}${c.freeze >= b.turn ? " · Frozen" : ""}${c.lock ? " · Locked" : ""}${c.sever ? " · Severed" : ""}`;
+        nums.innerHTML = `${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}<b>${left === Infinity ? "∞" : left}/${d.limit < 0 ? "∞" : ctx.game.allowance({ ...c, used: 0 }, i)} acts</b>`;
         if (d.type === "Ally") {
           const maximum = Math.max(
             c.hp,

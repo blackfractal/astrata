@@ -1,3 +1,13 @@
+# Battle feedback and upgrade previews — package 1.3.16
+
+Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 remain unchanged. Combat power and elemental calculations were extracted into shared pure functions so the interface uses the same math as combat. No balance or policy changes. All 110 tests pass, including previews matching actual hits across weakness, strength, neutral, Resist, Guard, Flicker and Wisp cases, with no state/RNG mutation.
+
+Packaged graphical checks use real mouse drags: Thorn Choir updates 6→8 after placing a neighbor; holding an attack over three enemies shows 12 (+4) green, 4 (-4) red and 8 neutral. Canceling spends no Channel and restores 8; committing the first target deals 12. Tests also verify Insight→Focus→Channel highlighting, no resource highlight during enemy defense, six adverse-status badges and their tooltips, Used-this-turn state, badge/control separation, and a Shield upgrade tooltip showing 4→7. No renderer errors; screenshots inspected. Evidence: `reports/battle-feedback-verification.json`, `reports/screenshots/battle-feedback/`, `tests/battle-feedback.test.mjs`.
+
+The preview describes the source card's direct hits; equipment, covered-card effects and status ticks are separate, as stated in hover help. Random attacks retain their range and are not presented as a deterministic target forecast. Prior five-run results remain applicable; no new gameplay batch or full graphical playthrough was run.
+
+---
+
 # Keyword help — package 1.3.15
 
 Presentation/help-only change: shared keyword annotation across rendered text, expanded glossary and aliases, including Locked/Frozen/Severed. Rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged. All 107 gameplay tests pass again. Packaged UI checks verify status and card-detail help, Ally HP, four-second expiry, valid Locked Corner Flame activation and once-per-turn gating, dialogs, 92 glossary terms/aliases, dynamic text replacement, safe text preservation and idempotent annotation. No renderer errors; screenshot inspected. Evidence: `reports/keyword-help-verification.json`, `reports/screenshots/keyword-help/`. Prior five-run results remain applicable; no new gameplay batch was needed.

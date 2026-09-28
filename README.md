@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.56. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.15; rules 1.3.10).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.57. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.16; rules 1.3.10).
 
 Blast starts at 4 damage and Shield at 4 block, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 block each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
 
@@ -15,6 +15,8 @@ Mind Grid slots have no visible indices. Inventory separates Equipped from Satch
 New Druid runs start with 12 cards: four Blasts, four Shields, Familiar, Clear Mind, Focus Energy, and Sapling. Existing saves retain their acquired/removed cards; the new base Insight applies at the next Reveal.
 
 Card backs show a Druid tree-and-roots emblem without the game title. Reveal uses shorter, overlapping deal/flip animations while preserving draw order, with a normal four-card Reveal taking about 1.8 seconds. Fast, Skip, and reduced-motion controls remain available.
+
+The active phase outlines Insight, Focus or Channel in soft green. Placed cards display their current conditional damage. Dragging over an enemy previews adjusted card damage and HP loss, with green/red deltas; leaving or canceling restores the normal number. Card status badges have distinct symbols and hover explanations. Tavern upgrade offers show their specific benefits on hover.
 
 ## Play
 

@@ -21,6 +21,65 @@ export function offense(n, from, to) {
             : 1),
   );
 }
+export function gridNeighbors(b, i) {
+  if (top(b.grid[i])?.sever) return [];
+  return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
+}
+export function matchingNeighbors(b, c, i) {
+  if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
+  return gridNeighbors(b, i).filter((j) => top(b.grid[j]).id === c.id).length;
+}
+export function enemyDamage(n, element, enemy) {
+  let damage = offense(n, element, enemy.element);
+  if (enemy.resist === element) damage = Math.ceil(damage / 2);
+  if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
+  return damage;
+}
+export function cardPower(b, c, i) {
+  const d = cards[c.id],
+    f = d.effects;
+  let n = f.hpDamage
+    ? c.hp
+    : f.damage
+      ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
+      : 0;
+  if (f.row)
+    n += b.grid.reduce(
+      (sum, slot, j) =>
+        sum +
+        (j !== i &&
+        Math.floor(j / 5) === Math.floor(i / 5) &&
+        top(slot)?.element === c.element &&
+        !top(slot).sever &&
+        !c.sever
+          ? f.row
+          : 0),
+      0,
+    );
+  if (f.adj) n += gridNeighbors(b, i).length * f.adj;
+  if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
+  if (f.square && !c.sever)
+    for (const origin of [i, i - 1, i - 5, i - 6])
+      if (
+        origin >= 0 &&
+        origin % 5 < 4 &&
+        origin < 15 &&
+        [origin, origin + 1, origin + 5, origin + 6].every(
+          (j) => top(b.grid[j]) && !top(b.grid[j]).sever,
+        )
+      ) {
+        n *= 2;
+        break;
+      }
+  const level = b.grid[i].findIndex((x) => x.uid === c.uid) + 1;
+  for (let j = 0; j < 20; j++)
+    if (j !== i) {
+      const tower = top(b.grid[j]);
+      if (tower?.magnified && b.grid[j].length === level) n *= 2;
+    }
+  return n;
+}
+
 // Resolve elemental damage locally; only unmodified base damage travels onward.
 // A surviving weakness bonus may travel only to a defender with the same weakness.
 export function allyHit(hit, element, hp, swallow = false) {
@@ -722,10 +781,7 @@ export class Game {
     s.checkpoint = clone({ ...s, checkpoint: undefined });
   }
   neighbors(i) {
-    const b = this.s.battle,
-      c = top(b.grid[i]);
-    if (c?.sever) return [];
-    return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
+    return gridNeighbors(this.s.battle, i);
   }
   allowance(c, i) {
     const b = this.s.battle,
@@ -1227,9 +1283,7 @@ export class Game {
     if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
     const s = this.s,
       b = s.battle;
-    let d = offense(n, element, e.element);
-    if (e.resist === element) d = Math.ceil(d / 2);
-    if (e.wisp) d = Math.ceil(d * (element === "Arcane" ? 0.5 : 2));
+    let d = enemyDamage(n, element, e);
     const guard = Math.min(d, e.guard);
     e.guard -= guard;
     d -= guard;
@@ -1261,10 +1315,7 @@ export class Game {
     }
   }
   matchingNeighbors(c, i) {
-    if (c.sever || top(this.s.battle.grid[i])?.uid !== c.uid) return 0;
-    return this.neighbors(i).filter(
-      (j) => top(this.s.battle.grid[j]).id === c.id,
-    ).length;
+    return matchingNeighbors(this.s.battle, c, i);
   }
   shieldPower(c, i) {
     const d = cards[c.id];
@@ -1276,49 +1327,7 @@ export class Game {
     );
   }
   cardPower(c, i) {
-    const d = cards[c.id],
-      f = d.effects,
-      b = this.s.battle;
-    let n = f.hpDamage
-      ? c.hp
-      : f.damage
-        ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
-        : 0;
-    if (f.row)
-      n += b.grid.reduce(
-        (sum, slot, j) =>
-          sum +
-          (j !== i &&
-          Math.floor(j / 5) === Math.floor(i / 5) &&
-          top(slot)?.element === c.element &&
-          !top(slot).sever &&
-          !c.sever
-            ? f.row
-            : 0),
-        0,
-      );
-    if (f.adj) n += this.neighbors(i).length * f.adj;
-    if (f.matchingDamage) n += this.matchingNeighbors(c, i) * f.matchingDamage;
-    if (f.square && !c.sever)
-      for (const origin of [i, i - 1, i - 5, i - 6])
-        if (
-          origin >= 0 &&
-          origin % 5 < 4 &&
-          origin < 15 &&
-          [origin, origin + 1, origin + 5, origin + 6].every(
-            (j) => top(b.grid[j]) && !top(b.grid[j]).sever,
-          )
-        ) {
-          n *= 2;
-          break;
-        }
-    const level = b.grid[i].indexOf(c) + 1;
-    for (let j = 0; j < 20; j++)
-      if (j !== i) {
-        const tower = top(b.grid[j]);
-        if (tower?.magnified && b.grid[j].length === level) n *= 2;
-      }
-    return n;
+    return cardPower(this.s.battle, c, i);
   }
   applyCard(c, i, target, element, a = {}, context = {}) {
     const s = this.s,

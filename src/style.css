@@ -2272,3 +2272,109 @@ header {
   background: #122a23;
   font-size: 10px;
 }
+/* Current resource and reversible attack forecasts. */
+.resources > span {
+  padding: 4px 7px;
+  border-radius: 4px;
+}
+.resources > span.resource-active {
+  outline: 1px solid #a4d5a1;
+  outline-offset: 2px;
+  box-shadow: 0 0 13px #93ca912b;
+  background-color: #65906126;
+}
+.damage-value {
+  font-variant-numeric: tabular-nums;
+}
+.damage-up {
+  color: #a6edaa !important;
+}
+.damage-down {
+  color: #ffaaa0 !important;
+}
+.enemy {
+  position: relative;
+}
+.target-damage-preview {
+  position: absolute;
+  right: 6px;
+  bottom: 5px;
+  z-index: 3;
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  background: #0b1a14f5;
+  color: #f1e0aa;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.card-statuses {
+  position: absolute;
+  z-index: 3;
+  right: 3px;
+  top: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 2px;
+  max-width: 67px;
+}
+.card-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  color: #f5c58b;
+  background: #1b1713ef;
+  box-shadow: 0 1px 3px #0008;
+  cursor: help;
+}
+.card-status svg {
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+}
+.card-status b {
+  position: absolute;
+  right: -1px;
+  bottom: -3px;
+  font-size: 9px;
+  line-height: 11px;
+  background: #102117;
+  padding: 0 1px;
+}
+.status-freeze {
+  color: #a6dff5;
+}
+.status-sever {
+  color: #efabbc;
+}
+.status-burn {
+  color: #ffb27c;
+}
+.status-poison {
+  color: #c5df88;
+}
+.status-corrode {
+  color: #e3c372;
+}
+.status-used,
+.status-spent,
+.status-depleted {
+  color: #c3c8c0;
+}
+.slot.has-statuses .overlay {
+  right: 72px;
+}
+
+.slot.has-statuses {
+  min-height: calc(30px + var(--status-rows, 1) * 22px);
+}
+.slot.has-statuses .level {
+  right: 73px;
+}
