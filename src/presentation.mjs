@@ -347,6 +347,9 @@ export async function playFrames(before, frames, after, render, isFast) {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);
         render(frame.state);
+      } else if (frame.kind === "death") {
+        await flash(enemy(frame.uid), frame.name, true);
+        render(frame.state);
       } else if (frame.kind === "incoming") {
         source = { enemy: frame.source, element: frame.element };
         const el = enemy(frame.source);

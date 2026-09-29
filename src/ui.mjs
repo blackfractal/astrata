@@ -112,9 +112,9 @@ function phaseBar(b, actions) {
   return `<nav class="phasebar" aria-label="Battle phases">
     <span class="phase-step ${b.phase === "start" && !b.reaction ? "active" : "completed"}">1 · Reveal</span>
     <span class="phase-arrow automatic" role="img" aria-label="Reveal to placement advances automatically" title="Reveal advances to Placement automatically"><svg viewBox="0 0 32 24" aria-hidden="true"><path d="M3 12h24M18 3l9 9-9 9" /></svg></span>
-    <span class="phase-step ${b.phase === "place" ? "active" : ""}">2 · Placement</span>
+    <span class="phase-step ${b.phase === "place" && !b.reaction ? "active" : ""}">2 · Placement</span>
     ${arrow("activatePhase", "Begin activation", "Finish placement and begin activation. You cannot return to placement this turn.")}
-    <span class="phase-step ${b.phase === "activate" ? "active" : ""}">3 · Activation</span>
+    <span class="phase-step ${b.phase === "activate" && !b.reaction ? "active" : ""}">3 · Activation</span>
     ${arrow("endTurn", "End turn", "Finish activation and let enemies act.")}
     <span class="phase-step ${b.phase === "enemy" || b.reaction ? "active" : ""}">4 · Enemy</span>
   </nav>`;
@@ -272,7 +272,7 @@ function render(frame = null) {
     body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Battle · Turn ${b.turn}</div><h2>The Mind Grid</h2></div><div class="resources"><span><b>${b.insight || 0}</b>${key("Insight")}</span><span><b>${b.focus || 0}</b>${key("Focus")}</span><span><b>${b.channel || 0}</b>${key("Channel")}</span></div></div><div class="enemy-line">${b.enemies
       .map(
         (e) =>
-          `<article class="enemy" data-enemy="${e.id}" title="${esc(e.signature + " Counterplay: " + e.counter)}">${img("enemy-" + e.id)}<div class="info"><h4>${e.name}</h4><small style="color:var(--${e.element})">${e.element} · ${e.hp} / ${e.maxHp} HP ${e.restless ? "· Restless " + e.restless : ""}</small><div class="health-track"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i></div><div class="tell">${text(tellText(e.tell))}</div><small>${Object.entries(
+          `<article class="enemy" data-enemy="${e.id}" title="${esc(e.signature + " Counterplay: " + e.counter)}">${img("enemy-" + e.id)}<div class="info"><h4>${e.name}</h4><small style="color:var(--${e.element})">${e.element} · ${e.hp} / ${e.maxHp} HP ${e.restless ? "· Restless " + e.restless : ""}</small><div class="health-track"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i></div><div class="tell">${text(tellText(e.tell))}</div>${e.onDeath ? `<small class="death-warning">On death: ${text(tellText(e.onDeath))}</small>` : ""}<small>${Object.entries(
             e.status,
           )
             .filter(([k, v]) => v)

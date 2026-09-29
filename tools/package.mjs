@@ -61,6 +61,8 @@ for (const name of [
   "reveal-verification.json",
   "reveal-evaluation",
   "reveal-playthrough.json",
+  "choir-final-note-verification.json",
+  "choir-final-note-evaluation",
   "status-defense-evaluation",
   "ring-origin-verification.json",
   "golem-defeat-verification.json",

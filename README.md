@@ -1,6 +1,8 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.64. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.23; rules 1.3.13).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.65. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.24; rules 1.3.14).
+
+The Glass Choir now uses Chorus (10 Water) on turn four. Its warned Final Note deals 12 Light damage on death before victory, using defenses already prepared; dying to it loses the run.
 
 Burn, Poison and Corrode on the player now damage HP directly, bypassing Bracelet block and Armor. Husk Armor subtracts 2 damage from each enemy attack; it does not negate two attacks or reduce its own Corrode.
 

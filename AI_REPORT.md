@@ -1,3 +1,13 @@
+# Glass Choir Chorus and Final Note — package 1.3.24
+
+Rules 1.3.14/content 1.1.13; weighted-druid-v1.7 unchanged. All 135 rules tests pass. Ten focused tests cover the revised rotation/warning, fixed unscaled death damage, victory deferral, mutual-death loss, ordered defenses without refill, exact-state resume, status/reflection/equipment kills, two simultaneous Choir deaths, continued battle with other enemies, and loading recent save versions.
+
+Packaged UI checks verify the battle-card and full-description warning, Chorus in the rotation, a zero-HP Choir remaining visible during defense, bracelet selection, Final Note damage before rewards, lethal damage before You Died, only Enemy highlighted during the response, reduced motion, Skip and effect cleanup. No renderer errors; screenshots inspected. Evidence: `tests/choir-final-note.test.mjs`, `tools/choir-final-note-ui-test.mjs`, `reports/choir-final-note-verification.json`, `reports/screenshots/choir-final-note/`.
+
+Five runs in `reports/choir-final-note-evaluation/` completed: seeds 825183–825186 lost at rounds 20/19/14/12; 825187 won at 6 HP, round 19. These match the preceding status-defense outcomes. None reached Glass Choir, so the batch is a general playability check, not coverage of the changed boss or a balance conclusion. Focused rules and UI scenarios establish the new death-attack behavior. The policy was not trained or retuned to plan around Final Note.
+
+---
+
 # Ongoing status damage — package 1.3.23
 
 Rules 1.3.13/content 1.1.12; weighted-druid-v1.7 unchanged. All 125 rules tests pass. Seven focused regressions cover opening Husk Corrode, increasing turn-start damage, Burn/Poison/Corrode bypassing attack defenses without consuming bracelet block, normal per-attack flat reduction, bracelet-before-armor attack order, elemental resistance and reflection excluding status ticks. Status hit presentation carries the actual HP loss and no armor-defense highlight. See `tests/status-defense.test.mjs`.

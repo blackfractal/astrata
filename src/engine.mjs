@@ -148,6 +148,10 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.13",
+          "1.3.12",
+          "1.3.11",
+          "1.3.10",
           "1.3.9",
           "1.3.8",
           "1.3.7",
@@ -1024,7 +1028,7 @@ export class Game {
             uid: e.uid,
             amount: j.damage,
             element: "Arcane",
-            dead: e.hp <= 0,
+            dead: e.hp <= 0 && !enemies[e.id].onDeath,
           });
           s.stats.damageDealt += j.damage;
         }
@@ -1210,8 +1214,14 @@ export class Game {
     if (!h.statusHit)
       for (const k of ["burn", "poison", "corrode"])
         if (h[k]) this.s.status[k] += h[k];
+    if (h.deathSource != null) {
+      const source = b.enemies.find((e) => e.uid === h.deathSource);
+      if (source) source.deathResolved = true;
+      this.present("death", { uid: h.deathSource, name: h.name + " fades" });
+    }
     b.reaction = null;
-    this.checkBattle();
+    if (this.s.hp <= 0) this.finish(false, h.name);
+    else this.checkBattle();
   }
   intercept(i) {
     const b = this.s.battle,
@@ -1308,7 +1318,7 @@ export class Game {
       amount: d,
       element,
       ...(sourceItem != null ? { sourceItem } : {}),
-      dead: e.hp <= 0,
+      dead: e.hp <= 0 && !enemies[e.id].onDeath,
     });
     s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
     if (e.id === "colossus" && element === "Chaos" && !activation.summoned) {
@@ -1564,6 +1574,7 @@ export class Game {
     }
     this.log("Activated " + d.name + ".");
     this.checkBattle();
+    if (this.s.mode === "battle") this.pump();
   }
   checkBattle() {
     const s = this.s,
@@ -1573,6 +1584,32 @@ export class Game {
       this.finish(false, "Battle damage");
       return;
     }
+    const deathJobs = [];
+    for (const e of b.enemies) {
+      const effect = enemies[e.id].onDeath;
+      if (e.hp <= 0 && effect && !e.deathTriggered) {
+        e.deathTriggered = true;
+        deathJobs.push({
+          kind: "hit",
+          ...clone(effect),
+          source: e.uid,
+          deathSource: e.uid,
+        });
+        this.log(
+          e.name +
+            " dies: " +
+            effect.name +
+            " · " +
+            effect.damage +
+            " " +
+            effect.element +
+            ".",
+        );
+      }
+    }
+    // Death attacks precede victory and pending turn jobs, using existing defenses.
+    b.jobs.unshift(...deathJobs);
+    if (b.reaction || b.jobs.some((j) => j.deathSource != null)) return;
     if (b.enemies.every((e) => e.hp <= 0)) {
       const encounter = s.stats.encounters.at(-1);
       encounter.outcome = "victory";
@@ -2448,8 +2485,16 @@ export class Game {
       delete o.battle.jobs;
       o.battle.deck.sort((a, b) => a.id.localeCompare(b.id) || a.uid - b.uid);
       o.battle.enemies = o.battle.enemies
-        .filter((e) => e.hp > 0)
-        .map((e) => ({ ...e, tell: this.tell(e) }));
+        .filter((e) => e.hp > 0 || (enemies[e.id].onDeath && !e.deathResolved))
+        .map((e) => ({
+          ...e,
+          hp: Math.max(0, e.hp),
+          signature: enemies[e.id].signature,
+          counter: enemies[e.id].counter,
+          rotation: clone(enemies[e.id].rotation),
+          onDeath: clone(enemies[e.id].onDeath),
+          tell: e.hp <= 0 ? clone(enemies[e.id].onDeath) : this.tell(e),
+        }));
     }
     if (s.mode === "event") o.event = events.find((e) => e.id === s.event);
     if (s.mode === "tavern") o.shop = clone(s.shop);

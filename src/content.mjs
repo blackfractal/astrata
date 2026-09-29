@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.13",
-  content: "1.1.12",
+  rules: "1.3.14",
+  content: "1.1.13",
   observation: 1,
   actions: 1,
 };
@@ -1267,11 +1267,15 @@ enemy(
     effect("Shatter hymn", { grid: "destroy", target: "tallest" }),
     attack("Refrain", 7, "Wind", { hits: 2 }),
     effect("Silence", { grid: "sever", target: "connected" }),
-    attack("Final note", 12, "Light"),
+    attack("Chorus", 10, "Water"),
   ],
-  "Below half HP gains a shield every cycle.",
-  "Short stacks and Earth attacks are safest.",
-  { schedule: "Pursue 0, 1, 2, 3, 4; Hunt on round 6.", bossMode: "pursuit" },
+  "At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 12 Light damage before victory. Prepare defenses before the killing blow; this death attack does not scale.",
+  "Use short stacks and Earth attacks. Prepare for Wind and Water attacks, then survive Final Note on death.",
+  {
+    schedule: "Pursue 0, 1, 2, 3, 4; Hunt on round 6.",
+    bossMode: "pursuit",
+    onDeath: attack("Final Note", 12, "Light"),
+  },
 );
 enemy(
   "mini",
