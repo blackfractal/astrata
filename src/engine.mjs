@@ -1077,8 +1077,13 @@ export class Game {
       if (j.kind === "hit") {
         b.reaction = {
           ...j,
-          stage:
-            j.statusHit || j.pierce ? "bracelet" : j.cull ? "ally" : "ward",
+          stage: j.statusHit
+            ? "player"
+            : j.pierce
+              ? "bracelet"
+              : j.cull
+                ? "ally"
+                : "ward",
           intercepted: [],
         };
         this.present("incoming", {
@@ -1169,7 +1174,9 @@ export class Game {
     }
     if (h.stage === "player") {
       let damage = h.damage;
-      const armor = this.equipped().find((x) => x.slot === "torso");
+      const armor = h.statusHit
+        ? null
+        : this.equipped().find((x) => x.slot === "torso");
       if (armor?.definition.effect.reflect && !b.mirror && !h.statusHit) {
         b.mirror = true;
         const e = b.enemies.find((x) => x.uid === h.source);
@@ -1181,7 +1188,7 @@ export class Game {
       }
       if (armor?.definition.effect.resist === h.element)
         damage = Math.ceil(damage / 2);
-      damage = Math.max(0, damage - this.bonuses().armor);
+      if (!h.statusHit) damage = Math.max(0, damage - this.bonuses().armor);
       s.hp = Math.max(0, s.hp - damage);
       this.present("hit", {
         target: "player",

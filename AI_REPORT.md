@@ -1,3 +1,21 @@
+# Ongoing status damage — package 1.3.23
+
+Rules 1.3.13/content 1.1.12; weighted-druid-v1.7 unchanged. All 125 rules tests pass. Seven focused regressions cover opening Husk Corrode, increasing turn-start damage, Burn/Poison/Corrode bypassing attack defenses without consuming bracelet block, normal per-attack flat reduction, bracelet-before-armor attack order, elemental resistance and reflection excluding status ticks. Status hit presentation carries the actual HP loss and no armor-defense highlight. See `tests/status-defense.test.mjs`.
+
+Five deterministic background runs in `reports/status-defense-evaluation/` completed without stalls:
+
+| Seed | Outcome | Comparison with preceding rules |
+|---|---|---|
+| 825183 | Loss, round 20 | Cinder Hart approached at 22 HP instead of 27; survived eight boss turns instead of nine. |
+| 825184 | Loss, round 19 | Previously won with 4 HP; now loses to Void-Colossus. |
+| 825185 | Loss, round 14 | Still loses the five-enemy encounter. |
+| 825186 | Loss, round 12 | Still loses against Fire Wolf and Dervish Hunter. |
+| 825187 | Win, 6 HP, round 19 | Previously won with 15 HP. |
+
+This is an intentional increase in ongoing status danger. Five seeds are a playability check, not a statistically reliable balance estimate. No policy training or unrelated balance changes. No new graphical test was needed for this damage-routing and content-text change; existing presentation is fed verified hit snapshots.
+
+---
+
 # Equipment projectile origin — package 1.3.22
 
 Presentation-only change; rules 1.3.12/content 1.1.11 and weighted-druid-v1.7 are unchanged. All 118 rules tests pass. Packaged UI checks verify the Ring projectile starts at the actual equipped icon, including the right finger slot, while the main attack starts at its card. Normal 2-damage and socketed 1-damage results are preserved; a second attack does not retrigger the Ring. Normal/Fast, reduced motion and Skip clean up correctly. Reduced motion shows the Ring highlight without a traveling projectile. No renderer errors; screenshot inspected.

@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.12",
-  content: "1.1.11",
+  rules: "1.3.13",
+  content: "1.1.12",
   observation: 1,
   actions: 1,
 };
@@ -811,7 +811,7 @@ for (const element of ["Fire", "Water", "Earth", "Wind"])
     "torso",
     { resist: element },
     65,
-    "Halve " + element + " damage to the player.",
+    "Halve " + element + " damage from enemy attacks to the player.",
   );
 item(
   "holyArmor",
@@ -827,7 +827,7 @@ item(
   "torso",
   { armor: 1 },
   60,
-  "Reduce every hit to the player by 1.",
+  "Reduce damage from each enemy attack by 1.",
 );
 item(
   "quickArmor",
@@ -884,7 +884,7 @@ item(
   "torso",
   { armor: 2, corrode: 1 },
   90,
-  "Cursed: forced equip. Reduce hits by 2; start each battle Corroded 1.",
+  "Cursed: forced equip. Reduce damage from each enemy attack by 2; start each battle Corroded 1.",
   { cursed: true },
 );
 item(
@@ -1460,9 +1460,11 @@ export const glossary = {
   Shield:
     "Block expires after the enemy turn. Choose which portion absorbs a hit.",
   Ally: "May intercept after Wards and Shields. Destroyed Allies return next battle.",
-  Burn: "Damage at turn start; value decreases by one.",
-  Poison: "Constant damage at turn start.",
-  Corrode: "Damage at turn start; value increases by one.",
+  Burn: "Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+  Poison:
+    "Constant damage at turn start. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+  Corrode:
+    "Damage at turn start; value increases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Lock: "Locked cards cannot be Recalled or Shifted. They CAN still activate and can be covered by a legal stack. Lock does not disable abilities.",
   Freeze:
     "Frozen cards cannot activate. The effect lasts through the indicated turn; it does not prevent another card from covering them.",
