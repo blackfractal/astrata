@@ -1,5 +1,11 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
-import { attunementElements, gridNeighbors, squarePattern } from "./engine.mjs";
+import {
+  attunementElements,
+  gridNeighbors,
+  squarePattern,
+  cardAllowance,
+  corner,
+} from "./engine.mjs";
 const unique = (xs) => [...new Set(xs)];
 const color = (element) => `var(--${element})`;
 const gradient = (elements) =>
@@ -45,6 +51,90 @@ export function cardInteraction(b, c, i) {
       (d.effects.matchingDamage || d.effects.matchingShield || 0),
     bonusType: d.effects.matchingShield ? "block" : "damage",
   };
+}
+export function boardConnections(b) {
+  const links = [];
+  const add = (from, to, type, element, reason, owner = null, both = false) => {
+    if (from === to || b.grid[from].at(-1)?.sever || b.grid[to].at(-1)?.sever)
+      return;
+    links.push({ from, to, type, element, reason, owner, both });
+  };
+  const live = (c, i) => cardAllowance(b, c, i) > 0 && !c.zeroWard;
+  for (const [i, stack] of b.grid.entries()) {
+    const c = stack.at(-1);
+    if (!c) continue;
+    const d = cards[c.id],
+      m = cardInteraction(b, c, i),
+      active = live(c, i);
+    if (active)
+      for (const j of m.providers)
+        add(j, i, "attune", b.grid[j].at(-1).element, "Attunement choice");
+    for (const j of m.matching)
+      if (i < j) {
+        const other = live(b.grid[j].at(-1), j);
+        if (active || other)
+          add(
+            active ? j : i,
+            active ? i : j,
+            "synergy",
+            null,
+            "Matching card bonus",
+            null,
+            active && other,
+          );
+      }
+    if (d.growth || (active && (d.effects.adj || d.effects.adjHeal)))
+      for (const j of m.neighbors)
+        add(
+          j,
+          i,
+          "benefit",
+          c.element,
+          d.growth ? "Growth from neighbor" : "Adjacency bonus",
+        );
+    if (active && d.effects.row && !c.sever)
+      for (const [j, other] of b.grid.entries())
+        if (
+          j !== i &&
+          Math.floor(i / MIND_COLUMNS) === Math.floor(j / MIND_COLUMNS) &&
+          other.at(-1)?.element === c.element
+        )
+          add(j, i, "benefit", c.element, "Same-element row damage");
+    if (active && d.condition && !["corner", "isolated"].includes(d.condition))
+      for (const j of m.neighbors)
+        if (b.grid[j].at(-1).element === d.condition)
+          add(j, i, "benefit", d.condition, "Activation requirement");
+    if (d.keystone && corner(i))
+      for (const [j, other] of b.grid.entries()) {
+        const target = other.at(-1),
+          def = cards[target?.id];
+        if (
+          target &&
+          !def.singleUse &&
+          def.limit > 0 &&
+          live(target, j) &&
+          (j % MIND_COLUMNS === i % MIND_COLUMNS ||
+            Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS))
+        )
+          add(i, j, "allowance", "Light", "+1 activation allowance");
+      }
+    if (!active || !m.pattern.length) continue;
+    const [tl, tr, bl, br] = m.pattern;
+    for (const [a, z] of [
+      [tl, tr],
+      [tl, bl],
+      [tr, br],
+      [bl, br],
+    ])
+      add(a, z, "pattern", null, "Fourfold 2×2 damage bonus", i, true);
+    const opposite = m.pattern.find(
+      (j) =>
+        Math.floor(j / MIND_COLUMNS) !== Math.floor(i / MIND_COLUMNS) &&
+        j % MIND_COLUMNS !== i % MIND_COLUMNS,
+    );
+    add(opposite, i, "pattern", null, "Fourfold opposite corner", i);
+  }
+  return links;
 }
 export function previewElement(ctx, i, element = null) {
   const slot = ctx.app.querySelector(`[data-slot="${i}"]`);
@@ -118,13 +208,11 @@ export function boardInteractions(ctx) {
   const b = ctx.o.battle,
     mind = ctx.app.querySelector(".mind");
   if (!mind) return;
-  const models = new Map();
   for (const [i, stack] of b.grid.entries()) {
     const c = stack.at(-1);
     if (!c) continue;
     const slot = ctx.app.querySelector(`[data-slot="${i}"]`),
       m = cardInteraction(b, c, i);
-    models.set(i, m);
     slot.classList.add("has-element");
     if (c.sever) severBorder(slot);
     const statusCount = slot.querySelectorAll(".card-status").length;
@@ -249,7 +337,15 @@ export function boardInteractions(ctx) {
   svg.classList.add("board-links");
   svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
   svg.setAttribute("aria-hidden", "true");
-  const edge = (from, to, type, element, owner = null) => {
+  const edge = (
+    from,
+    to,
+    type,
+    element,
+    owner = null,
+    both = false,
+    reason = "",
+  ) => {
     const a = ctx.app
         .querySelector(`[data-slot="${from}"]`)
         .getBoundingClientRect(),
@@ -265,8 +361,8 @@ export function boardInteractions(ctx) {
         : a.left + 5
       : horizontal
         ? forward
-          ? a.right - 4
-          : a.left + 4
+          ? a.right - 13
+          : a.left + 13
         : (a.left + a.right) / 2;
     const x2 = diagonal
       ? right
@@ -274,41 +370,48 @@ export function boardInteractions(ctx) {
         : z.right - 5
       : horizontal
         ? forward
-          ? z.left + 4
-          : z.right - 4
+          ? z.left + 13
+          : z.right - 13
         : (z.left + z.right) / 2;
     const y1 = diagonal
       ? forward
         ? a.bottom - 5
         : a.top + 5
       : horizontal
-        ? (a.top + a.bottom) / 2
+        ? a.top + a.height * 0.32
         : forward
-          ? a.bottom
-          : a.top;
+          ? a.bottom - 3
+          : a.top + 3;
     const y2 = diagonal
       ? forward
         ? z.top + 5
         : z.bottom - 5
       : horizontal
-        ? (z.top + z.bottom) / 2
+        ? z.top + z.height * 0.32
         : forward
-          ? z.top
-          : z.bottom;
+          ? z.top + 3
+          : z.bottom - 3;
     const link = document.createElementNS(ns, "g");
     link.classList.add("board-link", `link-${type}`);
     link.dataset.from = from;
     link.dataset.to = to;
     link.dataset.linkType = type;
+    link.dataset.reason = reason;
+    const distance =
+      Math.abs(
+        Math.floor(from / MIND_COLUMNS) - Math.floor(to / MIND_COLUMNS),
+      ) + Math.abs((from % MIND_COLUMNS) - (to % MIND_COLUMNS));
+    if (distance > 1 && !diagonal) link.classList.add("link-distant");
+    const title = document.createElementNS(ns, "title");
+    title.textContent = reason;
+    link.append(title);
     if (owner != null) link.dataset.patternOwner = owner;
     if (diagonal) link.classList.add("link-diagonal");
     link.style.setProperty(
       "--link-color",
       type === "synergy" || type === "pattern"
         ? "#ffdf82"
-        : type === "adjacency"
-          ? "#9cbdb0"
-          : color(element),
+        : color(element || "Arcane"),
     );
     const coords = {
       x1: x1 - box.left,
@@ -316,49 +419,37 @@ export function boardInteractions(ctx) {
       x2: x2 - box.left,
       y2: y2 - box.top,
     };
-    for (const cls of ["link-rail", "link-core"]) {
-      const line = document.createElementNS(ns, "line");
-      line.classList.add(cls);
-      for (const [k, v] of Object.entries(coords)) line.setAttribute(k, v);
-      link.append(line);
+    const dx = coords.x2 - coords.x1,
+      dy = coords.y2 - coords.y1;
+    let curve = `M${coords.x1},${coords.y1} Q${(coords.x1 + coords.x2) / 2 - dy * 0.13},${(coords.y1 + coords.y2) / 2 + dx * 0.13} ${coords.x2},${coords.y2}`;
+    // Long row/column auras run in the gutter and reveal on inspection.
+    if (distance > 1 && !diagonal) {
+      if (horizontal) {
+        const gutter = a.top - box.top - 2;
+        curve = `M${(a.left + a.right) / 2 - box.left},${a.top - box.top + 5} V${gutter} H${(z.left + z.right) / 2 - box.left} V${z.top - box.top + 5}`;
+      } else {
+        const gutter = a.left - box.left - 2;
+        curve = `M${a.left - box.left + 5},${(a.top + a.bottom) / 2 - box.top} H${gutter} V${(z.top + z.bottom) / 2 - box.top} H${z.left - box.left + 5}`;
+      }
     }
-    for (const [x, y] of [
-      [coords.x1, coords.y1],
-      [coords.x2, coords.y2],
+    for (const cls of [
+      "link-rail",
+      "link-glow",
+      "link-core",
+      "link-flow",
+      ...(both ? ["link-flow link-flow-return"] : []),
     ]) {
-      const port = document.createElementNS(ns, "circle");
-      port.classList.add("link-port");
-      port.setAttribute("cx", x);
-      port.setAttribute("cy", y);
-      port.setAttribute("r", 2.8);
-      link.append(port);
+      const path = document.createElementNS(ns, "path");
+      path.setAttribute("class", cls);
+      path.setAttribute("d", curve);
+      path.setAttribute("pathLength", "100");
+      link.append(path);
     }
     svg.append(link);
   };
-  // Render structural links first; actual bonuses remain on top.
-  for (const [i, m] of models)
-    for (const j of m.neighbors) if (i < j) edge(i, j, "adjacency");
-  for (const [i, m] of models)
-    for (const j of m.providers) edge(j, i, "attune", b.grid[j].at(-1).element);
-  for (const [i, m] of models)
-    for (const j of m.matching) if (i < j) edge(i, j, "synergy");
-
-  for (const [i, m] of models) {
-    if (!m.pattern.length) continue;
-    const [tl, tr, bl, br] = m.pattern;
-    for (const [a, z] of [
-      [tl, tr],
-      [tl, bl],
-      [tr, br],
-      [bl, br],
-    ])
-      edge(a, z, "pattern", null, i);
-    const opposite = m.pattern.find(
-      (j) =>
-        Math.floor(j / MIND_COLUMNS) !== Math.floor(i / MIND_COLUMNS) &&
-        j % MIND_COLUMNS !== i % MIND_COLUMNS,
-    );
-    edge(i, opposite, "pattern", null, i);
+  for (const connection of boardConnections(b)) {
+    const { from, to, type, element, owner, both, reason } = connection;
+    edge(from, to, type, element, owner, both, reason);
   }
   mind.append(svg);
 }

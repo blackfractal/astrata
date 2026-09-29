@@ -6,7 +6,10 @@ import {
   squarePattern,
   cardPower,
 } from "../src/engine.mjs";
-import { cardInteraction } from "../src/board-interactions.mjs";
+import {
+  cardInteraction,
+  boardConnections,
+} from "../src/board-interactions.mjs";
 function base() {
   const g = new Game(8);
   g.s.equipment = {};
@@ -184,4 +187,61 @@ test("Opening Rite grants only opening Focus and cannot Recall alone or beneath 
   b.phase = "enemy";
   g.beginTurn();
   assert.equal(b.focus, 1);
+});
+
+test("Connections require an effect: no Focus-Blast cable, but spent neighbors can feed live bonuses", () => {
+  const g = base(),
+    b = g.s.battle,
+    focus = put(g, "focus", 8);
+  focus.used = 1;
+  put(g, "blast", 9);
+  assert.deepEqual(boardConnections(b), []);
+  const other = put(g, "blast", 10);
+  other.used = 2;
+  let links = boardConnections(b);
+  assert.equal(links.length, 1);
+  assert.equal(links[0].from, 10);
+  assert.equal(links[0].to, 9);
+  assert.equal(links[0].both, false);
+  b.grid[9][0].used = 2;
+  assert.deepEqual(boardConnections(b), []);
+});
+test("Real effects connect: Keystone allowance, growth and adjacent damage, without mutating state", () => {
+  const g = base(),
+    b = g.s.battle,
+    c = put(g, "focus", 1);
+  c.used = 1;
+  put(g, "keystone", 0);
+  assert.ok(
+    boardConnections(b).some(
+      (l) => l.type === "allowance" && l.from === 0 && l.to === 1,
+    ),
+  );
+  b.grid[0] = [];
+  const thorn = put(g, "thorn", 8);
+  put(g, "sapling", 9);
+  assert.ok(
+    boardConnections(b).some(
+      (l) => l.from === 8 && l.to === 9 && l.reason === "Growth from neighbor",
+    ),
+  );
+  const snapshot = structuredClone(g.s);
+  assert.ok(boardConnections(b).some((l) => l.from === 1 && l.to === 8));
+  assert.deepEqual(g.s, snapshot);
+  b.grid[1][0].sever = true;
+  assert.ok(!boardConnections(b).some((l) => l.from === 1 || l.to === 1));
+});
+test("Attune links have a useful recipient; exhausted providers retain their element", () => {
+  const g = base(),
+    b = g.s.battle,
+    s = put(g, "shield", 8),
+    rain = put(g, "rain", 7);
+  rain.used = 2;
+  assert.ok(
+    boardConnections(b).some(
+      (l) => l.from === 7 && l.to === 8 && l.type === "attune",
+    ),
+  );
+  s.used = 2;
+  assert.deepEqual(boardConnections(b), []);
 });

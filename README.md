@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.76. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.34; rules 1.3.20).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.77. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.35; rules 1.3.20).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -108,3 +108,5 @@ Fourfold Grove shows its qualifying 2×2 with four side links, one diagonal and 
 Shield now has two activations per placement. Glass Choir destroys the two highest-value complete stacks (total printed Focus, then remaining activations, then reading order); both targets are telegraphed. Its on-death Final Note is a fixed 20 Light Cull hit: Wards/Shields are bypassed, Allies/equipment still defend.
 
 Event exchanges now open an offer chooser with Equipped and Satchel groups, inspectable items and rewards, drag-to-trade or click confirmation, and a no-cost Back option. Lantern Trader lets you choose any eligible owned Bracelet; only that copy is surrendered, and its Gem stays in your Satchel. Exact offered IDs are available to AI and saved in run records.
+
+Board connections now represent real effects only. Glowing energy strands flow toward recipients; mutual bonuses flow both ways. Plain adjacency creates no line, and long-range effects reveal on inspection. Reduced motion keeps static strands.

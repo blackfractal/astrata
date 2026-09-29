@@ -444,3 +444,5 @@ Rules1.3.20/content1.1.21; weighted-druid-v1.9 now subtracts the particular offe
 Five completed seeds825183–187: loss/win9/loss/loss/loss; rounds20/19/14/12/19; decisions367/309/195/177/388. These outcomes and decision counts match the preceding Choir/Shield batch. Seed825186 completes one actual Bracelet trade under the new action schema; the others contain no such committed exchange. All finish without illegal moves, crashes or stalls. Detailed compressed run archives and source snapshots are in reports/event-trade-evaluation/.
 
 All195 rules tests and isolated drag/click/cancel GUI checks pass. Focused tests verify duplicate instance identity, equipped/spare choices, socketed Gem retention, rejection of invalid offers, generic upgraded-card exchange, save/resume and AI scoring. This is a compatibility/playability check, not evidence of balance or trained strength.
+
+Package1.3.35 replaces proximity-only links with real-effect energy connections. Rules1.3.20/content1.1.21/policy1.9 unchanged; all198 tests and graphical interaction/reduced-motion checks pass. No new AI batch for presentation only; package1.3.34 five-run evaluation remains the latest.

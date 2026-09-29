@@ -27,10 +27,13 @@ for (const [id, i] of [
   ["blast", 23],
   ["blast", 24],
   ["clean", 27],
+  ["focus", 40],
+  ["blast", 41],
 ]) {
   b.grid[i] = [g.instance(g.newCard(id))];
 }
 b.grid[8][0].sever = true;
+b.grid[40][0].used = 1;
 const profile = path.resolve(".tmp/sever-connections-" + Date.now());
 await fs.mkdir(profile, { recursive: true });
 await fs.writeFile(path.join(profile, "save.json"), JSON.stringify(g.s));
@@ -53,7 +56,30 @@ try {
   assert.equal(await p.locator(".sever-border .sever-cut").count(), 4);
   assert.equal(await incident().count(), 0);
   assert.equal(await p.locator(".link-pattern").count(), 0);
-  assert.ok((await p.locator(".link-adjacency").count()) > 0);
+  assert.equal(await p.locator(".link-adjacency").count(), 0);
+  assert.equal(
+    await p
+      .locator('.board-link[data-from="40"],.board-link[data-to="40"]')
+      .count(),
+    0,
+  );
+  assert.ok((await p.locator(".link-flow").count()) > 0);
+  assert.equal(
+    await p
+      .locator(".link-flow")
+      .first()
+      .evaluate((el) => getComputedStyle(el).animationName),
+    "connection-flow",
+  );
+  await p.emulateMedia({ reducedMotion: "reduce" });
+  assert.equal(
+    await p
+      .locator(".link-flow")
+      .first()
+      .evaluate((el) => getComputedStyle(el).animationName),
+    "none",
+  );
+  await p.emulateMedia({ reducedMotion: "no-preference" });
   assert.equal(await p.locator(".link-synergy").count(), 1);
   assert.match(await p.locator('[data-activate-slot="16"]').textContent(), /6/);
   assert.ok(await p.locator('[data-slot="8"].grid-threat').count());
@@ -87,7 +113,7 @@ try {
   await p.mouse.move(5, 5);
   await p.screenshot({ path: dir + "/restored.png" });
   report.checks.push(
-    "Four jagged purple borders; no Severed links; ordinary and bonus links remain elsewhere; boss telegraph coexists; card details and Severed activation clickable; Unbinding Dew removes border, restores adjacency/Attune/Shield synergy and Fourfold damage from 6 to 12; five pattern links including one diagonal and the doubled-damage badge, all emphasized on Grove hover.",
+    "Four jagged purple borders; no Severed links; only genuine effect links remain elsewhere; boss telegraph coexists; card details and Severed activation clickable; Unbinding Dew removes border, restores adjacency/Attune/Shield synergy and Fourfold damage from 6 to 12; five pattern links including one diagonal and the doubled-damage badge, all emphasized on Grove hover. No irrelevant spent Focus Energy to Blast cable; real links have animated energy flow, static in reduced-motion mode.",
   );
   assert.deepEqual(report.errors, []);
 } finally {

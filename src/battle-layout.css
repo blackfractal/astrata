@@ -959,3 +959,64 @@ body {
   border-color: #d69aff;
   box-shadow: 0 0 5px #b964f1;
 }
+
+/* Energy only follows real card effects; no proximity-only cables. */
+.battle-scene .board-link {
+  fill: none;
+  stroke-width: 2;
+  opacity: 0.85;
+  filter: none;
+}
+.battle-scene .board-link .link-rail {
+  stroke: #071610;
+  stroke-width: 6;
+}
+.battle-scene .board-link .link-glow {
+  stroke: var(--link-color);
+  stroke-width: 5;
+  opacity: 0.25;
+  filter: blur(2px);
+}
+.battle-scene .board-link .link-core {
+  stroke: var(--link-color);
+  stroke-width: 1.5;
+  opacity: 0.8;
+}
+.battle-scene .board-link .link-flow {
+  stroke: #fff8da;
+  stroke-width: 2.5;
+  stroke-dasharray: 14 86;
+  animation: connection-flow 1.7s linear infinite;
+  filter: drop-shadow(0 0 2px var(--link-color));
+}
+.battle-scene .board-link .link-flow-return {
+  animation-direction: reverse;
+  animation-delay: -0.85s;
+}
+.battle-scene .board-link.link-distant {
+  opacity: 0;
+}
+.battle-scene .board-link.link-inspected {
+  opacity: 1;
+}
+.battle-scene .board-link.link-inspected .link-glow {
+  opacity: 0.55;
+}
+@keyframes connection-flow {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-scene .board-link .link-flow {
+    animation: none;
+    stroke-dashoffset: 50;
+    opacity: 0.65;
+  }
+  .battle-scene .board-link .link-flow-return {
+    display: none;
+  }
+}
