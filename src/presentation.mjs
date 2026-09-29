@@ -1,3 +1,4 @@
+import { stageBounds } from "./stage.mjs";
 import { spellImpact, impactStyles } from "./impact-effects.mjs";
 import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
@@ -28,11 +29,19 @@ export function installTooltips() {
     tip.textContent = value;
     tip.hidden = false;
     const r = el.getBoundingClientRect();
-    tip.style.left = Math.max(12, Math.min(innerWidth - 330, r.left)) + "px";
+    const bounds = stageBounds();
+    tip.style.left =
+      Math.max(
+        bounds.left + 8,
+        Math.min(bounds.left + bounds.width - tip.offsetWidth - 8, r.left),
+      ) + "px";
     tip.style.top =
       Math.max(
-        12,
-        Math.min(innerHeight - tip.offsetHeight - 12, r.bottom + 8),
+        bounds.top + 8,
+        Math.min(
+          bounds.top + bounds.height - tip.offsetHeight - 8,
+          r.bottom + 8,
+        ),
       ) + "px";
     timer = setTimeout(hide, 4000);
   }
@@ -97,6 +106,18 @@ export async function playFrames(before, frames, after, render, isFast) {
     return tag;
   }
   async function flash(el, label, dead = false, from = null, element = null) {
+    // Reveal the acting/struck foe inside crowded encounters without moving the stage.
+    for (const node of [from, el]) {
+      if (node?.matches(".enemy")) {
+        const panel = node.closest(".enemy-line"),
+          r = node.getBoundingClientRect(),
+          b = panel?.getBoundingClientRect();
+        if (b && (r.top < b.top || r.bottom > b.bottom))
+          panel.scrollTop +=
+            (r.top < b.top ? r.top - b.top : r.bottom - b.bottom) /
+            stageBounds().scale;
+      }
+    }
     let projectile;
     if (el && from && from !== el && !reduced) {
       const a = from.getBoundingClientRect(),
@@ -305,7 +326,7 @@ export async function playFrames(before, frames, after, render, isFast) {
             [
               { transform: "translate(0,0)" },
               {
-                transform: `translate(${b.left - a.left}px,${b.top - a.top}px)`,
+                transform: `translate(${(b.left - a.left) / stageBounds().scale}px,${(b.top - a.top) / stageBounds().scale}px)`,
               },
             ],
             { duration: ms(280), fill: "forwards", easing: "ease-in-out" },

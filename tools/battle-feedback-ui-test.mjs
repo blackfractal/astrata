@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.16", checks: [], errors: [] },
+const report = { package: "1.3.18", checks: [], errors: [] },
   dir = "reports/screenshots/battle-feedback";
 await fs.mkdir(dir, { recursive: true });
 async function open(g) {
@@ -101,8 +101,8 @@ function put(g, id, i) {
         .locator('[data-slot="19"]')
         .evaluate(
           (el) =>
-            el.querySelector(".overlay").getBoundingClientRect().right <
-            el.querySelector(".card-statuses").getBoundingClientRect().left,
+            el.querySelector(".nums").getBoundingClientRect().top >=
+            el.querySelector(".card-statuses").getBoundingClientRect().bottom,
         ),
       true,
     );

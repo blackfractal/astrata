@@ -1,3 +1,11 @@
+# Horizontal 16:9 battlefield — package 1.3.18
+
+Presentation-only change; rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 remain unchanged. All 110 rules tests pass. Packaged UI verification covers fixed battle geometry at 16:9, 4:3 and 21:9, letterboxing/pillarboxing, window presets/fullscreen, local hand/enemy scrolling, real placement and bracelet defense, inspectors and AI drawer persistence after one AI action. Existing combat-feedback and elemental-impact checks also pass in the scaled stage, including attack drag previews and actual damage. No renderer errors; screenshots inspected.
+
+Evidence: `reports/horizontal-layout-verification.json`, `reports/screenshots/horizontal-layout/`, `tools/horizontal-layout-ui-test.mjs`, refreshed battle-feedback and element-impact verification reports. Existing five-run gameplay conclusions remain applicable; no new full graphical run or balance batch was performed for this layout change.
+
+---
+
 # Elemental spell impacts — package 1.3.17
 
 Presentation-only change; rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 are unchanged. Packaged graphical tests verify all seven element-specific bursts during actual attacks, the gray Arcane star, impact location and timing after projectile arrival, Ally interception, and correct cleanup. Fast, reduced-motion and Skip modes retain identical damage and final state. Reduced motion has no flying particles. No renderer errors; Arcane/Fire/Water screenshots inspected.

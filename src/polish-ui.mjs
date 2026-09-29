@@ -1,3 +1,4 @@
+import { arrangeBattle } from "./battle-layout.mjs";
 import {
   damageMarkup,
   targetPreview,
@@ -1025,6 +1026,7 @@ export function enhance(ctx) {
     });
   }
   bindEquipment(ctx, app);
+  if (o.mode === "battle") arrangeBattle(ctx);
   if (ctx.frame) {
     app
       .querySelectorAll("button,select,input")

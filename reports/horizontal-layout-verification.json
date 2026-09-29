@@ -1,0 +1,154 @@
+{
+  "package": "1.3.18",
+  "checks": [
+    "16:9, 4:3 and 21:9 preserve identical virtual battle geometry, center a 16:9 stage with bars, and have no stage overflow. Card/equipment/Inventory inspectors and Battle tools remain accessible.",
+    "The Battle tools drawer remains open after an AI action, keeping Stop/Watch AI reachable.",
+    "Window is not freely resizable; four 16:9 presets and fullscreen/windowed transitions work.",
+    "Eight enemies and ten revealed cards stay accessible through local scroll regions; the last hand card can be dragged onto the grid.",
+    "Incoming attack occupies the bottom dock; a glowing wrist icon commits the legal bracelet defense and removes its ready glow when spent."
+  ],
+  "errors": [],
+  "geometry": [
+    {
+      "name": "16-9",
+      "viewport": [
+        1600,
+        900
+      ],
+      "stage": [
+        0,
+        0,
+        1600,
+        900
+      ],
+      "scroll": [
+        1600,
+        900
+      ],
+      "player": {
+        "x": 24,
+        "y": 170,
+        "w": 238,
+        "h": 478
+      },
+      "mind": {
+        "x": 280,
+        "y": 170,
+        "w": 938,
+        "h": 478
+      },
+      "enemies": {
+        "x": 1236,
+        "y": 194,
+        "w": 340,
+        "h": 454
+      },
+      "hand": {
+        "x": 24,
+        "y": 658,
+        "w": 1552,
+        "h": 186
+      },
+      "phases": {
+        "x": 24,
+        "y": 70,
+        "w": 1552,
+        "h": 45
+      }
+    },
+    {
+      "name": "4-3",
+      "viewport": [
+        1200,
+        900
+      ],
+      "stage": [
+        0,
+        112.5,
+        1200,
+        675
+      ],
+      "scroll": [
+        1600,
+        900
+      ],
+      "player": {
+        "x": 24,
+        "y": 170,
+        "w": 238,
+        "h": 478
+      },
+      "mind": {
+        "x": 280,
+        "y": 170,
+        "w": 938,
+        "h": 478
+      },
+      "enemies": {
+        "x": 1236,
+        "y": 194,
+        "w": 340,
+        "h": 454
+      },
+      "hand": {
+        "x": 24,
+        "y": 658,
+        "w": 1552,
+        "h": 186
+      },
+      "phases": {
+        "x": 24,
+        "y": 70,
+        "w": 1552,
+        "h": 45
+      }
+    },
+    {
+      "name": "21-9",
+      "viewport": [
+        2100,
+        900
+      ],
+      "stage": [
+        250,
+        0,
+        1600,
+        900
+      ],
+      "scroll": [
+        1600,
+        900
+      ],
+      "player": {
+        "x": 24,
+        "y": 170,
+        "w": 238,
+        "h": 478
+      },
+      "mind": {
+        "x": 280,
+        "y": 170,
+        "w": 938,
+        "h": 478
+      },
+      "enemies": {
+        "x": 1236,
+        "y": 194,
+        "w": 340,
+        "h": 454
+      },
+      "hand": {
+        "x": 24,
+        "y": 658,
+        "w": 1552,
+        "h": 186
+      },
+      "phases": {
+        "x": 24,
+        "y": 70,
+        "w": 1552,
+        "h": 45
+      }
+    }
+  ]
+}

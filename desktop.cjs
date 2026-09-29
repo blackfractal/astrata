@@ -1,7 +1,20 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const fs = require("node:fs");
 const path = require("node:path");
 let win;
+function windowSize(width) {
+  const area = (
+    win
+      ? screen.getDisplayMatching(win.getBounds())
+      : screen.getPrimaryDisplay()
+  ).workAreaSize;
+  const requested = Number.isFinite(Number(width)) ? Number(width) : 1440;
+  const fitted = Math.max(
+    640,
+    Math.min(requested, area.width - 24, ((area.height - 64) * 16) / 9),
+  );
+  return [Math.floor(fitted), Math.floor((fitted * 9) / 16)];
+}
 const base = () => app.getPath("userData");
 const read = (name, fallback) => {
   try {
@@ -19,16 +32,18 @@ const write = (name, data) => {
 app.whenReady().then(() => {
   const settings = read("settings.json", {
     width: 1440,
-    height: 900,
+    height: 810,
     fullscreen: false,
     music: 50,
     effects: 50,
   });
+  const [width, height] = windowSize(settings.width);
   win = new BrowserWindow({
-    width: settings.width,
-    height: settings.height,
-    minWidth: 1100,
-    minHeight: 720,
+    width,
+    height,
+    useContentSize: true,
+    resizable: false,
+    maximizable: false,
     title: "Astrata",
     backgroundColor: "#101b19",
     fullscreen: settings.fullscreen,
@@ -67,7 +82,7 @@ ipcMain.handle("result", (_, result) => {
 ipcMain.handle("settings", (_, settings) => {
   write("settings.json", settings);
   win.setFullScreen(!!settings.fullscreen);
-  if (!settings.fullscreen) win.setSize(settings.width, settings.height);
+  if (!settings.fullscreen) win.setContentSize(...windowSize(settings.width));
 });
 ipcMain.handle("quit", () => app.quit());
 app.on("window-all-closed", () => app.quit());

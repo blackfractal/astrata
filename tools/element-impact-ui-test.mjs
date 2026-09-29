@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.17", checks: [], errors: [] },
+const report = { package: "1.3.18", checks: [], errors: [] },
   dir = "reports/screenshots/element-impact";
 await fs.mkdir(dir, { recursive: true });
 async function open(g, fast = false) {

@@ -1,9 +1,11 @@
+import { installStage } from "./stage.mjs";
 import { enhance, showCard, showEquipment } from "./polish-ui.mjs";
 import { playFrames, installTooltips } from "./presentation.mjs";
 import { Game, incomingDamageText } from "./engine.mjs";
 import { cards, items, enemies, glossary, VERSION } from "./content.mjs";
 import { artPaths } from "./art-paths.mjs";
 import { WeightedPolicy } from "./policy.mjs";
+installStage();
 const app = document.querySelector("#app"),
   modal = document.querySelector("#modal");
 const storage = window.desktop || {
@@ -41,13 +43,14 @@ let data = await storage.load(),
   busy = false;
 let settings = {
   width: 1440,
-  height: 900,
+  height: 810,
   fullscreen: false,
   music: 50,
   effects: 50,
   fast: false,
   ...data.settings,
 };
+settings.height = Math.round((settings.width * 9) / 16);
 const policy = new WeightedPolicy();
 const audio = {
   emit(name) {
@@ -144,6 +147,7 @@ function sidebar(o) {
     )}</div><div><button data-ui="help" class="quiet">Rules & keywords ↗</button><div class="row"><button data-ui="botStep" title="Let the weighted bot choose one legal action">AI step</button><button data-ui="botToggle">${auto ? "Stop AI" : "Watch AI"}</button></div><div class="botbar">${esc(reason || "The AI uses the same visible state and legal choices as you.")}</div></div></aside>`;
 }
 function menu() {
+  app.classList.remove("battle-scene");
   auto = false;
   clearTimeout(autoTimer);
   app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}<button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
@@ -210,6 +214,7 @@ async function stepBot() {
 }
 function render(frame = null) {
   if (!game) return menu();
+  app.classList.remove("battle-scene");
   const o = frame || game.observe(),
     actions = frame ? [] : game.legal();
   let body = "";
@@ -443,10 +448,10 @@ function inventory() {
 }
 function showSettings() {
   dialog(
-    `<h2>Settings</h2><label>Display <select id="display"><option value="windowed" ${!settings.fullscreen ? "selected" : ""}>Windowed</option><option value="fullscreen" ${settings.fullscreen ? "selected" : ""}>Fullscreen</option></select></label><label>Resolution <select id="resolution">${[
-      [1280, 800],
-      [1440, 900],
-      [1600, 1000],
+    `<h2>Settings</h2><label>Display <select id="display"><option value="windowed" ${!settings.fullscreen ? "selected" : ""}>Windowed</option><option value="fullscreen" ${settings.fullscreen ? "selected" : ""}>Fullscreen</option></select></label><label>Window size · 16:9 <select id="resolution">${[
+      [1280, 720],
+      [1440, 810],
+      [1600, 900],
       [1920, 1080],
     ]
       .map(
