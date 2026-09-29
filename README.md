@@ -1,8 +1,8 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.66. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.25; rules 1.3.15).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.67. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.26; rules 1.3.16).
 
-Void-Colossus now uses Chaotic Glare after its two Void Fists and Collapse. It randomly selects any element, including Arcane; both its attacks and defensive matchups use that element until the next Glare.
+Void-Colossus now uses Chaotic Glare after its two Void Fists and Collapse. It randomly selects any element, including Arcane; both its attacks and defensive matchups use that element until the next Glare. Matching-element hits summon a Mini-Void of that element once per activation. Each Mini-Void retains its own birth element for attacks and defense, even after later Glares.
 
 The Glass Choir now uses Chorus (10 Water) on turn four. Its warned Final Note deals 12 Light damage on death before victory, using defenses already prepared; dying to it loses the run.
 

@@ -1,3 +1,13 @@
+# Matching-element Mini-Voids — package 1.3.26
+
+Rules 1.3.16/content 1.1.15; weighted-druid-v1.7 unchanged. All 158 rules tests pass. Eleven added tests cover matching versus nonmatching hits across all seven elements, neutral same-element damage, the existing once-per-activation limit, Fire weakness/resistance, independent summon elements after actual Glare, exact-state save/resume, live rotation details, equipment bonus hits, and a matching killing blow leaving a summon before victory. The prior fixed-Chaos trigger test was updated to the new rule.
+
+Packaged graphical verification: a Fire Blast deals normal 4 damage to a Fire Colossus and summons one Fire Mini-Void. A subsequent actual Water Glare changes only the boss; the Mini-Void attacks for 2 Fire and telegraphs 3 Fire next, with both rotation entries still Fire in its details. No renderer errors; screenshot inspected. Evidence: `tests/mini-element.test.mjs`, `tools/mini-element-ui-test.mjs`, `reports/mini-element-verification.json`, `reports/screenshots/mini-element/`.
+
+Five runs in `reports/mini-element-evaluation/` complete: 825183 loss at round 20; 825184 win at 9 HP, round 19; 825185 loss at round 14; 825186 loss at round 12; 825187 win at 11 HP, round 19. The last seed previously won at 10 HP and now takes 11 rather than 10 boss turns. Other outcomes are unchanged. This is a playability check, not a balance conclusion. No policy retraining or tuning; focused tests and the graphical scenario cover the new summon behavior.
+
+---
+
 # Chaotic Glare — package 1.3.25
 
 Rules 1.3.15/content 1.1.14; weighted-druid-v1.7 unchanged. Includes the preceding Choir Final Note update. All 147 rules tests pass. Twelve new checks cover the four-move cycle, all seven possible elements (including retaining Chaos), both subsequent Fists, Fire weakness/resistance and Arcane neutrality, unchanged Chaos-hit summoning, seeded replay/save persistence, old-save compatibility, and no premature RNG consumption in observations/Tells.

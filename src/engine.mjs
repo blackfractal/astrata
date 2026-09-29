@@ -148,6 +148,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.15",
           "1.3.14",
           "1.3.13",
           "1.3.12",
@@ -1332,11 +1333,12 @@ export class Game {
       dead: e.hp <= 0 && !enemies[e.id].onDeath,
     });
     s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
-    if (e.id === "colossus" && element === "Chaos" && !activation.summoned) {
+    if (e.id === "colossus" && element === e.element && !activation.summoned) {
       activation.summoned = true;
       const def = enemies.mini;
       b.enemies.push({
         ...def,
+        element: e.element,
         uid: this.uid(),
         entityUid: null,
         maxHp: def.hp,
@@ -1347,7 +1349,7 @@ export class Game {
         guard: 0,
         status: blankStatus(),
       });
-      this.log("A Mini-Void tears free.");
+      this.log(`A ${e.element} Mini-Void tears free.`);
     }
   }
   matchingNeighbors(c, i) {

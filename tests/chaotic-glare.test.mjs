@@ -79,13 +79,13 @@ test("Fire form takes Water +50%, Earth half; Arcane form is neutral", () => {
     assert.equal(e.hp, hp - expected);
   }
 });
-test("Chaos-hit Mini-Void trait persists after changing to Fire", () => {
+test("Matching-element Mini-Void trait follows a change to Fire", () => {
   const g = base(),
     e = g.s.battle.enemies[0];
   e.element = "Fire";
   const context = {};
-  g.damageEnemy(e, 1, "Chaos", context);
-  g.damageEnemy(e, 1, "Chaos", context);
+  g.damageEnemy(e, 1, "Fire", context);
+  g.damageEnemy(e, 1, "Fire", context);
   assert.equal(g.s.battle.enemies.filter((e) => e.id === "mini").length, 1);
 });
 test("Glare selection and later random state survive replay and exact-state resume", () => {
