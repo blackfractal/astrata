@@ -19,7 +19,7 @@ const marks = (p) =>
 for (const [id, cycle, initial, changed, targets] of [
   ["hart", 2, [0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13], [7, 8]],
   ["colossus", 2, [0, 7, 14, 21, 28, 35], [1, 8, 15, 22, 29, 36], [1, 8]],
-  ["choir", 0, [0], [1], [1]],
+  ["choir", 0, [0, 1], [1, 7], [7, 8]],
 ]) {
   const g = new Game(8);
   g.s.equipment = {};
@@ -49,16 +49,13 @@ for (const [id, cycle, initial, changed, targets] of [
     assert.deepEqual(await marks(p), initial);
     assert.match(
       await p.locator(".enemy .tell").textContent(),
-      /Destroy (fullest row|fullest column|tallest stack)/,
+      /Destroy (fullest row|fullest column|2 most valuable stacks)/,
     );
     assert.match(
       await p.locator(".grid-threat-label").textContent(),
       /card.*threatened.*next enemy turn/,
     );
-    assert.equal(
-      await p.locator(".grid-threat-badge").count(),
-      id === "choir" ? 1 : 2,
-    );
+    assert.equal(await p.locator(".grid-threat-badge").count(), 2);
     await p.locator('[data-slot="0"] .name').click();
     await p.getByRole("button", { name: /Recall slot 1 ·/ }).click();
     await settle(p);
@@ -80,7 +77,9 @@ for (const [id, cycle, initial, changed, targets] of [
     const attackSlot = id === "choir" ? 1 : 7;
     await p.locator('[data-activate-slot="' + attackSlot + '"]').dblclick();
     await settle(p);
-    assert.deepEqual(await marks(p), changed);
+    assert.deepEqual(await marks(p), id === "choir" ? [7, 8] : changed);
+    if (id === "choir")
+      await p.screenshot({ path: dir + "/choir-after-activation.png" });
     await p.getByRole("button", { name: "End turn", exact: true }).click();
     await settle(p);
     for (const slot of targets)

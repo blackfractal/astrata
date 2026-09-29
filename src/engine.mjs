@@ -169,6 +169,30 @@ export const corner = (i) =>
 const top = (slot) => slot?.at(-1),
   blankStatus = () => ({ burn: 0, poison: 0, corrode: 0 }),
   clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+export function cardAllowance(b, c, i) {
+  const d = cards[c.id];
+  if (d.singleUse) return Math.max(0, 1 - c.used);
+  if (d.limit < 0) return Infinity;
+  const plus = b.grid.some(
+    (x, j) =>
+      cards[top(x)?.id]?.keystone &&
+      corner(j) &&
+      (j % MIND_COLUMNS === i % MIND_COLUMNS ||
+        Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS)),
+  )
+    ? 1
+    : 0;
+  return Math.max(0, d.limit + plus - c.used);
+}
+export function stackValue(b, i) {
+  return {
+    focus: b.grid[i].reduce(
+      (n, c) => n + (cards[c.id].focus === 99 ? 0 : cards[c.id].focus),
+      0,
+    ),
+    activations: b.grid[i].reduce((n, c) => n + cardAllowance(b, c, i), 0),
+  };
+}
 export function gridTargets(b, t) {
   const occupied = b.grid
     .map((slot, i) => ({ slot, i, c: top(slot) }))
@@ -195,6 +219,20 @@ export function gridTargets(b, t) {
         ? x.i % MIND_COLUMNS === best
         : Math.floor(x.i / MIND_COLUMNS) === best,
     );
+  } else if (t.target === "valuable") {
+    const valued = occupied.map((x) => ({ ...x, value: stackValue(b, x.i) }));
+    targets = valued
+      .sort(
+        (a, z) =>
+          z.value.focus - a.value.focus ||
+          (z.value.activations === a.value.activations
+            ? 0
+            : z.value.activations > a.value.activations
+              ? 1
+              : -1) ||
+          a.i - z.i,
+      )
+      .slice(0, t.count || 1);
   } else {
     const score = (x) =>
       t.target === "newest"
@@ -240,6 +278,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.18",
           "1.3.17",
           "1.3.16",
           "1.3.15",
@@ -890,20 +929,7 @@ export class Game {
     return gridNeighbors(this.s.battle, i);
   }
   allowance(c, i) {
-    const b = this.s.battle,
-      d = cards[c.id];
-    if (d.singleUse) return Math.max(0, 1 - c.used);
-    if (d.limit < 0) return Infinity;
-    const plus = b.grid.some(
-      (x, j) =>
-        cards[top(x)?.id]?.keystone &&
-        corner(j) &&
-        (j % MIND_COLUMNS === i % MIND_COLUMNS ||
-          Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS)),
-    )
-      ? 1
-      : 0;
-    return Math.max(0, d.limit + plus - c.used);
+    return cardAllowance(this.s.battle, c, i);
   }
   activationAvailable(c, i) {
     return (
@@ -1398,6 +1424,7 @@ export class Game {
             enemy: e.name,
             name: tell.name,
             kind: tell.grid,
+            target: tell.target,
             targets,
             spaces,
             cards: targets.reduce((n, i) => n + b.grid[i].length, 0),

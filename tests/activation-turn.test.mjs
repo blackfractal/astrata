@@ -38,15 +38,23 @@ test("ordinary cards reject repeated activation despite Channel and remaining to
   b.phase = "activate";
   assert.equal(action(g), undefined);
 });
-test("unlimited Shield still activates only once per turn without Blink", () => {
+test("Shield has two total activations, once per turn, then is spent until recalled", () => {
   const { g, b, c } = setup("shield");
   g.act(action(g));
-  assert.equal(g.allowance(c, 0), Infinity);
+  assert.equal(g.allowance(c, 0), 1);
   assert.equal(action(g), undefined);
   g.beginTurn();
   b.phase = "activate";
   assert.ok(action(g));
   assert.equal(c.used, 1);
+  g.act(action(g));
+  assert.equal(g.allowance(c, 0), 0);
+  g.beginTurn();
+  b.phase = "activate";
+  assert.equal(action(g), undefined);
+  const fresh = g.instance(c);
+  assert.equal(fresh.used, 0);
+  assert.equal(g.allowance(fresh, 0), 2);
 });
 test("Blink permits paid repeats while respecting allowance and Channel", () => {
   cards.testblink = {

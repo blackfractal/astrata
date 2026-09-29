@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.74. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.32; rules 1.3.18).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.75. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.33; rules 1.3.19).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -104,3 +104,5 @@ New runs start with the Bronze Bracelet and Rootbound Ring equipped on the right
 Severed cards have jagged purple borders on all four sides and no connection links. Neutral adjacency, elemental Attunement and gold synergy links are now brighter and thicker with visible endpoints; clearing Sever restores valid links.
 
 Fourfold Grove shows its qualifying 2×2 with four side links, one diagonal and a doubled-damage badge. Elemental outlines and translucent art tint replace the bright left stripe; activated Shields retain their chosen colors for the turn. Opening Rite begins placed, grants first-turn Focus and cannot be recalled, including through whole-stack Recall.
+
+Shield now has two activations per placement. Glass Choir destroys the two highest-value complete stacks (total printed Focus, then remaining activations, then reading order); both targets are telegraphed. Its on-death Final Note is a fixed 20 Light Cull hit: Wards/Shields are bypassed, Allies/equipment still defend.

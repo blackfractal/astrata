@@ -418,3 +418,20 @@ Package 1.3.30 moves new-run starter equipment to the right-side slots; content 
 Package 1.3.31 improves Sever and connection visuals only; rules/content/policy unchanged. All 186 tests and isolated graphical interaction checks pass. No new AI batch; the 7×6 five-run evaluation remains current.
 
 Package 1.3.32 (rules1.3.18/content1.1.19) adds Fourfold pattern links and stronger elemental outlines/tints; Opening Rite is now unrecallable with its bonus only on the opening turn. Policy unchanged. All188 tests and two isolated graphical suites pass, including targeted Opening Rite resource/Recall/save tests. No new AI batch or training for this small card restriction and presentation change; the prior 7×6 five-run results remain historical comparison evidence, not a new-version balance evaluation.
+
+
+## Glass Choir / two-use Shield — package1.3.33
+
+Rules1.3.19/content1.1.20; unchanged weighted-druid-v1.8. Five completed trials retained as compressed versioned decision/state archives in reports/choir-shield-evaluation/.
+
+| Seed | Previous7×6 result | New result | Round | Decisions |
+| --- | --- | --- | --- | --- |
+| 825183 | Loss | Loss |20|367|
+| 825184 | Win13HP | Win9HP |19|309|
+| 825185 | Loss | Loss |14|195|
+| 825186 | Loss | Loss |12|177|
+| 825187 | Loss | Loss |19|388|
+
+The winning Colossus run takes309 decisions versus311 previously, retains9boss turns, and ends4HP lower. Other four outcomes/decision counts remain unchanged. None reaches Choir; focused engine and graphical fixtures verify the new double-stack destruction and20LightCull death attack. This small batch does not establish balance and includes intervening Opening Rite changes since the comparison batch. No training or weight changes.
+
+One initial825187 attempt was interrupted by Windows EPERM on an atomic archive metadata rename. Partial records remain under their original ID; retry completed under a new ID. verification-notes.json records the distinction. Summary contains the five completed exports. All189 tests and graphical checks pass; no game stalls/illegal-action failures in completed runs.

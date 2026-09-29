@@ -25,7 +25,7 @@ function act(g, type, predicate = () => true) {
 for (const [id, cycle, occupied, initial, after] of [
   ["hart", 2, [0, 1, 7, 8], [0, 1], [7, 8]],
   ["colossus", 2, [0, 1, 7, 8], [0, 7], [1, 8]],
-  ["choir", 0, [0, 1, 7, 8], [0], [1]],
+  ["choir", 0, [0, 1, 7, 8], [0, 1], [1, 7]],
 ])
   test(`${id} preview breaks ties deterministically, retargets after Recall, and matches actual destruction`, () => {
     const g = base(id, cycle),
@@ -59,14 +59,14 @@ test("Line previews count covered cards and outline empty cells along the threat
   assert.deepEqual(t.spaces, [0, 7, 14, 21, 28, 35]);
   assert.equal(t.cards, 4);
 });
-test("Tallest includes covered cards; equal heights use reading order", () => {
+test("Choir counts covered Focus value and selects two distinct stacks with reading-order ties", () => {
   const g = base("choir", 0);
   put(g, 4);
   put(g, 7);
   put(g, 19, 2);
-  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [19]);
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [19, 4]);
   put(g, 4, 2);
-  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [4]);
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [4, 19]);
 });
 test("Empty board, normal moves, enemy resolution and reaction windows have no danger markings", () => {
   const g = base("hart", 2),
@@ -114,4 +114,32 @@ test("Shared targeting retains other grid effects' newest and connected tie rule
   assert.deepEqual(gridTargets(b, { target: "connected" }), [0]);
   b.grid[0][0].sever = true;
   assert.deepEqual(gridTargets(b, { target: "connected" }), [0]); // all three isolated, reading-order tie
+});
+
+test("Choir prioritizes Focus over height, uses remaining allowance for ties, and handles fewer than two stacks", () => {
+  const g = base("choir", 0),
+    b = g.s.battle;
+  b.grid[0] = [
+    g.instance(g.newCard("clear")),
+    g.instance(g.newCard("clear")),
+    g.instance(g.newCard("clear")),
+  ];
+  b.grid[1] = [g.instance(g.newCard("shield"))];
+  b.grid[7] = [g.instance(g.newCard("ward"))];
+  b.grid[8] = [g.instance(g.newCard("shield"))];
+  b.grid[1][0].used = 2;
+  const tell = g.tell(b.enemies[0]);
+  assert.deepEqual(gridTargets(b, tell), [7, 8]);
+  const targets = gridTargets(b, tell).flatMap((i) =>
+    b.grid[i].map((c) => c.uid),
+  );
+  g.gridAttack(tell);
+  assert.deepEqual(
+    b.destroyed.map((c) => c.uid),
+    targets,
+  );
+  b.grid[0] = [];
+  assert.deepEqual(gridTargets(b, tell), [1]);
+  b.grid[1] = [];
+  assert.deepEqual(gridTargets(b, tell), []);
 });

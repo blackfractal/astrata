@@ -90,11 +90,13 @@ function tellText(t) {
       ? "Destroy fullest row"
       : t.grid === "column"
         ? "Destroy fullest column"
-        : t.grid === "destroy" && t.target === "tallest"
-          ? "Destroy tallest stack"
-          : t.grid
-            ? `${t.grid} ${t.count || 1} · ${t.target}`
-            : "",
+        : t.grid === "destroy" && t.target === "valuable"
+          ? `Destroy ${t.count || 1} most valuable stacks`
+          : t.grid === "destroy" && t.target === "tallest"
+            ? "Destroy tallest stack"
+            : t.grid
+              ? `${t.grid} ${t.count || 1} · ${t.target}`
+              : "",
     ...["burn", "poison", "corrode"]
       .filter((k) => t[k])
       .map((k) => k[0].toUpperCase() + k.slice(1) + " " + t[k]),

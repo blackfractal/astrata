@@ -3,13 +3,17 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.24", checks: [], errors: [] };
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  checks: [],
+  errors: [],
+};
 const dir = "reports/screenshots/choir-final-note";
 await fs.mkdir(dir, { recursive: true });
 for (const mode of ["defend", "lethal", "reduced", "skip"]) {
   const g = new Game(8);
-  const bracelet = g.s.equipment.wrist1;
-  g.s.equipment = mode === "defend" ? { wrist1: bracelet } : {};
+  const bracelet = g.s.equipment.wrist2;
+  g.s.equipment = mode === "defend" ? { wrist2: bracelet } : {};
   g.beginBattle([{ uid: 900, enemy: "choir", restless: 0 }]);
   const b = g.s.battle;
   b.phase = "activate";
@@ -17,7 +21,7 @@ for (const mode of ["defend", "lethal", "reduced", "skip"]) {
   b.grid[0] = [g.instance(g.newCard("blast"))];
   b.enemies[0].hp = 1;
   b.enemies[0].cycle = 3;
-  g.s.hp = mode === "lethal" ? 12 : 13;
+  g.s.hp = mode === "lethal" ? 20 : 21;
   if (mode === "defend")
     b.bracelets = [
       { uid: bracelet, block: 2, element: "Arcane", name: "Bronze Bracelet" },
@@ -40,11 +44,11 @@ for (const mode of ["defend", "lethal", "reduced", "skip"]) {
     if (mode === "reduced") await p.emulateMedia({ reducedMotion: "reduce" });
     assert.match(
       await p.locator(".death-warning").textContent(),
-      /On death: Final Note.*12.*Light/,
+      /On death: Final Note.*20.*Light.*Cull/,
     );
     await p.locator(".enemy").click();
     const dialog = await p.locator("#modal").textContent();
-    assert.match(dialog, /On death: Final Note deals 12 Light/);
+    assert.match(dialog, /On death: Final Note deals 20 Light/);
     assert.match(dialog, /Chorus.*10.*Water/);
     await p.keyboard.press("Escape");
     if (mode === "defend") await p.screenshot({ path: dir + "/warning.png" });
@@ -88,7 +92,7 @@ for (const mode of ["defend", "lethal", "reduced", "skip"]) {
       );
       assert.match(
         await p.locator(".player-portrait b").textContent(),
-        /13\/65/,
+        /21\/65/,
       );
       await p.screenshot({ path: dir + "/defend-final-note.png" });
       await p

@@ -31,23 +31,23 @@ test("Chorus replaces turn four and Final Note is explicitly warned", () => {
   assert.equal(g.tell(e).name, "Chorus");
   assert.equal(g.tell(e).element, "Water");
   assert.equal(g.tell(e).damage, 10);
-  assert.match(enemies.choir.signature, /On death: Final Note deals 12 Light/);
+  assert.match(enemies.choir.signature, /On death: Final Note deals 20 Light/);
 });
-test("Killing blow resolves fixed Light 12 before rewards, then disintegrates", () => {
+test("Killing blow resolves fixed Light 20 before rewards, then disintegrates", () => {
   const g = base(),
     b = g.s.battle,
     e = b.enemies[0];
   e.cycle = 40;
   e.restless = 9;
   e.buff = 9;
-  g.s.hp = 13;
+  g.s.hp = 21;
   const gold = g.s.gold;
   act(g, "activate");
   assert.equal(g.s.mode, "reward");
   assert.equal(g.s.hp, 1);
   assert.equal(g.s.gold, gold + 120);
   assert.equal(notes(g).length, 1);
-  assert.equal(notes(g)[0].amount, 12);
+  assert.equal(notes(g)[0].amount, 20);
   assert.equal(notes(g)[0].element, "Light");
   assert.equal(notes(g)[0].state.mode, "battle");
   assert.equal(notes(g)[0].state.battle.enemies[0].hp, 0);
@@ -67,7 +67,7 @@ test("Killing blow resolves fixed Light 12 before rewards, then disintegrates", 
 test("Mutual death loses with no rewards and zero-HP hit snapshot", () => {
   const g = base(),
     gold = g.s.gold;
-  g.s.hp = 12;
+  g.s.hp = 20;
   act(g, "activate");
   assert.equal(g.s.outcome, "loss");
   assert.equal(g.s.cause, "Final Note");
@@ -77,7 +77,7 @@ test("Mutual death loses with no rewards and zero-HP hit snapshot", () => {
   assert.equal(g.s.stats.encounters.at(-1).outcome, "loss");
   assert.equal(g.presentation.find((f) => f.target === "player").state.hp, 0);
 });
-test("Prepared defenses resolve in order, no refill, and resume never duplicates Final Note", () => {
+test("Cull skips intact Wards and Shields, permits Ally/equipment defense, and resumes once", () => {
   let g = base();
   const b = g.s.battle;
   const ward = g.instance(g.newCard("ward"));
@@ -98,15 +98,16 @@ test("Prepared defenses resolve in order, no refill, and resume never duplicates
   act(g, "activate");
   assert.equal(g.s.mode, "battle");
   assert.equal(g.s.gold, gold);
-  assert.equal(b.reaction.stage, "shield");
-  assert.equal(ward.ward, 0);
-  assert.ok(g.legal().every((a) => a.type === "block"));
+  assert.equal(b.reaction.stage, "ally");
+  assert.equal(ward.ward, 2);
+  assert.equal(b.shields[0].block, 2);
+  assert.ok(g.legal().some((a) => a.type === "intercept"));
+  assert.ok(!g.legal().some((a) => a.type === "block"));
   g = new Game(0, g.s);
-  act(g, "block");
   act(g, "intercept");
   act(g, "bracelet");
   assert.equal(g.s.mode, "reward");
-  assert.equal(g.s.hp, hp - 4); // 12 - Ward2 - Shield2 - Ally2 - Bracelet1 - Armor1
+  assert.equal(g.s.hp, hp - 16); // 20 - Ally2 - Bracelet1 - Armor1; Ward/Shield bypassed
   assert.equal(g.s.battle.bracelets[0].block, 0);
   assert.equal(g.s.log.filter((x) => x.includes("dies: Final Note")).length, 1);
 });
@@ -117,7 +118,7 @@ test("Enemy status kill triggers Final Note before its queued attack or next tur
   const hp = g.s.hp;
   act(g, "endTurn");
   assert.equal(g.s.mode, "reward");
-  assert.equal(g.s.hp, hp - 12);
+  assert.equal(g.s.hp, hp - 20);
   assert.equal(notes(g).length, 1);
   assert.equal(b.turn, 1);
   assert.equal(g.presentation.filter((f) => f.kind === "incoming").length, 1);
@@ -130,7 +131,7 @@ test("Reflection kill triggers Final Note; spent mirror cannot reflect it again"
   const hp = g.s.hp;
   act(g, "endTurn");
   assert.equal(g.s.mode, "reward");
-  assert.equal(g.s.hp, hp - 12);
+  assert.equal(g.s.hp, hp - 20);
   assert.equal(notes(g).length, 1);
 });
 test("Equipment killing blow triggers Final Note", () => {
@@ -148,7 +149,7 @@ test("Area kill of two Choirs resolves each death attack once before victory", (
   const hp = g.s.hp;
   act(g, "activate");
   assert.equal(g.s.mode, "reward");
-  assert.equal(g.s.hp, hp - 24);
+  assert.equal(g.s.hp, hp - 40);
   assert.equal(notes(g).length, 2);
 });
 test("Choir death with another enemy alive resolves Final Note and allows battle to continue", () => {
@@ -174,6 +175,6 @@ test("Recent saves load and use current Choir warnings and rotation", () => {
     assert.match(e.signature, /Final Note/);
     assert.equal(e.rotation[3].name, "Chorus");
     act(h, "activate");
-    assert.equal(h.s.hp, 53);
+    assert.equal(h.s.hp, 45);
   }
 });

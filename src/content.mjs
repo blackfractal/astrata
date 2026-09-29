@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.18",
-  content: "1.1.19",
+  rules: "1.3.19",
+  content: "1.1.20",
   observation: 1,
   actions: 1,
 };
@@ -82,7 +82,7 @@ card(
   "Arcane",
   "Object",
   1,
-  -1,
+  2,
   { shield: 4, matchingShield: 1 },
   "Attune. Add 4 block, +1 per adjacent Shield, until the enemy turn ends.",
   { attune: true },
@@ -1268,17 +1268,17 @@ enemy(
   159,
   "Archon",
   [
-    effect("Shatter hymn", { grid: "destroy", target: "tallest" }),
+    effect("Shatter Hymn", { grid: "destroy", target: "valuable", count: 2 }),
     attack("Refrain", 7, "Wind", { hits: 2 }),
     effect("Silence", { grid: "sever", target: "connected" }),
     attack("Chorus", 10, "Water"),
   ],
-  "At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 12 Light damage before victory. Prepare defenses before the killing blow; this death attack does not scale.",
-  "Use short stacks and Earth attacks. Prepare for Wind and Water attacks, then survive Final Note on death.",
+  "Shatter Hymn destroys the two most valuable complete stacks: total printed Focus, then remaining activations, then reading order. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
+  "Recall threatened stacks and use Earth attacks. Prepare for Wind and Water attacks, then use Allies and equipment to survive Final Note on death.",
   {
     schedule: "Pursue 0, 1, 2, 3, 4; Hunt on round 6.",
     bossMode: "pursuit",
-    onDeath: attack("Final Note", 12, "Light"),
+    onDeath: attack("Final Note", 20, "Light", { cull: true }),
   },
 );
 enemy(
@@ -1487,7 +1487,7 @@ export const glossary = {
   Herald: "Defeat to reveal this Stratum’s Archon.",
   Restless: "+1 movement and attack per batch survived.",
   Pierce: "Skips Wards, Shields and Allies. Equipment still protects.",
-  Cull: "Skips Wards and Shields.",
+  Cull: "Bypasses Wards and Shields. Allies can intercept; Bracelets and Armor still apply.",
   Taunt:
     "The most recently taunting Ally must intercept after Wards and Shields. Stone Golem's Taunt expires after the coming enemy phase.",
   Isolated: "No orthogonal neighbors; Sever also satisfies this.",
