@@ -100,7 +100,7 @@ test("Taunt forces the latest taunting Ally", () => {
   put(g, "familiar", 0);
   const c = put(g, "golem", 1, { taunt: true });
   hit(g, 5);
-  assert.equal(c.hp, 11);
+  assert.equal(c.hp, cards.golem.hp - 5);
   assert.equal(g.s.battle.reaction, null);
 });
 test("Pierce and player status bypass grid but meet Bracelet and Armor", () => {

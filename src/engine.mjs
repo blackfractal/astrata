@@ -852,7 +852,13 @@ export class Game {
     this.refillResources();
     s.hp = Math.min(s.maxHp, s.hp + this.bonuses().heal);
     for (const slot of b.grid)
-      for (const c of slot) if (c.freeze && c.freeze < b.turn) c.freeze = 0;
+      for (const c of slot) {
+        if (c.freeze && c.freeze < b.turn) c.freeze = 0;
+        if (c.taunt && c.tauntUntil != null && c.tauntUntil < b.turn) {
+          c.taunt = false;
+          delete c.tauntUntil;
+        }
+      }
     for (let i = 0; i < 20; i++) {
       const c = top(b.grid[i]);
       if (!c) continue;
@@ -1176,7 +1182,7 @@ export class Game {
       if (armor?.definition.effect.resist === h.element)
         damage = Math.ceil(damage / 2);
       damage = Math.max(0, damage - this.bonuses().armor);
-      s.hp -= damage;
+      s.hp = Math.max(0, s.hp - damage);
       this.present("hit", {
         target: "player",
         amount: damage,
@@ -1369,9 +1375,17 @@ export class Game {
           x.sever = false;
           x.freeze = 0;
         }
+    if (f.selfGrowth) {
+      c.maxHp = Math.max(c.maxHp || 0, c.hp) + f.selfGrowth;
+      c.hp += f.selfGrowth;
+    }
     if (f.taunt) {
-      for (const x of this.allies()) x.c.taunt = false;
+      for (const x of this.allies()) {
+        x.c.taunt = false;
+        delete x.c.tauntUntil;
+      }
       c.taunt = true;
+      c.tauntUntil = f.tauntRound ? b.turn : null;
     }
     if (f.magnify && b.grid[i].length >= 2) {
       if (c.lastActivated === b.turn - 1) c.magnified = true;
@@ -2403,7 +2417,7 @@ export class Game {
       version: VERSION,
       mode: s.mode,
       classId: s.classId,
-      hp: s.hp,
+      hp: Math.max(0, s.hp),
       maxHp: s.maxHp,
       gold: s.gold,
       deck: clone(s.deck),

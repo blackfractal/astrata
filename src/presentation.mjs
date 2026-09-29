@@ -398,7 +398,9 @@ export async function playFrames(before, frames, after, render, isFast) {
           : after.mode === "reward"
             ? "Victory"
             : after.mode === "result"
-              ? "Journey complete"
+              ? after.outcome === "loss"
+                ? "You Died"
+                : "Stratum 1 Complete"
               : "Continue";
       await pause(after.mode === "reward" ? 700 : 450);
     }

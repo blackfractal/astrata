@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.11",
-  content: "1.1.10",
+  rules: "1.3.12",
+  content: "1.1.11",
   observation: 1,
   actions: 1,
 };
@@ -253,9 +253,9 @@ card(
   "Ally",
   2,
   1,
-  { taunt: true },
-  "16 HP. Taunt: must intercept after Wards and Shields.",
-  { hp: 16 },
+  { taunt: true, selfGrowth: 6, tauntRound: true },
+  "10 HP. Activate: grow +6 current and maximum HP; gain Taunt until the end of this enemy phase. Growth remains while placed.",
+  { hp: 10 },
 );
 card(
   "guardian",
@@ -1475,7 +1475,8 @@ export const glossary = {
   Restless: "+1 movement and attack per batch survived.",
   Pierce: "Skips Wards, Shields and Allies. Equipment still protects.",
   Cull: "Skips Wards and Shields.",
-  Taunt: "The most recently taunting Ally must intercept.",
+  Taunt:
+    "The most recently taunting Ally must intercept after Wards and Shields. Stone Golem's Taunt expires after the coming enemy phase.",
   Isolated: "No orthogonal neighbors; Sever also satisfies this.",
   Cornerstone: "Only functions in a grid corner.",
   Bonded: "Requires a neighbor of the printed element.",

@@ -1,3 +1,21 @@
+# Zero-HP defeat and Stone Golem — package 1.3.21
+
+Rules 1.3.12/content 1.1.11; weighted-druid-v1.7 unchanged. All 118 tests pass. Packaged UI checks verify player HP never appears negative during a lethal attack, 0 HP precedes You Died, and Stone Golem grows from 10/10 to 16/16, intercepts, then loses Taunt while retaining its maximum HP. Wounded growth, same-round repeated interception, later optional interception and status lethality have focused rules coverage. Evidence: `reports/golem-defeat-verification.json`, `reports/screenshots/golem-defeat/`, `tests/golem-defeat.test.mjs`.
+
+Five runs in `reports/golem-defeat-evaluation/` completed:
+
+| Seed | Outcome | Interpretation |
+|---|---|---|
+| 825183 | Loss, round 20 | Used an unactivated 10-HP Golem. Reached Cinder Hart at 27 HP (previously 40) and died after nine boss turns. Attrition and the baseline strategy contributed; this sample does not isolate every downstream decision. |
+| 825184 | Win, 4 HP, round 19 | Narrow Void-Colossus win, unchanged. |
+| 825185 | Loss, round 14 | Five-enemy collision at low HP, unchanged. |
+| 825186 | Loss, round 12 | Attrition followed by Fire Wolf and Dervish Hunter, unchanged. |
+| 825187 | Win, 15 HP, round 19 | Healthier approach to Void-Colossus, unchanged. |
+
+None activated Stone Golem. Its new ability is verified by focused tests, not this batch. The baseline policy was not trained or retuned; the small sample establishes playability, not balance, and demonstrates no new exploit.
+
+---
+
 # Ward allowance — package 1.3.20
 
 Content 1.1.10 reduces Ward's total activations from 3 to 2; rules 1.3.11 and weighted-druid-v1.7 are unchanged. All 114 tests pass. A direct engine check verifies two activations, rejection of a third, and continued absorption from remaining ward value after exhaustion. Evidence: `reports/ward-limit-verification.json`.

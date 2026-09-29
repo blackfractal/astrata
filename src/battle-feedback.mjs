@@ -53,6 +53,8 @@ export function targetPreview(ctx, source, slot, actionFor) {
   return { show, clear, leave };
 }
 const icons = {
+  Taunt:
+    '<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/>',
   Lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',
   Freeze: '<path d="M12 2v20M3 7l18 10M3 17L21 7M8 4l4 4 4-4M8 20l4-4 4 4"/>',
   Sever:
@@ -70,6 +72,13 @@ export function statusBadges(ctx, c, i) {
   const d = cards[c.id],
     b = ctx.o.battle,
     states = [];
+  if (c.taunt)
+    states.push([
+      "Taunt",
+      "Taunt",
+      glossary.Taunt +
+        (c.tauntUntil != null ? " Ends after this enemy phase." : ""),
+    ]);
   if (c.lock) states.push(["Lock", "Locked", glossary.Lock]);
   if (c.freeze >= b.turn) states.push(["Freeze", "Frozen", glossary.Freeze]);
   if (c.sever) states.push(["Sever", "Severed", glossary.Sever]);
