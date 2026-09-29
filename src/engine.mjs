@@ -148,6 +148,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.14",
           "1.3.13",
           "1.3.12",
           "1.3.11",
@@ -953,6 +954,7 @@ export class Game {
   tell(e) {
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    if (t.currentElement) t.element = e.element;
     t.damage =
       (t.damage || 0) +
       (t.damage
@@ -1051,6 +1053,15 @@ export class Game {
         if (e.id === "hart" && e.hp <= e.maxHp / 2) s.status.burn++;
         if (e.id === "choir" && e.hp <= e.maxHp / 2 && e.cycle % 4 === 1)
           e.guard += 8;
+        if (t.randomElement) {
+          e.element = this.pick(ELEMENTS);
+          this.log(e.name + " attunes to " + e.element + ".");
+          this.present("status", {
+            target: "enemy",
+            uid: e.uid,
+            name: t.name + " · " + e.element,
+          });
+        }
         if (t.grid) this.gridAttack(t);
         if (t.insight) b.next.insight += t.insight;
         if (t.howl)
@@ -2491,7 +2502,10 @@ export class Game {
           hp: Math.max(0, e.hp),
           signature: enemies[e.id].signature,
           counter: enemies[e.id].counter,
-          rotation: clone(enemies[e.id].rotation),
+          rotation: enemies[e.id].rotation.map((t) => ({
+            ...clone(t),
+            ...(t.currentElement ? { element: e.element } : {}),
+          })),
           onDeath: clone(enemies[e.id].onDeath),
           tell: e.hp <= 0 ? clone(enemies[e.id].onDeath) : this.tell(e),
         }));

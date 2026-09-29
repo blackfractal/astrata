@@ -1,3 +1,23 @@
+# Chaotic Glare — package 1.3.25
+
+Rules 1.3.15/content 1.1.14; weighted-druid-v1.7 unchanged. Includes the preceding Choir Final Note update. All 147 rules tests pass. Twelve new checks cover the four-move cycle, all seven possible elements (including retaining Chaos), both subsequent Fists, Fire weakness/resistance and Arcane neutrality, unchanged Chaos-hit summoning, seeded replay/save persistence, old-save compatibility, and no premature RNG consumption in observations/Tells.
+
+Packaged UI checks exercise actual Fire and Arcane Glare outcomes, no damage during Glare, visible current element, updated next-attack Tells and full rotation details, and both following attacks. Each deals 11 in these fixtures because one full cycle has completed; base damage remains 10. Fixtures use 999 HP to isolate presentation. No renderer errors; screenshot inspected. Evidence: `tests/chaotic-glare.test.mjs`, `tools/chaotic-glare-ui-test.mjs`, `reports/chaotic-glare-verification.json`, `reports/screenshots/chaotic-glare/`.
+
+Five runs in `reports/chaotic-glare-evaluation/`:
+
+| Seed | Outcome | Comparison |
+|---|---|---|
+| 825183 | Loss, round 20 | Cinder Hart result unchanged. |
+| 825184 | Win, 9 HP, round 19 | Previously lost to Void-Colossus; now wins in 10 boss turns. |
+| 825185 | Loss, round 14 | Five-enemy collision result unchanged. |
+| 825186 | Loss, round 12 | Fire Wolf/Dervish result unchanged. |
+| 825187 | Win, 10 HP, round 19 | Previously won at 6 HP after 12 boss turns; now 10 turns. |
+
+The extra non-attacking move reduces attack frequency and slows per-cycle scaling; changing matchups also affects the fight. This sample suggests an easier Colossus, but does not isolate those factors or establish overall balance. No compensating HP/damage adjustment or policy training was made. None reached Glass Choir; its focused rules/UI evidence remains the coverage for Final Note.
+
+---
+
 # Glass Choir Chorus and Final Note — package 1.3.24
 
 Rules 1.3.14/content 1.1.13; weighted-druid-v1.7 unchanged. All 135 rules tests pass. Ten focused tests cover the revised rotation/warning, fixed unscaled death damage, victory deferral, mutual-death loss, ordered defenses without refill, exact-state resume, status/reflection/equipment kills, two simultaneous Choir deaths, continued battle with other enemies, and loading recent save versions.

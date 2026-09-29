@@ -1,6 +1,6 @@
 export const VERSION = {
-  rules: "1.3.14",
-  content: "1.1.13",
+  rules: "1.3.15",
+  content: "1.1.14",
   observation: 1,
   actions: 1,
 };
@@ -1228,12 +1228,13 @@ enemy(
   173,
   "Archon",
   [
-    attack("Void fist", 10, "Chaos"),
-    attack("Void fist", 10, "Chaos"),
+    attack("Void fist", 10, "Chaos", { currentElement: true }),
+    attack("Void fist", 10, "Chaos", { currentElement: true }),
     effect("Collapse", { grid: "column", target: "column" }),
+    effect("Chaotic Glare", { randomElement: true }),
   ],
-  "Chaos hits summon a Mini-Void (once per activation). Below half HP: +3 attack.",
-  "Use Light, and disperse cards across columns.",
+  "Chaotic Glare randomly changes its element, including Arcane; Void Fist and defensive matchups follow its current element. Chaos hits still summon a Mini-Void (once per activation). At half HP or lower: +3 attack.",
+  "Start with Light attacks, then adapt to its new element. Disperse cards across columns.",
   {
     schedule: "Wait 3 rounds, then pursue 3, 4, then Hunt.",
     bossMode: "sentinel",
