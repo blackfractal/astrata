@@ -26,6 +26,7 @@ for (const name of [
   "assets",
   "index.html",
   "desktop.cjs",
+  "run-archive.cjs",
   "preload.cjs",
 ])
   await fs.cp(path.join(root, name), path.join(app, name), { recursive: true });
@@ -33,7 +34,9 @@ await fs.writeFile(
   path.join(app, "package.json"),
   JSON.stringify({
     name: "astrata",
-    version: "1.3.22",
+    version: JSON.parse(
+      await fs.readFile(path.join(root, "package.json"), "utf8"),
+    ).version,
     main: "desktop.cjs",
     type: "module",
   }),
@@ -61,6 +64,8 @@ for (const name of [
   "reveal-verification.json",
   "reveal-evaluation",
   "reveal-playthrough.json",
+  "board-interactions-verification.json",
+  "run-archive-verification.json",
   "grid-telegraph-verification.json",
   "mini-element-verification.json",
   "mini-element-evaluation",

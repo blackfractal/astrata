@@ -1,3 +1,4 @@
+import { runRecord } from "./run-record.mjs";
 import { installStage } from "./stage.mjs";
 import { enhance, showCard, showEquipment } from "./polish-ui.mjs";
 import { playFrames, installTooltips } from "./presentation.mjs";
@@ -9,6 +10,16 @@ installStage();
 const app = document.querySelector("#app"),
   modal = document.querySelector("#modal");
 const storage = window.desktop || {
+  record: async (event) => {
+    const key = "astrata-run-" + event.runId;
+    const events = JSON.parse(localStorage.getItem(key) || "[]");
+    events.push({
+      ...event,
+      recordedAt: new Date().toISOString(),
+      packageVersion: null,
+    });
+    localStorage.setItem(key, JSON.stringify(events));
+  },
   load: async () =>
     JSON.parse(localStorage.getItem("astrata") || '{"history":[]}'),
   save: async (save) => {
@@ -174,16 +185,25 @@ async function persist() {
     data.save = save;
   }
 }
-async function act(a) {
+async function act(a, controller = { kind: "human" }) {
   if (busy) return;
   busy = true;
   try {
     const before = game.observe();
     game.capturePresentation = true;
-    game.act(a);
+    const action =
+      typeof a === "string" ? game.legal().find((x) => x.key === a) : a;
+    game.act(action);
     audio.emit("decision");
     selectedHand = null;
     selectedSlot = null;
+    await storage.record(
+      runRecord(game, runId, "decision", {
+        action,
+        controller,
+        elapsedMs: Date.now() - started,
+      }),
+    );
     await persist();
     await playFrames(
       before,
@@ -218,7 +238,12 @@ async function stepBot() {
     return;
   }
   reason = d.reason;
-  await act(d.action);
+  await act(d.action, {
+    kind: "ai",
+    policy: policy.id,
+    weights: policy.weights,
+    reason: d.reason,
+  });
 }
 function render(frame = null) {
   if (!game) return menu();
@@ -351,7 +376,8 @@ function render(frame = null) {
     clearTimeout(autoTimer);
     if (!resultsShown) {
       body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum 1 Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? "For a moment, the branches grow still. Your first journey is complete." : esc(o.cause) + ". Another traveler may find a different way."}</p><button class="primary" data-ui="results">View results →</button></div></section>`;
-    } else body = resultMarkup(o);
+    } else
+      body = resultMarkup(data.history?.find((h) => h.runId === runId) || o);
   }
   app.innerHTML =
     (o.mode === "result" && !resultsShown ? "" : header(o)) + body;
@@ -393,7 +419,7 @@ function botControls() {
 }
 function resultMarkup(o) {
   const st = o.stats;
-  return `<section class="result"><div class="result-title"><div class="eyebrow">Druid · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? "Stratum 1 Complete" : esc(o.cause)} · Seed ${o.seed}</p></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
+  return `<section class="result"><div class="result-title"><div class="eyebrow">Druid · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? "Stratum 1 Complete" : esc(o.cause)} · Seed ${o.seed}</p><small>Build ${esc(o.packageVersion || "not recorded")} · Rules ${esc(o.version?.rules || "unknown")} · Content ${esc(o.version?.content || "unknown")}</small></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
 }
 let backdropPressed = false;
 modal.addEventListener("pointerdown", (event) => {
@@ -488,6 +514,7 @@ async function ui(name) {
       started = Date.now();
       elapsed = 0;
       resultsShown = false;
+      await storage.record(runRecord(game, runId, "start", { settings }));
       await persist();
       render();
       break;
@@ -496,6 +523,14 @@ async function ui(name) {
       runId = data.save.uiMeta?.runId || crypto.randomUUID();
       started = Date.now() - (data.save.uiMeta?.elapsed || 0);
       resultsShown = false;
+      await storage.record(
+        runRecord(game, runId, "resume", {
+          settings,
+          elapsedMs: Date.now() - started,
+          resumedFrom: data.save.version,
+        }),
+      );
+      await persist();
       render();
       break;
     case "home":

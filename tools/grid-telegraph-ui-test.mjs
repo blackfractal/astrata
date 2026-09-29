@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.27", checks: [], errors: [] };
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  checks: [],
+  errors: [],
+};
 const dir = "reports/screenshots/grid-telegraph";
 await fs.mkdir(dir, { recursive: true });
 const settle = (p) =>

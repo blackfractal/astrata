@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("desktop", {
+  record: (event) => ipcRenderer.invoke("record", event),
   load: () => ipcRenderer.invoke("load"),
   save: (state) => ipcRenderer.invoke("save", state),
   result: (r) => ipcRenderer.invoke("result", r),

@@ -1,3 +1,8 @@
+import {
+  boardInteractions,
+  previewElement,
+  inspectLinks,
+} from "./board-interactions.mjs";
 import { arrangeBattle } from "./battle-layout.mjs";
 import {
   damageMarkup,
@@ -155,6 +160,8 @@ function activationChooser(ctx, slot, dragging = false) {
   }
   targetingCleanup = () => {
     controller.abort();
+    previewElement(ctx, slot);
+    inspectLinks(ctx, null);
     cleanHighlights();
     bar.remove();
   };
@@ -187,6 +194,15 @@ function activationChooser(ctx, slot, dragging = false) {
       stage = field;
       break;
     }
+    const chosenElements = [...new Set(filtered.map((a) => a.element))].filter(
+      Boolean,
+    );
+    previewElement(
+      ctx,
+      slot,
+      chosenElements.length === 1 ? chosenElements[0] : null,
+    );
+    inspectLinks(ctx, slot);
     if (!stage) {
       const action = filtered[0];
       clearTargeting();
@@ -1075,6 +1091,7 @@ export function enhance(ctx) {
   bindEquipment(ctx, app);
   if (o.mode === "battle") {
     arrangeBattle(ctx);
+    boardInteractions(ctx);
     gridTelegraphs(ctx);
   }
   if (ctx.frame) {

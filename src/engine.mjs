@@ -25,6 +25,20 @@ export function gridNeighbors(b, i) {
   if (top(b.grid[i])?.sever) return [];
   return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
 }
+export function attunementElements(b, c, i) {
+  const d = cards[c.id];
+  const elements =
+    d.attune && !c.transmuted && c.element === d.element
+      ? [
+          ...new Set(
+            gridNeighbors(b, i)
+              .map((j) => top(b.grid[j]).element)
+              .filter((element) => element !== "Arcane"),
+          ),
+        ]
+      : [c.element];
+  return elements.length ? elements : ["Arcane"];
+}
 export function matchingNeighbors(b, c, i) {
   if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
   return gridNeighbors(b, i).filter((j) => top(b.grid[j]).id === c.id).length;
@@ -414,6 +428,7 @@ export class Game {
     return this.s.inventory.find((x) => x.uid === uid);
   }
   log(msg) {
+    this.decisionLog?.push(msg);
     this.s.log.push(msg);
     if (this.s.log.length > 120) this.s.log.shift();
   }
@@ -748,6 +763,7 @@ export class Game {
       ...c,
       used: 0,
       lastActivatedTurn: 0,
+      lastActivationElement: null,
       charge: 0,
       hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       maxHp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
@@ -1422,6 +1438,7 @@ export class Game {
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
     if (!this.activationAvailable(c, i)) return;
     c.lastActivatedTurn = b.turn;
+    c.lastActivationElement = element || c.element;
     c.used++;
     if (d.charge) {
       c.charge++;
@@ -2146,17 +2163,7 @@ export class Game {
             !this.condition(c, i)
           )
             continue;
-          let els =
-            d.attune && !c.transmuted && c.element === d.element
-              ? [
-                  ...new Set(
-                    this.neighbors(i)
-                      .map((j) => top(b.grid[j]).element)
-                      .filter((x) => x !== "Arcane"),
-                  ),
-                ]
-              : [c.element];
-          if (!els.length) els = ["Arcane"];
+          const els = attunementElements(b, c, i);
           const charging = !!(d.charge && c.charge + 1 < d.charge);
           const targets =
             charging ||
@@ -2226,6 +2233,7 @@ export class Game {
     const s = this.s,
       b = s.battle;
     this.presentation = [];
+    this.decisionLog = [];
     s.steps++;
     s.history.push(a.key);
     switch (a.type) {

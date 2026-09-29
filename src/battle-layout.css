@@ -615,3 +615,134 @@ body {
   font-size: 12px;
   line-height: 1.25;
 }
+
+/* Elemental state and spatial relationships are separate from danger outlines. */
+.battle-scene .mind {
+  position: relative;
+}
+.battle-scene .has-element {
+  border-color: var(--card-primary);
+}
+.battle-scene .element-wash {
+  position: absolute;
+  inset: 0 0 31px;
+  background: var(--card-colors);
+  opacity: 0.17;
+  pointer-events: none;
+  z-index: 0;
+}
+.battle-scene .element-ribbon {
+  position: absolute;
+  inset: 0 auto 31px 0;
+  width: 4px;
+  background: var(--card-colors);
+  z-index: 2;
+  pointer-events: none;
+}
+.battle-scene .card-element-panel {
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  right: 4px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2px 4px;
+  font-size: 10px;
+  line-height: 14px;
+}
+.battle-scene .has-statuses .card-element-panel {
+  right: var(--status-reserve, 26px);
+}
+.battle-scene .element-label {
+  color: var(--card-primary);
+  background: #0d1917e8;
+  padding: 0 3px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .attune-swatches {
+  display: inline-flex;
+  gap: 3px;
+  padding: 2px;
+  background: #0d1917e8;
+}
+.battle-scene .attune-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #f2e9d4;
+  border-radius: 50%;
+  background: var(--swatch);
+}
+.battle-scene .shield-portions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  width: 100%;
+}
+.battle-scene .shield-portion {
+  color: var(--portion);
+  border-left: 3px solid var(--portion);
+  padding: 0 3px;
+  background: #0d1917eb;
+  white-space: nowrap;
+}
+.battle-scene .shield-more {
+  color: var(--paper);
+  background: #0d1917eb;
+  padding: 0 3px;
+}
+.battle-scene .synergy-bonus {
+  display: inline-block;
+  margin-left: 5px;
+  color: #ffe09a;
+  font-size: 12px;
+  line-height: 14px;
+  padding: 0 3px;
+  border: 1px solid #bca46b;
+  background: #302a17;
+}
+.battle-scene .board-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 6;
+  pointer-events: none;
+}
+.battle-scene .board-link {
+  stroke: var(--link-color);
+  stroke-width: 3;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.battle-scene .link-synergy {
+  filter: drop-shadow(0 0 3px #f1c865);
+}
+.battle-scene .link-attune {
+  opacity: 0;
+  stroke-dasharray: 2 2;
+}
+.battle-scene .link-inspected {
+  opacity: 1;
+  stroke-width: 5;
+}
+.battle-scene .element-preview .element-wash {
+  opacity: 0.32;
+}
+.battle-scene .has-element .grid-threat-badge {
+  top: auto;
+  left: auto;
+  right: 4px;
+  bottom: 34px;
+  width: 19px;
+  height: 19px;
+}
+
+.battle-scene .slot .overlay {
+  z-index: 1;
+}
