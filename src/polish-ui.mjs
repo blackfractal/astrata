@@ -1,3 +1,4 @@
+import { eventTrades } from "./trade-ui.mjs";
 import {
   boardInteractions,
   previewElement,
@@ -1068,6 +1069,7 @@ export function enhance(ctx) {
     }
   }
   if (o.mode === "event") {
+    eventTrades(ctx);
     const scene = app.querySelector(".scene");
     scene?.insertAdjacentHTML(
       "beforeend",

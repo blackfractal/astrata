@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.8";
+    this.id = "weighted-druid-v1.9";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -334,8 +334,17 @@ export class WeightedPolicy {
             (f.clean || f.cleanHex
               ? o.deck.filter((x) => cards[x.id].type === "Hex").length * 20
               : 0) -
-            (a.costs.gold || 0) * 0.2,
-          "Compare the visible reward, recovery, and cost of this event choice.",
+            (a.costs.gold || 0) * 0.2 -
+            (a.tradeItem != null
+              ? this.gearValue(
+                  items[o.inventory.find((x) => x.uid === a.tradeItem).id]
+                    .effect,
+                )
+              : 0) -
+            (a.tradeCard != null
+              ? this.cardValue(o.deck.find((x) => x.uid === a.tradeCard).id, o)
+              : 0),
+          "Compare the visible reward with the cost of the specific offered item or card.",
         ];
       case "socket": {
         const inst = o.inventory.find((x) => x.uid === a.uid),

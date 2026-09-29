@@ -2449,3 +2449,122 @@ header {
     animation: none !important;
   }
 }
+
+/* Explicit exchanges: belongings on the left, the offered reward on the right. */
+.trade-dialog {
+  width: 980px;
+}
+.trade-heading h2 {
+  margin: 6px 0 20px;
+}
+.trade-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 26px;
+  align-items: start;
+}
+.trade-belongings {
+  max-height: 57vh;
+  overflow: auto;
+  padding-right: 8px;
+}
+.trade-group h3 {
+  margin: 0 0 10px;
+  color: var(--gold);
+}
+.trade-group + .trade-group {
+  margin-top: 20px;
+}
+.trade-assets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.trade-asset {
+  padding: 8px;
+  background: #0e1c17;
+  border: 1px solid var(--line);
+}
+.trade-select {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  border: 2px solid transparent;
+  background: transparent;
+  padding: 5px;
+}
+.trade-select img {
+  width: 100%;
+  height: 74px;
+  object-fit: contain;
+}
+.trade-select[draggable="true"] {
+  cursor: grab;
+}
+.trade-select[aria-pressed="true"] {
+  border-color: var(--gold);
+  background: #d4b77912;
+}
+.trade-asset small {
+  display: block;
+  color: var(--muted);
+}
+.trade-asset details,
+.trade-reward details {
+  font-size: 13px;
+  margin-top: 8px;
+}
+.trade-asset details p,
+.trade-reward details p {
+  margin: 8px 0;
+}
+.trade-asset summary,
+.trade-reward summary {
+  cursor: pointer;
+  color: var(--gold);
+}
+.trade-reward {
+  border: 2px dashed #7c896d;
+  background: #0d1a16;
+  padding: 16px;
+  text-align: center;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.trade-reward h3 {
+  margin: 6px 0 10px;
+}
+.trade-reward-art {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+}
+.trade-reward.has-offer,
+.trade-reward.accepting-offer {
+  border-color: var(--gold);
+}
+.trade-reward.drag-over {
+  border-style: solid;
+  background: #344431;
+  box-shadow: 0 0 20px #d4b77935;
+}
+.trade-selection {
+  min-height: 36px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.trade-reward button {
+  width: 100%;
+}
+.trade-footer {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.trade-gem {
+  color: var(--Water);
+}

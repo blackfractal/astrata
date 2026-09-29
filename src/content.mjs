@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.19",
-  content: "1.1.20",
+  rules: "1.3.20",
+  content: "1.1.21",
   observation: 1,
   actions: 1,
 };
@@ -1326,7 +1326,7 @@ export const events = [
     choices: [
       {
         label: "Trade a Bracelet for Grove Titan",
-        tradeWrist: true,
+        trade: { kind: "item", slot: "wrist", label: "Bracelet" },
         card: "grove",
       },
       { label: "Keep your belongings" },

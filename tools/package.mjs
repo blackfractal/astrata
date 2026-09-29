@@ -68,6 +68,8 @@ for (const name of [
   "mind-grid-verification.json",
   "mind-grid-evaluation",
   "choir-shield-evaluation",
+  "event-trade-evaluation",
+  "event-trade-verification.json",
   "board-interactions-verification.json",
   "run-archive-verification.json",
   "grid-telegraph-verification.json",

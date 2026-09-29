@@ -193,6 +193,40 @@ export function stackValue(b, i) {
     activations: b.grid[i].reduce((n, c) => n + cardAllowance(b, c, i), 0),
   };
 }
+// Owned instances, including equipped gear, keep their identity through exchanges.
+export function tradeAssets(s, trade) {
+  const isItem = trade.kind === "item",
+    defs = isItem ? items : cards;
+  return (isItem ? s.inventory : s.deck)
+    .filter((x) => {
+      const d = defs[x.id];
+      return (
+        (!trade.id || trade.id === x.id) &&
+        (!trade.slot || trade.slot === d.slot) &&
+        (!trade.type || trade.type === d.type) &&
+        (!trade.rarity || trade.rarity === d.rarity)
+      );
+    })
+    .map((x) => {
+      const d = defs[x.id],
+        socketed = isItem && s.inventory.some((y) => y.gem === x.uid);
+      const reason =
+        d.cursed || (!isItem && d.type === "Hex")
+          ? "Cannot trade a Curse or Hex"
+          : socketed
+            ? "Remove this Gem at a Tavern before trading it"
+            : null;
+      return {
+        ...x,
+        eligible: !reason,
+        reason,
+        equippedSlot: isItem
+          ? Object.keys(s.equipment).find((k) => s.equipment[k] === x.uid) ||
+            null
+          : null,
+      };
+    });
+}
 export function gridTargets(b, t) {
   const occupied = b.grid
     .map((slot, i) => ({ slot, i, c: top(slot) }))
@@ -278,6 +312,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.19",
           "1.3.18",
           "1.3.17",
           "1.3.16",
@@ -1959,15 +1994,30 @@ export class Game {
     if (s.mode === "event") {
       const event = events.find((x) => x.id === s.event);
       event.choices.forEach((c, index) => {
-        if (
-          (c.cost || 0) > s.gold ||
-          (c.tradeWrist &&
-            !this.equipped().some(
-              (x) => x.slot.startsWith("wrist") && !x.definition.cursed,
-            ))
-        )
-          return;
-        add("eventChoice", c.label, { index }, { ...c }, { gold: c.cost || 0 });
+        if ((c.cost || 0) > s.gold) return;
+        if (c.trade) {
+          for (const asset of tradeAssets(s, c.trade).filter(
+            (x) => x.eligible,
+          )) {
+            const isItem = c.trade.kind === "item",
+              d = (isItem ? items : cards)[asset.id];
+            const key = isItem ? "tradeItem" : "tradeCard";
+            add(
+              "eventChoice",
+              `${c.label} · offer ${d.name}${asset.upgrade ? " +" : ""}`,
+              { index, [key]: asset.uid },
+              { ...c },
+              { gold: c.cost || 0, [key]: asset.uid },
+            );
+          }
+        } else
+          add(
+            "eventChoice",
+            c.label,
+            { index },
+            { ...c },
+            { gold: c.cost || 0 },
+          );
       });
       return actions;
     }
@@ -2388,6 +2438,20 @@ export class Game {
         break;
       case "eventChoice": {
         const c = events.find((e) => e.id === s.event).choices[a.index];
+        if (a.tradeItem != null) {
+          const offered = this.getItem(a.tradeItem);
+          this.log(
+            `Traded ${items[offered.id].name} (item ${offered.uid})${offered.gem ? "; socketed Gem returned to Satchel" : ""}.`,
+          );
+          this.removeItem(a.tradeItem);
+        }
+        if (a.tradeCard != null) {
+          const offered = s.deck.find((x) => x.uid === a.tradeCard);
+          this.log(
+            `Traded ${cards[offered.id].name}${offered.upgrade ? " +" : ""} (card ${offered.uid}).`,
+          );
+          s.deck = s.deck.filter((x) => x.uid !== a.tradeCard);
+        }
         if (c.cost) this.spend(c.cost);
         if (c.hp) {
           s.hp += c.hp;
@@ -2399,12 +2463,6 @@ export class Game {
         if (c.hex) this.addCard(c.hex);
         if (c.item) this.addItem(c.item);
         if (c.quest) s.quest = true;
-        if (c.tradeWrist) {
-          const gear = this.equipped().find(
-            (x) => x.slot.startsWith("wrist") && !x.definition.cursed,
-          );
-          this.removeItem(gear.uid);
-        }
         if (c.clean || c.cleanHex)
           s.deck = s.deck.filter((x) => cards[x.id].type !== "Hex");
         if (c.clean)
