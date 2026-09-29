@@ -1,5 +1,5 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
-import { offense, defenseRate, adjacent, allyHit } from "./engine.mjs";
+import { offense, defenseRate, adjacent, allyHit, corner } from "./engine.mjs";
 export const defaultWeights = {
   damage: 1,
   survival: 1.4,
@@ -11,7 +11,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.7";
+    this.id = "weighted-druid-v1.8";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -173,8 +173,7 @@ export class WeightedPolicy {
         if (e.damage && !hasOffense) n += 8;
         if (e.shield && existing) n -= 12;
         if (c.condition === "isolated") n += ns.length ? -30 : 4;
-        if (c.condition === "corner" && ![0, 4, 15, 19].includes(a.slot))
-          n -= 30;
+        if (c.condition === "corner" && !corner(a.slot)) n -= 30;
         if (
           c.condition &&
           ["Earth", "Fire", "Wind", "Water"].includes(c.condition) &&

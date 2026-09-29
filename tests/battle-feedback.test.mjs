@@ -18,28 +18,28 @@ function put(g, id, i) {
 test("live power follows neighbors, Sever, row elements, HP, upgrades and snapshot identity", () => {
   const g = setup(),
     b = g.s.battle,
-    c = put(g, "thorn", 6);
-  assert.equal(cardPower(b, c, 6), 4);
-  put(g, "shield", 5);
+    c = put(g, "thorn", 8);
+  assert.equal(cardPower(b, c, 8), 4);
   put(g, "shield", 7);
-  assert.equal(cardPower(b, c, 6), 8);
-  b.grid[7][0].sever = true;
-  assert.equal(cardPower(b, c, 6), 6);
+  put(g, "shield", 9);
+  assert.equal(cardPower(b, c, 8), 8);
+  b.grid[9][0].sever = true;
+  assert.equal(cardPower(b, c, 8), 6);
   c.sever = true;
-  assert.equal(cardPower(b, c, 6), 4);
+  assert.equal(cardPower(b, c, 8), 4);
   c.sever = false;
   c.upgrade = true;
-  assert.equal(cardPower(b, c, 6), 9);
-  const row = put(g, "ignis", 10);
-  const fire = put(g, "corner", 14);
-  assert.equal(cardPower(b, row, 10), 7);
+  assert.equal(cardPower(b, c, 8), 9);
+  const row = put(g, "ignis", 14);
+  const fire = put(g, "corner", 18);
+  assert.equal(cardPower(b, row, 14), 7);
   fire.element = "Water";
-  assert.equal(cardPower(b, row, 10), 5);
-  const ally = put(g, "sapling", 11);
+  assert.equal(cardPower(b, row, 14), 5);
+  const ally = put(g, "sapling", 15);
   ally.hp = 17;
-  assert.equal(cardPower(b, ally, 11), 17);
+  assert.equal(cardPower(b, ally, 15), 17);
   const snapshot = structuredClone(b);
-  assert.equal(cardPower(snapshot, structuredClone(c), 6), g.cardPower(c, 6));
+  assert.equal(cardPower(snapshot, structuredClone(c), 8), g.cardPower(c, 8));
 });
 test("target preview matches actual single-card hits without changing state, RNG or costs", () => {
   for (const config of [
@@ -53,15 +53,15 @@ test("target preview matches actual single-card hits without changing state, RNG
   ]) {
     const g = setup(),
       b = g.s.battle,
-      c = put(g, "thorn", 6),
+      c = put(g, "thorn", 8),
       e = b.enemies[0];
     Object.assign(e, config);
-    put(g, "shield", 5);
+    put(g, "shield", 7);
     const before = JSON.stringify(g.s),
-      preview = attackPreview(b, c, 6, e);
+      preview = attackPreview(b, c, 8, e);
     assert.equal(JSON.stringify(g.s), before);
     const hp = e.hp;
-    g.act(g.legal().find((a) => a.type === "activate" && a.slot === 6));
+    g.act(g.legal().find((a) => a.type === "activate" && a.slot === 8));
     assert.equal(hp - e.hp, preview.hpLoss, JSON.stringify(config));
   }
 });

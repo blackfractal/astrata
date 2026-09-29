@@ -331,7 +331,7 @@ test("Shift carries a full stack; Transmute changes future Attune choices", () =
   put(g, "plasma", 0);
   put(g, "quicksilver", 4);
   put(g, "transmute", 9);
-  put(g, "blast", 7);
+  put(g, "blast", 13);
   g.s.battle.phase = "activate";
   g.s.battle.channel = 3;
   act(
@@ -349,7 +349,7 @@ test("Shift carries a full stack; Transmute changes future Attune choices", () =
     g
       .legal()
       .some(
-        (a) => a.type === "activate" && a.slot === 7 && a.element === "Water",
+        (a) => a.type === "activate" && a.slot === 13 && a.element === "Water",
       ),
   );
 });

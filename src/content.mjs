@@ -1,6 +1,9 @@
+export const MIND_COLUMNS = 7,
+  MIND_ROWS = 6,
+  MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.16",
-  content: "1.1.16",
+  rules: "1.3.17",
+  content: "1.1.17",
   observation: 1,
   actions: 1,
 };
@@ -1535,7 +1538,7 @@ export const glossary = {
   Adjacent:
     "The four orthogonal neighbors: above, below, left and right. Diagonals do not count; Sever disables adjacency.",
   "Mind Grid":
-    "The 5-by-4 battlefield where you arrange and activate cards. Covered cards function only as their top card allows.",
+    "The 7-by-6 battlefield where you arrange and activate cards. Covered cards function only as their top card allows.",
   Pile: "A stacking rule that can activate eligible matching cards beneath the top card. Each card still respects its own activation limits.",
   Fusion:
     "A stacking rule that can also activate an eligible covered card. The top card's text states which cards and extra effects qualify.",

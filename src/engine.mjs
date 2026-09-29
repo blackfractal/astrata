@@ -7,6 +7,9 @@ import {
   ELEMENTS,
   cycle,
   VERSION,
+  MIND_COLUMNS,
+  MIND_ROWS,
+  MIND_SIZE,
 } from "./content.mjs";
 export const clone = (x) => structuredClone(x);
 export function offense(n, from, to) {
@@ -62,7 +65,7 @@ export function cardPower(b, c, i) {
       (sum, slot, j) =>
         sum +
         (j !== i &&
-        Math.floor(j / 5) === Math.floor(i / 5) &&
+        Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS) &&
         top(slot)?.element === c.element &&
         !top(slot).sever &&
         !c.sever
@@ -73,20 +76,23 @@ export function cardPower(b, c, i) {
   if (f.adj) n += gridNeighbors(b, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square && !c.sever)
-    for (const origin of [i, i - 1, i - 5, i - 6])
+    for (const origin of [i, i - 1, i - MIND_COLUMNS, i - MIND_COLUMNS - 1])
       if (
         origin >= 0 &&
-        origin % 5 < 4 &&
-        origin < 15 &&
-        [origin, origin + 1, origin + 5, origin + 6].every(
-          (j) => top(b.grid[j]) && !top(b.grid[j]).sever,
-        )
+        origin % MIND_COLUMNS < MIND_COLUMNS - 1 &&
+        origin < MIND_SIZE - MIND_COLUMNS &&
+        [
+          origin,
+          origin + 1,
+          origin + MIND_COLUMNS,
+          origin + MIND_COLUMNS + 1,
+        ].every((j) => top(b.grid[j]) && !top(b.grid[j]).sever)
       ) {
         n *= 2;
         break;
       }
   const level = b.grid[i].findIndex((x) => x.uid === c.uid) + 1;
-  for (let j = 0; j < 20; j++)
+  for (let j = 0; j < b.grid.length; j++)
     if (j !== i) {
       const tower = top(b.grid[j]);
       if (tower?.magnified && b.grid[j].length === level) n *= 2;
@@ -146,14 +152,15 @@ export function blockHit(block, element, damage, attack) {
 }
 export function adjacent(i) {
   return [
-    i % 5 ? i - 1 : -1,
-    i % 5 < 4 ? i + 1 : -1,
-    i >= 5 ? i - 5 : -1,
-    i < 15 ? i + 5 : -1,
+    i % MIND_COLUMNS ? i - 1 : -1,
+    i % MIND_COLUMNS < MIND_COLUMNS - 1 ? i + 1 : -1,
+    i >= MIND_COLUMNS ? i - MIND_COLUMNS : -1,
+    i < MIND_SIZE - MIND_COLUMNS ? i + MIND_COLUMNS : -1,
   ].filter((x) => x >= 0);
 }
-const corner = (i) => [0, 4, 15, 19].includes(i),
-  top = (slot) => slot?.at(-1),
+export const corner = (i) =>
+  [0, MIND_COLUMNS - 1, MIND_SIZE - MIND_COLUMNS, MIND_SIZE - 1].includes(i);
+const top = (slot) => slot?.at(-1),
   blankStatus = () => ({ burn: 0, poison: 0, corrode: 0 }),
   clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 export function gridTargets(b, t) {
@@ -163,12 +170,14 @@ export function gridTargets(b, t) {
   let targets = [];
   if (t.grid === "row" || t.grid === "column") {
     const col = t.grid === "column",
-      count = col ? 5 : 4;
+      count = col ? MIND_COLUMNS : MIND_ROWS;
     let best = 0,
       max = -1;
     for (let k = 0; k < count; k++) {
       const n = occupied
-        .filter((x) => (col ? x.i % 5 === k : Math.floor(x.i / 5) === k))
+        .filter((x) =>
+          col ? x.i % MIND_COLUMNS === k : Math.floor(x.i / MIND_COLUMNS) === k,
+        )
         .reduce((n, x) => n + x.slot.length, 0);
       if (n > max) {
         max = n;
@@ -176,7 +185,9 @@ export function gridTargets(b, t) {
       }
     }
     targets = occupied.filter((x) =>
-      col ? x.i % 5 === best : Math.floor(x.i / 5) === best,
+      col
+        ? x.i % MIND_COLUMNS === best
+        : Math.floor(x.i / MIND_COLUMNS) === best,
     );
   } else {
     const score = (x) =>
@@ -196,12 +207,34 @@ export function gridTargets(b, t) {
   return targets.map((x) => x.i);
 }
 
+// Expand older 5×4 saves by coordinates, preserving complete stacks and block owners.
+export function normalizeMindGrid(state) {
+  const b = state.battle;
+  if (b) {
+    if (b.grid.length === 20 && (!b.columns || b.columns === 5)) {
+      const remap = (i) => Math.floor(i / 5) * MIND_COLUMNS + (i % 5);
+      const expanded = Array.from({ length: MIND_SIZE }, () => []);
+      b.grid.forEach((stack, i) => {
+        expanded[remap(i)] = stack;
+      });
+      b.grid = expanded;
+      for (const portion of b.shields || []) portion.slot = remap(portion.slot);
+    } else if (b.grid.length !== MIND_SIZE) {
+      throw Error("Unsupported Mind Grid dimensions in save");
+    }
+    b.columns = MIND_COLUMNS;
+    b.rows = MIND_ROWS;
+  }
+  if (state.checkpoint) normalizeMindGrid(state.checkpoint);
+}
+
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
       if (
         ![
           VERSION.rules,
+          "1.3.16",
           "1.3.15",
           "1.3.14",
           "1.3.13",
@@ -226,6 +259,7 @@ export class Game {
       )
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
+      normalizeMindGrid(this.s);
       this.s.version = VERSION;
       for (const c of this.s.battle?.grid?.flat() || [])
         if (cards[c.id].type === "Ally" && c.maxHp == null)
@@ -785,7 +819,9 @@ export class Game {
     s.battle = {
       turn: 0,
       phase: "place",
-      grid: Array.from({ length: 20 }, () => []),
+      columns: MIND_COLUMNS,
+      rows: MIND_ROWS,
+      grid: Array.from({ length: MIND_SIZE }, () => []),
       deck: clone(s.deck),
       hand: [],
       discard: [],
@@ -855,7 +891,8 @@ export class Game {
       (x, j) =>
         cards[top(x)?.id]?.keystone &&
         corner(j) &&
-        (j % 5 === i % 5 || Math.floor(j / 5) === Math.floor(i / 5)),
+        (j % MIND_COLUMNS === i % MIND_COLUMNS ||
+          Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS)),
     )
       ? 1
       : 0;
@@ -921,7 +958,7 @@ export class Game {
           delete c.tauntUntil;
         }
       }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < b.grid.length; i++) {
       const c = top(b.grid[i]);
       if (!c) continue;
       if (cards[c.id].growth) {
@@ -1329,8 +1366,8 @@ export class Game {
         const targets = gridTargets(b, tell);
         const line = targets.length
           ? tell.grid === "row"
-            ? Math.floor(targets[0] / 5)
-            : targets[0] % 5
+            ? Math.floor(targets[0] / MIND_COLUMNS)
+            : targets[0] % MIND_COLUMNS
           : null;
         const spaces =
           targets.length && ["row", "column"].includes(tell.grid)
@@ -1338,8 +1375,8 @@ export class Game {
                 .map((_, i) => i)
                 .filter((i) =>
                   tell.grid === "row"
-                    ? Math.floor(i / 5) === line
-                    : i % 5 === line,
+                    ? Math.floor(i / MIND_COLUMNS) === line
+                    : i % MIND_COLUMNS === line,
                 )
             : targets;
         return [
@@ -2119,7 +2156,7 @@ export class Game {
           const d = cards[c.id],
             cost = d.focus + (b.milky ? 1 : 0);
           if (d.unplaceable || cost > b.focus) continue;
-          for (let i = 0; i < 20; i++)
+          for (let i = 0; i < b.grid.length; i++)
             if (
               this.canStack(c, b.grid[i]) &&
               (d.type !== "Hex" ||
@@ -2138,7 +2175,7 @@ export class Game {
                 { focus: cost },
               );
         }
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < b.grid.length; i++) {
           const cost = this.recallCost(b.grid[i]);
           if (cost != null && cost <= b.focus)
             add(
@@ -2152,7 +2189,7 @@ export class Game {
         add("activatePhase", "Begin activation", {}, { progress: 1 });
       }
       if (b.phase === "activate") {
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < b.grid.length; i++) {
           const c = top(b.grid[i]);
           if (!c) continue;
           const d = cards[c.id],

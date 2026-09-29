@@ -391,7 +391,7 @@ header button {
 }
 .mind {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--mind-columns, 7), minmax(0, 1fr));
   gap: 8px;
   background:
     linear-gradient(#101a1870, #101a1870),

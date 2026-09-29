@@ -1,4 +1,4 @@
-import { items } from "./content.mjs";
+import { items, MIND_COLUMNS, MIND_ROWS } from "./content.mjs";
 let toolsOpen = false;
 export function arrangeBattle(ctx) {
   const { app, o, actions } = ctx;
@@ -6,6 +6,8 @@ export function arrangeBattle(ctx) {
     mind = app.querySelector(".mind");
   if (!old || !mind) return;
   app.classList.add("battle-scene");
+  mind.style.setProperty("--mind-columns", MIND_COLUMNS);
+  mind.style.setProperty("--mind-rows", MIND_ROWS);
   const layout = document.createElement("section");
   layout.className = "battle-layout";
   const command = document.createElement("div");

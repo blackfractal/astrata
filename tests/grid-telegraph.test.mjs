@@ -23,9 +23,9 @@ function act(g, type, predicate = () => true) {
   g.act(a);
 }
 for (const [id, cycle, occupied, initial, after] of [
-  ["hart", 2, [0, 1, 5, 6], [0, 1], [5, 6]],
-  ["colossus", 2, [0, 1, 5, 6], [0, 5], [1, 6]],
-  ["choir", 0, [0, 1, 5, 6], [0], [1]],
+  ["hart", 2, [0, 1, 7, 8], [0, 1], [7, 8]],
+  ["colossus", 2, [0, 1, 7, 8], [0, 7], [1, 8]],
+  ["choir", 0, [0, 1, 7, 8], [0], [1]],
 ])
   test(`${id} preview breaks ties deterministically, retargets after Recall, and matches actual destruction`, () => {
     const g = base(id, cycle),
@@ -48,21 +48,21 @@ test("Line previews count covered cards and outline empty cells along the threat
   const g = base("hart", 2);
   put(g, 0);
   put(g, 1);
-  put(g, 5, 3);
+  put(g, 7, 3);
   let t = g.observe().battle.telegraphs[0];
-  assert.deepEqual(t.targets, [5]);
-  assert.deepEqual(t.spaces, [5, 6, 7, 8, 9]);
+  assert.deepEqual(t.targets, [7]);
+  assert.deepEqual(t.spaces, [7, 8, 9, 10, 11, 12, 13]);
   assert.equal(t.cards, 3);
   g.s.battle.enemies[0].id = "colossus";
   t = g.observe().battle.telegraphs[0];
-  assert.deepEqual(t.targets, [0, 5]);
-  assert.deepEqual(t.spaces, [0, 5, 10, 15]);
+  assert.deepEqual(t.targets, [0, 7]);
+  assert.deepEqual(t.spaces, [0, 7, 14, 21, 28, 35]);
   assert.equal(t.cards, 4);
 });
 test("Tallest includes covered cards; equal heights use reading order", () => {
   const g = base("choir", 0);
   put(g, 4);
-  put(g, 5);
+  put(g, 7);
   put(g, 19, 2);
   assert.deepEqual(g.observe().battle.telegraphs[0].targets, [19]);
   put(g, 4, 2);
@@ -109,8 +109,8 @@ test("Shared targeting retains other grid effects' newest and connected tie rule
     b = g.s.battle;
   put(g, 0);
   put(g, 1);
-  put(g, 5);
-  assert.deepEqual(gridTargets(b, { target: "newest" }), [5]);
+  put(g, 7);
+  assert.deepEqual(gridTargets(b, { target: "newest" }), [7]);
   assert.deepEqual(gridTargets(b, { target: "connected" }), [0]);
   b.grid[0][0].sever = true;
   assert.deepEqual(gridTargets(b, { target: "connected" }), [0]); // all three isolated, reading-order tie

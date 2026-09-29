@@ -76,7 +76,7 @@ body {
   height: 838px;
   padding: 8px 24px 10px;
   display: grid;
-  grid-template-rows: 90px 478px 186px 34px;
+  grid-template-rows: 80px 550px 126px 34px;
   gap: 10px;
 }
 .battle-scene .battle-command {
@@ -114,15 +114,15 @@ body {
 }
 .battle-scene .battle-arena {
   display: grid;
-  grid-template-columns: 238px minmax(0, 1fr) 340px;
-  gap: 18px;
+  grid-template-columns: 218px minmax(0, 1fr) 280px;
+  gap: 14px;
   align-items: stretch;
   min-height: 0;
 }
 .battle-scene .mind {
   width: 100%;
-  height: 478px;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
+  height: 550px;
+  grid-template-rows: repeat(var(--mind-rows, 6), minmax(0, 1fr));
   gap: 7px;
   padding: 10px;
 }
@@ -745,4 +745,161 @@ body {
 
 .battle-scene .slot .overlay {
   z-index: 1;
+}
+
+/* The 7×6 playtest board gets more arena space; card details remain one click away. */
+.battle-scene .phasebar {
+  height: 40px;
+}
+.battle-scene .resources {
+  height: 38px;
+}
+.battle-scene .mind {
+  padding: 8px;
+  gap: 5px;
+}
+.battle-scene .battle-player {
+  width: 218px;
+  grid-template-columns: 44px 116px 44px;
+}
+.battle-scene .battle-player .player-portrait {
+  width: 116px;
+}
+.battle-scene .battle-player .player-portrait img {
+  width: 114px;
+}
+.battle-scene .battle-player .gear-slot,
+.battle-scene .battle-player .gear-item {
+  width: 44px;
+}
+.battle-scene .mind .slot .overlay {
+  padding: 3px 4px;
+  bottom: 23px;
+}
+.battle-scene .mind .slot .name {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .mind .slot.has-statuses .name {
+  padding-right: 0;
+}
+.battle-scene .mind .slot .nums {
+  font-size: 11px;
+  line-height: 13px;
+  white-space: nowrap;
+}
+.battle-scene .mind .slot .slot-activate {
+  height: 23px;
+  min-height: 23px;
+  padding: 2px 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .mind .card-status {
+  width: 16px;
+  height: 16px;
+}
+.battle-scene .mind .card-status svg {
+  width: 13px;
+  height: 13px;
+}
+.battle-scene .mind .card-statuses {
+  max-width: 52px;
+  gap: 2px;
+}
+.battle-scene .mind .slot .level {
+  top: auto;
+  bottom: 24px;
+  right: 3px;
+  font-size: 10px;
+}
+.battle-scene .mind .card-element-panel {
+  top: 2px;
+  left: 6px;
+  gap: 1px 3px;
+  font-size: 9px;
+  line-height: 11px;
+}
+.battle-scene .mind .attune-swatch {
+  width: 7px;
+  height: 7px;
+}
+.battle-scene .mind .element-wash {
+  bottom: 23px;
+}
+.battle-scene .mind .element-ribbon {
+  bottom: 23px;
+  width: 3px;
+}
+.battle-scene .mind .synergy-bonus {
+  margin-left: 3px;
+  font-size: 10px;
+  line-height: 11px;
+  padding: 0 2px;
+}
+.battle-scene .mind .shield-portions {
+  flex-wrap: nowrap;
+}
+.battle-scene .mind .shield-portion {
+  padding: 0 2px;
+}
+.battle-scene .mind .grid-threat-badge {
+  bottom: 46px;
+  right: 2px;
+  width: 15px;
+  height: 15px;
+}
+.battle-scene .mind .ally-health {
+  height: 12px;
+  display: inline-block;
+  min-width: 53px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.battle-scene .mind .ally-health > span {
+  font-size: 9px;
+  line-height: 10px;
+}
+.battle-scene .revealed-hand .hand {
+  height: 104px;
+  gap: 8px;
+  padding: 2px 8px 6px;
+}
+.battle-scene .revealed-hand .card {
+  width: 230px;
+  min-width: 230px;
+  flex-basis: 230px;
+  height: 96px;
+  grid-template-columns: 48px 1fr;
+}
+.battle-scene .revealed-hand .card img {
+  width: 48px;
+  height: 96px;
+}
+.battle-scene .revealed-hand .card .body {
+  padding: 4px 6px;
+}
+.battle-scene .revealed-hand .card h4 {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.battle-scene .revealed-hand .card .text {
+  font-size: 11px;
+  line-height: 1.1;
+  -webkit-line-clamp: 2;
+}
+.battle-scene .revealed-hand .card .meta {
+  font-size: 10px;
+  margin-top: 2px;
+  line-height: 1.1;
+}
+.battle-scene .revealed-hand .card .eyebrow {
+  font-size: 9px;
+}
+.battle-scene .targeting-bar {
+  bottom: 60px;
 }

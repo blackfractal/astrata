@@ -395,3 +395,20 @@ Exact versions and policy weights accompany each run. Tests separately verify un
 
 
 Post-build 1.3.28: elemental-interaction visuals and durable local run archives do not change balance or policy. Full suite: 178 passing tests. Two archival verification runs of seed 825184 both win with 9 HP after 308 decisions and 19 Field rounds, matching the prior result; these are repeated-seed persistence checks, not a new five-run balance sample. The preceding mini-element five-run evaluation remains the latest balance batch. Headless batches now preserve unique per-run archives with exact states, structured actions, effects, logs, policy/weights, package/rules/content versions and shared source snapshots; repeated seeds cannot overwrite canonical records. Completed event logs are compressed losslessly. Detailed measurement in reports/run-archive-verification.json.
+
+
+## 7×6 Mind Grid playtest — package 1.3.29
+
+Rules 1.3.17/content 1.1.17; policy weighted-druid-v1.8. The policy changes only its corner detection to use the shared 7×6 geometry; weights and strategy are unchanged and no training occurred. Five matching seeds completed normally, with one victory and four losses. Each trial has its own compressed decision/state archive plus the exact engine/content/policy source snapshot in reports/mind-grid-evaluation/.
+
+| Seed | Previous 5×4 outcome | 7×6 outcome | Field round | Decisions | Last encounter |
+| --- | --- | --- | --- | --- | --- |
+| 825183 | Loss | Loss | 20 | 367 | Cinder Heart, 8 turns |
+| 825184 | Win, 9 HP | Win, 13 HP | 19 | 311 | Void-Colossus, 9 turns |
+| 825185 | Loss | Loss | 14 | 195 | Five-enemy encounter, 1 turn |
+| 825186 | Loss | Loss | 12 | 177 | Fire Wolf + Dervish Hunter, 1 turn |
+| 825187 | Win, 11 HP | Loss | 19 | 388 | Void-Colossus, 12 turns |
+
+The first, third and fourth runs retain their previous outcomes and decision counts. Both Colossus encounters change: one finishes healthier, the other loses after an additional boss turn. This is a small playability/comparison sample, not evidence that 7×6 is globally easier or harder. All runs terminate without illegal moves, crashes or action-limit stalls. No resource, card or enemy rebalance was applied. Human playtesting should evaluate how much the extra room changes Recall/stacking pressure, isolated groups and recovery from telegraphed row/column destruction before introducing Act 2 Corruptions.
+
+Verification: 186 rules tests pass, including new far-edge placement/activation/Recall, adjacency bounds, Ally growth/status processing, 2×2 formations, row bonuses, Towers, corner Keystone, boss telegraphs and 5×4 save migration. Packaged UI checks 42 visible cells in seven columns/six rows, final-space dragging/activation/Transmute, readable status/health/value overlays, full card details, and target-choice controls clear of the grid. Element-interaction and all-three-boss telegraph graphical regressions also pass. No renderer errors; screenshots inspected.

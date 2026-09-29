@@ -17,8 +17,8 @@ const marks = (p) =>
     .locator(".grid-threat")
     .evaluateAll((nodes) => nodes.map((x) => Number(x.dataset.slot)));
 for (const [id, cycle, initial, changed, targets] of [
-  ["hart", 2, [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [5, 6]],
-  ["colossus", 2, [0, 5, 10, 15], [1, 6, 11, 16], [1, 6]],
+  ["hart", 2, [0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13], [7, 8]],
+  ["colossus", 2, [0, 7, 14, 21, 28, 35], [1, 8, 15, 22, 29, 36], [1, 8]],
   ["choir", 0, [0], [1], [1]],
 ]) {
   const g = new Game(8);
@@ -29,7 +29,7 @@ for (const [id, cycle, initial, changed, targets] of [
   b.focus = 5;
   b.hand = [];
   b.enemies[0].cycle = cycle;
-  for (const i of [0, 1, 5, 6]) b.grid[i] = [g.instance(g.newCard("blast"))];
+  for (const i of [0, 1, 7, 8]) b.grid[i] = [g.instance(g.newCard("blast"))];
   if (id === "hart") b.hand = [g.instance(g.newCard("clear"))];
   const profile = path.resolve(".tmp/grid-telegraph-" + Date.now());
   await fs.mkdir(profile, { recursive: true });
@@ -77,7 +77,7 @@ for (const [id, cycle, initial, changed, targets] of [
       .click();
     await settle(p);
     assert.deepEqual(await marks(p), changed);
-    const attackSlot = id === "choir" ? 1 : 5;
+    const attackSlot = id === "choir" ? 1 : 7;
     await p.locator('[data-activate-slot="' + attackSlot + '"]').dblclick();
     await settle(p);
     assert.deepEqual(await marks(p), changed);

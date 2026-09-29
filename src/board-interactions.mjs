@@ -1,4 +1,4 @@
-import { cards } from "./content.mjs";
+import { cards, MIND_COLUMNS } from "./content.mjs";
 import { attunementElements, gridNeighbors } from "./engine.mjs";
 const unique = (xs) => [...new Set(xs)];
 const color = (element) => `var(--${element})`;
@@ -87,7 +87,7 @@ export function boardInteractions(ctx) {
     const statusCount = slot.querySelectorAll(".card-status").length;
     slot.style.setProperty(
       "--status-reserve",
-      `${Math.min(statusCount, 3) * 22 + 4}px`,
+      `${Math.min(statusCount, 3) * 18 + 4}px`,
     );
     slot.dataset.baseColors = gradient(m.colors);
     slot.dataset.basePrimary = color(m.colors[0]);
@@ -148,7 +148,7 @@ export function boardInteractions(ctx) {
     if (m.portions.length) {
       const row = document.createElement("div");
       row.className = "shield-portions";
-      for (const p of m.portions.slice(0, 3)) {
+      for (const p of m.portions.slice(0, 2)) {
         const chip = document.createElement("span");
         chip.className = "shield-portion";
         chip.dataset.portion = p.uid;
@@ -158,12 +158,12 @@ export function boardInteractions(ctx) {
         chip.dataset.tooltip = `${p.block} remaining ${p.element} block. This portion keeps its element until spent or the enemy phase ends.`;
         row.append(chip);
       }
-      if (m.portions.length > 3) {
+      if (m.portions.length > 2) {
         const more = document.createElement("span");
         more.className = "shield-more";
-        more.textContent = `+${m.portions.length - 3}`;
+        more.textContent = `+${m.portions.length - 2}`;
         more.dataset.tooltip = m.portions
-          .slice(3)
+          .slice(2)
           .map((p) => `${p.block} ${p.element} block`)
           .join(" · ");
         row.append(more);
@@ -207,7 +207,8 @@ export function boardInteractions(ctx) {
         .querySelector(`[data-slot="${from}"]`)
         .getBoundingClientRect(),
       z = ctx.app.querySelector(`[data-slot="${to}"]`).getBoundingClientRect();
-    const horizontal = Math.floor(from / 5) === Math.floor(to / 5);
+    const horizontal =
+      Math.floor(from / MIND_COLUMNS) === Math.floor(to / MIND_COLUMNS);
     const forward = from < to;
     const x1 = horizontal
       ? forward

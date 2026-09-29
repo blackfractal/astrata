@@ -29,20 +29,20 @@ test("a row of three matching Blasts or Shields has +1/+2/+1, with symmetric pai
 });
 test("matching bonuses exclude diagonals, row wrapping, covered cards, and Sever but include exposed spent neighbors", () => {
   const g = setup(),
-    a = put(g, "blast", 4);
-  put(g, "blast", 5);
-  put(g, "blast", 8);
-  assert.equal(g.cardPower(a, 4), 4);
-  const b = put(g, "blast", 9);
+    a = put(g, "blast", 6);
+  put(g, "blast", 7);
+  put(g, "blast", 12);
+  assert.equal(g.cardPower(a, 6), 4);
+  const b = put(g, "blast", 13);
   b.used = 2;
-  assert.equal(g.cardPower(a, 4), 5);
+  assert.equal(g.cardPower(a, 6), 5);
   b.sever = true;
-  assert.equal(g.cardPower(a, 4), 4);
+  assert.equal(g.cardPower(a, 6), 4);
   b.sever = false;
-  put(g, "heat", 9);
-  assert.equal(g.cardPower(a, 4), 4);
-  put(g, "heat", 4);
-  assert.equal(g.matchingNeighbors(a, 4), 0);
+  put(g, "heat", 13);
+  assert.equal(g.cardPower(a, 6), 4);
+  put(g, "heat", 6);
+  assert.equal(g.matchingNeighbors(a, 6), 0);
 });
 test("matching Blast damage is included before elemental multipliers and reflected in legal actions", () => {
   const g = setup(),

@@ -66,15 +66,15 @@ test("Ring fires once across a Plasma pile, an area attack, and a multi-element 
     [991, 993],
   );
   g = setup();
-  put(g, "prism", 6);
+  put(g, "prism", 8);
   for (const [id, i] of [
     ["ignis", 1],
-    ["water", 5],
-    ["gust", 7],
-    ["thorn", 11],
+    ["water", 7],
+    ["gust", 9],
+    ["thorn", 15],
   ])
     put(g, id, i);
-  activate(g, 6);
+  activate(g, 8);
   assert.equal(g.s.battle.enemies[0].hp, 982);
 });
 test("Charge building and status-only activations preserve the Ring, including Fusion", () => {
