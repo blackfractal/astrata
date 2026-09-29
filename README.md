@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.72. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.30; rules 1.3.17).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.73. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.31; rules 1.3.17).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -100,3 +100,5 @@ Run data: the desktop build retains every completed result in `%APPDATA%/astrata
 The Mind Grid is now 7 columns × 6 rows (42 spaces) for playtesting future Corruption space. All existing spatial rules use the larger board; default resources/card values are unchanged. Older 5×4 saves keep stack coordinates, with new spaces added on the right and bottom. Corruptions remain planned Act 2 content.
 
 New runs start with the Bronze Bracelet and Rootbound Ring equipped on the right wrist and right finger. Existing runs retain their equipment arrangement.
+
+Severed cards have jagged purple borders on all four sides and no connection links. Neutral adjacency, elemental Attunement and gold synergy links are now brighter and thicker with visible endpoints; clearing Sever restores valid links.

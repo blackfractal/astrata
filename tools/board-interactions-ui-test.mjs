@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.29", checks: [], errors: [] };
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  checks: [],
+  errors: [],
+};
 const dir = "reports/screenshots/board-interactions";
 await fs.mkdir(dir, { recursive: true });
 const settle = (p) =>
@@ -116,7 +120,7 @@ async function open(g, label) {
     assert.equal(events[0].kind, "resume");
     assert.equal(events.filter((e) => e.kind === "decision").length, 3);
     assert.equal(events.at(-1).state.battle.grid[8][0].element, "Earth");
-    assert.equal(events.at(-1).version.package, "1.3.29");
+    assert.equal(events.at(-1).version.package, report.package);
     report.checks.push(
       "Shield Water portion, persistent Earth Transmute with original Water block, independent Arcane neighbor, three synergy links/+2 central bonus, source hover; desktop archive captures all three decisions and exact state.",
     );

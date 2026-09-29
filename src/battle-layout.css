@@ -903,3 +903,70 @@ body {
 .battle-scene .targeting-bar {
   bottom: 60px;
 }
+
+/* Connections read as physical joins; Sever is a break around the entire card. */
+.battle-scene .board-link {
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.battle-scene .link-rail {
+  stroke: #06110f;
+  stroke-width: 8;
+}
+.battle-scene .link-core {
+  stroke: var(--link-color);
+}
+.battle-scene .link-port {
+  fill: var(--link-color);
+  stroke: #10241b;
+  stroke-width: 1;
+}
+.battle-scene .link-adjacency {
+  opacity: 0.55;
+}
+.battle-scene .link-attune {
+  opacity: 0.9;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 2px var(--link-color));
+}
+.battle-scene .link-synergy {
+  stroke-width: 5;
+  filter: drop-shadow(0 0 4px #ffdc79);
+}
+.battle-scene .link-inspected {
+  opacity: 1;
+  stroke-width: 6;
+}
+.battle-scene .sever-border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+  pointer-events: none;
+  overflow: visible;
+}
+.battle-scene .sever-border path {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.battle-scene .sever-shadow {
+  stroke: #1b092a;
+  stroke-width: 5;
+}
+.battle-scene .sever-cut {
+  stroke: #d69aff;
+  stroke-width: 2.3;
+  filter: drop-shadow(0 0 2px #9c4ee4);
+}
+.battle-scene .mind .severed-card {
+  border-color: #bb70ed;
+  box-shadow: inset 0 0 12px #9b47d82e;
+}
+.battle-scene .mind .status-sever {
+  color: #edc9ff;
+  background: #4a1b69;
+  border-color: #d69aff;
+  box-shadow: 0 0 5px #b964f1;
+}

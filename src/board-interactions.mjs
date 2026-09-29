@@ -31,6 +31,7 @@ export function cardInteraction(b, c, i) {
       : [cast || c.element];
   return {
     attunes,
+    neighbors,
     providers,
     matching,
     choices: attunementElements(b, c, i),
@@ -72,6 +73,44 @@ export function inspectLinks(ctx, i = null) {
         (Number(link.dataset.from) === i || Number(link.dataset.to) === i),
     );
 }
+function severBorder(slot) {
+  const ns = "http://www.w3.org/2000/svg",
+    w = slot.clientWidth,
+    h = slot.clientHeight;
+  const svg = document.createElementNS(ns, "svg");
+  svg.classList.add("sever-border");
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  svg.setAttribute("aria-hidden", "true");
+  const zigzag = (length, point) => {
+    const count = Math.max(4, Math.round((length - 5) / 6));
+    return Array.from({ length: count + 1 }, (_, n) =>
+      point(2.5 + ((length - 5) * n) / count, n % 2 ? 5.5 : 2.5),
+    );
+  };
+  for (const [edge, points] of [
+    ["top", zigzag(w, (along, depth) => [along, depth])],
+    ["bottom", zigzag(w, (along, depth) => [along, h - depth])],
+    ["left", zigzag(h, (along, depth) => [depth, along])],
+    ["right", zigzag(h, (along, depth) => [w - depth, along])],
+  ]) {
+    const d = points.map(([x, y], n) => `${n ? "L" : "M"}${x},${y}`).join(" ");
+    for (const type of ["shadow", "cut"]) {
+      const line = document.createElementNS(ns, "path");
+      line.setAttribute("d", d);
+      line.classList.add(`sever-${type}`);
+      line.dataset.edge = edge;
+      svg.append(line);
+    }
+  }
+  slot.classList.add("severed-card");
+  slot.setAttribute(
+    "aria-label",
+    slot.getAttribute("aria-label") +
+      " · Severed: no adjacency or pattern connections",
+  );
+  slot.append(svg);
+}
+
 export function boardInteractions(ctx) {
   const b = ctx.o.battle,
     mind = ctx.app.querySelector(".mind");
@@ -84,6 +123,7 @@ export function boardInteractions(ctx) {
       m = cardInteraction(b, c, i);
     models.set(i, m);
     slot.classList.add("has-element");
+    if (c.sever) severBorder(slot);
     const statusCount = slot.querySelectorAll(".card-status").length;
     slot.style.setProperty(
       "--status-reserve",
@@ -212,37 +252,61 @@ export function boardInteractions(ctx) {
     const forward = from < to;
     const x1 = horizontal
       ? forward
-        ? a.right
-        : a.left
+        ? a.right - 4
+        : a.left + 4
       : (a.left + a.right) / 2;
     const x2 = horizontal
       ? forward
-        ? z.left
-        : z.right
+        ? z.left + 4
+        : z.right - 4
       : (z.left + z.right) / 2;
     const y1 = horizontal ? (a.top + a.bottom) / 2 : forward ? a.bottom : a.top;
     const y2 = horizontal ? (z.top + z.bottom) / 2 : forward ? z.top : z.bottom;
-    const line = document.createElementNS(ns, "line");
-    line.classList.add("board-link", `link-${type}`);
-    line.dataset.from = from;
-    line.dataset.to = to;
-    line.dataset.linkType = type;
-    for (const [k, v] of Object.entries({
+    const link = document.createElementNS(ns, "g");
+    link.classList.add("board-link", `link-${type}`);
+    link.dataset.from = from;
+    link.dataset.to = to;
+    link.dataset.linkType = type;
+    link.style.setProperty(
+      "--link-color",
+      type === "synergy"
+        ? "#ffdf82"
+        : type === "adjacency"
+          ? "#9cbdb0"
+          : color(element),
+    );
+    const coords = {
       x1: x1 - box.left,
       y1: y1 - box.top,
       x2: x2 - box.left,
       y2: y2 - box.top,
-    }))
-      line.setAttribute(k, v);
-    line.style.setProperty(
-      "--link-color",
-      type === "synergy" ? "var(--gold)" : color(element),
-    );
-    svg.append(line);
+    };
+    for (const cls of ["link-rail", "link-core"]) {
+      const line = document.createElementNS(ns, "line");
+      line.classList.add(cls);
+      for (const [k, v] of Object.entries(coords)) line.setAttribute(k, v);
+      link.append(line);
+    }
+    for (const [x, y] of [
+      [coords.x1, coords.y1],
+      [coords.x2, coords.y2],
+    ]) {
+      const port = document.createElementNS(ns, "circle");
+      port.classList.add("link-port");
+      port.setAttribute("cx", x);
+      port.setAttribute("cy", y);
+      port.setAttribute("r", 2.8);
+      link.append(port);
+    }
+    svg.append(link);
   };
-  for (const [i, m] of models) {
-    for (const j of m.matching) if (i < j) edge(i, j, "synergy");
+  // Render structural links first; actual bonuses remain on top.
+  for (const [i, m] of models)
+    for (const j of m.neighbors) if (i < j) edge(i, j, "adjacency");
+  for (const [i, m] of models)
     for (const j of m.providers) edge(j, i, "attune", b.grid[j].at(-1).element);
-  }
+  for (const [i, m] of models)
+    for (const j of m.matching) if (i < j) edge(i, j, "synergy");
+
   mind.append(svg);
 }

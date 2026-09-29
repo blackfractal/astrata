@@ -64,6 +64,7 @@ for (const name of [
   "reveal-verification.json",
   "reveal-evaluation",
   "reveal-playthrough.json",
+  "sever-connections-verification.json",
   "mind-grid-verification.json",
   "mind-grid-evaluation",
   "board-interactions-verification.json",

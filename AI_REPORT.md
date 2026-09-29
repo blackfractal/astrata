@@ -414,3 +414,5 @@ The first, third and fourth runs retain their previous outcomes and decision cou
 Verification: 186 rules tests pass, including new far-edge placement/activation/Recall, adjacency bounds, Ally growth/status processing, 2×2 formations, row bonuses, Towers, corner Keystone, boss telegraphs and 5×4 save migration. Packaged UI checks 42 visible cells in seven columns/six rows, final-space dragging/activation/Transmute, readable status/health/value overlays, full card details, and target-choice controls clear of the grid. Element-interaction and all-three-boss telegraph graphical regressions also pass. No renderer errors; screenshots inspected.
 
 Package 1.3.30 moves new-run starter equipment to the right-side slots; content 1.1.18, rules/policy unchanged. All186 existing tests pass and both new/legacy opening Gem choices were checked directly. No new AI batch for this side-default change; the 7×6 five-run evaluation remains current.
+
+Package 1.3.31 improves Sever and connection visuals only; rules/content/policy unchanged. All 186 tests and isolated graphical interaction checks pass. No new AI batch; the 7×6 five-run evaluation remains current.
