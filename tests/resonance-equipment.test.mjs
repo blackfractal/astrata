@@ -44,7 +44,7 @@ test("unequip and re-equip retain ownership, socketed Gems, and movement allowan
   const g = new Game(8);
   g.s.mode = "field";
   g.s.field.stage = "player";
-  const slot = "wrist1",
+  const slot = "wrist2",
     uid = g.s.equipment[slot],
     gear = g.getItem(uid);
   const gem = g.s.inventory.find((x) => items[x.id].slot === "gem");

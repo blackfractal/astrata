@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.71. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.29; rules 1.3.17).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.72. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.30; rules 1.3.17).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -98,3 +98,5 @@ Cards now activate once per turn by default, even with unused Channel or remaini
 Run data: the desktop build retains every completed result in `%APPDATA%/astrata/history.json`, with no ten-run cap. Detailed records now live in `runs/<runId>/` (`metadata.json`, append-only `events.jsonl` (losslessly compressed to `.jsonl.gz` on completion/forfeit), `latest.json`, `result.json` when completed). Archives retain unfinished/forfeited runs and every resumed attempt; the Continue save is separate. `builds/<hash>.json` preserves package identity and engine/content/policy sources. Legacy results are imported without invented timestamps/build versions; details discarded by older builds cannot be recovered. Records stay local. Headless batches keep the same unique archives inside their report directory; `run-<seed>.json` and `summary.json` remain convenience exports of the latest batch. No automatic pruning. The unsupported browser-only fallback uses localStorage and remains subject to browser storage quotas; the Windows executable is the durable archival target.
 
 The Mind Grid is now 7 columns × 6 rows (42 spaces) for playtesting future Corruption space. All existing spatial rules use the larger board; default resources/card values are unchanged. Older 5×4 saves keep stack coordinates, with new spaces added on the right and bottom. Corruptions remain planned Act 2 content.
+
+New runs start with the Bronze Bracelet and Rootbound Ring equipped on the right wrist and right finger. Existing runs retain their equipment arrangement.

@@ -4,7 +4,7 @@ import { Game } from "../src/engine.mjs";
 import { items } from "../src/content.mjs";
 function setup(two = false) {
   const g = new Game(71);
-  g.s.equipment.wrist1 = null;
+  g.s.equipment.wrist2 = null;
   g.beginBattle([
     { uid: 900, enemy: "beetle", restless: 0 },
     ...(two ? [{ uid: 901, enemy: "beetle", restless: 0 }] : []),
@@ -127,7 +127,7 @@ test("Ring retains socketed elemental damage; other damage gear keeps its own tr
   const g = setup(),
     b = g.s.battle;
   g.addItem("ruby");
-  g.getItem(g.s.equipment.finger1).gem = g.s.inventory.at(-1).uid;
+  g.getItem(g.s.equipment.finger2).gem = g.s.inventory.at(-1).uid;
   b.enemies[0].element = "Earth";
   put(g, "blast", 0);
   put(g, "blast", 4);
@@ -146,8 +146,8 @@ test("Bronze Bracelet refills two block per enemy turn and starting gem previews
   const g = new Game(12);
   g.act(g.legal()[0]);
   const options = g.legal();
-  assert.equal(options.find((a) => a.slot === "wrist1").effects.defense, 2);
-  assert.equal(options.find((a) => a.slot === "finger1").effects.damage, 2);
+  assert.equal(options.find((a) => a.slot === "wrist2").effects.defense, 2);
+  assert.equal(options.find((a) => a.slot === "finger2").effects.damage, 2);
   assert.equal(items.bronze.effect.block, 2);
   assert.equal(items.silver.effect.block, 5);
   g.beginBattle([{ uid: 900, enemy: "beetle", restless: 0 }]);

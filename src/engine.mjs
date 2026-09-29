@@ -360,8 +360,8 @@ export class Game {
     this.addItem("ring");
     this.s.startGem = this.pick(["ruby", "emerald", "topaz", "sapphire"]);
     this.addItem(this.s.startGem);
-    this.s.equipment.wrist1 = this.s.inventory[0].uid;
-    this.s.equipment.finger1 = this.s.inventory[1].uid;
+    this.s.equipment.wrist2 = this.s.inventory[0].uid;
+    this.s.equipment.finger2 = this.s.inventory[1].uid;
   }
   normalizeRewards() {
     const s = this.s;
@@ -1854,14 +1854,16 @@ export class Game {
       return actions;
     }
     if (s.mode === "gem") {
-      for (const slot of ["wrist1", "finger1"])
+      for (const slot of Object.keys(s.equipment).filter(
+        (slot) => /^(wrist|finger)/.test(slot) && s.equipment[slot] != null,
+      ))
         add(
           "startGem",
-          `Socket ${items[s.startGem].name} into ${slot === "wrist1" ? "Bracelet" : "Ring"}`,
+          `Socket ${items[s.startGem].name} into ${slot.startsWith("wrist") ? "Bracelet" : "Ring"}`,
           { slot },
           {
-            defense: slot === "wrist1" ? items.bronze.effect.block : 0,
-            damage: slot === "finger1" ? items.ring.effect.damage : 0,
+            defense: slot.startsWith("wrist") ? items.bronze.effect.block : 0,
+            damage: slot.startsWith("finger") ? items.ring.effect.damage : 0,
           },
         );
       return actions;
