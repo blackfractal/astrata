@@ -1,3 +1,21 @@
+# Transmute and activation shortcut — package 1.3.19
+
+Rules 1.3.11; content 1.1.9 and weighted-druid-v1.7 unchanged. All 114 tests pass. Focused packaged UI checks confirm sole-choice double-click behavior and an actual Water-transmuted Blast dealing 6 to a Fire enemy despite a Fire neighbor, with correct grid/details text. No renderer errors.
+
+Five headless runs completed under the corrected rules:
+
+| Seed | Result | Final HP / Field round | Interpretation |
+|---|---|---|---|
+| 825183 | Loss | 0 / 20 | Reached Cinder Hart at 40 HP but lost after 12 turns; sustained boss damage outlasted the strategy. |
+| 825184 | Win | 4 / 19 | Narrow survival against Void-Colossus; strategy and encounter/equipment luck both matter. |
+| 825185 | Loss | 0 / 14 | Entered a five-enemy collision at 12 HP and died in one turn; prior attrition and positioning contributed. |
+| 825186 | Loss | 0 / 12 | Earlier attrition left 16 HP for Fire Wolf plus Dervish Hunter; died in two turns. |
+| 825187 | Win | 15 / 19 | Reached Void-Colossus at 41 HP and survived an 11-turn battle; a healthier approach supported the same baseline policy. |
+
+These outcomes match the preceding evaluation. None of these runs activated Transmute, so they establish general playability, not Transmute balance; the focused tests exercise the correction. No exploit was demonstrated by this small sample, and no policy weights were trained. Evidence: `reports/transmute-evaluation/`, `reports/transmute-verification.json`, `reports/double-activation-verification.json`, `tests/transmute.test.mjs`.
+
+---
+
 # Horizontal 16:9 battlefield — package 1.3.18
 
 Presentation-only change; rules 1.3.10/content 1.1.9 and weighted-druid-v1.7 remain unchanged. All 110 rules tests pass. Packaged UI verification covers fixed battle geometry at 16:9, 4:3 and 21:9, letterboxing/pillarboxing, window presets/fullscreen, local hand/enemy scrolling, real placement and bracelet defense, inspectors and AI drawer persistence after one AI action. Existing combat-feedback and elemental-impact checks also pass in the scaled stage, including attack drag previews and actual damage. No renderer errors; screenshots inspected.

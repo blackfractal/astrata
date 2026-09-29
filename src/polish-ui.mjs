@@ -46,6 +46,14 @@ function bindActions(c, root) {
       }),
   );
 }
+function cardName(c) {
+  const d = cards[c.id];
+  return (
+    (c.used != null && (c.transmuted || c.element !== d.element)
+      ? c.element + " "
+      : "") + d.name
+  );
+}
 function effect(c, slot, ctx) {
   const d = cards[c.id],
     f = d.effects || {};
@@ -225,6 +233,13 @@ function activationChooser(ctx, slot, dragging = false) {
   ctx.app.addEventListener(
     "click",
     (e) => {
+      // A second click on the activation control belongs to the double-click
+      // shortcut, even if the source card is itself a legal target.
+      if (e.target.closest(`[data-activate-slot="${slot}"]`)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
       const choice = choiceAt(e.target);
       if (choice) {
         e.preventDefault();
@@ -235,6 +250,21 @@ function activationChooser(ctx, slot, dragging = false) {
         e.preventDefault();
         e.stopImmediatePropagation();
       } else if (!bar.contains(e.target)) clearTargeting();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "dblclick",
+    (e) => {
+      if (!e.target.closest(`[data-activate-slot="${slot}"]`)) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (ctx.busy() || filtered.length !== 1) return;
+      // Revalidate the complete decision, including any chosen attunement.
+      const action = ctx.game.legal().find((a) => a.key === filtered[0].key);
+      if (!action) return;
+      clearTargeting();
+      run(ctx, action);
     },
     { capture: true, signal },
   );
@@ -314,7 +344,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${d.name}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[d.type === "Ally" ? "HP " + c.hp : null, d.type === "Ward" ? "Ward " + c.ward : null, c.charge ? "Charge " + c.charge : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.type === "Ally" ? "HP " + c.hp : null, d.type === "Ward" ? "Ward " + c.ward : null, c.charge ? "Charge " + c.charge : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
   );
   const context = ctx.modal.querySelector(".card-context");
   if (slot != null) {
@@ -873,13 +903,16 @@ export function enhance(ctx) {
       el.setAttribute("role", "button");
       el.setAttribute(
         "aria-label",
-        c ? cards[c.id].name + " · full details" : "Slot " + (i + 1),
+        c ? cardName(c) + " · full details" : "Slot " + (i + 1),
       );
       old.replaceWith(el);
       if (c) {
         const d = cards[c.id],
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
+        el.querySelector(".name").textContent =
+          cardName(c) + (c.upgrade ? " +" : "");
+        el.dataset.element = c.element;
         const badges = statusBadges(ctx, c, i);
         if (badges) {
           el.classList.add("has-statuses");
@@ -920,9 +953,20 @@ export function enhance(ctx) {
           "beforeend",
           `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">Activate · ${effect(c, i, ctx)}</button>`,
         );
+        const activationChoices = actions.filter(
+          (a) => a.type === "activate" && a.slot === i,
+        );
+        if (
+          activationChoices.length === 1 &&
+          ["target", "cardTarget", "destination", "newElement"].some(
+            (k) => activationChoices[0][k] != null,
+          )
+        )
+          el.querySelector(".slot-activate").title +=
+            " Double-click to apply to the only legal target.";
         el.querySelector(".slot-activate").onclick = (e) => {
           stop(e);
-          if (!ctx.busy() && can) activationChooser(ctx, i);
+          if (!ctx.busy() && can && e.detail < 2) activationChooser(ctx, i);
         };
       }
       el.onclick = () => {

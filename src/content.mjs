@@ -1,5 +1,5 @@
 export const VERSION = {
-  rules: "1.3.10",
+  rules: "1.3.11",
   content: "1.1.9",
   observation: 1,
   actions: 1,
@@ -1441,8 +1441,10 @@ export const locations = [
   },
 ];
 export const glossary = {
+  Transmute:
+    "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "On activation choose an adjacent element. Existing Shield portions retain their elements.",
+    "On activation choose an adjacent element, or Arcane if none is available. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",

@@ -707,6 +707,7 @@ export class Game {
       maxHp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       ward: d.ward || 0,
       element: d.element,
+      transmuted: false,
       placed: ++this.s.battle.order,
       lock: false,
       sever: false,
@@ -1345,7 +1346,10 @@ export class Game {
     }
     if (f.transmute) {
       const victim = top(b.grid[a.cardTarget]);
-      if (victim) victim.element = a.newElement;
+      if (victim) {
+        victim.element = a.newElement;
+        victim.transmuted = true;
+      }
     }
     if (f.shift) {
       const moved = b.grid[a.cardTarget];
@@ -2022,15 +2026,16 @@ export class Game {
             !this.condition(c, i)
           )
             continue;
-          let els = d.attune
-            ? [
-                ...new Set(
-                  this.neighbors(i)
-                    .map((j) => top(b.grid[j]).element)
-                    .filter((x) => x !== "Arcane"),
-                ),
-              ]
-            : [c.element];
+          let els =
+            d.attune && !c.transmuted && c.element === d.element
+              ? [
+                  ...new Set(
+                    this.neighbors(i)
+                      .map((j) => top(b.grid[j]).element)
+                      .filter((x) => x !== "Arcane"),
+                  ),
+                ]
+              : [c.element];
           if (!els.length) els = ["Arcane"];
           const charging = !!(d.charge && c.charge + 1 < d.charge);
           const targets =
