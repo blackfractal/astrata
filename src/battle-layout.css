@@ -620,24 +620,16 @@ body {
 .battle-scene .mind {
   position: relative;
 }
-.battle-scene .has-element {
-  border-color: var(--card-primary);
+.battle-scene .mind .slot.has-element {
+  border: 2px solid var(--card-primary);
 }
 .battle-scene .element-wash {
   position: absolute;
   inset: 0 0 31px;
   background: var(--card-colors);
-  opacity: 0.17;
+  opacity: 0.28;
   pointer-events: none;
   z-index: 0;
-}
-.battle-scene .element-ribbon {
-  position: absolute;
-  inset: 0 auto 31px 0;
-  width: 4px;
-  background: var(--card-colors);
-  z-index: 2;
-  pointer-events: none;
 }
 .battle-scene .card-element-panel {
   position: absolute;
@@ -831,10 +823,6 @@ body {
 .battle-scene .mind .element-wash {
   bottom: 23px;
 }
-.battle-scene .mind .element-ribbon {
-  bottom: 23px;
-  width: 3px;
-}
 .battle-scene .mind .synergy-bonus {
   margin-left: 3px;
   font-size: 10px;
@@ -929,6 +917,7 @@ body {
   stroke-dasharray: none;
   filter: drop-shadow(0 0 2px var(--link-color));
 }
+.battle-scene .link-pattern,
 .battle-scene .link-synergy {
   stroke-width: 5;
   filter: drop-shadow(0 0 4px #ffdc79);
@@ -960,7 +949,7 @@ body {
   stroke-width: 2.3;
   filter: drop-shadow(0 0 2px #9c4ee4);
 }
-.battle-scene .mind .severed-card {
+.battle-scene .mind .slot.severed-card {
   border-color: #bb70ed;
   box-shadow: inset 0 0 12px #9b47d82e;
 }

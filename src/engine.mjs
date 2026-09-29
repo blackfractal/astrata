@@ -52,6 +52,27 @@ export function enemyDamage(n, element, enemy) {
   if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
   return damage;
 }
+// Shared by damage and its visual indicator; first valid block wins (no stacking).
+export function squarePattern(b, c, i) {
+  if (c.sever) return [];
+  for (const origin of [i, i - 1, i - MIND_COLUMNS, i - MIND_COLUMNS - 1]) {
+    if (
+      origin < 0 ||
+      origin % MIND_COLUMNS >= MIND_COLUMNS - 1 ||
+      origin >= MIND_SIZE - MIND_COLUMNS
+    )
+      continue;
+    const cells = [
+      origin,
+      origin + 1,
+      origin + MIND_COLUMNS,
+      origin + MIND_COLUMNS + 1,
+    ];
+    if (cells.every((j) => top(b.grid[j]) && !top(b.grid[j]).sever))
+      return cells;
+  }
+  return [];
+}
 export function cardPower(b, c, i) {
   const d = cards[c.id],
     f = d.effects;
@@ -75,22 +96,7 @@ export function cardPower(b, c, i) {
     );
   if (f.adj) n += gridNeighbors(b, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
-  if (f.square && !c.sever)
-    for (const origin of [i, i - 1, i - MIND_COLUMNS, i - MIND_COLUMNS - 1])
-      if (
-        origin >= 0 &&
-        origin % MIND_COLUMNS < MIND_COLUMNS - 1 &&
-        origin < MIND_SIZE - MIND_COLUMNS &&
-        [
-          origin,
-          origin + 1,
-          origin + MIND_COLUMNS,
-          origin + MIND_COLUMNS + 1,
-        ].every((j) => top(b.grid[j]) && !top(b.grid[j]).sever)
-      ) {
-        n *= 2;
-        break;
-      }
+  if (f.square && squarePattern(b, c, i).length) n *= 2;
   const level = b.grid[i].findIndex((x) => x.uid === c.uid) + 1;
   for (let j = 0; j < b.grid.length; j++)
     if (j !== i) {
@@ -234,6 +240,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.17",
           "1.3.16",
           "1.3.15",
           "1.3.14",
@@ -909,7 +916,13 @@ export class Game {
   }
   recallCost(slot) {
     const d = cards[top(slot)?.id];
-    if (!d || slot.some((c) => c.lock || cards[c.id].singleUse)) return null;
+    if (
+      !d ||
+      slot.some(
+        (c) => c.lock || cards[c.id].singleUse || cards[c.id].unrecallable,
+      )
+    )
+      return null;
     if (d.recallWhole != null) return d.recallWhole;
     if (slot.some((c) => cards[c.id].recall == null)) return null;
     return Math.max(

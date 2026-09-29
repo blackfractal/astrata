@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.17",
-  content: "1.1.18",
+  rules: "1.3.18",
+  content: "1.1.19",
   observation: 1,
   actions: 1,
 };
@@ -329,8 +329,8 @@ card(
   1,
   0,
   {},
-  "Begins battle placed. On place: +1 Focus this turn.",
-  { onPlaceFocus: 1, opening: true },
+  "Begins battle placed. Gain +1 Focus on your first turn. Cannot be recalled.",
+  { opening: true, recall: null, unrecallable: true },
 );
 card(
   "transmute",

@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { Game, attunementElements } from "../src/engine.mjs";
+import {
+  Game,
+  attunementElements,
+  squarePattern,
+  cardPower,
+} from "../src/engine.mjs";
 import { cardInteraction } from "../src/board-interactions.mjs";
 function base() {
   const g = new Game(8);
@@ -131,4 +136,52 @@ test("Visuals don't recalculate stored block after adjacency changes, and are re
     cardInteraction(h.s.battle, h.s.battle.grid[8][0], 8).portions[0].block,
     5,
   );
+});
+
+test("Fourfold visual block matches damage in every corner, retargets and breaks on Sever", () => {
+  for (const i of [8, 9, 15, 16]) {
+    const g = base(),
+      b = g.s.battle;
+    for (const j of [8, 9, 15, 16]) put(g, j === i ? "square" : "shield", j);
+    const c = b.grid[i][0];
+    assert.deepEqual(cardInteraction(b, c, i).pattern, [8, 9, 15, 16]);
+    assert.equal(cardPower(b, c, i), 12);
+    b.grid[16][0].sever = true;
+    assert.deepEqual(squarePattern(b, c, i), []);
+    assert.equal(cardPower(b, c, i), 6);
+  }
+  const g = base(),
+    b = g.s.battle,
+    c = put(g, "square", 8);
+  for (const j of [7, 9, 14, 15, 16]) put(g, "shield", j);
+  assert.deepEqual(squarePattern(b, c, 8), [8, 9, 15, 16]);
+  assert.equal(cardPower(b, c, 8), 12);
+  b.grid[9] = [];
+  assert.deepEqual(cardInteraction(b, c, 8).pattern, [7, 8, 14, 15]);
+  b.grid[14] = [];
+  assert.deepEqual(squarePattern(b, c, 8), []);
+});
+
+test("Opening Rite grants only opening Focus and cannot Recall alone or beneath Palimpsest", () => {
+  const g = new Game(8);
+  g.s.deck.push(g.newCard("rite"));
+  g.beginBattle([{ uid: 900, enemy: "beetle", restless: 0 }]);
+  const b = g.s.battle,
+    i = b.grid.findIndex((s) => s.some((c) => c.id === "rite"));
+  assert.ok(i >= 0);
+  assert.equal(b.focus, 2);
+  b.phase = "place";
+  b.focus = 10;
+  assert.equal(g.recallCost(b.grid[i]), null);
+  assert.ok(!g.legal().some((a) => a.type === "recall" && a.slot === i));
+  b.grid[i].push(g.instance(g.newCard("palimpsest")));
+  assert.equal(g.recallCost(b.grid[i]), null);
+  assert.ok(!g.legal().some((a) => a.type === "recall" && a.slot === i));
+  const saved = structuredClone(g.s);
+  saved.version.rules = "1.3.17";
+  const resumed = new Game(0, saved);
+  assert.equal(resumed.recallCost(resumed.s.battle.grid[i]), null);
+  b.phase = "enemy";
+  g.beginTurn();
+  assert.equal(b.focus, 1);
 });

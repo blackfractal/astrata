@@ -1,5 +1,5 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
-import { attunementElements, gridNeighbors } from "./engine.mjs";
+import { attunementElements, gridNeighbors, squarePattern } from "./engine.mjs";
 const unique = (xs) => [...new Set(xs)];
 const color = (element) => `var(--${element})`;
 const gradient = (elements) =>
@@ -34,6 +34,7 @@ export function cardInteraction(b, c, i) {
     neighbors,
     providers,
     matching,
+    pattern: d.effects.square ? squarePattern(b, c, i) : [],
     choices: attunementElements(b, c, i),
     portions,
     cast,
@@ -70,7 +71,9 @@ export function inspectLinks(ctx, i = null) {
     link.classList.toggle(
       "link-inspected",
       i != null &&
-        (Number(link.dataset.from) === i || Number(link.dataset.to) === i),
+        (Number(link.dataset.from) === i ||
+          Number(link.dataset.to) === i ||
+          link.dataset.patternOwner === String(i)),
     );
 }
 function severBorder(slot) {
@@ -138,10 +141,6 @@ export function boardInteractions(ctx) {
     wash.className = "element-wash";
     wash.setAttribute("aria-hidden", "true");
     slot.append(wash);
-    const ribbon = document.createElement("span");
-    ribbon.className = "element-ribbon";
-    ribbon.setAttribute("aria-hidden", "true");
-    slot.append(ribbon);
     const panel = document.createElement("div");
     panel.className = "card-element-panel";
     const label = document.createElement("span");
@@ -211,6 +210,14 @@ export function boardInteractions(ctx) {
       panel.append(row);
     }
     slot.append(panel);
+    if (m.pattern.length) {
+      const badge = document.createElement("span");
+      badge.className = "synergy-bonus pattern-bonus";
+      badge.textContent = "2×2 · ×2";
+      badge.dataset.tooltip =
+        "Intact 2×2 block: double damage, already included below. All four exposed cards must be present and not Severed. One qualifying block is shown; multiple blocks do not multiply the bonus again.";
+      slot.querySelector(".nums")?.append(badge);
+    }
     if (m.bonus) {
       const bonus = document.createElement("span");
       bonus.className = "synergy-bonus";
@@ -242,34 +249,62 @@ export function boardInteractions(ctx) {
   svg.classList.add("board-links");
   svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
   svg.setAttribute("aria-hidden", "true");
-  const edge = (from, to, type, element) => {
+  const edge = (from, to, type, element, owner = null) => {
     const a = ctx.app
         .querySelector(`[data-slot="${from}"]`)
         .getBoundingClientRect(),
       z = ctx.app.querySelector(`[data-slot="${to}"]`).getBoundingClientRect();
     const horizontal =
       Math.floor(from / MIND_COLUMNS) === Math.floor(to / MIND_COLUMNS);
+    const diagonal = !horizontal && from % MIND_COLUMNS !== to % MIND_COLUMNS;
+    const right = from % MIND_COLUMNS < to % MIND_COLUMNS;
     const forward = from < to;
-    const x1 = horizontal
+    const x1 = diagonal
+      ? right
+        ? a.right - 5
+        : a.left + 5
+      : horizontal
+        ? forward
+          ? a.right - 4
+          : a.left + 4
+        : (a.left + a.right) / 2;
+    const x2 = diagonal
+      ? right
+        ? z.left + 5
+        : z.right - 5
+      : horizontal
+        ? forward
+          ? z.left + 4
+          : z.right - 4
+        : (z.left + z.right) / 2;
+    const y1 = diagonal
       ? forward
-        ? a.right - 4
-        : a.left + 4
-      : (a.left + a.right) / 2;
-    const x2 = horizontal
+        ? a.bottom - 5
+        : a.top + 5
+      : horizontal
+        ? (a.top + a.bottom) / 2
+        : forward
+          ? a.bottom
+          : a.top;
+    const y2 = diagonal
       ? forward
-        ? z.left + 4
-        : z.right - 4
-      : (z.left + z.right) / 2;
-    const y1 = horizontal ? (a.top + a.bottom) / 2 : forward ? a.bottom : a.top;
-    const y2 = horizontal ? (z.top + z.bottom) / 2 : forward ? z.top : z.bottom;
+        ? z.top + 5
+        : z.bottom - 5
+      : horizontal
+        ? (z.top + z.bottom) / 2
+        : forward
+          ? z.top
+          : z.bottom;
     const link = document.createElementNS(ns, "g");
     link.classList.add("board-link", `link-${type}`);
     link.dataset.from = from;
     link.dataset.to = to;
     link.dataset.linkType = type;
+    if (owner != null) link.dataset.patternOwner = owner;
+    if (diagonal) link.classList.add("link-diagonal");
     link.style.setProperty(
       "--link-color",
-      type === "synergy"
+      type === "synergy" || type === "pattern"
         ? "#ffdf82"
         : type === "adjacency"
           ? "#9cbdb0"
@@ -308,5 +343,22 @@ export function boardInteractions(ctx) {
   for (const [i, m] of models)
     for (const j of m.matching) if (i < j) edge(i, j, "synergy");
 
+  for (const [i, m] of models) {
+    if (!m.pattern.length) continue;
+    const [tl, tr, bl, br] = m.pattern;
+    for (const [a, z] of [
+      [tl, tr],
+      [tl, bl],
+      [tr, br],
+      [bl, br],
+    ])
+      edge(a, z, "pattern", null, i);
+    const opposite = m.pattern.find(
+      (j) =>
+        Math.floor(j / MIND_COLUMNS) !== Math.floor(i / MIND_COLUMNS) &&
+        j % MIND_COLUMNS !== i % MIND_COLUMNS,
+    );
+    edge(i, opposite, "pattern", null, i);
+  }
   mind.append(svg);
 }

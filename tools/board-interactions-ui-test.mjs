@@ -83,6 +83,19 @@ async function open(g, label) {
       await slot(p, 8).locator(".shield-portion").textContent(),
       "5 Water",
     );
+    assert.equal(await p.locator(".element-ribbon").count(), 0);
+    const appearance = await slot(p, 8).evaluate((el) => ({
+      border: getComputedStyle(el).borderTopColor,
+      width: getComputedStyle(el).borderTopWidth,
+      tint: getComputedStyle(el.querySelector(".element-wash")).backgroundColor,
+      opacity: getComputedStyle(el.querySelector(".element-wash")).opacity,
+    }));
+    assert.equal(appearance.border, "rgb(131, 184, 211)");
+    assert.equal(appearance.tint, appearance.border);
+    assert.equal(appearance.width, "2px");
+    assert.equal(appearance.opacity, "0.28");
+    await p.mouse.move(5, 5);
+    await p.screenshot({ path: dir + "/attuned-shield.png" });
     await p.locator('[data-activate-slot="9"]').dblclick();
     await settle(p);
     assert.equal(

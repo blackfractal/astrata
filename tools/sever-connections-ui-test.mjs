@@ -52,6 +52,7 @@ try {
   await p.locator('[data-ui="continue"]').click();
   assert.equal(await p.locator(".sever-border .sever-cut").count(), 4);
   assert.equal(await incident().count(), 0);
+  assert.equal(await p.locator(".link-pattern").count(), 0);
   assert.ok((await p.locator(".link-adjacency").count()) > 0);
   assert.equal(await p.locator(".link-synergy").count(), 1);
   assert.match(await p.locator('[data-activate-slot="16"]').textContent(), /6/);
@@ -78,9 +79,15 @@ try {
     /12/,
   );
   await p.mouse.move(5, 5);
+  assert.equal(await p.locator(".link-pattern").count(), 5);
+  assert.equal(await p.locator(".link-pattern.link-diagonal").count(), 1);
+  assert.equal(await p.locator(".pattern-bonus").textContent(), "2×2 · ×2");
+  await p.locator('[data-slot="16"]').hover();
+  assert.equal(await p.locator(".link-pattern.link-inspected").count(), 5);
+  await p.mouse.move(5, 5);
   await p.screenshot({ path: dir + "/restored.png" });
   report.checks.push(
-    "Four jagged purple borders; no Severed links; ordinary and bonus links remain elsewhere; boss telegraph coexists; card details and Severed activation clickable; Unbinding Dew removes border, restores adjacency/Attune/Shield synergy and Fourfold damage from 6 to 12.",
+    "Four jagged purple borders; no Severed links; ordinary and bonus links remain elsewhere; boss telegraph coexists; card details and Severed activation clickable; Unbinding Dew removes border, restores adjacency/Attune/Shield synergy and Fourfold damage from 6 to 12; five pattern links including one diagonal and the doubled-damage badge, all emphasized on Grove hover.",
   );
   assert.deepEqual(report.errors, []);
 } finally {

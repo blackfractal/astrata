@@ -416,3 +416,5 @@ Verification: 186 rules tests pass, including new far-edge placement/activation/
 Package 1.3.30 moves new-run starter equipment to the right-side slots; content 1.1.18, rules/policy unchanged. All186 existing tests pass and both new/legacy opening Gem choices were checked directly. No new AI batch for this side-default change; the 7×6 five-run evaluation remains current.
 
 Package 1.3.31 improves Sever and connection visuals only; rules/content/policy unchanged. All 186 tests and isolated graphical interaction checks pass. No new AI batch; the 7×6 five-run evaluation remains current.
+
+Package 1.3.32 (rules1.3.18/content1.1.19) adds Fourfold pattern links and stronger elemental outlines/tints; Opening Rite is now unrecallable with its bonus only on the opening turn. Policy unchanged. All188 tests and two isolated graphical suites pass, including targeted Opening Rite resource/Recall/save tests. No new AI batch or training for this small card restriction and presentation change; the prior 7×6 five-run results remain historical comparison evidence, not a new-version balance evaluation.
