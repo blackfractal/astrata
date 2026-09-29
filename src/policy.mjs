@@ -1,5 +1,12 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
-import { offense, defenseRate, adjacent, allyHit, corner } from "./engine.mjs";
+import {
+  offense,
+  defenseRate,
+  adjacent,
+  allyHit,
+  corner,
+  enemyStatusImmunity,
+} from "./engine.mjs";
 export const defaultWeights = {
   damage: 1,
   survival: 1.4,
@@ -11,7 +18,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.9";
+    this.id = "weighted-druid-v1.10";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -235,12 +242,18 @@ export class WeightedPolicy {
         if (f.all) damage *= b.enemies.length;
         n +=
           damage * w.damage +
-          (f.burn || 0) * 2 +
+          (target && enemyStatusImmunity(target) === "burn"
+            ? 0
+            : (f.burn || 0) * 2) +
           (f.burnAll || (f.chargedBurnAll || 0) / (f.charge || 1)) *
-            b.enemies.length *
+            b.enemies.filter((e) => enemyStatusImmunity(e) !== "burn").length *
             2 +
-          (f.poison || 0) * 3 +
-          (f.corrode || 0) * 5;
+          (target && enemyStatusImmunity(target) === "poison"
+            ? 0
+            : (f.poison || 0) * 3) +
+          (target && enemyStatusImmunity(target) === "corrode"
+            ? 0
+            : (f.corrode || 0) * 5);
         n += (f.channel || 0) > a.costs.channel ? 12 : 0;
         n += (f.focusPermanent || 0) * (b.turn < 7 ? 12 : 4);
         n += (f.insight || 0) * 0.4 + (f.focus || 0) * 1.2;

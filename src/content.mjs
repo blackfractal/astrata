@@ -2,10 +2,15 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.20",
-  content: "1.1.21",
+  rules: "1.3.21",
+  content: "1.1.22",
   observation: 1,
   actions: 1,
+};
+export const ENEMY_STATUS_IMMUNITY = {
+  Water: "burn",
+  Fire: "poison",
+  Chaos: "corrode",
 };
 export const ELEMENTS = [
   "Arcane",
@@ -1471,11 +1476,11 @@ export const glossary = {
   Shield:
     "Block expires after the enemy turn. Choose which portion absorbs a hit.",
   Ally: "May intercept after Wards and Shields. Destroyed Allies return next battle.",
-  Burn: "Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+  Burn: "Water enemies are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Poison:
-    "Constant damage at turn start. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+    "Fire enemies are immune. Constant damage at turn start. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Corrode:
-    "Damage at turn start; value increases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+    "Chaos enemies are immune. Damage at turn start; value increases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Lock: "Locked cards cannot be Recalled or Shifted. They CAN still activate and can be covered by a legal stack. Lock does not disable abilities.",
   Freeze:
     "Frozen cards cannot activate. The effect lasts through the indicated turn; it does not prevent another card from covering them.",
@@ -1586,14 +1591,14 @@ export const glossary = {
     "When a matching pack member arrives on the player, other pack members move toward the player too. Arriving enemies remain there until the battle begins.",
   Arcane:
     "No elemental matchup: Arcane damage receives no elemental-cycle bonus or penalty.",
-  Fire: "Fire deals +50% damage to Earth and -50% to Water, rounded up. Fire defense has its own Shield/equipment rules.",
+  Fire: "Fire deals +50% damage to Earth and -50% to Water, rounded up. Fire defense has its own Shield/equipment rules. Fire enemies are immune to Poison.",
   Earth:
     "Earth deals +50% damage to Wind and -50% to Fire, rounded up. Earth defense has its own Shield/equipment rules.",
   Wind: "Wind deals +50% damage to Water and -50% to Earth, rounded up. Wind defense has its own Shield/equipment rules.",
   Water:
-    "Water deals +50% damage to Fire and -50% to Wind, rounded up. Water defense has its own Shield/equipment rules.",
+    "Water deals +50% damage to Fire and -50% to Wind, rounded up. Water defense has its own Shield/equipment rules. Water enemies are immune to Burn.",
   Chaos:
-    "Chaos and Light each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
+    "Chaos and Light each deal +50% damage to the other, rounded up; they sit outside the four-element cycle. Chaos enemies are immune to Corrode.",
   Light:
     "Light and Chaos each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
 };

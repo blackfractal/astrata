@@ -5,6 +5,7 @@ import {
   events,
   starter,
   ELEMENTS,
+  ENEMY_STATUS_IMMUNITY,
   cycle,
   VERSION,
   MIND_COLUMNS,
@@ -12,6 +13,21 @@ import {
   MIND_SIZE,
 } from "./content.mjs";
 export const clone = (x) => structuredClone(x);
+export const enemyStatusImmunity = (e) =>
+  ENEMY_STATUS_IMMUNITY[e.element] || null;
+function clearImmuneStatus(e) {
+  const status = enemyStatusImmunity(e);
+  if (status && e.status?.[status]) {
+    e.status[status] = 0;
+    return status;
+  }
+  return null;
+}
+function normalizeEnemyImmunities(state) {
+  for (const e of state.battle?.enemies || []) clearImmuneStatus(e);
+  if (state.checkpoint) normalizeEnemyImmunities(state.checkpoint);
+}
+const statusName = (k) => k[0].toUpperCase() + k.slice(1);
 export function offense(n, from, to) {
   return Math.ceil(
     n *
@@ -312,6 +328,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.20",
           "1.3.19",
           "1.3.18",
           "1.3.17",
@@ -341,6 +358,7 @@ export class Game {
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
       normalizeMindGrid(this.s);
+      normalizeEnemyImmunities(this.s);
       this.s.version = VERSION;
       for (const c of this.s.battle?.grid?.flat() || [])
         if (cards[c.id].type === "Ally" && c.maxHp == null)
@@ -1160,9 +1178,15 @@ export class Game {
       }));
     b.jobs = [];
     for (const e of b.enemies) {
+      clearImmuneStatus(e);
       for (const k of ["burn", "poison", "corrode"])
         if (e.status[k]) {
-          b.jobs.push({ kind: "enemyStatus", uid: e.uid, damage: e.status[k] });
+          b.jobs.push({
+            kind: "enemyStatus",
+            uid: e.uid,
+            status: k,
+            damage: e.status[k],
+          });
           e.status[k] =
             k === "burn"
               ? e.status[k] - 1
@@ -1191,6 +1215,10 @@ export class Game {
       }
       if (j.kind === "enemyStatus") {
         const e = b.enemies.find((x) => x.uid === j.uid);
+        if (e && j.status && enemyStatusImmunity(e) === j.status) {
+          clearImmuneStatus(e);
+          continue;
+        }
         if (e) {
           e.hp -= j.damage;
           this.present("hit", {
@@ -1223,6 +1251,16 @@ export class Game {
           e.guard += 8;
         if (t.randomElement) {
           e.element = this.pick(ELEMENTS);
+          const cleared = clearImmuneStatus(e);
+          if (cleared)
+            this.log(
+              e.name +
+                " clears " +
+                statusName(cleared) +
+                " through " +
+                e.element +
+                " immunity.",
+            );
           this.log(e.name + " attunes to " + e.element + ".");
           this.present("status", {
             target: "enemy",
@@ -1490,6 +1528,20 @@ export class Game {
       this.log(`${t.name} targets slot ${x.i + 1}.`);
     }
   }
+  applyEnemyStatus(e, status, value) {
+    if (enemyStatusImmunity(e) === status) {
+      clearImmuneStatus(e);
+      this.log(`${e.name} is immune to ${statusName(status)} (${e.element}).`);
+      this.present("status", {
+        target: "enemy",
+        uid: e.uid,
+        name: `Immune to ${statusName(status)}`,
+      });
+      return false;
+    }
+    e.status[status] += value;
+    return true;
+  }
   damageEnemy(e, n, element, activation, sourceItem = null) {
     if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
     const s = this.s,
@@ -1688,7 +1740,7 @@ export class Game {
               );
         }
         for (const k of ["burn", "poison", "corrode"])
-          if (f[k]) e.status[k] += f[k] + bonus;
+          if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus);
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
     }
@@ -1702,7 +1754,7 @@ export class Game {
           this.log(e.name + " wastes the activation.");
           continue;
         }
-        e.status.burn += f.burnAll + bonus;
+        if (!this.applyEnemyStatus(e, "burn", f.burnAll + bonus)) continue;
         this.present("status", {
           target: "enemy",
           uid: e.uid,
@@ -1757,7 +1809,8 @@ export class Game {
         ) {
           this.applyCard(under, a.slot, a.target, under.element, a, ctx);
           const e = b.enemies.find((x) => x.uid === a.target);
-          if (e && !ctx.blocked?.has(e.uid)) e.status.burn += 6;
+          if (e && !ctx.blocked?.has(e.uid))
+            this.applyEnemyStatus(e, "burn", 6);
         }
       }
     }
@@ -2695,7 +2748,12 @@ export class Game {
         .map((e) => ({
           ...e,
           hp: Math.max(0, e.hp),
-          signature: enemies[e.id].signature,
+          statusImmunity: enemyStatusImmunity(e),
+          signature:
+            enemies[e.id].signature +
+            (enemyStatusImmunity(e)
+              ? ` Immune to ${statusName(enemyStatusImmunity(e))} while ${e.element}.`
+              : ""),
           counter: enemies[e.id].counter,
           rotation: enemies[e.id].rotation.map((t) => ({
             ...clone(t),
