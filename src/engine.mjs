@@ -142,6 +142,46 @@ const corner = (i) => [0, 4, 15, 19].includes(i),
   top = (slot) => slot?.at(-1),
   blankStatus = () => ({ burn: 0, poison: 0, corrode: 0 }),
   clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+export function gridTargets(b, t) {
+  const occupied = b.grid
+    .map((slot, i) => ({ slot, i, c: top(slot) }))
+    .filter((x) => x.c);
+  let targets = [];
+  if (t.grid === "row" || t.grid === "column") {
+    const col = t.grid === "column",
+      count = col ? 5 : 4;
+    let best = 0,
+      max = -1;
+    for (let k = 0; k < count; k++) {
+      const n = occupied
+        .filter((x) => (col ? x.i % 5 === k : Math.floor(x.i / 5) === k))
+        .reduce((n, x) => n + x.slot.length, 0);
+      if (n > max) {
+        max = n;
+        best = k;
+      }
+    }
+    targets = occupied.filter((x) =>
+      col ? x.i % 5 === best : Math.floor(x.i / 5) === best,
+    );
+  } else {
+    const score = (x) =>
+      t.target === "newest"
+        ? -x.c.placed
+        : t.target === "oldest"
+          ? x.c.placed
+          : t.target === "tallest"
+            ? -x.slot.length
+            : t.target === "connected"
+              ? -gridNeighbors(b, x.i).length
+              : x.i;
+    targets = occupied
+      .sort((a, z) => score(a) - score(z) || a.i - z.i)
+      .slice(0, t.count || 1);
+  }
+  return targets.map((x) => x.i);
+}
+
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
@@ -1261,44 +1301,51 @@ export class Game {
       j = b.grid[i].findIndex((c) => c.uid === uid);
     if (j >= 0) b.destroyed.push(...b.grid[i].splice(j, 1));
   }
+  gridTelegraphs() {
+    const b = this.s.battle;
+    if (!b || b.reaction || !["start", "place", "activate"].includes(b.phase))
+      return [];
+    return b.enemies
+      .filter((e) => e.hp > 0 && ["hart", "colossus", "choir"].includes(e.id))
+      .flatMap((e) => {
+        const tell = this.tell(e);
+        if (!["row", "column", "destroy"].includes(tell.grid)) return [];
+        const targets = gridTargets(b, tell);
+        const line = targets.length
+          ? tell.grid === "row"
+            ? Math.floor(targets[0] / 5)
+            : targets[0] % 5
+          : null;
+        const spaces =
+          targets.length && ["row", "column"].includes(tell.grid)
+            ? b.grid
+                .map((_, i) => i)
+                .filter((i) =>
+                  tell.grid === "row"
+                    ? Math.floor(i / 5) === line
+                    : i % 5 === line,
+                )
+            : targets;
+        return [
+          {
+            source: e.uid,
+            enemy: e.name,
+            name: tell.name,
+            kind: tell.grid,
+            targets,
+            spaces,
+            cards: targets.reduce((n, i) => n + b.grid[i].length, 0),
+          },
+        ];
+      });
+  }
   gridAttack(t) {
-    const b = this.s.battle,
-      occupied = b.grid
-        .map((slot, i) => ({ slot, i, c: top(slot) }))
-        .filter((x) => x.c);
-    let targets = [];
-    if (t.grid === "row" || t.grid === "column") {
-      const col = t.grid === "column",
-        count = col ? 5 : 4;
-      let best = 0,
-        max = -1;
-      for (let k = 0; k < count; k++) {
-        const n = occupied
-          .filter((x) => (col ? x.i % 5 === k : Math.floor(x.i / 5) === k))
-          .reduce((n, x) => n + x.slot.length, 0);
-        if (n > max) {
-          max = n;
-          best = k;
-        }
-      }
-      targets = occupied.filter((x) =>
-        col ? x.i % 5 === best : Math.floor(x.i / 5) === best,
-      );
-    } else {
-      const score = (x) =>
-        t.target === "newest"
-          ? -x.c.placed
-          : t.target === "oldest"
-            ? x.c.placed
-            : t.target === "tallest"
-              ? -x.slot.length
-              : t.target === "connected"
-                ? -this.neighbors(x.i).length
-                : x.i;
-      targets = occupied
-        .sort((a, z) => score(a) - score(z) || a.i - z.i)
-        .slice(0, t.count || 1);
-    }
+    const b = this.s.battle;
+    const targets = gridTargets(b, t).map((i) => ({
+      i,
+      slot: b.grid[i],
+      c: top(b.grid[i]),
+    }));
     for (const x of targets) {
       if (["destroy", "row", "column"].includes(t.grid)) {
         b.destroyed.push(...x.slot);
@@ -2496,6 +2543,7 @@ export class Game {
     if (s.mode === "battle") {
       o.battle = clone(s.battle);
       delete o.battle.jobs;
+      o.battle.telegraphs = this.gridTelegraphs();
       o.battle.deck.sort((a, b) => a.id.localeCompare(b.id) || a.uid - b.uid);
       o.battle.enemies = o.battle.enemies
         .filter((e) => e.hp > 0 || (enemies[e.id].onDeath && !e.deathResolved))

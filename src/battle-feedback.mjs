@@ -128,3 +128,56 @@ export function upgradeHelp(d) {
     if (f[key]) gains.push(`${label} ${f[key]} → ${f[key] + n}`);
   return [u.text, ...gains].join(" · ");
 }
+
+export function gridTelegraphs(ctx) {
+  const warnings = new Map();
+  const icon =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 22 21H2Z"/><path d="M12 9v5m0 3v1"/></svg>';
+  for (const t of ctx.o.battle.telegraphs || []) {
+    const rule =
+      t.kind === "row"
+        ? "Fullest row; ties choose the topmost row."
+        : t.kind === "column"
+          ? "Fullest column; ties choose the leftmost column."
+          : "Tallest complete stack; ties choose the first occupied space in reading order.";
+    const help = `${t.enemy} — ${t.name}: destroys ${t.cards} card${t.cards === 1 ? "" : "s"} on the upcoming enemy turn. ${rule} Covered cards count. Live preview: changes with your placements and Recalls.`;
+    const enemy = ctx.app.querySelector(`[data-enemy-uid="${t.source}"] .info`);
+    const label = document.createElement("div");
+    label.className = "grid-threat-label";
+    label.dataset.tooltip = help;
+    label.innerHTML =
+      icon +
+      `<span>${t.cards ? `${t.cards} card${t.cards === 1 ? "" : "s"} threatened` : "No cards threatened"} · next enemy turn</span>`;
+    enemy?.append(label);
+    for (const i of t.spaces) {
+      if (!warnings.has(i)) warnings.set(i, []);
+      warnings
+        .get(i)
+        .push({ help, occupied: t.targets.includes(i), source: t.source });
+    }
+  }
+  for (const [i, threats] of warnings) {
+    const slot = ctx.app.querySelector(`[data-slot="${i}"]`);
+    if (!slot) continue;
+    slot.classList.add("grid-threat");
+    slot.dataset.threatSources = threats.map((t) => t.source).join(",");
+    const help = threats.map((t) => t.help).join(" ");
+    slot.setAttribute(
+      "aria-label",
+      slot.getAttribute("aria-label") + ". Warning: " + help,
+    );
+    const outline = document.createElement("span");
+    outline.className = "grid-threat-outline";
+    outline.setAttribute("aria-hidden", "true");
+    slot.append(outline);
+    if (threats.some((t) => t.occupied)) {
+      const badge = document.createElement("span");
+      badge.className = "grid-threat-badge";
+      badge.dataset.tooltip = help;
+      badge.setAttribute("role", "img");
+      badge.setAttribute("aria-label", "Destruction warning");
+      badge.innerHTML = icon;
+      slot.append(badge);
+    }
+  }
+}

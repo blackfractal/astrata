@@ -1,3 +1,15 @@
+# Live boss grid telegraphs — package 1.3.27
+
+Rules 1.3.16 unchanged; content 1.1.16; weighted-druid-v1.7 unchanged. All 166 rules tests pass. Target resolution now shares a pure gridTargets function with the preview; the actual selection rules and tie-breakers are unchanged. AI observations add battle.telegraphs containing visible source/action, threatened spaces, affected occupied slots and card count. Reads consume no RNG and expose no hidden state.
+
+Eight new tests cover all three boss previews, deterministic ties, retargeting after Recall, exact match with ensuing destruction, covered-card counting, empty spaces within lines, empty boards, normal/enemy/reaction phases, simultaneous boss warnings, saved state and nonmutating observations. Shared targeting retains newest/connected behavior.
+
+Packaged UI checks exercise Cinder Hart, Void-Colossus and Glass Choir. Live warnings move after actual Recall, Cinder's count updates after a real drag placement, activation buttons remain clickable under overlays, and the actual destruction matches marked cards. The following normal turn removes the markers. Enemy Tells use plain targeting descriptions; warnings show both outlines and symbols. No renderer errors; screenshots inspected. Evidence: `tests/grid-telegraph.test.mjs`, `tools/grid-telegraph-ui-test.mjs`, `reports/grid-telegraph-verification.json`, `reports/screenshots/grid-telegraph/`.
+
+No new five-run balance batch for this visibility-only change. The preceding mini-element evaluation (loss/win9/loss/loss/win11) remains the latest five-run report. No policy training or balance changes. Corruptions, their counter-cards, spreading Wildfire, Shear and larger grids were added to the future-only design sections, not the game.
+
+---
+
 # Matching-element Mini-Voids — package 1.3.26
 
 Rules 1.3.16/content 1.1.15; weighted-druid-v1.7 unchanged. All 158 rules tests pass. Eleven added tests cover matching versus nonmatching hits across all seven elements, neutral same-element damage, the existing once-per-activation limit, Fire weakness/resistance, independent summon elements after actual Glare, exact-state save/resume, live rotation details, equipment bonus hits, and a matching killing blow leaving a summon before victory. The prior fixed-Chaos trigger test was updated to the new rule.

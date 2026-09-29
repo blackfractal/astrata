@@ -75,7 +75,15 @@ function tellText(t) {
     t.damage ? `${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}` : "",
     t.pierce ? "Pierce" : "",
     t.cull ? "Cull" : "",
-    t.grid ? `${t.grid} ${t.count || 1} · ${t.target}` : "",
+    t.grid === "row"
+      ? "Destroy fullest row"
+      : t.grid === "column"
+        ? "Destroy fullest column"
+        : t.grid === "destroy" && t.target === "tallest"
+          ? "Destroy tallest stack"
+          : t.grid
+            ? `${t.grid} ${t.count || 1} · ${t.target}`
+            : "",
     ...["burn", "poison", "corrode"]
       .filter((k) => t[k])
       .map((k) => k[0].toUpperCase() + k.slice(1) + " " + t[k]),

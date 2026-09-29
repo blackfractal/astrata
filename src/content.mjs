@@ -1,6 +1,6 @@
 export const VERSION = {
   rules: "1.3.16",
-  content: "1.1.15",
+  content: "1.1.16",
   observation: 1,
   actions: 1,
 };

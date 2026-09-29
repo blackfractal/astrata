@@ -1,6 +1,7 @@
 import { arrangeBattle } from "./battle-layout.mjs";
 import {
   damageMarkup,
+  gridTelegraphs,
   targetPreview,
   statusBadges,
   upgradeHelp,
@@ -1072,7 +1073,10 @@ export function enhance(ctx) {
     });
   }
   bindEquipment(ctx, app);
-  if (o.mode === "battle") arrangeBattle(ctx);
+  if (o.mode === "battle") {
+    arrangeBattle(ctx);
+    gridTelegraphs(ctx);
+  }
   if (ctx.frame) {
     app
       .querySelectorAll("button,select,input")
