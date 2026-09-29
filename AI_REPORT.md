@@ -1,3 +1,11 @@
+# Ward allowance — package 1.3.20
+
+Content 1.1.10 reduces Ward's total activations from 3 to 2; rules 1.3.11 and weighted-druid-v1.7 are unchanged. All 114 tests pass. A direct engine check verifies two activations, rejection of a third, and continued absorption from remaining ward value after exhaustion. Evidence: `reports/ward-limit-verification.json`.
+
+Five runs in `reports/ward-limit-evaluation/` completed with the same outcomes and causal patterns described in the preceding report: 825183 lost to Cinder Hart (round 20); 825184 beat Void-Colossus with 4 HP (19); 825185 died in a five-enemy collision (14); 825186 died to Fire Wolf plus Dervish Hunter (12); 825187 beat Void-Colossus with 15 HP (19). None activated Ward. This checks general playability and does not establish the balance impact of its reduced allowance. No new exploit was demonstrated or policy training performed.
+
+---
+
 # Transmute and activation shortcut — package 1.3.19
 
 Rules 1.3.11; content 1.1.9 and weighted-druid-v1.7 unchanged. All 114 tests pass. Focused packaged UI checks confirm sole-choice double-click behavior and an actual Water-transmuted Blast dealing 6 to a Fire enemy despite a Fire neighbor, with correct grid/details text. No renderer errors.

@@ -1,6 +1,6 @@
 export const VERSION = {
   rules: "1.3.11",
-  content: "1.1.9",
+  content: "1.1.10",
   observation: 1,
   actions: 1,
 };
@@ -274,7 +274,7 @@ card(
   "Arcane",
   "Ward",
   1,
-  3,
+  2,
   { ward: 10 },
   "Isolated. On place: 10 ward value. Activate: +10. Absorbs oldest first.",
   { ward: 10, condition: "isolated", tower: true },

@@ -447,3 +447,12 @@ Package 1.3.19; rules 1.3.11; content 1.1.9 and weighted-druid-v1.7 unchanged. A
 Five headless runs (825183–825187) completed: loss, win at 4 HP, loss, loss, win at 15 HP, matching prior outcomes. None activated Transmute, so these confirm general playability only; focused rules/UI checks cover the fix. Evidence: reports/double-activation-verification.json, reports/transmute-verification.json, reports/transmute-evaluation/, reports/screenshots/transmute/, tests/transmute.test.mjs and the two corresponding UI scripts. AI_REPORT.md records the five-run interpretation and coverage limit.
 
 Additional implementation, verification and packaging time: approximately 12 minutes. Runnable release and CRC-verified ZIP refreshed. Jonathan's running game and saved profile were not closed or changed. Local commit only; no push.
+
+
+## Post-build polish — Ward activation allowance, round 24
+
+2026-09-29. Jonathan requested reducing the Ward card from three activations to two because it felt too powerful. Changed only its printed total allowance, retaining 10 ward value on placement, +10 per activation, Isolated placement and existing spent-Ward absorption. Living Lattice already has two activations. Limits are read from current content, so existing owned copies use the new limit after restart. Freshly read and minimally updated the design's Ward row and changelog to v4.61.
+
+Package 1.3.20; content 1.1.10; rules 1.3.11 and weighted-druid-v1.7 unchanged. All 114 tests pass. A direct engine check activated Ward across two turns, verified no third legal activation, then confirmed remaining value still absorbed an enemy attack while exhausted. The packaged content was checked for limit 2. Five headless seeds 825183–825187 completed with the same loss/win4/loss/loss/win15 outcomes. None activated Ward, so this sample is a general playability check, not evidence of card balance. No new graphical run was needed for the numeric content change; the UI derives allowance from this definition.
+
+Evidence: reports/ward-limit-verification.json, reports/ward-limit-evaluation/, AI_REPORT.md. Additional implementation, verification and packaging time: approximately 4 minutes. Runnable distribution and CRC-verified ZIP refreshed; Jonathan's running game was not closed. Local commit only; no push.
