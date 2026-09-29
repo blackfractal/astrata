@@ -1286,7 +1286,7 @@ export class Game {
       this.log(`${t.name} targets slot ${x.i + 1}.`);
     }
   }
-  damageEnemy(e, n, element, activation) {
+  damageEnemy(e, n, element, activation, sourceItem = null) {
     if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
     const s = this.s,
       b = s.battle;
@@ -1300,6 +1300,7 @@ export class Game {
       uid: e.uid,
       amount: d,
       element,
+      ...(sourceItem != null ? { sourceItem } : {}),
       dead: e.hp <= 0,
     });
     s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
@@ -1477,6 +1478,7 @@ export class Game {
                 gear.definition.effect.damage,
                 gear.element,
                 context,
+                gear.uid,
               );
         }
         for (const k of ["burn", "poison", "corrode"])

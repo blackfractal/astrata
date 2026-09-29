@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.62. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.21; rules 1.3.12).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.63. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.22; rules 1.3.12).
 
 Blast starts at 4 damage and Shield at 4 block, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 block each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
 
@@ -39,7 +39,7 @@ Open `release/Astrata/Astrata.exe` by double-clicking it. Keep the entire `Astra
 - Read enemy Tells before ending a turn. Each defense selection absorbs as much of the hit as it can.
 - Inventory is available throughout. Equip before or between Field movement steps, or at a Tavern. Drag equipment into slots and Gems into/out of sockets; Gem changes are Tavern-only.
 - Click Tavern people/areas for services. The Market separates Buy from Sell/remove, with View controls before transactions. Ordinary paid card removal is once per Tavern; variable-cost Hex treatment is separate.
-- Spell collisions have small element-specific bursts; Arcane uses a gray star. Damage numbers remain above the effect.
+- Spell collisions have small element-specific bursts; Arcane uses a gray star. Damage numbers remain above the effect. Rootbound Ring's bonus projectile launches from its equipped icon, which briefly glows when it fires.
 - Normal animations show each movement step, damage, and defeats before changing screens. Fast animations is available in Settings/during play; Skip resolves the current presentation immediately.
 - The only Field Tavern spawns at slot 8; the Archon at 16. Other rolls use relative weights Mote 40 / Eidolon 10 / Gold 15 / Item 10 / Event 20, with no opening Eidolons.
 - AI step chooses one action. Watch AI plays the same run with the baseline weighted policy; Stop AI returns control.
@@ -78,7 +78,7 @@ npm run test:gui
 - `tools/art.mjs` / `tools/revise-art.mjs`: ComfyUI generation, machine/model/workflow/prompt/seed records.
 - `tests/rules.test.mjs`: focused rules and replay regression tests.
 
-The shared source design is updated through v4.62; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
+The shared source design is updated through v4.63; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
 
 Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3/1.3.4/1.3.5/1.3.6/1.3.7/1.3.8/1.3.9 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
 

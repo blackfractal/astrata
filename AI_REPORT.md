@@ -1,3 +1,11 @@
+# Equipment projectile origin — package 1.3.22
+
+Presentation-only change; rules 1.3.12/content 1.1.11 and weighted-druid-v1.7 are unchanged. All 118 rules tests pass. Packaged UI checks verify the Ring projectile starts at the actual equipped icon, including the right finger slot, while the main attack starts at its card. Normal 2-damage and socketed 1-damage results are preserved; a second attack does not retrigger the Ring. Normal/Fast, reduced motion and Skip clean up correctly. Reduced motion shows the Ring highlight without a traveling projectile. No renderer errors; screenshot inspected.
+
+Evidence: `reports/ring-origin-verification.json`, `reports/screenshots/ring-origin/`, `tools/ring-origin-ui-test.mjs`. The preceding five-run evaluation remains applicable; no redundant balance batch was run.
+
+---
+
 # Zero-HP defeat and Stone Golem — package 1.3.21
 
 Rules 1.3.12/content 1.1.11; weighted-druid-v1.7 unchanged. All 118 tests pass. Packaged UI checks verify player HP never appears negative during a lethal attack, 0 HP precedes You Died, and Stone Golem grows from 10/10 to 16/16, intercepts, then loses Taunt while retaining its maximum HP. Wounded growth, same-round repeated interception, later optional interception and status lethality have focused rules coverage. Evidence: `reports/golem-defeat-verification.json`, `reports/screenshots/golem-defeat/`, `tests/golem-defeat.test.mjs`.

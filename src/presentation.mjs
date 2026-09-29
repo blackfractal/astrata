@@ -367,26 +367,35 @@ export async function playFrames(before, frames, after, render, isFast) {
                   ? find(`[data-item-detail="${frame.item}"]`)
                   : player();
         const from =
-          source?.slot != null
-            ? card(source.slot)
-            : source?.enemy
-              ? enemy(source.enemy)
-              : null;
+          frame.sourceItem != null
+            ? find(
+                `.battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
+              ) || player()
+            : source?.slot != null
+              ? card(source.slot)
+              : source?.enemy
+                ? enemy(source.enemy)
+                : null;
         if (frame.armor)
           find(`[data-item-detail="${frame.armor}"]`)?.classList.add(
             "defense-ready",
           );
-        await flash(
-          el,
-          frame.amount != null
-            ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
-            : frame.name || "Hit",
-          frame.dead,
-          from,
-          frame.amount != null
-            ? frame.element || source?.element || "Arcane"
-            : null,
-        );
+        if (frame.sourceItem != null) from?.classList.add("gear-proc");
+        try {
+          await flash(
+            el,
+            frame.amount != null
+              ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
+              : frame.name || "Hit",
+            frame.dead,
+            from,
+            frame.amount != null
+              ? frame.element || source?.element || "Arcane"
+              : null,
+          );
+        } finally {
+          if (frame.sourceItem != null) from?.classList.remove("gear-proc");
+        }
         render(frame.state);
       } else render(frame.state);
       previous = frame.state;

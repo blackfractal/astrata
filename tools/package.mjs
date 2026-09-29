@@ -33,7 +33,7 @@ await fs.writeFile(
   path.join(app, "package.json"),
   JSON.stringify({
     name: "astrata",
-    version: "1.3.21",
+    version: "1.3.22",
     main: "desktop.cjs",
     type: "module",
   }),
@@ -61,6 +61,7 @@ for (const name of [
   "reveal-verification.json",
   "reveal-evaluation",
   "reveal-playthrough.json",
+  "ring-origin-verification.json",
   "golem-defeat-verification.json",
   "golem-defeat-evaluation",
   "ward-limit-verification.json",
