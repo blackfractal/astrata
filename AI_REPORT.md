@@ -473,3 +473,6 @@ All219 tests and six packaged graphical death flows pass. Full message and struc
 
 
 Package1.3.40/rules1.3.24 adds incoming-attack path/loss metadata, persistent waiting markers and Field portrait/circular Gold. Combat damage calculations and policy1.11 remain unchanged; lastNode metadata survives saves but does not affect decisions. All222 tests and packaged path/actual-loss/held-marker/reduced-motion/map checks pass; outgoing Ring normal/Water/reduced/Skip regressions also pass. No new AI batch or training for this presentation update; package1.3.39 death evaluation remains historical evidence.
+
+
+Package1.3.41 changes only incoming orb presentation timing/continuity. Three focused traversal tests and packaged impact-time, disintegration, numbered-flight, reduced-motion, equipment-hold and Ring-origin checks pass. No rules/content/policy change, new AI batch, or training; the earlier five-run evaluation remains historical evidence.

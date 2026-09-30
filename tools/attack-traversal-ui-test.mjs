@@ -10,13 +10,13 @@ const report = {
 };
 const dir = "reports/screenshots/attack-traversal";
 await fs.mkdir(dir, { recursive: true });
-async function check(g, fn) {
+async function check(g, fn, fast = true) {
   const profile = path.resolve(".tmp/attack-path-" + Date.now());
   await fs.mkdir(profile, { recursive: true });
   await fs.writeFile(path.join(profile, "save.json"), JSON.stringify(g.s));
   await fs.writeFile(
     path.join(profile, "settings.json"),
-    JSON.stringify({ width: 1280, fast: true }),
+    JSON.stringify({ width: 1280, fast }),
   );
   const app = await electron.launch({
     executablePath: path.resolve("release/Astrata/Astrata.exe"),
@@ -97,116 +97,177 @@ for (const reduced of [false, true]) {
   ally.element = "Arcane";
   b.grid[20] = [ward];
   b.grid[22] = [ally];
-  await check(g, async (p) => {
-    if (reduced) await p.emulateMedia({ reducedMotion: "reduce" });
-    const selectors = [
-      '[data-enemy-uid="900"]',
-      '[data-slot="20"]',
-      '[data-slot="22"]',
-      `.battle-player [data-item-uid="${bracelet.uid}"]`,
-      ".battle-player .player-portrait",
-    ];
-    const centers = await p.evaluate(
-      (ss) =>
-        ss.map((s) => {
-          const r = document.querySelector(s).getBoundingClientRect();
-          return { left: r.left + r.width / 2, top: r.top + r.height / 2 };
-        }),
-      selectors,
-    );
-    await p.evaluate(() => {
-      window.bolts = [];
-      window.losses = [];
-      window.bursts = [];
-      const original = Element.prototype.animate;
-      Element.prototype.animate = function (frames, opts) {
-        if (this.matches(".attack-bolt")) window.bolts.push(frames);
-        return original.call(this, frames, opts);
-      };
-      new MutationObserver((records) => {
-        for (const r of records)
-          for (const el of r.addedNodes) {
-            if (el.nodeType === 1 && el.matches(".spell-impact"))
-              window.bursts.push(el.dataset.element);
-            if (
-              el.nodeType === 1 &&
-              el.matches(".impact-number") &&
-              el.textContent.startsWith("−")
-            )
-              window.losses.push(el.textContent);
-          }
-      }).observe(document.body, { childList: true, subtree: true });
-    });
-    await p.getByRole("button", { name: "End turn", exact: true }).click();
-    await settle(p);
-    assert.equal(
-      await p.locator('[data-slot="20"] .held-attack').textContent(),
-      "25",
-    );
-    await p
-      .locator(".incoming-attack [data-action]")
-      .filter({ hasText: "Familiar intercepts" })
-      .click();
-    await settle(p);
-    assert.equal(
-      await p.locator('[data-slot="22"] .held-attack').textContent(),
-      "19",
-    );
-    await p.waitForTimeout(250);
-    assert.equal(
-      await p.locator('[data-slot="22"] .held-attack').textContent(),
-      "19",
-    );
-    assert.equal(await p.locator('[data-slot="20"] .held-attack').count(), 0);
-    if (reduced)
-      assert.equal(
-        await p
-          .locator(".held-attack")
-          .evaluate((el) => getComputedStyle(el).animationName),
-        "none",
+  await check(
+    g,
+    async (p) => {
+      if (reduced) await p.emulateMedia({ reducedMotion: "reduce" });
+      const selectors = [
+        '[data-enemy-uid="900"]',
+        '[data-slot="20"]',
+        '[data-slot="22"]',
+        `.battle-player [data-item-uid="${bracelet.uid}"]`,
+        ".battle-player .player-portrait",
+      ];
+      const centers = await p.evaluate(
+        (ss) =>
+          ss.map((s) => {
+            const r = document.querySelector(s).getBoundingClientRect();
+            return { left: r.left + r.width / 2, top: r.top + r.height / 2 };
+          }),
+        selectors,
       );
-    await p.mouse.move(5, 5);
-    await p.screenshot({
-      path: dir + (reduced ? "/held-reduced.png" : "/held-on-dead-card.png"),
-    });
-    await p.locator(`.battle-player [data-item-uid="${bracelet.uid}"]`).click();
-    await settle(p);
-    assert.match(
-      await p.locator(".player-portrait").textContent(),
-      /48\/65 HP/,
-    );
-    const got = await p.evaluate(() => ({
-      bolts: window.bolts,
-      losses: window.losses,
-      bursts: window.bursts,
-    }));
-    assert.deepEqual(got.bursts, ["Arcane", "Arcane", "Arcane", "Arcane"]);
-    assert.equal(await p.locator(".held-attack").count(), 0);
-    assert.deepEqual(got.losses, ["−5", "−6", "−2", "−17"]);
-    assert.equal(got.bolts.length, reduced ? 0 : 4);
-    if (!reduced)
-      for (let i = 0; i < 4; i++)
-        for (const [k, center] of [
-          [0, centers[i]],
-          [1, centers[i + 1]],
-        ])
-          for (const axis of ["left", "top"])
-            assert.ok(
-              Math.abs(parseFloat(got.bolts[i][k][axis]) - center[axis]) < 2,
-              `leg ${i} ${k} ${axis}`,
-            );
-    await p.mouse.move(5, 5);
-    await p.screenshot({
-      path: dir + (reduced ? "/reduced-result.png" : "/chain-result.png"),
-    });
-    report.checks.push(
-      (reduced ? "Reduced motion: " : "Animated: ") +
-        "Arcane30 follows enemy → Ward20 → dead Familiar22 → right Bracelet → player; displays −5/−6/−2/−17, actual HP48. Attack holds with 25 on Ward, then 19 on the destroyed Ally space until next choice; all four nodes receive an Arcane hit burst; marker clears when resolved. " +
-        (reduced
-          ? "No flying projectiles."
-          : "All four projectile endpoints match actual node centers across separate clicks."),
-    );
-  });
+      await p.evaluate(() => {
+        window.bolts = [];
+        window.losses = [];
+        window.bursts = [];
+        window.impactOrbs = [];
+        window.flightDamage = [];
+        window.dyingOrbs = [];
+        const original = Element.prototype.animate;
+        Element.prototype.animate = function (frames, opts) {
+          if (this.matches(".attack-bolt")) {
+            window.bolts.push(frames);
+            window.flightDamage.push(this.textContent);
+          }
+          return original.call(this, frames, opts);
+        };
+        new MutationObserver((records) => {
+          for (const r of records) {
+            if (
+              r.type === "attributes" &&
+              r.target.matches(".disintegrating")
+            ) {
+              const orb = document.querySelector(
+                "body > .attack-orb-overlay:not(.attack-bolt)",
+              );
+              window.dyingOrbs.push(orb?.textContent ?? null);
+            }
+            for (const el of r.addedNodes) {
+              if (el.nodeType === 1 && el.matches(".spell-impact")) {
+                window.bursts.push(el.dataset.element);
+                const orb = document.querySelector(
+                  "body > .attack-orb-overlay:not(.attack-bolt)",
+                );
+                window.impactOrbs.push(
+                  orb
+                    ? {
+                        damage: orb.textContent,
+                        visible:
+                          getComputedStyle(orb).opacity === "1" &&
+                          getComputedStyle(orb).display !== "none",
+                        fixed: getComputedStyle(orb).position === "fixed",
+                      }
+                    : null,
+                );
+              }
+              if (
+                el.nodeType === 1 &&
+                el.matches(".impact-number") &&
+                el.textContent.startsWith("−")
+              )
+                window.losses.push(el.textContent);
+            }
+          }
+        }).observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      });
+      await p.getByRole("button", { name: "End turn", exact: true }).click();
+      await settle(p);
+      assert.equal(
+        await p.locator('[data-slot="20"] .held-attack').textContent(),
+        "25",
+      );
+      await p
+        .locator(".incoming-attack [data-action]")
+        .filter({ hasText: "Familiar intercepts" })
+        .click();
+      await settle(p);
+      assert.equal(
+        await p.locator('[data-slot="22"] .held-attack').textContent(),
+        "19",
+      );
+      await p.waitForTimeout(250);
+      assert.equal(
+        await p.locator('[data-slot="22"] .held-attack').textContent(),
+        "19",
+      );
+      assert.equal(await p.locator('[data-slot="20"] .held-attack').count(), 0);
+      if (reduced)
+        assert.equal(
+          await p
+            .locator(".held-attack")
+            .evaluate((el) => getComputedStyle(el).animationName),
+          "none",
+        );
+      await p.mouse.move(5, 5);
+      await p.screenshot({
+        path: dir + (reduced ? "/held-reduced.png" : "/held-on-dead-card.png"),
+      });
+      await p
+        .locator(`.battle-player [data-item-uid="${bracelet.uid}"]`)
+        .click();
+      await settle(p);
+      assert.match(
+        await p.locator(".player-portrait").textContent(),
+        /48\/65 HP/,
+      );
+      const got = await p.evaluate(() => ({
+        bolts: window.bolts,
+        losses: window.losses,
+        bursts: window.bursts,
+        impactOrbs: window.impactOrbs,
+        flightDamage: window.flightDamage,
+        dyingOrbs: window.dyingOrbs,
+      }));
+      assert.deepEqual(got.bursts, ["Arcane", "Arcane", "Arcane", "Arcane"]);
+      assert.deepEqual(
+        got.impactOrbs,
+        ["25", "19", "17"]
+          .map((damage) => ({ damage, visible: true, fixed: true }))
+          .concat(null),
+      );
+      assert.ok(
+        got.dyingOrbs.includes("19"),
+        "Orb remains independently visible as the Ally disintegrates",
+      );
+      assert.deepEqual(
+        got.flightDamage,
+        reduced ? [] : ["30", "25", "19", "17"],
+      );
+      assert.equal(await p.locator(".attack-orb-overlay").count(), 0);
+      assert.equal(await p.locator(".held-attack").count(), 0);
+      assert.deepEqual(got.losses, ["−5", "−6", "−2", "−17"]);
+      assert.equal(got.bolts.length, reduced ? 0 : 4);
+      if (!reduced)
+        for (let i = 0; i < 4; i++)
+          for (const [k, center] of [
+            [0, centers[i]],
+            [1, centers[i + 1]],
+          ])
+            for (const axis of ["left", "top"])
+              assert.ok(
+                Math.abs(parseFloat(got.bolts[i][k][axis]) - center[axis]) < 2,
+                `leg ${i} ${k} ${axis}`,
+              );
+      await p.mouse.move(5, 5);
+      await p.screenshot({
+        path: dir + (reduced ? "/reduced-result.png" : "/chain-result.png"),
+      });
+      report.checks.push(
+        (reduced ? "Reduced motion: " : "Animated: ") +
+          "Arcane30 follows enemy → Ward20 → dead Familiar22 → right Bracelet → player; displays −5/−6/−2/−17, actual HP48. Attack holds with 25 on Ward, then 19 on the destroyed Ally space until next choice; all four nodes receive an Arcane hit burst; marker clears when resolved. " +
+          "Remaining damage is already visible at each impact burst, survives Ally disintegration, and flight carries the current damage number. " +
+          (reduced
+            ? "No flying projectiles."
+            : "All four projectile endpoints match actual node centers across separate clicks."),
+      );
+    },
+    false,
+  );
 }
 const gear = new Game(8);
 gear.s.equipment = {};

@@ -89,3 +89,16 @@ export function spellImpact(
     }
   return root;
 }
+
+// Shared appearance for the traveling, impact and waiting portions of one attack.
+export function attackOrb(damage, element) {
+  const orb = document.createElement("span");
+  orb.className = "held-attack";
+  orb.style.setProperty(
+    "--hit-color",
+    (impactStyles[element] || impactStyles.Arcane).color,
+  );
+  orb.textContent = damage;
+  orb.setAttribute("aria-label", `${damage} ${element} damage remaining`);
+  return orb;
+}

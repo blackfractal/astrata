@@ -1,4 +1,4 @@
-import { impactStyles } from "./impact-effects.mjs";
+import { attackOrb } from "./impact-effects.mjs";
 import { eventTrades } from "./trade-ui.mjs";
 import {
   boardInteractions,
@@ -1125,17 +1125,7 @@ export function enhance(ctx) {
               `.battle-player .gear-item[data-item-uid="${node.uid}"]`,
             );
       if (anchor) {
-        const held = document.createElement("span");
-        held.className = "held-attack";
-        held.style.setProperty(
-          "--hit-color",
-          (impactStyles[hit.element] || impactStyles.Arcane).color,
-        );
-        held.textContent = hit.damage;
-        held.setAttribute(
-          "aria-label",
-          `${hit.damage} ${hit.element} damage waiting for your defense choice`,
-        );
+        const held = attackOrb(hit.damage, hit.element);
         anchor.append(held);
       }
     }

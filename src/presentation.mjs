@@ -1,5 +1,5 @@
 import { stageBounds } from "./stage.mjs";
-import { spellImpact, impactStyles } from "./impact-effects.mjs";
+import { spellImpact, impactStyles, attackOrb } from "./impact-effects.mjs";
 import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
 export function installTooltips() {
@@ -118,7 +118,14 @@ export async function playFrames(before, frames, after, render, isFast) {
     document.body.append(tag);
     return tag;
   }
-  async function flash(el, label, dead = false, from = null, element = null) {
+  async function flash(
+    el,
+    label,
+    dead = false,
+    from = null,
+    element = null,
+    attack = null,
+  ) {
     // Reveal the acting/struck foe inside crowded encounters without moving the stage.
     for (const node of [from, el]) {
       if (node?.matches(".enemy")) {
@@ -135,8 +142,14 @@ export async function playFrames(before, frames, after, render, isFast) {
     if (el && from && from !== el && !reduced) {
       const a = from.getBoundingClientRect(),
         b = el.getBoundingClientRect();
-      projectile = document.createElement("div");
-      projectile.className = "attack-bolt";
+      projectile = attack
+        ? attackOrb(attack.incoming, element)
+        : document.createElement("div");
+      projectile.classList.add("attack-bolt");
+      if (attack) {
+        projectile.classList.add("attack-orb-overlay");
+        projectile.style.setProperty("--orb-scale", stageBounds().scale);
+      }
       projectile.style.setProperty(
         "--hit-color",
         (impactStyles[element] || impactStyles.Arcane).color,
@@ -161,6 +174,17 @@ export async function playFrames(before, frames, after, render, isFast) {
       projectile.remove();
     }
     if (skip) return;
+    // Arrive in the same paint as the hit burst, before its pause or disintegration.
+    // A viewport overlay stays visible even while the struck card fades underneath.
+    if (el && attack?.remaining > 0) {
+      const r = el.getBoundingClientRect();
+      const orb = attackOrb(attack.remaining, element);
+      orb.classList.add("attack-orb-overlay");
+      orb.style.left = r.left + r.width / 2 + "px";
+      orb.style.top = r.top + r.height / 2 + "px";
+      orb.style.setProperty("--orb-scale", stageBounds().scale);
+      document.body.append(orb);
+    }
     const burst = element
       ? spellImpact(el, element, { duration: ms(500), reduced })
       : null;
@@ -416,11 +440,23 @@ export async function playFrames(before, frames, after, render, isFast) {
             frame.amount != null
               ? frame.element || source?.element || "Arcane"
               : null,
+            frame.attackPath && frame.pathFrom
+              ? {
+                  incoming: previous.battle?.reaction?.damage ?? frame.amount,
+                  remaining: ["card", "item"].includes(frame.pathTo?.kind)
+                    ? frame.remaining
+                    : 0,
+                }
+              : null,
           );
         } finally {
           if (frame.sourceItem != null) from?.classList.remove("gear-proc");
         }
         render(frame.state);
+        // Swap the impact overlay for the rendered waiting marker without a blank frame.
+        document
+          .querySelectorAll(".attack-orb-overlay")
+          .forEach((el) => el.remove());
       } else render(frame.state);
       previous = frame.state;
     }
@@ -440,7 +476,9 @@ export async function playFrames(before, frames, after, render, isFast) {
   } finally {
     bar.remove();
     document
-      .querySelectorAll(".impact-number,.attack-bolt,.spell-impact")
+      .querySelectorAll(
+        ".impact-number,.attack-bolt,.spell-impact,.attack-orb-overlay",
+      )
       .forEach((el) => el.remove());
   }
 }

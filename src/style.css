@@ -2638,3 +2638,10 @@ header {
 .battle-scene .battle-player .gear-item > .held-attack {
   display: grid;
 }
+
+/* Viewport copy bridges flight/impact to the grid marker without fading with a card. */
+.held-attack.attack-orb-overlay {
+  position: fixed;
+  z-index: 66;
+  transform: translate(-50%, -50%) scale(var(--orb-scale, 1));
+}
