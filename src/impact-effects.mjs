@@ -49,9 +49,9 @@ impactStyles.Poison = {
   spark: "bubble",
 };
 impactStyles.Corrode = {
-  color: "#c9cf52",
-  core: '<path d="m19 18 23 8 12-17 11 20 22 6-12 21 9 24-27-3-18 17-8-25-20-14 16-16Z"/><path d="m53 22-17 29 23-4-14 30" fill="none" stroke="#37351a" stroke-width="7"/><circle cx="20" cy="83" r="5"/>',
-  spark: "shard",
+  color: "#b86b45",
+  core: '<path d="m24 14 47 4 14 28-14 34-43 7-16-33Z" stroke="#dfab7a" stroke-width="3"/><path d="m44 18-8 24 13 9-9 30M75 31 58 45l11 16" fill="none" stroke="#4b302a" stroke-width="6"/><g fill="#513930"><circle cx="61" cy="27" r="5"/><circle cx="26" cy="58" r="6"/><circle cx="60" cy="70" r="7"/></g><path d="m5 19 10-4 3 10-9 5Zm77 64 11-6 4 12-12 6Z" fill="#d29160"/>',
+  spark: "rust",
 };
 export function spellImpact(
   target,

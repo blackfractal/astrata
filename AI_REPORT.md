@@ -497,3 +497,6 @@ Package1.3.44 moves the existing skipEquipment decision to the Druid portrait an
 
 
 Package1.3.45/rules1.3.26 adds status-application and typed-tick presentation metadata only; content1.1.26/policy1.12 unchanged. All233 tests and packaged Poison/Burn/Corrode normal/Fast/reduced/immune/Skip visual checks pass. Counters, damage, RNG and decisions remain unchanged. No new AI batch or training; package1.3.43 evaluation remains historical evidence.
+
+
+Package1.3.46/rules1.3.27 adds source-aware friendly status presentation and rust-colored Corrode. Rules counters, damage, RNG and policy are unchanged; no new AI batch or training. All237 tests pass, plus packaged curse/enemy application and stationary player-tick checks in normal/Fast/reduced/Skip modes and existing outgoing status visual regressions. Package1.3.43's five archived runs remain historical playability evidence.

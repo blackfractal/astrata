@@ -10,7 +10,7 @@ const report = {
 };
 const effects = ["Poison", "Burn", "Corrode"],
   ids = ["spore", "heat", "rot"],
-  colors = ["#81e65b", "#ffa04d", "#c9cf52"];
+  colors = ["#81e65b", "#ffa04d", "#b86b45"];
 const dir = "reports/screenshots/status-impact";
 await fs.mkdir(dir, { recursive: true });
 for (const mode of ["normal", "fast", "reduced", "immune", "skip"]) {

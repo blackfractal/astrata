@@ -100,6 +100,7 @@ for (const name of [
   "horizontal-layout-verification.json",
   "element-impact-verification.json",
   "status-impact-verification.json",
+  "player-status-verification.json",
   "battle-feedback-verification.json",
   "keyword-help-verification.json",
   "dialog-dismiss-verification.json",

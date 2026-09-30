@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.87. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.45; rules 1.3.26).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.88. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.46; rules 1.3.27).
 
 Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
 
@@ -122,3 +122,5 @@ Shield now has two activations per placement. Glass Choir destroys the two highe
 Event exchanges now open an offer chooser with Equipped and Satchel groups, inspectable items and rewards, drag-to-trade or click confirmation, and a no-cost Back option. Lantern Trader lets you choose any eligible owned Bracelet; only that copy is surrendered, and its Gem stays in your Satchel. Exact offered IDs are available to AI and saved in run records.
 
 Board connections now represent real effects only. Glowing energy strands flow toward recipients; mutual bonuses flow both ways. Plain adjacency creates no line, and long-range effects reveal on inspection. Reduced motion keeps static strands.
+
+Corrode now uses rust-brown pitted metal and flakes. Newly inflicted Burn/Poison/Corrode travels from the responsible equipped item or enemy to the Druid; ongoing status damage bursts in place. Battle-start curses animate before their first tick and Reveal.

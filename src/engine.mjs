@@ -960,14 +960,35 @@ export class Game {
       mirror: false,
     };
     s.status = blankStatus();
-    const b = s.battle;
+    const b = s.battle,
+      openingStatuses = [];
     for (const e of this.equipped())
       for (const k of ["burn", "poison", "corrode"])
-        s.status[k] += e.definition.effect[k] || 0;
+        if (e.definition.effect[k])
+          openingStatuses.push(
+            this.applyFriendlyStatus(
+              k,
+              e.definition.effect[k],
+              { sourceItem: e.uid },
+              null,
+              false,
+            ),
+          );
     for (const x of s.inventory)
       if (x.id === "curseGem" && !s.inventory.some((a) => a.gem === x.uid))
-        s.status.poison++;
-    if (s.deck.some((x) => x.id === "rust")) s.status.corrode++;
+        openingStatuses.push(
+          this.applyFriendlyStatus(
+            "poison",
+            1,
+            { sourceItem: x.uid },
+            null,
+            false,
+          ),
+        );
+    if (s.deck.some((x) => x.id === "rust"))
+      openingStatuses.push(
+        this.applyFriendlyStatus("corrode", 1, {}, null, false),
+      );
     for (const c of [...b.deck])
       if (cards[c.id].opening) {
         b.deck = b.deck.filter((x) => x.uid !== c.uid);
@@ -981,7 +1002,7 @@ export class Game {
       outcome: "in progress",
       hpStart: s.hp,
     });
-    this.beginTurn();
+    this.beginTurn(openingStatuses);
     s.checkpoint = clone({ ...s, checkpoint: undefined });
   }
   neighbors(i) {
@@ -1041,13 +1062,28 @@ export class Game {
         ["Water", "Earth"].includes(top(slot).element))
     );
   }
-  beginTurn() {
+  applyFriendlyStatus(status, value, source = {}, slot = null, animate = true) {
+    const target = slot == null ? this.s : top(this.s.battle.grid[slot]);
+    target.status[status] += value;
+    const detail = {
+      target: slot == null ? "player" : "card",
+      slot,
+      statusEffect: status,
+      value,
+      name: `${statusName(status)} +${value}`,
+      ...source,
+    };
+    if (animate) this.present("status", detail);
+    return detail;
+  }
+  beginTurn(openingStatuses = []) {
     const s = this.s,
       b = s.battle;
     b.turn++;
     b.phase = "start";
     this.refillResources();
     s.hp = Math.min(s.maxHp, s.hp + this.bonuses().heal);
+    for (const detail of openingStatuses) this.present("status", detail);
     for (const slot of b.grid)
       for (const c of slot) {
         if (c.freeze && c.freeze < b.turn) c.freeze = 0;
@@ -1089,6 +1125,7 @@ export class Game {
           damage: s.status[k],
           element: "Arcane",
           statusHit: true,
+          status: k,
           name: k,
         });
         s.status[k] =
@@ -1253,7 +1290,8 @@ export class Game {
               ? ` · ${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}`
               : ""),
         );
-        if (e.id === "hart" && e.hp <= e.maxHp / 2) s.status.burn++;
+        if (e.id === "hart" && e.hp <= e.maxHp / 2)
+          this.applyFriendlyStatus("burn", 1, { source: e.uid });
         if (e.id === "choir" && e.hp <= e.maxHp / 2 && e.cycle % 4 === 1)
           e.guard += 8;
         if (t.randomElement) {
@@ -1289,8 +1327,12 @@ export class Game {
                 .map((x, i) => ({ c: top(x), i }))
                 .filter((x) => cards[x.c?.id]?.type === "Ally")
                 .sort((a, z) => a.c.placed - z.c.placed);
-              if (t.allyStatus && allies.length) allies[0].c.status[k] += t[k];
-              else s.status[k] += t[k];
+              this.applyFriendlyStatus(
+                k,
+                t[k],
+                { source: e.uid },
+                t.allyStatus && allies.length ? allies[0].i : null,
+              );
             }
         if (t.damage)
           b.jobs.unshift(
@@ -1450,6 +1492,7 @@ export class Game {
           element: h.element,
           name: h.name,
           armor: armor?.uid,
+          statusTick: h.statusHit ? h.status || h.name : null,
         },
         { kind: "player" },
       );
@@ -1465,7 +1508,7 @@ export class Game {
     if (!h) return;
     if (!h.statusHit)
       for (const k of ["burn", "poison", "corrode"])
-        if (h[k]) this.s.status[k] += h[k];
+        if (h[k]) this.applyFriendlyStatus(k, h[k], { source: h.source });
     if (h.deathSource != null) {
       const source = b.enemies.find((e) => e.uid === h.deathSource);
       if (source) source.deathResolved = true;

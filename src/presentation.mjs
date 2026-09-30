@@ -339,13 +339,35 @@ export async function playFrames(before, frames, after, render, isFast) {
         render(frame.state);
         await pause(220);
       } else if (frame.kind === "status") {
-        await flash(
-          enemy(frame.uid),
-          frame.name,
-          false,
-          frame.sourceSlot != null ? card(frame.sourceSlot) : null,
-          statusVisual[frame.statusEffect] || null,
-        );
+        // Battle-start curses need the battlefield and equipped icons before Reveal.
+        if (frame.state.mode === "battle" && !find(".battle-player"))
+          render(frame.state);
+        const target =
+          frame.target === "player"
+            ? player()
+            : frame.target === "card"
+              ? card(frame.slot)
+              : enemy(frame.uid);
+        const from =
+          frame.sourceItem != null
+            ? item(frame.sourceItem)
+            : frame.source != null
+              ? enemy(frame.source)
+              : frame.sourceSlot != null
+                ? card(frame.sourceSlot)
+                : null;
+        if (frame.sourceItem != null) from?.classList.add("gear-proc");
+        try {
+          await flash(
+            target,
+            frame.name,
+            false,
+            from,
+            statusVisual[frame.statusEffect] || null,
+          );
+        } finally {
+          from?.classList.remove("gear-proc");
+        }
         render(frame.state);
       } else if (frame.kind === "move") {
         if (!find(".field")) {
