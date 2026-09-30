@@ -2706,3 +2706,21 @@ header {
     box-shadow: 0 0 14px 2px #8dded175;
   }
 }
+
+.spark-bubble {
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid currentColor;
+}
+.attack-bolt[data-effect="Poison"] {
+  border: 2px solid #cfffad;
+  background: radial-gradient(circle at 35% 30%, #e7ffd2, #81e65b 45%, #317929);
+}
+.attack-bolt[data-effect="Corrode"] {
+  border-radius: 30% 65% 40% 55%;
+}
+
+.impact-number.status-impact-number {
+  font-size: 22px;
+  white-space: nowrap;
+}

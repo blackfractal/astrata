@@ -99,6 +99,7 @@ for (const name of [
   "transmute-evaluation",
   "horizontal-layout-verification.json",
   "element-impact-verification.json",
+  "status-impact-verification.json",
   "battle-feedback-verification.json",
   "keyword-help-verification.json",
   "dialog-dismiss-verification.json",

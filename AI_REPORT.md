@@ -494,3 +494,6 @@ All five complete without illegal actions or stalls, with full source/version/st
 
 
 Package1.3.44 moves the existing skipEquipment decision to the Druid portrait and pulses legal defenders. No legal-action, rule, content or policy changes; no new AI batch. Packaged mouse/keyboard portrait selection, defense preservation, reduced-motion highlights and attack traversal checks pass. The package1.3.43 five-run evaluation above remains historical evidence.
+
+
+Package1.3.45/rules1.3.26 adds status-application and typed-tick presentation metadata only; content1.1.26/policy1.12 unchanged. All233 tests and packaged Poison/Burn/Corrode normal/Fast/reduced/immune/Skip visual checks pass. Counters, damage, RNG and decisions remain unchanged. No new AI batch or training; package1.3.43 evaluation remains historical evidence.

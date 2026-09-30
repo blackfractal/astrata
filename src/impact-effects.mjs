@@ -36,6 +36,23 @@ export const impactStyles = {
     spark: "ray",
   },
 };
+// Status visuals are independent of the spell's elemental damage matchup.
+export const statusVisual = {
+  poison: "Poison",
+  burn: "Burn",
+  corrode: "Corrode",
+};
+impactStyles.Burn = impactStyles.Fire;
+impactStyles.Poison = {
+  color: "#81e65b",
+  core: '<path d="M48 9C43 29 22 37 22 59a28 28 0 0 0 56 0C78 40 60 28 48 9Z"/><g fill="#173722"><circle cx="41" cy="54" r="5"/><circle cx="59" cy="61" r="7"/></g><g fill="none" stroke="currentColor" stroke-width="4"><circle cx="15" cy="29" r="7"/><circle cx="85" cy="24" r="5"/></g>',
+  spark: "bubble",
+};
+impactStyles.Corrode = {
+  color: "#c9cf52",
+  core: '<path d="m19 18 23 8 12-17 11 20 22 6-12 21 9 24-27-3-18 17-8-25-20-14 16-16Z"/><path d="m53 22-17 29 23-4-14 30" fill="none" stroke="#37351a" stroke-width="7"/><circle cx="20" cy="83" r="5"/>',
+  spark: "shard",
+};
 export function spellImpact(
   target,
   element,

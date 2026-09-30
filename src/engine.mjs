@@ -329,6 +329,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.25",
           "1.3.24",
           "1.3.23",
           "1.3.22",
@@ -1231,6 +1232,7 @@ export class Game {
             uid: e.uid,
             amount: j.damage,
             element: "Arcane",
+            statusTick: j.status || null,
             dead: e.hp <= 0 && !enemies[e.id].onDeath,
           });
           s.stats.damageDealt += j.damage;
@@ -1566,7 +1568,7 @@ export class Game {
       this.log(`${t.name} targets slot ${x.i + 1}.`);
     }
   }
-  applyEnemyStatus(e, status, value) {
+  applyEnemyStatus(e, status, value, sourceSlot = null) {
     if (enemyStatusImmunity(e) === status) {
       clearImmuneStatus(e);
       this.log(`${e.name} is immune to ${statusName(status)} (${e.element}).`);
@@ -1574,10 +1576,21 @@ export class Game {
         target: "enemy",
         uid: e.uid,
         name: `Immune to ${statusName(status)}`,
+        statusEffect: status,
+        sourceSlot,
+        immune: true,
       });
       return false;
     }
     e.status[status] += value;
+    this.present("status", {
+      target: "enemy",
+      uid: e.uid,
+      name: `${statusName(status)} +${value}`,
+      statusEffect: status,
+      sourceSlot,
+      value,
+    });
     return true;
   }
   damageEnemy(e, n, element, activation, sourceItem = null) {
@@ -1778,7 +1791,7 @@ export class Game {
               );
         }
         for (const k of ["burn", "poison", "corrode"])
-          if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus);
+          if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus, i);
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
     }
@@ -1792,12 +1805,7 @@ export class Game {
           this.log(e.name + " wastes the activation.");
           continue;
         }
-        if (!this.applyEnemyStatus(e, "burn", f.burnAll + bonus)) continue;
-        this.present("status", {
-          target: "enemy",
-          uid: e.uid,
-          name: `Burn +${f.burnAll + bonus}`,
-        });
+        this.applyEnemyStatus(e, "burn", f.burnAll + bonus, i);
       }
     }
     if (d.destroyAfterActivation) {
@@ -1848,7 +1856,7 @@ export class Game {
           this.applyCard(under, a.slot, a.target, under.element, a, ctx);
           const e = b.enemies.find((x) => x.uid === a.target);
           if (e && !ctx.blocked?.has(e.uid))
-            this.applyEnemyStatus(e, "burn", 6);
+            this.applyEnemyStatus(e, "burn", 6, a.slot);
         }
       }
     }

@@ -1,5 +1,10 @@
 import { stageBounds } from "./stage.mjs";
-import { spellImpact, impactStyles, attackOrb } from "./impact-effects.mjs";
+import {
+  spellImpact,
+  impactStyles,
+  attackOrb,
+  statusVisual,
+} from "./impact-effects.mjs";
 import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
 export function installTooltips() {
@@ -146,6 +151,7 @@ export async function playFrames(before, frames, after, render, isFast) {
         ? attackOrb(attack.incoming, element)
         : document.createElement("div");
       projectile.classList.add("attack-bolt");
+      projectile.dataset.effect = element || "Arcane";
       if (attack) {
         projectile.classList.add("attack-orb-overlay");
         projectile.style.setProperty("--orb-scale", stageBounds().scale);
@@ -190,6 +196,10 @@ export async function playFrames(before, frames, after, render, isFast) {
       : null;
     el?.classList.add("impact");
     const tag = floating(el, label);
+    if (tag && Object.values(statusVisual).includes(element)) {
+      tag.classList.add("status-impact-number");
+      tag.style.top = parseFloat(tag.style.top) - 55 + "px";
+    }
     await pause(550);
     el?.classList.remove("impact");
     tag?.remove();
@@ -329,7 +339,13 @@ export async function playFrames(before, frames, after, render, isFast) {
         render(frame.state);
         await pause(220);
       } else if (frame.kind === "status") {
-        await flash(enemy(frame.uid), frame.name);
+        await flash(
+          enemy(frame.uid),
+          frame.name,
+          false,
+          frame.sourceSlot != null ? card(frame.sourceSlot) : null,
+          statusVisual[frame.statusEffect] || null,
+        );
         render(frame.state);
       } else if (frame.kind === "move") {
         if (!find(".field")) {
@@ -411,17 +427,19 @@ export async function playFrames(before, frames, after, render, isFast) {
                 : frame.item
                   ? find(`[data-item-detail="${frame.item}"]`)
                   : player();
-        const from = frame.attackPath
-          ? pathNode(frame.pathFrom)
-          : frame.sourceItem != null
-            ? find(
-                `.battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
-              ) || player()
-            : source?.slot != null
-              ? card(source.slot)
-              : source?.enemy
-                ? enemy(source.enemy)
-                : null;
+        const from = frame.statusTick
+          ? null
+          : frame.attackPath
+            ? pathNode(frame.pathFrom)
+            : frame.sourceItem != null
+              ? find(
+                  `.battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
+                ) || player()
+              : source?.slot != null
+                ? card(source.slot)
+                : source?.enemy
+                  ? enemy(source.enemy)
+                  : null;
         if (frame.armor)
           find(`[data-item-detail="${frame.armor}"]`)?.classList.add(
             "defense-ready",
@@ -438,7 +456,10 @@ export async function playFrames(before, frames, after, render, isFast) {
             frame.dead,
             from,
             frame.amount != null
-              ? frame.element || source?.element || "Arcane"
+              ? statusVisual[frame.statusTick] ||
+                  frame.element ||
+                  source?.element ||
+                  "Arcane"
               : null,
             frame.attackPath && frame.pathFrom
               ? {
