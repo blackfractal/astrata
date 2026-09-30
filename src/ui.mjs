@@ -332,10 +332,7 @@ function render(frame = null) {
       })
       .join("")}</div>${
       b.reaction
-        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><div class="row wrap">${actions
-            .filter((a) => a.type === "skipEquipment")
-            .map((a) => actionButton(a))
-            .join("")}</div></div>`
+        ? `<div class="panel incoming-attack" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4></div>`
         : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
     }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,

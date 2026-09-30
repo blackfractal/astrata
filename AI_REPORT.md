@@ -491,3 +491,6 @@ Rules1.3.25/content1.1.26/policyweighted-druid-v1.12. Wards are new explicit leg
 |825187|Win|12|20|364|
 
 All five complete without illegal actions or stalls, with full source/version/state archives in reports/positional-defense-evaluation/. Two wins provide end-to-end playability evidence. This is not a controlled balance comparison: health, defense rules and policy changed together, and five runs are too few for a balance conclusion. All229 rules tests and direct-click/mixed-portion/passed-column GUI checks pass; normal/reduced incoming animation checks also pass.
+
+
+Package1.3.44 moves the existing skipEquipment decision to the Druid portrait and pulses legal defenders. No legal-action, rule, content or policy changes; no new AI batch. Packaged mouse/keyboard portrait selection, defense preservation, reduced-motion highlights and attack traversal checks pass. The package1.3.43 five-run evaluation above remains historical evidence.

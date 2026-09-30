@@ -63,6 +63,30 @@ export function arrangeBattle(ctx) {
   if (activeEnemy)
     activeEnemy.scrollIntoView({ block: "nearest", inline: "nearest" });
 
+  const takeHit = actions.find((a) => a.type === "skipEquipment");
+  const portrait = player.querySelector(".player-portrait");
+  if (takeHit && portrait) {
+    portrait.classList.add("defense-ready");
+    portrait.setAttribute(
+      "aria-label",
+      "Druid: take the hit and save remaining defenses",
+    );
+    portrait.title =
+      "Click the Druid to take this hit without using remaining cards or item block. Armor still applies.";
+    portrait.onclick = (e) => {
+      e.stopPropagation();
+      if (!ctx.busy()) {
+        const current = ctx.game
+          .legal()
+          .find((a) => a.type === "skipEquipment");
+        if (current) {
+          ctx.close();
+          ctx.act(current);
+        }
+      }
+    };
+  }
+
   // Keep compact equipment spatially arranged around the portrait.
   const labels = {
     head: "Head",

@@ -1,10 +1,10 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.85. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.43; rules 1.3.25).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.86. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.44; rules 1.3.25).
 
 Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
 
-Click highlighted cards to defend. Wards, Shields and Allies are offered together: after a card absorbs damage, only its column and columns closer to the player remain eligible. Equipment is the final stop. Take hit preserves unused defenses; View opens card details, and mixed Shield portions are chosen beside their card. Each new hit resets the route. Taunt and explicit targeting remain exceptions; Pierce/Cull/status bypasses still apply.
+Click highlighted cards to defend. Wards, Shields and Allies are offered together: after a card absorbs damage, only its column and columns closer to the player remain eligible. Equipment is the final stop. Click the pulsing Druid portrait to take the hit and preserve unused defenses; all eligible cards and equipment pulse too. View opens card details, and mixed Shield portions are chosen beside their card. Each new hit resets the route. Taunt and explicit targeting remain exceptions; Pierce/Cull/status bypasses still apply.
 
 The Field player marker uses the Druid portrait inside its yellow ring; Gold uses a filled circle inside a circular ring. Incoming attacks travel from defender to defender, showing actual HP/Ward/block lost at each stop. The numbered orb appears immediately with the hit burst, stays visible through card destruction, and carries the damage number during flight. A glowing marker with remaining damage waits at the last impact (even an emptied Ally space) until your next choice, then moves onward with an elemental hit effect at each node.
 

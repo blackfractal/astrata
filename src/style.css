@@ -2683,3 +2683,26 @@ header {
   white-space: normal;
   font-size: 12px;
 }
+
+/* Pulse legal defense targets without fading their art or fighting hit animations. */
+.battle-scene:not(.presenting) .slot.defense-ready,
+.battle-scene:not(.presenting) .battle-player .block-available,
+.battle-scene:not(.presenting) .battle-player .player-portrait.defense-ready {
+  animation: defense-choice-pulse 1.25s ease-in-out infinite alternate;
+}
+@keyframes defense-choice-pulse {
+  from {
+    box-shadow: 0 0 5px 1px #8dded140;
+  }
+  to {
+    box-shadow: 0 0 22px 4px #8dded1b0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-scene:not(.presenting) .slot.defense-ready,
+  .battle-scene:not(.presenting) .battle-player .block-available,
+  .battle-scene:not(.presenting) .battle-player .player-portrait.defense-ready {
+    animation: none;
+    box-shadow: 0 0 14px 2px #8dded175;
+  }
+}

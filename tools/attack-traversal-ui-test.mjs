@@ -296,15 +296,12 @@ await check(gear, async (p) => {
   const held = first.locator(".held-attack");
   assert.equal(await held.textContent(), "4");
   assert.equal(await held.isVisible(), true);
-  await p
-    .locator(".incoming-attack [data-action]")
-    .filter({ hasText: "Take hit" })
-    .click();
+  await p.locator(".player-portrait").click();
   await settle(p);
   assert.equal(await p.locator(".held-attack").count(), 0);
   assert.match(await p.locator(".player-portrait").textContent(), /66\/70 HP/);
   report.checks.push(
-    "Attack also holds visibly on a depleted Bracelet while another equipment choice remains, then clears after Take hit.",
+    "Attack also holds visibly on a depleted Bracelet while another equipment choice remains, then clears after clicking the Druid to take the hit.",
   );
 });
 assert.deepEqual(report.errors, []);

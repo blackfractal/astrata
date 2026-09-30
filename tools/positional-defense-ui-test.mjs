@@ -71,10 +71,30 @@ try {
   await p.screenshot({
     path: "reports/screenshots/positional-defense/ready.png",
   });
-  assert.equal(await p.locator(".incoming-attack [data-action]").count(), 1);
-  await expect(p.locator(".incoming-attack [data-action]")).toHaveText(
-    "Take hit — save defenses",
+  await expect(p.locator(".incoming-attack h4")).toContainText("Test hit");
+  await expect(p.locator(".inspect-attack")).toBeVisible();
+  assert.equal(await p.locator(".incoming-attack [data-action]").count(), 0);
+  const choices = p.locator(
+    ".slot.defense-ready, .battle-player .block-available, .player-portrait.defense-ready",
   );
+  assert.equal(await choices.count(), 6);
+  assert.ok(
+    (
+      await choices.evaluateAll((xs) =>
+        xs.map((x) => getComputedStyle(x).animationName),
+      )
+    ).every((x) => x === "defense-choice-pulse"),
+  );
+  await p.emulateMedia({ reducedMotion: "reduce" });
+  assert.ok(
+    (
+      await choices.evaluateAll((xs) =>
+        xs.map((x) => getComputedStyle(x).animationName),
+      )
+    ).every((x) => x === "none"),
+  );
+  await p.emulateMedia({ reducedMotion: "no-preference" });
+
   await p.locator('[data-slot="4"] .defense-view').click();
   await expect(p.locator("#modal")).toBeVisible();
   await p.locator("[data-close]").first().click();
@@ -100,18 +120,28 @@ try {
   await settle(p);
   await expect(p.locator('[data-slot="2"] .held-attack')).toHaveText("13");
   await expect(p.locator('[data-slot="4"]')).not.toHaveClass(/defense-ready/);
-  assert.equal(await p.locator(".incoming-attack [data-action]").count(), 1);
+  assert.equal(await p.locator(".incoming-attack [data-action]").count(), 0);
   await fs.mkdir("reports/screenshots/positional-defense", { recursive: true });
   await p.mouse.move(5, 5);
   await p.screenshot({
     path: "reports/screenshots/positional-defense/passed-columns.png",
   });
-  await p.locator(`.battle-player [data-item-uid="${bracelet.uid}"]`).click();
+  await p.locator(".player-portrait").focus();
+  await p.locator(".player-portrait").press("Enter");
   await settle(p);
-  await expect(p.locator(".player-portrait")).toContainText("59/70 HP");
+  await expect(p.locator(".player-portrait")).toContainText("57/70 HP");
+  await expect(
+    p.locator(`.battle-player [data-item-uid="${bracelet.uid}"]`),
+  ).toContainText("2 block");
+  await expect(p.locator('[data-slot="6"]')).toContainText("Ward 3");
+  await expect(p.locator('[data-slot="4"]')).toContainText("3 Water");
+  assert.equal(await choices.count(), 0);
+  await p.locator(".player-portrait").click();
+  await expect(p.locator("#modal h2")).toHaveText("The Druid");
+  await p.locator("[data-close]").first().click();
   assert.equal(await p.locator(".held-attack").count(), 0);
   report.checks.push(
-    "All three card defense types highlight together; direct card click and Defend button resolve without bottom selection list. View remains available. Mixed Shield portions open beside the clicked card. Column five disables column seven while same-column Ward stays legal; then column three disables remaining Shield. Numbered attack route persists, equipment is last, losses leave59/70HP.",
+    "All three card defense types highlight together; direct card click and Defend button resolve without bottom selection list. View remains available. Mixed Shield portions open beside the clicked card. Column five disables column seven while same-column Ward stays legal; then column three disables remaining Shield. Numbered attack route persists, Druid keyboard selection accepts13damage leaving57/70HP, preserves2Bracelet/3Ward/3Shield, and restores portrait details afterward. Six legal targets pulse together; reduced motion uses steady highlights; the bottom Take hit button is absent.",
   );
 } finally {
   await app.close();

@@ -721,3 +721,14 @@ All229 tests pass: seven new positional cases plus updated old-order/spillover/H
 Five archived AI games825183–187 complete without errors/stalls: loss/win14/loss/loss/win12; rounds13/19/10/12/20; decisions225/300/185/175/364. Full versioned traces and source snapshots in reports/positional-defense-evaluation/. Two wins demonstrate end-to-end playability; this small sample combines rule, policy, and health changes and does not establish balance. Updated AI_REPORT with outcomes and limitations.
 
 Additional implementation, verification, documentation and packaging time: approximately25 minutes. Runnable release and CRC-verified ZIP refreshed; user’s running app/profile untouched. Local implementation commit only, no push.
+
+
+## Post-build polish — Druid takes the hit, round 49
+
+2026-09-30. Jonathan requested selecting the Druid instead of the bottom Take hit button, and pulsing all possible defense choices including the Druid. During an ordinary defensive choice, the portrait now invokes the existing legal skipEquipment action (revalidated at click), preserving all unused defenses and resolving passive Armor normally. It supports mouse and keyboard; outside that choice, clicking the portrait again opens character details. Removed the bottom button while retaining incoming damage and the attack inspector.
+
+Eligible cards, equipment and Druid share a gentle teal glow pulse without fading their art. Passed/depleted defenders do not pulse. Pulse runs only outside presentation frames, avoiding interference with hit/disintegration animation; reduced-motion mode uses steady highlights. Package1.3.44/design4.86; rules1.3.25/content1.1.26/policy1.12 unchanged.
+
+Packaged graphical checks pass: six legal targets animate together, reduced motion disables pulse, mixed portions and passed columns remain correct, Druid keyboard selection takes13HP while preserving2Bracelet/3Ward/3Shield, portrait details return afterward, and no bottom action button remains. Incoming readout/inspector presence explicitly checked. Normal/reduced traversal and post-Bracelet Druid mouse-click regression pass, exact attack losses and orb cleanup retained. Screenshots reviewed, no renderer errors. No new rules tests or AI batch for this UI-only change; prior229 tests and five archived positional-defense runs remain historical evidence.
+
+Additional implementation, verification, documentation and packaging time: approximately8 minutes. Runnable release and CRC-verified ZIP refreshed; user's active app/profile untouched. Local implementation commit only, no push.

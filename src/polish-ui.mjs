@@ -1063,7 +1063,7 @@ export function enhance(ctx) {
               : "No activations available";
     });
     if (b.reaction) {
-      const box = section.querySelector(".panel.pulse");
+      const box = section.querySelector(".incoming-attack");
       if (box) {
         box.classList.add("incoming-attack");
         box.insertAdjacentHTML(
