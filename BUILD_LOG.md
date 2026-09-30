@@ -754,3 +754,10 @@ Friendly status applications now expose target, value and actual source item/ene
 All237 tests pass, including four new source/target/order/legacy regressions. Packaged player-status GUI checks cover map-to-battle curses and three enemy application types in normal/Fast/reduced/Skip modes, actual source/target centers, three applications versus three stationary damage bursts, rust color and cleanup. Existing outgoing status GUI suite also passes (normal/Fast/reduced, immunity, Skip, stationary enemy ticks). Screenshots reviewed; no renderer errors. Evidence: reports/player-status-verification.json, reports/status-impact-verification.json, screenshots/player-status and status-impact. No AI rerun or training for this presentation-only change.
 
 Additional implementation, verification, documentation and packaging time: approximately16 minutes. Runnable release and CRC-verified distribution ZIP refreshed. User's running app/profile untouched; local implementation commit only, no push.
+
+
+## Post-build polish — gentler Fire Wolf Burn, round 52
+
+2026-09-30. Jonathan requested reducing Fire Wolf's aggressive Burn 4 to Burn 2. Fire Bite now inflicts Burn 2; its printed 10 Fire damage and other moves remain unchanged. Updated the main design to v4.89, package to1.3.47 and content to1.1.27; rules1.3.27/policy1.12 unchanged. Future intents in continued battles read current content; already applied statuses remain as saved.
+
+Verified actual Fire Bite resolution: 10 HP damage and Burn 2. All237 existing tests pass. No new tests, UI changes, AI training or balance batch for this single requested content adjustment; historical evaluations remain version-specific. Additional implementation, verification, documentation and packaging time: approximately4 minutes. Runnable release and CRC-verified ZIP refreshed. Local commit only, no push; user profile/app untouched.

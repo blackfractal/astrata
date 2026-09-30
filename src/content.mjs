@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.27",
-  content: "1.1.26",
+  content: "1.1.27",
   observation: 1,
   actions: 1,
 };
@@ -1002,7 +1002,7 @@ enemy(
   "Fire",
   17,
   "Stalker",
-  [attack("Claw", 5, "Fire"), attack("Fire Bite", 10, "Fire", { burn: 4 })],
+  [attack("Claw", 5, "Fire"), attack("Fire Bite", 10, "Fire", { burn: 2 })],
   "Burn persists past interception.",
   "Water offense and Fire defense.",
   { speed: 2, pack: "Wolf" },

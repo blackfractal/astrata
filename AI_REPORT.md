@@ -500,3 +500,6 @@ Package1.3.45/rules1.3.26 adds status-application and typed-tick presentation me
 
 
 Package1.3.46/rules1.3.27 adds source-aware friendly status presentation and rust-colored Corrode. Rules counters, damage, RNG and policy are unchanged; no new AI batch or training. All237 tests pass, plus packaged curse/enemy application and stationary player-tick checks in normal/Fast/reduced/Skip modes and existing outgoing status visual regressions. Package1.3.43's five archived runs remain historical playability evidence.
+
+
+Package1.3.47/content1.1.27 reduces Fire Wolf Fire Bite from Burn4 to Burn2. Actual hit/status resolution verified; all237 existing tests pass. No new AI batch or training; earlier evaluations describe their recorded versions, not this balance adjustment.
