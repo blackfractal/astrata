@@ -31,8 +31,10 @@ test("Arcane30 traverses Ward5, Ally6, Bracelet2, player17 across separate choic
     },
   ];
   g.pump();
+  assert.equal(b.reaction.stage, "defend");
+  act(g, "ward");
   const frames = g.presentation.filter((f) => f.attackPath);
-  assert.equal(b.reaction.stage, "ally");
+  assert.equal(b.reaction.stage, "defend");
   act(g, "intercept");
   frames.push(...g.presentation.filter((f) => f.attackPath));
   assert.equal(b.grid[22].length, 0);
@@ -69,7 +71,7 @@ test("Arcane30 traverses Ward5, Ally6, Bracelet2, player17 across separate choic
     frames.map((f) => f.remaining),
     [25, 19, 17, 0],
   );
-  assert.equal(g.s.hp, 48);
+  assert.equal(g.s.hp, 53);
 });
 test("Elemental block floats actual block spent; weak Ally shows only HP lost and keeps spillover math", () => {
   const g = base(),
@@ -86,7 +88,7 @@ test("Elemental block floats actual block spent; weak Ally shows only HP lost an
   const f = g.presentation.find((f) => f.target === "card");
   assert.equal(f.amount, 9);
   assert.equal(f.loss, 2);
-  assert.equal(g.s.hp, 59);
+  assert.equal(g.s.hp, 64);
   const h = base(),
     hb = h.s.battle;
   hb.bracelets = [{ uid: 99, name: "Fire", block: 2, element: "Fire" }];

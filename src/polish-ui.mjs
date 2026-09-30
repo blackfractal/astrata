@@ -769,6 +769,8 @@ function incomingDetails(ctx) {
         );
         note = ` → ${result.remaining} damage continues`;
       }
+      if (a.type === "ward")
+        note = ` → ${Math.max(0, h.damage - a.effects.ward)} damage continues`;
       if (a.type === "intercept") {
         const result = allyHit(
           h,
@@ -782,7 +784,7 @@ function incomingDetails(ctx) {
     })
     .join("");
   ctx.dialog(
-    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Defense stage: ${h.stage}</p><div class="choices">${choices}</div>`,
+    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Choose a highlighted card or equipment. After a card blocks, only its column and columns closer to you remain eligible. Equipment is the final stop; Take hit saves all remaining defenses.</p><div class="choices">${choices}</div>`,
   );
   bindActions(ctx, ctx.modal);
 }
@@ -1046,14 +1048,6 @@ export function enhance(ctx) {
         drag = null;
         if (a) run(ctx, a);
       };
-      if (
-        actions.some((a) => a.type === "intercept" && a.slot === i) ||
-        (b.reaction &&
-          b.shields.some(
-            (p) => p.slot === i && p.block > 0 && b.reaction.stage === "shield",
-          ))
-      )
-        el.classList.add("defense-ready");
     });
     const hints = section.querySelectorAll(".row.spread>small");
     hints.forEach((el) => {
@@ -1111,6 +1105,93 @@ export function enhance(ctx) {
     arrangeBattle(ctx);
     boardInteractions(ctx);
     gridTelegraphs(ctx);
+    if (o.battle.reaction) {
+      const b = o.battle;
+      app.querySelectorAll("[data-slot]").forEach((el) => {
+        const i = Number(el.dataset.slot),
+          c = b.grid[i].at(-1);
+        if (!c) return;
+        const options = () =>
+          game
+            .legal()
+            .filter(
+              (a) =>
+                ["ward", "block", "intercept"].includes(a.type) && a.slot === i,
+            );
+        const available = options();
+        const control = el.querySelector(".slot-activate");
+        if (control) {
+          control.textContent = available.length ? "Defend" : "Cannot defend";
+          control.classList.toggle("available", !!available.length);
+          control.setAttribute("aria-disabled", !available.length);
+          control.removeAttribute("data-activate-slot");
+        }
+        const defend = (e) => {
+          e?.stopPropagation();
+          if (ctx.busy()) return;
+          const choices = options();
+          if (choices.length === 1) {
+            run(ctx, choices[0]);
+            return;
+          }
+          if (!choices.length) return;
+          // Only mixed portions/covered Wards need a second choice, beside their card.
+          app.querySelectorAll(".defense-options").forEach((x) => x.remove());
+          const menu = document.createElement("div");
+          menu.className = "defense-options";
+          menu.innerHTML =
+            choices.map((a) => button(ctx, a)).join("") +
+            "<button data-defense-cancel>Cancel</button>";
+          menu.onclick = (e) => e.stopPropagation();
+          el.append(menu);
+          menu.querySelectorAll("[data-action]").forEach(
+            (btn) =>
+              (btn.onclick = (e) => {
+                stop(e);
+                run(ctx, btn.dataset.action);
+              }),
+          );
+          menu.querySelector("[data-defense-cancel]").onclick = (e) => {
+            stop(e);
+            menu.remove();
+          };
+        };
+        el.onclick = available.length
+          ? defend
+          : () => {
+              if (!ctx.busy()) showCard(ctx, c, i);
+            };
+        if (control) control.onclick = defend;
+        el.classList.toggle("defense-ready", !!available.length);
+        const passed =
+          b.reaction.column != null && i % b.columns > b.reaction.column;
+        el.classList.toggle("defense-passed", passed);
+        el.setAttribute(
+          "aria-label",
+          cardName(c) +
+            (available.length
+              ? " · Click to defend"
+              : passed
+                ? " · Attack has passed this column"
+                : " · Cannot defend this hit"),
+        );
+        if (control)
+          control.title = available.length
+            ? "Click to absorb this hit. It cannot travel back toward the enemy."
+            : passed
+              ? "The attack has passed this column."
+              : "No eligible defense against this hit.";
+        const view = document.createElement("button");
+        view.className = "defense-view";
+        view.textContent = "View";
+        view.setAttribute("aria-label", "View " + cardName(c));
+        view.onclick = (e) => {
+          stop(e);
+          if (!ctx.busy()) showCard(ctx, c, i);
+        };
+        el.append(view);
+      });
+    }
     const hit = o.battle.reaction,
       node = hit?.lastNode;
     if (

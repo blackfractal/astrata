@@ -177,14 +177,13 @@ for (const reduced of [false, true]) {
       });
       await p.getByRole("button", { name: "End turn", exact: true }).click();
       await settle(p);
+      await p.locator('[data-slot="20"]').click();
+      await settle(p);
       assert.equal(
         await p.locator('[data-slot="20"] .held-attack').textContent(),
         "25",
       );
-      await p
-        .locator(".incoming-attack [data-action]")
-        .filter({ hasText: "Familiar intercepts" })
-        .click();
+      await p.locator('[data-slot="22"]').click();
       await settle(p);
       assert.equal(
         await p.locator('[data-slot="22"] .held-attack').textContent(),
@@ -213,7 +212,7 @@ for (const reduced of [false, true]) {
       await settle(p);
       assert.match(
         await p.locator(".player-portrait").textContent(),
-        /48\/65 HP/,
+        /53\/70 HP/,
       );
       const got = await p.evaluate(() => ({
         bolts: window.bolts,
@@ -259,7 +258,7 @@ for (const reduced of [false, true]) {
       });
       report.checks.push(
         (reduced ? "Reduced motion: " : "Animated: ") +
-          "Arcane30 follows enemy → Ward20 → dead Familiar22 → right Bracelet → player; displays −5/−6/−2/−17, actual HP48. Attack holds with 25 on Ward, then 19 on the destroyed Ally space until next choice; all four nodes receive an Arcane hit burst; marker clears when resolved. " +
+          "Arcane30 follows enemy → Ward20 → dead Familiar22 → right Bracelet → player; displays −5/−6/−2/−17, actual HP53. Attack holds with 25 on Ward, then 19 on the destroyed Ally space until next choice; all four nodes receive an Arcane hit burst; marker clears when resolved. " +
           "Remaining damage is already visible at each impact burst, survives Ally disintegration, and flight carries the current damage number. " +
           (reduced
             ? "No flying projectiles."
@@ -303,7 +302,7 @@ await check(gear, async (p) => {
     .click();
   await settle(p);
   assert.equal(await p.locator(".held-attack").count(), 0);
-  assert.match(await p.locator(".player-portrait").textContent(), /61\/65 HP/);
+  assert.match(await p.locator(".player-portrait").textContent(), /66\/70 HP/);
   report.checks.push(
     "Attack also holds visibly on a depleted Bracelet while another equipment choice remains, then clears after Take hit.",
   );

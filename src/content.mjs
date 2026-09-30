@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.24",
-  content: "1.1.25",
+  rules: "1.3.25",
+  content: "1.1.26",
   observation: 1,
   actions: 1,
 };
@@ -284,7 +284,7 @@ card(
   1,
   2,
   { ward: 10 },
-  "Isolated. On place: 10 ward value. Activate: +10. Absorbs oldest first.",
+  "Isolated. On place: 10 ward value. Activate: +10. Absorbs incoming damage when chosen.",
   { ward: 10, condition: "isolated", tower: true },
 );
 card(
@@ -1472,10 +1472,10 @@ export const glossary = {
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
-  Ward: "Persistent automatic defense, oldest first. Covered Wards do not absorb unless the top card permits it.",
+  Ward: "Persistent defense chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Shield:
     "Block expires after the enemy turn. Choose which portion absorbs a hit.",
-  Ally: "May intercept after Wards and Shields. Destroyed Allies return next battle.",
+  Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",
   Burn: "Water enemies are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Poison:
     "Fire enemies are immune. Constant damage at turn start. On the player, bypasses all attack defenses, including Bracelets and Armor.",
@@ -1494,7 +1494,7 @@ export const glossary = {
   Pierce: "Skips Wards, Shields and Allies. Equipment still protects.",
   Cull: "Bypasses Wards and Shields. Allies can intercept; Bracelets and Armor still apply.",
   Taunt:
-    "The most recently taunting Ally must intercept after Wards and Shields. Stone Golem's Taunt expires after the coming enemy phase.",
+    "The most recently taunting reachable Ally must intercept before ordinary defense choices. Stone Golem's Taunt expires after the coming enemy phase.",
   Isolated: "No orthogonal neighbors; Sever also satisfies this.",
   Cornerstone: "Only functions in a grid corner.",
   Bonded: "Requires a neighbor of the printed element.",
@@ -1563,7 +1563,7 @@ export const glossary = {
   Setting:
     "A Necklace, Bracelet or Ring with its own printed effect and one Gem socket.",
   Bracelet:
-    "Equipment block protecting the player after Allies. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack; passive Armor still applies.",
+    "Equipment block at the final position before the player. Choosing it passes all grid defenses for this hit. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack; passive Armor still applies.",
   Ring: "Equipment with a printed effect and a Gem socket. Rootbound Ring adds one separate hit on your first damaging activation each player turn.",
   Necklace: "Equipment with a printed effect and a Gem socket.",
   Crown: "Head equipment with a printed effect and no Gem socket.",

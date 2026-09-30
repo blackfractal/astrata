@@ -43,14 +43,17 @@ test("elemental block converts leftovers back per portion", () => {
   assert.deepEqual(blockHit(5, "Fire", 4, "Fire"), { remaining: 0, block: 3 });
   assert.deepEqual(blockHit(5, "Fire", 8, "Water"), { remaining: 5, block: 0 });
 });
-test("Ward FIFO and exhausted activations remain independent", () => {
+test("Wards are selectable and exhausted activations do not prevent absorption", () => {
   const g = battle(),
-    a = put(g, "ward", 0, { ward: 3, used: 3 }),
-    b = put(g, "ward", 4, { ward: 10 });
+    a = put(g, "ward", 4, { ward: 3, used: 3 }),
+    b = put(g, "ward", 0, { ward: 10 });
   hit(g, 12);
+  assert.equal(a.ward, 3);
+  act(g, "ward", (x) => x.uid === a.uid);
+  act(g, "ward", (x) => x.uid === b.uid);
   assert.equal(a.ward, 0);
   assert.equal(b.ward, 1);
-  assert.equal(g.s.hp, 65);
+  assert.equal(g.s.hp, 70);
 });
 test("covered Wards inert unless top explicitly permits", () => {
   const g = battle(),
@@ -58,15 +61,17 @@ test("covered Wards inert unless top explicitly permits", () => {
   put(g, "palimpsest", 0);
   hit(g, 4);
   assert.equal(w.ward, 10);
-  assert.equal(g.s.hp, 61);
+  assert.equal(g.s.hp, 66);
   const h = battle(),
     v = put(h, "ward", 0);
   put(h, "lattice", 0);
   hit(h, 12);
+  act(h, "ward", (x) => x.uid === v.uid);
+  act(h, "ward");
   assert.equal(v.ward, 0);
   assert.equal(h.s.battle.grid[0][1].ward, 6);
 });
-test("Shield portions are compulsory choices before Allies", () => {
+test("Shield portions and Allies are optional choices sharing one defensive position", () => {
   const g = battle();
   const c = put(g, "shield", 0);
   put(g, "familiar", 1);
@@ -75,7 +80,8 @@ test("Shield portions are compulsory choices before Allies", () => {
     { uid: 1001, owner: c.uid, slot: 0, block: 5, element: "Water" },
   ];
   hit(g, 8, { element: "Water" });
-  assert.ok(g.legal().every((x) => x.type === "block"));
+  assert.ok(g.legal().some((x) => x.type === "intercept"));
+  assert.ok(g.legal().some((x) => x.type === "skipEquipment"));
   act(g, "block", (a) => a.uid === 1000);
   assert.equal(g.s.battle.reaction.damage, 5);
   act(g, "block");
@@ -87,13 +93,13 @@ test("Ally interception spills excess; Guardian swallows it", () => {
   put(g, "familiar", 0);
   hit(g, 10);
   act(g, "intercept");
-  assert.equal(g.s.hp, 61);
+  assert.equal(g.s.hp, 66);
   assert.equal(g.s.battle.destroyed.length, 1);
   const h = battle();
   put(h, "guardian", 0);
   hit(h, 20);
   act(h, "intercept");
-  assert.equal(h.s.hp, 65);
+  assert.equal(h.s.hp, 70);
 });
 test("Taunt forces the latest taunting Ally", () => {
   const g = battle();
@@ -111,7 +117,7 @@ test("Pierce and player status bypass grid but meet Bracelet and Armor", () => {
   hit(g, 7, { stage: "bracelet", pierce: true });
   act(g, "bracelet");
   assert.equal(w.ward, 10);
-  assert.equal(g.s.hp, 61);
+  assert.equal(g.s.hp, 66);
 });
 test("Recall restores activations, Charge, and Ward on subsequent placement", () => {
   const g = battle(),

@@ -11,7 +11,7 @@ function setup(elements, damage = 6, attack = "Fire") {
     const c = g.instance(g.newCard(id));
     c.element = element;
     c.hp = hp;
-    b.grid[i] = [c];
+    b.grid[i * 7] = [c];
   });
   b.reaction = {
     damage,
@@ -26,11 +26,11 @@ function setup(elements, damage = 6, attack = "Fire") {
 test("weakness bonus is absorbed first and never becomes player damage", () => {
   const g = setup([["Earth", 2]]);
   g.intercept(0);
-  assert.equal(g.s.hp, 59);
+  assert.equal(g.s.hp, 64);
   assert.equal(g.s.battle.destroyed.length, 1);
   const h = setup([["Earth", 4]]);
   h.intercept(0);
-  assert.equal(h.s.hp, 60);
+  assert.equal(h.s.hp, 65);
 });
 test("successive weak Allies share only the remaining weakness bonus, including after save/load", () => {
   let g = setup([
@@ -41,16 +41,16 @@ test("successive weak Allies share only the remaining weakness bonus, including 
   assert.equal(g.s.battle.reaction.damage, 6);
   assert.equal(g.s.battle.reaction.weaknessBonus, 1);
   g = new Game(0, g.s);
-  g.intercept(1);
-  assert.equal(g.s.hp, 60);
+  g.intercept(7);
+  assert.equal(g.s.hp, 65);
   const h = setup([
     ["Earth", 3],
     ["Earth", 2],
   ]);
   h.intercept(0);
   assert.equal(h.s.battle.reaction.weaknessBonus, 0);
-  h.intercept(1);
-  assert.equal(h.s.hp, 61);
+  h.intercept(7);
+  assert.equal(h.s.hp, 66);
 });
 test("weak to resistant drops the old bonus and converts resistance overflow back to base", () => {
   const g = setup([
@@ -58,15 +58,15 @@ test("weak to resistant drops the old bonus and converts resistance overflow bac
     ["Water", 2],
   ]);
   g.intercept(0);
-  g.intercept(1);
-  assert.equal(g.s.hp, 63);
+  g.intercept(7);
+  assert.equal(g.s.hp, 68);
   const h = setup([
     ["Earth", 2],
     ["Wind", 2],
   ]);
   h.intercept(0);
-  h.intercept(1);
-  assert.equal(h.s.hp, 61);
+  h.intercept(7);
+  assert.equal(h.s.hp, 66);
 });
 test("resistant to weak applies the new weakness to remaining base only", () => {
   const g = setup([
@@ -76,8 +76,8 @@ test("resistant to weak applies the new weakness to remaining base only", () => 
   g.intercept(0);
   assert.equal(g.s.battle.reaction.damage, 2);
   assert.equal(g.s.battle.reaction.weaknessBonus, 0);
-  g.intercept(1);
-  assert.equal(g.s.hp, 64);
+  g.intercept(7);
+  assert.equal(g.s.hp, 69);
 });
 test("odd damage resistance rounds locally and never increases the incoming base", () => {
   for (let base = 1; base <= 25; base++)
@@ -92,23 +92,23 @@ test("odd damage resistance rounds locally and never increases the incoming base
     }
   const g = setup([["Water", 2]], 5);
   g.intercept(0);
-  assert.equal(g.s.hp, 63);
+  assert.equal(g.s.hp, 68);
 });
 test("surviving Allies and Guardian swallow finish the hit, Chaos/Light remain mutually weak", () => {
   const g = setup([["Earth", 10]]);
   g.intercept(0);
   assert.equal(g.s.battle.grid[0][0].hp, 1);
-  assert.equal(g.s.hp, 65);
+  assert.equal(g.s.hp, 70);
   const h = setup([["Earth", 2, "guardian"]]);
   h.intercept(0);
-  assert.equal(h.s.hp, 65);
+  assert.equal(h.s.hp, 70);
   for (const [attack, defender] of [
     ["Chaos", "Light"],
     ["Light", "Chaos"],
   ]) {
     const k = setup([[defender, 2]], 6, attack);
     k.intercept(0);
-    assert.equal(k.s.hp, 59);
+    assert.equal(k.s.hp, 64);
   }
 });
 test("leftover bonus is discarded before equipment, while Bracelet and Armor still apply", () => {
@@ -122,7 +122,7 @@ test("leftover bonus is discarded before equipment, while Bracelet and Armor sti
   assert.equal(g.s.battle.reaction.stage, "bracelet");
   assert.equal(g.s.battle.reaction.weaknessBonus, 0);
   g.act(g.legal().find((a) => a.type === "bracelet"));
-  assert.equal(g.s.hp, 63);
+  assert.equal(g.s.hp, 68);
 });
 test("each hit gets fresh weakness and automatic Taunt uses the same handoff calculation", () => {
   const g = setup([
@@ -132,8 +132,8 @@ test("each hit gets fresh weakness and automatic Taunt uses the same handoff cal
   g.s.battle.grid[0][0].taunt = true;
   g.advanceHit();
   assert.equal(g.s.battle.reaction.damage, 6);
-  g.intercept(1);
-  assert.equal(g.s.hp, 63);
+  g.intercept(7);
+  assert.equal(g.s.hp, 68);
   const b = g.s.battle,
     c = g.instance(g.newCard("familiar"));
   c.element = "Earth";
@@ -147,5 +147,5 @@ test("each hit gets fresh weakness and automatic Taunt uses the same handoff cal
     name: "Second hit",
   };
   g.intercept(0);
-  assert.equal(g.s.hp, 57);
+  assert.equal(g.s.hp, 62);
 });

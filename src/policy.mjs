@@ -18,7 +18,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.11";
+    this.id = "weighted-druid-v1.12";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -279,10 +279,20 @@ export class WeightedPolicy {
           "Balance immediate kills, incoming damage, healing, and future resources.",
         ];
       }
+      case "ward":
+        return [
+          Math.min(f.ward, b.reaction.damage) * w.survival + (f.column + 1) * 2,
+          "Absorb damage while preserving defenders closer to the player.",
+        ];
       case "block":
       case "bracelet":
         return [
-          f.block * defenseRate(f.element, b.reaction.element),
+          Math.min(
+            b.reaction.damage,
+            f.block * defenseRate(f.element, b.reaction.element),
+          ) *
+            w.survival +
+            ((f.column ?? -1) + 1) * 2,
           "Use the portion with the strongest effective block against this element.",
         ];
       case "intercept": {
@@ -293,7 +303,8 @@ export class WeightedPolicy {
           (b.reaction.damage - result.remaining) * w.survival -
             (d.growth ? 8 : 0) -
             (d.effects.heal ? 5 : 0) +
-            (f.swallow ? b.reaction.damage : 0),
+            (f.swallow ? b.reaction.damage : 0) +
+            ((f.column ?? 0) + 1) * 2,
           "Protect player HP while retaining valuable growing Allies when possible.",
         ];
       }

@@ -69,6 +69,8 @@ for (const name of [
   "mind-grid-evaluation",
   "choir-shield-evaluation",
   "attack-traversal-verification.json",
+  "positional-defense-verification.json",
+  "positional-defense-evaluation",
   "death-evaluation",
   "death-verification.json",
   "optional-equipment-block-evaluation",

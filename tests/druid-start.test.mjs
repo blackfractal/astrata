@@ -4,6 +4,8 @@ import { Game } from "../src/engine.mjs";
 
 test("Druid opens each battle with four revealed cards, one Focus, two Channel and its 12-card starter", () => {
   const g = new Game(9);
+  assert.equal(g.s.hp, 70);
+  assert.equal(g.s.maxHp, 70);
   g.s.inventory = [];
   for (const slot of Object.keys(g.s.equipment)) g.s.equipment[slot] = null;
   const ids = g.s.deck.map((c) => c.id);
@@ -32,10 +34,14 @@ test("loading an older run preserves its edited deck and applies base Insight at
     original.s.deck.findIndex((c) => c.id === "shield"),
     1,
   );
+  original.s.hp = 40;
+  original.s.maxHp = 65;
   const saved = original.save();
   saved.version = { ...saved.version, rules: "1.3.4" };
   const loaded = new Game(0, saved);
   assert.deepEqual(loaded.s.deck, saved.deck);
+  assert.equal(loaded.s.hp, 40);
+  assert.equal(loaded.s.maxHp, 65);
   loaded.beginBattle([{ uid: loaded.uid(), enemy: "bat", restless: 0 }]);
   assert.equal(loaded.s.battle.hand.length, 4);
 });

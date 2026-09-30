@@ -18,12 +18,12 @@ function hit(g, damage, statusHit = false, element = "Arcane") {
 }
 test("Husk Corrode hurts on the opening turn, then grows through leftover bracelet block", () => {
   const g = base();
-  assert.equal(g.s.hp, 64);
+  assert.equal(g.s.hp, 69);
   assert.equal(g.s.status.corrode, 2);
   const b = g.s.battle;
   b.bracelets = [{ uid: 901, block: 2, element: "Arcane" }];
   g.beginTurn();
-  assert.equal(g.s.hp, 62);
+  assert.equal(g.s.hp, 67);
   assert.equal(g.s.status.corrode, 3);
   assert.equal(b.bracelets[0].block, 2);
   assert.equal(b.reaction, null);

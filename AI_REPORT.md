@@ -476,3 +476,18 @@ Package1.3.40/rules1.3.24 adds incoming-attack path/loss metadata, persistent wa
 
 
 Package1.3.41 changes only incoming orb presentation timing/continuity. Three focused traversal tests and packaged impact-time, disintegration, numbered-flight, reduced-motion, equipment-hold and Ring-origin checks pass. No rules/content/policy change, new AI batch, or training; the earlier five-run evaluation remains historical evidence.
+
+
+## Positional defense and70HP — package1.3.43
+
+Rules1.3.25/content1.1.26/policyweighted-druid-v1.12. Wards are new explicit legal actions alongside Shields/Allies/equipment. Column position limits legal choices, item block passes the grid, and Take hit preserves all unused defenses. The policy recognizes Ward absorption and favors farther columns to retain subsequent defensive options; existing weights remain, no training. New Druid runs start70/70.
+
+| Seed | Outcome | Remaining HP | Field round | Decisions |
+| --- | --- | --- | --- | --- |
+|825183|Loss|0|13|225|
+|825184|Win|14|19|300|
+|825185|Loss|0|10|185|
+|825186|Loss|0|12|175|
+|825187|Win|12|20|364|
+
+All five complete without illegal actions or stalls, with full source/version/state archives in reports/positional-defense-evaluation/. Two wins provide end-to-end playability evidence. This is not a controlled balance comparison: health, defense rules and policy changed together, and five runs are too few for a balance conclusion. All229 rules tests and direct-click/mixed-portion/passed-column GUI checks pass; normal/reduced incoming animation checks also pass.

@@ -329,6 +329,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.24",
           "1.3.23",
           "1.3.22",
           "1.3.21",
@@ -389,8 +390,8 @@ export class Game {
       uid: 0,
       mode: "class",
       classId: "druid",
-      hp: 65,
-      maxHp: 65,
+      hp: 70,
+      maxHp: 70,
       gold: 0,
       deck: [],
       inventory: [],
@@ -1302,13 +1303,8 @@ export class Game {
       if (j.kind === "hit") {
         b.reaction = {
           ...j,
-          stage: j.statusHit
-            ? "player"
-            : j.pierce
-              ? "bracelet"
-              : j.cull
-                ? "ally"
-                : "ward",
+          stage: j.statusHit ? "player" : "defend",
+          column: j.pierce ? -1 : MIND_COLUMNS - 1,
           intercepted: [],
         };
         this.present("incoming", {
@@ -1340,6 +1336,36 @@ export class Game {
       .map((x, i) => ({ c: top(x), i }))
       .filter((x) => cards[x.c?.id]?.type === "Ally" && x.c.hp > 0);
   }
+  defenseChoices() {
+    const b = this.s.battle,
+      h = b?.reaction;
+    const empty = { wards: [], shields: [], allies: [], bracelets: [] };
+    if (!h || h.statusHit || h.stage === "player") return empty;
+    // Older saved reactions infer position from their last actual impact.
+    const column =
+      h.column ??
+      (h.lastNode?.kind === "card"
+        ? h.lastNode.slot % MIND_COLUMNS
+        : h.lastNode?.kind === "item" || h.stage === "bracelet"
+          ? -1
+          : MIND_COLUMNS - 1);
+    const reachable = (i) => !h.pierce && i % MIND_COLUMNS <= column;
+    return {
+      wards: h.cull ? [] : this.activeWards().filter((x) => reachable(x.i)),
+      shields: h.cull
+        ? []
+        : b.shields.filter(
+            (p) =>
+              p.block > 0 &&
+              reachable(p.slot) &&
+              top(b.grid[p.slot])?.uid === p.owner,
+          ),
+      allies: this.allies().filter(
+        (x) => reachable(x.i) && !(h.intercepted || []).includes(x.c.uid),
+      ),
+      bracelets: b.bracelets.filter((p) => p.block > 0),
+    };
+  }
   presentIncomingNode(kind, detail, node) {
     const h = this.s.battle.reaction;
     const pathFrom = h.statusHit
@@ -1347,6 +1373,11 @@ export class Game {
       : h.lastNode ||
         (h.source != null ? { kind: "enemy", uid: h.source } : null);
     h.lastNode = node;
+    if (node.kind === "card") h.column = node.slot % MIND_COLUMNS;
+    else if (node.kind === "item") {
+      h.column = -1;
+      h.stage = "bracelet";
+    }
     this.present(kind, {
       ...detail,
       element: h.element,
@@ -1365,56 +1396,28 @@ export class Game {
       this.finishHit();
       return;
     }
-    if (h.stage === "ward") {
-      for (const { c, i } of this.activeWards()) {
-        const n = Math.min(c.ward, h.damage);
-        c.ward -= n;
-        h.damage -= n;
-        if (c.ward === 0) c.zeroWard = true;
-        this.presentIncomingNode(
-          "defend",
-          { slot: i, amount: n, loss: n, name: "Ward absorbs" },
-          { kind: "card", slot: i },
-        );
-        if (!h.damage) break;
-      }
-      h.stage = "shield";
-    }
-    if (h.damage <= 0) {
-      this.finishHit();
-      return;
-    }
-    if (h.stage === "shield") {
-      if (
-        b.shields.some(
-          (p) => p.block > 0 && top(b.grid[p.slot])?.uid === p.owner,
-        )
-      )
-        return;
-      h.stage = "ally";
-    }
-    if (h.stage === "ally") {
-      const allies = this.allies().filter(
-        (x) => !h.intercepted.includes(x.c.uid),
-      );
-      if (h.weakest && allies.length) {
-        this.intercept(
-          allies.sort((a, z) => a.c.hp - z.c.hp || a.i - z.i)[0].i,
-        );
+    if (h.stage !== "player") {
+      const choices = this.defenseChoices();
+      const forced = h.weakest
+        ? [...choices.allies].sort((a, z) => a.c.hp - z.c.hp || a.i - z.i)[0]
+        : choices.allies.find((x) => x.c.taunt);
+      if (forced) {
+        this.intercept(forced.i);
         return;
       }
-      const taunt = allies.find((x) => x.c.taunt);
-      if (taunt) {
-        this.intercept(taunt.i);
+      if (Object.values(choices).some((list) => list.length)) {
+        const hasGrid =
+          choices.wards.length ||
+          choices.shields.length ||
+          choices.allies.length;
+        h.stage = hasGrid ? "defend" : "bracelet";
+        if (!hasGrid) {
+          h.column = -1;
+          h.weaknessBonus = 0;
+          h.weaknessElement = null;
+        }
         return;
       }
-      if (allies.length) return;
-      h.stage = "bracelet";
-    }
-    if (h.stage === "bracelet") {
-      h.weaknessBonus = 0;
-      h.weaknessElement = null;
-      if (b.bracelets.some((x) => x.block > 0)) return;
       h.stage = "player";
     }
     if (h.stage === "player") {
@@ -2291,52 +2294,51 @@ export class Game {
     if (s.mode === "battle") {
       const h = b.reaction;
       if (h) {
-        if (h.stage === "shield")
-          for (const p of b.shields.filter(
-            (p) => p.block > 0 && top(b.grid[p.slot])?.uid === p.owner,
-          ))
-            add(
-              "block",
-              `${p.element} Shield · ${p.block} block`,
-              { uid: p.uid },
-              { block: p.block, element: p.element },
-            );
-        if (h.stage === "ally") {
-          for (const x of this.allies().filter(
-            (x) => !h.intercepted.includes(x.c.uid),
-          ))
-            add(
-              "intercept",
-              `${cards[x.c.id].name} intercepts · ${x.c.hp} HP`,
-              { slot: x.i },
-              {
-                allyHp: x.c.hp,
-                element: x.c.element,
-                swallow: !!cards[x.c.id].swallow,
-              },
-            );
+        const choices = this.defenseChoices();
+        for (const { c, i } of choices.wards)
           add(
-            "takeHit",
-            "Let it reach your equipment",
-            {},
-            { takeDamage: h.damage },
+            "ward",
+            `${cards[c.id].name} · ${c.ward} ward`,
+            { uid: c.uid, slot: i },
+            { ward: c.ward, column: i % MIND_COLUMNS },
           );
-        }
-        if (h.stage === "bracelet") {
-          for (const p of b.bracelets.filter((x) => x.block > 0))
-            add(
-              "bracelet",
-              `${p.name} · ${p.element} · ${p.block} block`,
-              { uid: p.uid },
-              { block: p.block, element: p.element },
-            );
+        for (const p of choices.shields)
+          add(
+            "block",
+            `${p.element} Shield · ${p.block} block`,
+            { uid: p.uid, slot: p.slot },
+            {
+              block: p.block,
+              element: p.element,
+              column: p.slot % MIND_COLUMNS,
+            },
+          );
+        for (const x of choices.allies)
+          add(
+            "intercept",
+            `${cards[x.c.id].name} intercepts · ${x.c.hp} HP`,
+            { slot: x.i },
+            {
+              allyHp: x.c.hp,
+              element: x.c.element,
+              swallow: !!cards[x.c.id].swallow,
+              column: x.i % MIND_COLUMNS,
+            },
+          );
+        for (const p of choices.bracelets)
+          add(
+            "bracelet",
+            `${p.name} · ${p.element} · ${p.block} block`,
+            { uid: p.uid },
+            { block: p.block, element: p.element, column: -1 },
+          );
+        if (!h.statusHit && h.stage !== "player")
           add(
             "skipEquipment",
-            "Take hit — save item block",
+            "Take hit — save defenses",
             {},
             { takeDamage: h.damage, preserveEquipmentBlock: true },
           );
-        }
         return actions;
       }
       if (b.phase === "place") {
@@ -2715,11 +2717,31 @@ export class Game {
       case "endTurn":
         this.endTurn();
         break;
+      case "ward": {
+        const c = b.grid[a.slot].find((c) => c.uid === a.uid),
+          h = b.reaction;
+        const loss = Math.min(c.ward, h.damage);
+        c.ward -= loss;
+        h.damage -= loss;
+        h.weaknessBonus = 0;
+        h.weaknessElement = null;
+        if (!c.ward) c.zeroWard = true;
+        this.presentIncomingNode(
+          "defend",
+          { slot: a.slot, amount: loss, loss, name: "Ward absorbs" },
+          { kind: "card", slot: a.slot },
+        );
+        this.advanceHit();
+        this.pump();
+        break;
+      }
       case "block":
       case "bracelet": {
         const p = (a.type === "block" ? b.shields : b.bracelets).find(
           (x) => x.uid === a.uid,
         );
+        b.reaction.weaknessBonus = 0;
+        b.reaction.weaknessElement = null;
         const r = blockHit(
           p.block,
           p.element,
@@ -2752,12 +2774,13 @@ export class Game {
         this.pump();
         break;
       case "skipEquipment":
-        this.log("You let the hit through without using item block.");
+        this.log("You let the hit through without using remaining defenses.");
         b.reaction.stage = "player";
         this.advanceHit();
         this.pump();
         break;
       case "takeHit":
+        b.reaction.column = -1;
         b.reaction.stage = "bracelet";
         this.advanceHit();
         this.pump();

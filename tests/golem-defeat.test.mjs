@@ -64,7 +64,7 @@ test("Golem grows 10 to 16, intercepts all attacks that round, then keeps growth
   assert.equal(b.channel, 1);
   assert.equal(b.destroyed.length, 0);
   act(g, "endTurn");
-  assert.equal(g.s.hp, 65);
+  assert.equal(g.s.hp, 70);
   assert.equal(c.hp, 8);
   assert.equal(c.maxHp, 16);
   assert.equal(c.taunt, false);
@@ -73,7 +73,7 @@ test("Golem grows 10 to 16, intercepts all attacks that round, then keeps growth
   for (const enemy of b.enemies) enemy.cycle = 2;
   b.phase = "activate";
   act(g, "endTurn");
-  assert.ok(g.legal().some((a) => a.type === "takeHit"));
+  assert.ok(g.legal().some((a) => a.type === "skipEquipment"));
 });
 test("Golem growth adds six when wounded rather than healing to full, and remains a normal Ally", () => {
   const g = base(),

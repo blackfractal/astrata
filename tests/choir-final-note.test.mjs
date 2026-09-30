@@ -98,7 +98,7 @@ test("Cull skips intact Wards and Shields, permits Ally/equipment defense, and r
   act(g, "activate");
   assert.equal(g.s.mode, "battle");
   assert.equal(g.s.gold, gold);
-  assert.equal(b.reaction.stage, "ally");
+  assert.equal(b.reaction.stage, "defend");
   assert.equal(ward.ward, 2);
   assert.equal(b.shields[0].block, 2);
   assert.ok(g.legal().some((a) => a.type === "intercept"));
@@ -175,6 +175,6 @@ test("Recent saves load and use current Choir warnings and rotation", () => {
     assert.match(e.signature, /Final Note/);
     assert.equal(e.rotation[3].name, "Chorus");
     act(h, "activate");
-    assert.equal(h.s.hp, 45);
+    assert.equal(h.s.hp, 50);
   }
 });

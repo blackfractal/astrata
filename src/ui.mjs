@@ -269,7 +269,7 @@ function render(frame = null) {
         : o.mode === "gem"
           ? `${items[o.startGem].name} carries ${items[o.startGem].element}. Imbue your Bracelet to protect, or your Ring to strike. Gems can be moved at Taverns.`
           : "The Apex Predator terrorizes Astrata. Your journey begins among pale roots and dark pools. Beyond the Weald, an Archon guards the way to the deeper Strata. Gather what you can before it wakes.";
-    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">65 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
+    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
     body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Whispering Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16</small></div></div><div class="field-wrap"><div class="field">${Array.from(
@@ -332,7 +332,10 @@ function render(frame = null) {
       })
       .join("")}</div>${
       b.reaction
-        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "item") + " absorbs this hit." + (b.reaction.stage === "bracelet" ? " Or take the hit and save item block; Armor still applies." : "")}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
+        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><div class="row wrap">${actions
+            .filter((a) => a.type === "skipEquipment")
+            .map((a) => actionButton(a))
+            .join("")}</div></div>`
         : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
     }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,
