@@ -503,3 +503,6 @@ Package1.3.46/rules1.3.27 adds source-aware friendly status presentation and rus
 
 
 Package1.3.47/content1.1.27 reduces Fire Wolf Fire Bite from Burn4 to Burn2. Actual hit/status resolution verified; all237 existing tests pass. No new AI batch or training; earlier evaluations describe their recorded versions, not this balance adjustment.
+
+
+Package1.3.48/rules1.3.28 introduces tabbed catalogs and requires a visiting Healer for cursed-item removal; restricted stock cannot be bought. Policy1.12/content1.1.27 unchanged. All239 tests pass with healer legality, payment, stale-action and legacy-save coverage; packaged tabbed Buy/Sell/Healer flows also pass. No training or new full-run evaluation; older runs remain evidence for their recorded versions.

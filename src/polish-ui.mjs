@@ -27,6 +27,8 @@ const slotNames = {
 const actTypes = ["activate", "recall"];
 let drag = null;
 let marketTab = "buy";
+const marketCategory = { buy: "Cards", sell: "Equipment" };
+const healerRequired = "Requires a Tavern Healer to remove.";
 const stop = (e) => e.stopPropagation();
 function run(c, a) {
   if (c.busy()) return;
@@ -462,10 +464,12 @@ function itemDetails(ctx, uid) {
         (a.type === "socket" && a.gem === uid),
     );
   ctx.dialog(
-    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}<div class="item-options">${
+    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="item-options">${
       ["equip", "unequip", "socket", "unsocket", "sell"]
         .map((type) => {
-          const list = choices.filter((a) => a.type === type);
+          const list = choices.filter(
+            (a) => a.type === type && !(type === "sell" && d.cursed),
+          );
           return list.length
             ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
             : "";
@@ -633,6 +637,7 @@ function tavern(ctx) {
     );
     if (marketTab === "sell") {
       content.innerHTML = sellCatalog(ctx);
+      bindMarketCategories(ctx, content);
       bindCatalog(ctx, content);
       bindActions(ctx, host);
       return;
@@ -644,26 +649,25 @@ function tavern(ctx) {
         a = actions.find((a) => a.type === "buy" && a.index === index);
       return { id, index, isCard, d, price, a };
     });
-    content.innerHTML = ["Cards", "Gems", "Equipment"]
-      .map(
-        (cat) =>
-          `<details class="market-category" ${cat === "Cards" ? "open" : ""}><summary>${cat}</summary><div class="market-stock">${
-            stock
-              .filter((x) =>
-                cat === "Cards"
-                  ? x.isCard
-                  : cat === "Gems"
-                    ? !x.isCard && x.d.slot === "gem"
-                    : !x.isCard && x.d.slot !== "gem",
-              )
-              .map(
-                (x) =>
-                  `<article class="market-item ${x.a ? "" : "unavailable"}">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.d.text)}</p><div class="store-controls"><button data-stock-view="${x.index}">View</button>${x.a ? button(ctx, { ...x.a, label: "Buy · " + x.price + " Gold" }) : `<button disabled title="Needs ${x.price} Gold; ${o.gold} available">Buy · ${x.price} Gold</button>`}</div></article>`,
-              )
-              .join("") || "<p>Sold out</p>"
-          }</div></details>`,
-      )
-      .join("");
+    const cat = marketCategory.buy;
+    const entries = stock.filter((x) =>
+      cat === "Cards"
+        ? x.isCard
+        : cat === "Gems"
+          ? !x.isCard && x.d.slot === "gem"
+          : !x.isCard && x.d.slot !== "gem",
+    );
+    content.innerHTML = marketCategories(
+      "buy",
+      ["Cards", "Gems", "Equipment"],
+      entries
+        .map((x) => {
+          const restricted = x.d.cursed || x.d.type === "Hex";
+          return `<article class="market-item ${restricted ? "healer-only" : x.a ? "" : "unavailable"}">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.d.text)}</p>${restricted ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-stock-view="${x.index}">View</button>${!restricted && x.a ? button(ctx, { ...x.a, label: "Buy · " + x.price + " Gold" }) : `<button disabled title="${restricted ? healerRequired : `Needs ${x.price} Gold; ${o.gold} available`}">${restricted ? "Buy unavailable" : `Buy · ${x.price} Gold`}</button>`}</div></article>`;
+        })
+        .join("") || "<p>Sold out</p>",
+    );
+    bindMarketCategories(ctx, content);
   } else {
     const types =
       {
@@ -704,38 +708,85 @@ function tavern(ctx) {
 }
 function viewStock(ctx, index) {
   const id = ctx.o.shop.stock[index],
-    a = ctx.actions.find((a) => a.type === "buy" && a.index === index);
+    d = id.startsWith("card:") ? cards[id.slice(5)] : items[id],
+    restricted = d.cursed || d.type === "Hex",
+    a =
+      !restricted &&
+      ctx.actions.find((a) => a.type === "buy" && a.index === index);
   if (id.startsWith("card:")) {
     showCard(ctx, { id: id.slice(5) });
     ctx.modal.querySelector(".card-context").innerHTML = a
       ? button(ctx, a, "primary")
-      : "<p>Not enough Gold to buy this card.</p>";
+      : `<p>${restricted ? healerRequired : "Not enough Gold to buy this card."}</p>`;
   } else {
     const d = items[id];
     ctx.dialog(
-      `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + id, "full-art")}<div><p>${ctx.text(d.text)}</p><p>${d.slot} · Worth ${d.worth} Gold</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${a ? button(ctx, a, "primary") : "<p>Not enough Gold to buy this item.</p>"}</div></div>`,
+      `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + id, "full-art")}<div><p>${ctx.text(d.text)}</p><p>${d.slot} · Worth ${d.worth} Gold</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${a ? button(ctx, a, "primary") : `<p>${restricted ? healerRequired : "Not enough Gold to buy this item."}</p>`}</div></div>`,
     );
   }
   bindActions(ctx, ctx.modal);
 }
+function marketCategories(mode, categories, body) {
+  const selected = marketCategory[mode];
+  return `<div class="market-categories" role="tablist" aria-label="${mode === "buy" ? "Buy categories" : "Sell categories"}">${categories.map((cat) => `<button role="tab" id="market-${mode}-${cat}" data-market-category="${cat}" aria-selected="${cat === selected}" aria-controls="market-catalog" tabindex="${cat === selected ? 0 : -1}">${cat}</button>`).join("")}</div><section id="market-catalog" role="tabpanel" aria-labelledby="market-${mode}-${selected}" tabindex="0">${mode === "sell" && selected === "Grimoire" ? '<p class="catalog-note">One paid card removal per Tavern.</p>' : ""}<div class="market-stock">${body}</div></section>`;
+}
+function bindMarketCategories(ctx, root) {
+  const tabs = [...root.querySelectorAll("[data-market-category]")];
+  for (const el of tabs) {
+    el.onclick = () => {
+      marketCategory[marketTab] = el.dataset.marketCategory;
+      ctx.render();
+    };
+    el.onkeydown = (e) => {
+      const i = tabs.indexOf(el);
+      const next =
+        e.key === "ArrowRight"
+          ? (i + 1) % tabs.length
+          : e.key === "ArrowLeft"
+            ? (i + tabs.length - 1) % tabs.length
+            : e.key === "Home"
+              ? 0
+              : e.key === "End"
+                ? tabs.length - 1
+                : null;
+      if (next == null) return;
+      e.preventDefault();
+      const category = tabs[next].dataset.marketCategory;
+      tabs[next].click();
+      ctx.app.querySelector(`[data-market-category="${category}"]`)?.focus();
+    };
+  }
+}
 function sellCatalog(ctx) {
   const { o, actions } = ctx;
-  const gear = o.inventory
-    .map((x) => {
-      const d = items[x.id],
-        a = actions.find((a) => a.type === "sell" && a.uid === x.uid),
-        gem = o.inventory.find((g) => g.uid === x.gem);
-      return `<article class="market-item">${ctx.img("item-" + x.id)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}</p><div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : '<button disabled title="Unsocket this Gem before selling; Cursed items also require enough Gold">Sell unavailable</button>'}</div></article>`;
-    })
-    .join("");
-  const deck = o.deck
-    .map((c) => {
-      const d = cards[c.id],
-        a = actions.find((a) => a.type === "remove" && a.uid === c.uid);
-      return `<article class="market-item">${ctx.img("card-" + c.id)}<h4>${d.name}${c.upgrade ? " +" : ""}</h4><p>${ctx.text(d.text)}</p><div class="store-controls"><button data-owned-card="${c.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${o.shop.removeUsed ? "Removal already used at this Tavern" : d.type === "Hex" ? "Visit the Healer" : "Needs 40 Gold"}">${d.type === "Hex" ? "Visit Healer" : o.shop.removeUsed ? "Removal used" : "Remove unavailable"}</button>`}</div></article>`;
-    })
-    .join("");
-  return `<details open><summary>Equipment & Gems</summary><div class="market-stock">${gear}</div></details><details><summary>Grimoire · one removal per Tavern</summary><div class="market-stock">${deck}</div></details>`;
+  const body =
+    marketCategory.sell === "Equipment"
+      ? o.inventory
+          .map((x) => {
+            const d = items[x.id],
+              a =
+                !d.cursed &&
+                actions.find((a) => a.type === "sell" && a.uid === x.uid),
+              gem = o.inventory.find((g) => g.uid === x.gem),
+              equipped = Object.values(o.equipment).includes(x.uid);
+            return `<article class="market-item ${d.cursed ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}</p>${d.cursed ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${d.cursed ? healerRequired : "Unsocket this Gem before selling"}">Sell unavailable</button>`}</div></article>`;
+          })
+          .join("")
+      : o.deck
+          .map((c) => {
+            const d = cards[c.id],
+              restricted = d.type === "Hex",
+              a =
+                !restricted &&
+                actions.find((a) => a.type === "remove" && a.uid === c.uid);
+            return `<article class="market-item ${restricted ? "healer-only" : ""}" data-catalog-card="${c.uid}">${ctx.img("card-" + c.id)}<h4>${d.name}${c.upgrade ? " +" : ""}</h4><p>${ctx.text(d.text)}</p>${restricted ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-card="${c.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : o.shop.removeUsed ? "Removal already used at this Tavern" : "Needs 40 Gold"}">${restricted ? "Removal unavailable" : o.shop.removeUsed ? "Removal used" : "Remove unavailable"}</button>`}</div></article>`;
+          })
+          .join("");
+  return marketCategories(
+    "sell",
+    ["Grimoire", "Equipment"],
+    body || "<p>No belongings in this category.</p>",
+  );
 }
 function bindCatalog(ctx, root) {
   root

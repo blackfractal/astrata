@@ -329,6 +329,8 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.27",
+          "1.3.26",
           "1.3.25",
           "1.3.24",
           "1.3.23",
@@ -2217,7 +2219,7 @@ export class Game {
         const id = shop.stock[index],
           d = id.startsWith("card:") ? cards[id.slice(5)] : items[id],
           price = d.worth || { common: 30, rare: 65, legendary: 120 }[d.rarity];
-        if (s.gold >= price)
+        if (s.gold >= price && !d.cursed && d.type !== "Hex")
           add(
             "buy",
             `Buy ${d.name} · ${price} Gold`,
@@ -2231,7 +2233,7 @@ export class Game {
         const d = items[inst.id];
         if (!s.inventory.some((x) => x.gem === inst.uid)) {
           const value = Math.floor(d.worth / 2);
-          if (!d.cursed || s.gold >= value)
+          if (!d.cursed || (shop.healer && s.gold >= value))
             add(
               "sell",
               `${d.cursed ? "Remove" : "Sell"} ${d.name} · ${d.cursed ? "-" : "+"}${value} Gold`,

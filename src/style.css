@@ -2733,3 +2733,66 @@ header {
   font-size: 22px;
   white-space: nowrap;
 }
+
+/* Market categories keep one catalog visible; equipped gear remains identifiable. */
+.market-categories {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid #6d7151;
+  margin-top: 16px;
+}
+.market-categories [role="tab"] {
+  min-width: 110px;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #afbaa8;
+}
+.market-categories [aria-selected="true"] {
+  color: #f0d498;
+  border-bottom-color: #d8b86e;
+  background: #263829;
+}
+.market-categories [role="tab"]:focus-visible {
+  outline: 2px solid #f0d498;
+  outline-offset: -4px;
+}
+.market-item {
+  position: relative;
+}
+.market-item.market-equipped {
+  border: 2px solid #dfc184;
+  box-shadow: inset 0 0 0 2px #dfc18424;
+}
+.equipped-label {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  left: 12px;
+  padding: 3px 7px;
+  background: #15271af2;
+  color: #f0d498;
+  border: 1px solid #dfc184;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+.market-item.healer-only {
+  background: #252a27;
+  color: #aeb3ad;
+}
+.market-item.healer-only > img {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+.market-item.healer-only h4 {
+  color: #b6b9b2;
+}
+.market-item > .healer-required {
+  min-height: 0;
+  color: #d2c6b0;
+  font-size: 12px;
+}
+.catalog-note {
+  margin-top: 12px;
+  color: #c5c8b5;
+  font-size: 12px;
+}
