@@ -463,3 +463,10 @@ Package1.3.37 changes only the human double-click shortcut to target the topmost
 Rules1.3.22/content1.1.23/policyweighted-druid-v1.11. New skipEquipment legal choice preserves item block and accepts remaining damage through normal Armor. Policy recognizes it explicitly and prefers usable block; weights unchanged, no training. Five archived seeds825183–187: loss/win9/loss/loss/loss, rounds20/19/14/12/19, decisions368/309/195/177/388, unchanged from immunity evaluation. All finish without errors or stalls. Compressed state/decision archives and source snapshots: reports/optional-equipment-block-evaluation/.
 
 All212 tests and packaged skip/partial-block/multiple-hit UI checks pass. Deliberate skipping is exercised by focused tests rather than inferred from AI outcomes; five games do not establish balance.
+
+
+## Death attribution — package1.3.39
+
+Rules1.3.23/content1.1.24; policy1.11 unchanged. Five seeds825183–187 finish loss/win9/loss/loss/loss with368/309/195/177/388 decisions, matching optional-block evaluation. New structured death details name the actual source: Cinder Hart/Stampede; Shard-Walker/Shard; Dervish Hunter/Slice; Mini-Void/Gnaw. Winning run has no death attribution. The Mini-Void result demonstrates attribution within a boss encounter rather than assigning the boss automatically.
+
+All219 tests and six packaged graphical death flows pass. Full message and structured fields persist in both desktop and headless result archives; new formatter source is included in build snapshots. Evidence reports/death-evaluation/. No combat/policy changes, training, or balance claim.

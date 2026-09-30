@@ -7,7 +7,7 @@ function archive() {
   return (runArchive ||= createArchive(base(), {
     packageVersion: require("./package.json").version,
     sources: Object.fromEntries(
-      ["engine.mjs", "content.mjs", "policy.mjs"].map((name) => [
+      ["engine.mjs", "content.mjs", "policy.mjs", "death.mjs"].map((name) => [
         name,
         fs.readFileSync(path.join(__dirname, "src", name), "utf8"),
       ]),

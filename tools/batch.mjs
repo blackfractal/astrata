@@ -16,10 +16,12 @@ const packageVersion = JSON.parse(
 ).version;
 const sources = Object.fromEntries(
   await Promise.all(
-    ["engine.mjs", "content.mjs", "policy.mjs"].map(async (name) => [
-      name,
-      await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),
-    ]),
+    ["engine.mjs", "content.mjs", "policy.mjs", "death.mjs"].map(
+      async (name) => [
+        name,
+        await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),
+      ],
+    ),
   ),
 );
 const archive = createArchive(dir, {
@@ -83,6 +85,7 @@ for (let i = 0; i < count; i++) {
     weights: policy.weights,
     outcome: g.s.outcome,
     cause: g.s.cause,
+    death: g.s.death,
     hp: g.s.hp,
     rounds: g.s.field.round,
     steps: g.s.steps,

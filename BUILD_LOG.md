@@ -664,3 +664,16 @@ Incoming panel and detail dialog expose the option; Bracelet tooltip explains pr
 Five archived seeds825183–187 complete without errors: loss/win9/loss/loss/loss, rounds20/19/14/12/19, decisions368/309/195/177/388, matching prior immunity evaluation. New legal action does not stall AI; focused engine/UI cases exercise intentional skipping. Full versioned compressed archives and build sources retained in reports/optional-equipment-block-evaluation/. Small playability sample, not balance evidence.
 
 Additional implementation, verification, documentation and packaging time: approximately10 minutes. Runnable release and CRC-verified ZIP refreshed; user's running app/profile untouched. Local implementation commit only, no push.
+
+
+## Post-build polish — personalized You Died, round 44
+
+2026-09-29. Jonathan requested enemy+attack attribution, plain-language status deaths, and a fun sentence for each boss/Eidolon, always ending Another traveler may find a different way. Added pure death.mjs formatter and ten unique epigraphs (three Archons/seven Eidolons), retaining his exact Glass Choir example. Lethal reaction is passed into finish before status cleanup; lookup uses the actual source UID, including a dead Choir's Final Note. Status ticks report burning, poison or corrosion without assigning an original enemy. Burning Itch, Events and unknown/legacy causes have factual fallbacks; old attack-only records never invent a killer. Existing cause field retained for compatibility.
+
+Persisted death object includes kind, relevant enemy ID/UID/name/tier/attack or status, summary, flavor and exact full message. Observation feeds both You Died and results/run history; state archives naturally retain the object, headless exports explicitly include it. Desktop and batch build snapshots now include the new death.mjs dependency. Victory behavior, lethal animation/zero-HP timing, RNG and combat decisions unchanged. Previous1.3.22 saves accepted. Package1.3.39/rules1.3.23/content1.1.24/design4.81, policy1.11 unchanged.
+
+All219 tests pass, including seven new attribution/format regressions: actual pack member, three real status ticks before cleanup, all10 epigraphs plus future-enemy fallback, Final Note mutual death with observation/archive/save retention, Hex/Event/legacy fallbacks and victory exclusion. Six packaged GUI cases execute ordinary enemy, Eidolon, Choir Final Note and allthree statuses, checking exact death text, result.json and results-page attribution. Screenshots inspected, no renderer errors. Evidence tests/death.test.mjs, tools/death-ui-test.mjs, reports/death-verification.json and screenshots/death/.
+
+Five complete archived seeds825183–187 retain previous outcomes/decisions: loss/win9/loss/loss/loss, counts368/309/195/177/388. Recorded killers are Cinder Hart/Stampede, Shard-Walker/Shard, Dervish Hunter/Slice and Mini-Void/Gnaw; the last correctly names the summoned enemy rather than Colossus. No errors/stalls, no training or balance inference. Full traces and build sources in reports/death-evaluation/.
+
+Additional implementation, verification, documentation and packaging time: approximately10 minutes. Runnable release and CRC-verified ZIP refreshed. User's running app/profile untouched; local implementation commit only, no push.

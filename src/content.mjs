@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.22",
-  content: "1.1.23",
+  rules: "1.3.23",
+  content: "1.1.24",
   observation: 1,
   actions: 1,
 };
@@ -1601,4 +1601,18 @@ export const glossary = {
     "Chaos and Light each deal +50% damage to the other, rounded up; they sit outside the four-element cycle. Chaos enemies are immune to Corrode.",
   Light:
     "Light and Chaos each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
+};
+
+// Defeat epigraphs appear only when this enemy delivers the lethal attack.
+export const enemyDeathLines = {
+  choir: "They sang of destruction, then delivered it.",
+  hart: "The forest bowed before its antlers. You did not bow quickly enough.",
+  colossus: "You stared into the void. It took that personally.",
+  dervish: "You found the rhythm. The last beat found you.",
+  shard: "Every shard had a point. One made it through.",
+  undead: "It had already cheated death. You were less fortunate.",
+  sentinel: "The bell tolled once. The verdict needed no explanation.",
+  weaver: "You were planning your next move. It was finishing your shroud.",
+  elemental: "So many colors. Such a brief rainbow.",
+  mason: "It called this a renovation. You were a load-bearing traveler.",
 };

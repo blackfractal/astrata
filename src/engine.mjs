@@ -1,3 +1,4 @@
+import { describeDeath } from "./death.mjs";
 import {
   cards,
   items,
@@ -328,6 +329,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.22",
           "1.3.21",
           "1.3.20",
           "1.3.19",
@@ -1438,7 +1440,7 @@ export class Game {
       this.present("death", { uid: h.deathSource, name: h.name + " fades" });
     }
     b.reaction = null;
-    if (this.s.hp <= 0) this.finish(false, h.name);
+    if (this.s.hp <= 0) this.finish(false, h.name, h);
     else this.checkBattle();
   }
   intercept(i) {
@@ -1880,9 +1882,10 @@ export class Game {
       this.log("Victory. Choose a card or skip.");
     }
   }
-  finish(win, cause = "") {
+  finish(win, cause = "", hit = null) {
     const s = this.s;
     if (s.mode === "result") return;
+    if (!win) s.death = describeDeath(s, cause, hit);
     s.mode = "result";
     s.outcome = win ? "win" : "loss";
     s.cause = cause;
@@ -2784,6 +2787,7 @@ export class Game {
     if (s.mode === "result") {
       o.outcome = s.outcome;
       o.cause = s.cause;
+      o.death = clone(s.death);
       o.seed = s.seed;
       o.history = clone(s.history);
     }

@@ -68,6 +68,8 @@ for (const name of [
   "mind-grid-verification.json",
   "mind-grid-evaluation",
   "choir-shield-evaluation",
+  "death-evaluation",
+  "death-verification.json",
   "optional-equipment-block-evaluation",
   "optional-equipment-block-verification.json",
   "enemy-immunity-evaluation",

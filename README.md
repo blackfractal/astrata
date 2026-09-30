@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.80. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.38; rules 1.3.22).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.81. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.39; rules 1.3.23).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -38,7 +38,7 @@ Double-click a placed card's activation button to attack the topmost eligible en
 
 Ward now has 2 total activations instead of 3; it still starts with 10 ward value and gains 10 per activation.
 
-Player HP floors at zero during lethal-hit animations before You Died appears. Stone Golem starts with 10 HP; its one activation costs 1 Channel and adds 6 current/maximum HP plus Taunt through the coming enemy phase. HP growth stays while placed; Taunt expires. This growth does not trigger healing-card destruction.
+Player HP floors at zero during lethal-hit animations before You Died appears. The death screen names the enemy and lethal attack, or burning/poison/corrosion for status deaths. Each boss and Eidolon has its own flavor sentence; the explanation ends with “Another traveler may find a different way.” Structured attribution and the exact message persist in run history and archived results. Stone Golem starts with 10 HP; its one activation costs 1 Channel and adds 6 current/maximum HP plus Taunt through the coming enemy phase. HP growth stays while placed; Taunt expires. This growth does not trigger healing-card destruction.
 
 ## Play
 
