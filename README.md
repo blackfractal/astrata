@@ -1,6 +1,8 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.83. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.41; rules 1.3.24).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.84. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.42; rules 1.3.24).
+
+Stratum 1 is **The Whispering Weald**, a living green forest.
 
 The Field player marker uses the Druid portrait inside its yellow ring; Gold uses a filled circle inside a circular ring. Incoming attacks travel from defender to defender, showing actual HP/Ward/block lost at each stop. The numbered orb appears immediately with the hit burst, stays visible through card destruction, and carries the damage number during flight. A glowing marker with remaining damage waits at the last impact (even an emptied Ally space) until your next choice, then moves onward with an elemental hit effect at each node.
 

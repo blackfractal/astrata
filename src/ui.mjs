@@ -262,7 +262,7 @@ function render(frame = null) {
         ? "The Druid"
         : o.mode === "gem"
           ? "A first glimmer"
-          : "The Ashen Weald";
+          : "The Whispering Weald";
     const copy =
       o.mode === "class"
         ? "Coax life from the space between spells. Grow Allies, weave elemental patterns, and turn a crowded mind into a living grove."
@@ -272,7 +272,7 @@ function render(frame = null) {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">65 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Ashen Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16</small></div></div><div class="field-wrap"><div class="field">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Whispering Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16</small></div></div><div class="field-wrap"><div class="field">${Array.from(
       { length: 121 },
       (_, i) => {
         const x = i % 11,

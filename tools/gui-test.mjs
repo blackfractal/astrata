@@ -25,7 +25,7 @@ for (let attempt = 1; attempt <= 4 && !victory; attempt++) {
     .click();
   await page.getByRole("button", { name: /into Bracelet/ }).click();
   await page
-    .getByRole("button", { name: "Enter the Ashen Weald", exact: true })
+    .getByRole("button", { name: "Enter the Whispering Weald", exact: true })
     .click();
   if (attempt === 1) {
     await page.screenshot({ path: "reports/screenshots/02-first-field.png" });

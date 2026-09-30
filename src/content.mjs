@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.24",
-  content: "1.1.24",
+  content: "1.1.25",
   observation: 1,
   actions: 1,
 };
@@ -1433,7 +1433,7 @@ export const events = [
 export const locations = [
   {
     id: "field",
-    name: "The Ashen Weald",
+    name: "The Whispering Weald",
     prompt:
       "an aerial view of a mysterious forest clearing, pale twisted roots, jade pools, ancient paths, ember lights, no grid, no letters",
   },

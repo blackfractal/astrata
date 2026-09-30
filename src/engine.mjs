@@ -2033,7 +2033,7 @@ export class Game {
       return actions;
     }
     if (s.mode === "intro") {
-      add("begin", "Enter the Ashen Weald", {}, { progress: 1 });
+      add("begin", "Enter the Whispering Weald", {}, { progress: 1 });
       return actions;
     }
     if (s.mode === "field") {

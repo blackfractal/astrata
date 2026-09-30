@@ -34,7 +34,7 @@ try {
     () => !document.querySelector(".presentation-bar"),
   );
   await page
-    .getByRole("button", { name: "Enter the Ashen Weald", exact: true })
+    .getByRole("button", { name: "Enter the Whispering Weald", exact: true })
     .click();
   await page.waitForFunction(
     () => !document.querySelector(".presentation-bar"),

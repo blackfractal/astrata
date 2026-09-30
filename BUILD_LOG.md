@@ -699,3 +699,10 @@ Additional implementation, follow-up refinement, verification, documentation and
 Three focused traversal rules tests pass. Extended packaged GUI verifies normal-speed and reduced-motion orb presence at every impact burst, visibility through Ally disintegration, flight numbers30/25/19/17, exact route and losses, hold through choices, depleted equipment hold, and cleanup. Four outgoing Ring cases (normal, Fast/right/Water, reduced, Skip) pass with no renderer errors. Existing map checks pass; screenshot inspected. No new AI batch or broad rules rerun for this presentation-only timing refinement.
 
 Additional implementation, verification, documentation and packaging time: approximately10 minutes. Runnable release and CRC-verified ZIP refreshed. User's active app/profile untouched; local implementation commit only, no push.
+
+
+## Post-build polish — The Whispering Weald, round 47
+
+2026-09-29. Jonathan chose The Whispering Weald as Stratum 1's name: the forest is green, so Ashen did not fit. Renamed the introduction, enter action label, Field heading and location content, plus existing GUI/playthrough selectors. README and shared design now use the chosen name; historical build notes and archived runs retain their original wording. Package1.3.42/content1.1.25/design4.84; rules1.3.24/policy1.11 unchanged. No gameplay or art changes.
+
+Verified a fresh isolated packaged run through class and Gem selection, the renamed intro/entry button and Field heading, with no renderer errors. Used locator waits for the existing transition animations. No new tests or AI batch for this text-only rename. Additional implementation, verification, documentation and packaging time: approximately5 minutes. Runnable release and CRC-verified ZIP refreshed. User's app/profile untouched; local implementation commit only, no push.
