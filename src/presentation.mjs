@@ -94,6 +94,19 @@ export async function playFrames(before, frames, after, render, isFast) {
   const card = (i) => find(`[data-slot="${i}"]`);
   const player = () =>
     find(".battle-player .player-portrait") || find(".player-portrait");
+  const item = (uid) =>
+    find(`.battle-player .gear-item[data-item-uid="${uid}"]`) ||
+    find(`[data-item-detail="${uid}"]`);
+  const pathNode = (node) =>
+    node?.kind === "enemy"
+      ? enemy(node.uid)
+      : node?.kind === "card"
+        ? card(node.slot)
+        : node?.kind === "item"
+          ? item(node.uid)
+          : node?.kind === "player"
+            ? player()
+            : null;
   function floating(el, label, cls = "") {
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -359,8 +372,13 @@ export async function playFrames(before, frames, after, render, isFast) {
         );
         render(frame.state);
       } else if (frame.kind === "hit" || frame.kind === "defend") {
-        const el =
-          frame.target === "enemy"
+        if (frame.attackPath)
+          document
+            .querySelectorAll(".held-attack")
+            .forEach((el) => el.remove());
+        const el = frame.attackPath
+          ? pathNode(frame.pathTo)
+          : frame.target === "enemy"
             ? enemy(frame.uid)
             : frame.target === "player"
               ? player()
@@ -369,8 +387,9 @@ export async function playFrames(before, frames, after, render, isFast) {
                 : frame.item
                   ? find(`[data-item-detail="${frame.item}"]`)
                   : player();
-        const from =
-          frame.sourceItem != null
+        const from = frame.attackPath
+          ? pathNode(frame.pathFrom)
+          : frame.sourceItem != null
             ? find(
                 `.battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
               ) || player()
@@ -387,9 +406,11 @@ export async function playFrames(before, frames, after, render, isFast) {
         try {
           await flash(
             el,
-            frame.amount != null
-              ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
-              : frame.name || "Hit",
+            frame.loss != null
+              ? "−" + frame.loss
+              : frame.amount != null
+                ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
+                : frame.name || "Hit",
             frame.dead,
             from,
             frame.amount != null

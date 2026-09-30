@@ -470,3 +470,6 @@ All212 tests and packaged skip/partial-block/multiple-hit UI checks pass. Delibe
 Rules1.3.23/content1.1.24; policy1.11 unchanged. Five seeds825183–187 finish loss/win9/loss/loss/loss with368/309/195/177/388 decisions, matching optional-block evaluation. New structured death details name the actual source: Cinder Hart/Stampede; Shard-Walker/Shard; Dervish Hunter/Slice; Mini-Void/Gnaw. Winning run has no death attribution. The Mini-Void result demonstrates attribution within a boss encounter rather than assigning the boss automatically.
 
 All219 tests and six packaged graphical death flows pass. Full message and structured fields persist in both desktop and headless result archives; new formatter source is included in build snapshots. Evidence reports/death-evaluation/. No combat/policy changes, training, or balance claim.
+
+
+Package1.3.40/rules1.3.24 adds incoming-attack path/loss metadata, persistent waiting markers and Field portrait/circular Gold. Combat damage calculations and policy1.11 remain unchanged; lastNode metadata survives saves but does not affect decisions. All222 tests and packaged path/actual-loss/held-marker/reduced-motion/map checks pass; outgoing Ring normal/Water/reduced/Skip regressions also pass. No new AI batch or training for this presentation update; package1.3.39 death evaluation remains historical evidence.

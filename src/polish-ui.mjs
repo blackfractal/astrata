@@ -1,3 +1,4 @@
+import { impactStyles } from "./impact-effects.mjs";
 import { eventTrades } from "./trade-ui.mjs";
 import {
   boardInteractions,
@@ -1110,6 +1111,34 @@ export function enhance(ctx) {
     arrangeBattle(ctx);
     boardInteractions(ctx);
     gridTelegraphs(ctx);
+    const hit = o.battle.reaction,
+      node = hit?.lastNode;
+    if (
+      hit?.damage > 0 &&
+      !hit.statusHit &&
+      ["card", "item"].includes(node?.kind)
+    ) {
+      const anchor =
+        node.kind === "card"
+          ? app.querySelector(`[data-slot="${node.slot}"]`)
+          : app.querySelector(
+              `.battle-player .gear-item[data-item-uid="${node.uid}"]`,
+            );
+      if (anchor) {
+        const held = document.createElement("span");
+        held.className = "held-attack";
+        held.style.setProperty(
+          "--hit-color",
+          (impactStyles[hit.element] || impactStyles.Arcane).color,
+        );
+        held.textContent = hit.damage;
+        held.setAttribute(
+          "aria-label",
+          `${hit.damage} ${hit.element} damage waiting for your defense choice`,
+        );
+        anchor.append(held);
+      }
+    }
   }
   if (ctx.frame) {
     app

@@ -1,6 +1,8 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.81. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.39; rules 1.3.23).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.82. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.40; rules 1.3.24).
+
+The Field player marker uses the Druid portrait inside its yellow ring; Gold uses a filled circle inside a circular ring. Incoming attacks travel from defender to defender, showing actual HP/Ward/block lost at each stop. A glowing marker with remaining damage waits at the last impact (even an emptied Ally space) until your next choice, then moves onward with an elemental hit effect at each node.
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 

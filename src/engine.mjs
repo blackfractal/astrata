@@ -329,6 +329,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.23",
           "1.3.22",
           "1.3.21",
           "1.3.20",
@@ -1339,6 +1340,22 @@ export class Game {
       .map((x, i) => ({ c: top(x), i }))
       .filter((x) => cards[x.c?.id]?.type === "Ally" && x.c.hp > 0);
   }
+  presentIncomingNode(kind, detail, node) {
+    const h = this.s.battle.reaction;
+    const pathFrom = h.statusHit
+      ? null
+      : h.lastNode ||
+        (h.source != null ? { kind: "enemy", uid: h.source } : null);
+    h.lastNode = node;
+    this.present(kind, {
+      ...detail,
+      element: h.element,
+      attackPath: true,
+      pathFrom,
+      pathTo: node,
+      remaining: node.kind === "player" ? 0 : h.damage,
+    });
+  }
   advanceHit() {
     const s = this.s,
       b = s.battle,
@@ -1354,7 +1371,11 @@ export class Game {
         c.ward -= n;
         h.damage -= n;
         if (c.ward === 0) c.zeroWard = true;
-        this.present("defend", { slot: i, amount: n, name: "Ward absorbs" });
+        this.presentIncomingNode(
+          "defend",
+          { slot: i, amount: n, loss: n, name: "Ward absorbs" },
+          { kind: "card", slot: i },
+        );
         if (!h.damage) break;
       }
       h.stage = "shield";
@@ -1413,14 +1434,20 @@ export class Game {
       if (armor?.definition.effect.resist === h.element)
         damage = Math.ceil(damage / 2);
       if (!h.statusHit) damage = Math.max(0, damage - this.bonuses().armor);
+      const loss = Math.min(s.hp, damage);
       s.hp = Math.max(0, s.hp - damage);
-      this.present("hit", {
-        target: "player",
-        amount: damage,
-        element: h.element,
-        name: h.name,
-        armor: armor?.uid,
-      });
+      this.presentIncomingNode(
+        "hit",
+        {
+          target: "player",
+          amount: damage,
+          loss,
+          element: h.element,
+          name: h.name,
+          armor: armor?.uid,
+        },
+        { kind: "player" },
+      );
       s.stats.damageTaken += damage;
       if (damage) this.log(`${h.name}: you take ${damage} damage.`);
       this.finishHit();
@@ -1449,18 +1476,23 @@ export class Game {
       c = top(b.grid[i]);
     const result = allyHit(h, c.element, c.hp, cards[c.id].swallow);
     const damage = result.damage;
-    c.hp -= damage;
+    c.hp = Math.max(0, c.hp - damage);
     h.damage = result.remaining;
     h.weaknessBonus = result.weaknessBonus;
     h.weaknessElement = result.weaknessElement;
     h.intercepted.push(c.uid);
-    this.present("hit", {
-      target: "card",
-      slot: i,
-      amount: damage,
-      dead: c.hp <= 0,
-      element: h.element,
-    });
+    this.presentIncomingNode(
+      "hit",
+      {
+        target: "card",
+        slot: i,
+        amount: damage,
+        loss: result.absorbed,
+        dead: c.hp <= 0,
+        element: h.element,
+      },
+      { kind: "card", slot: i },
+    );
     if (c.hp <= 0) this.destroyCard(i, c.uid);
     this.advanceHit();
   }
@@ -2695,14 +2727,22 @@ export class Game {
           b.reaction.element,
         );
         const stopped = b.reaction.damage - r.remaining;
+        const loss = p.block - r.block;
         p.block = r.block;
         b.reaction.damage = r.remaining;
-        this.present("defend", {
-          slot: a.type === "block" ? p.slot : null,
-          item: a.type === "bracelet" ? a.uid : null,
-          amount: stopped,
-          name: "Blocked",
-        });
+        this.presentIncomingNode(
+          "defend",
+          {
+            slot: a.type === "block" ? p.slot : null,
+            item: a.type === "bracelet" ? a.uid : null,
+            amount: stopped,
+            loss,
+            name: "Blocked",
+          },
+          a.type === "block"
+            ? { kind: "card", slot: p.slot }
+            : { kind: "item", uid: a.uid },
+        );
         this.advanceHit();
         this.pump();
         break;

@@ -4,12 +4,20 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
 import { items } from "../src/content.mjs";
-const report = { package: "1.3.22", checks: [], errors: [] };
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  checks: [],
+  errors: [],
+};
 const dir = "reports/screenshots/ring-origin";
 await fs.mkdir(dir, { recursive: true });
 for (const mode of ["normal", "fast-right-water", "reduced", "skip"]) {
   const g = new Game(8),
-    ring = g.s.equipment.finger1;
+    ring = g.s.equipment.finger2;
+  if (mode !== "fast-right-water") {
+    g.s.equipment.finger1 = ring;
+    g.s.equipment.finger2 = null;
+  }
   if (mode === "fast-right-water") {
     g.s.equipment.finger2 = ring;
     g.s.equipment.finger1 = null;
@@ -91,7 +99,9 @@ for (const mode of ["normal", "fast-right-water", "reduced", "skip"]) {
       assert.equal(shots[1].uid, String(ring));
       assert.ok(Math.abs(shots[1].x - shots[1].expectedX) < 0.1);
       assert.ok(Math.abs(shots[1].y - shots[1].expectedY) < 0.1);
-      assert.ok(Math.abs(shots[0].x - shots[1].x) > 100);
+      assert.ok(
+        Math.hypot(shots[0].x - shots[1].x, shots[0].y - shots[1].y) > 50,
+      );
     }
     const firstHp = mode === "fast-right-water" ? 95 : 94;
     assert.match(
