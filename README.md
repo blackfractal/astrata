@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.79. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.37; rules 1.3.21).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.80. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.38; rules 1.3.22).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -9,6 +9,8 @@ Act 1 boss destruction Tells now outline their currently threatened row, column 
 Void-Colossus now uses Chaotic Glare after its two Void Fists and Collapse. It randomly selects any element, including Arcane; both its attacks and defensive matchups use that element until the next Glare. Matching-element hits summon a Mini-Void of that element once per activation. Each Mini-Void retains its own birth element for attacks and defense, even after later Glares.
 
 The Glass Choir now uses Chorus (10 Water) on turn four. Its warned Final Note deals 20 Light damage with Cull on death before victory, bypassing Wards and Shields but allowing Allies and equipment already prepared; dying to it loses the run.
+
+During equipment defense, choose **Take hit — save item block** to preserve remaining Bracelet/item block for later attacks. You may also do this after one item partially blocks a hit. Passive Armor still applies.
 
 Water enemies are immune to Burn, Fire enemies to Poison, and Chaos enemies to Corrode. Immunity follows current element: Chaotic Glare clears any newly prohibited status, without restoring it on later changes. Enemy health panels, details and tooltips show the immunity. Player and Ally status rules are unchanged.
 

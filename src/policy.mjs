@@ -18,7 +18,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.10";
+    this.id = "weighted-druid-v1.11";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -297,6 +297,11 @@ export class WeightedPolicy {
           "Protect player HP while retaining valuable growing Allies when possible.",
         ];
       }
+      case "skipEquipment":
+        return [
+          -Math.max(0, b.reaction.damage - o.bonuses.armor) * w.survival,
+          "Preserve item block by accepting the remaining hit; prefer blocking damage when possible.",
+        ];
       case "takeHit":
         return [
           b.bracelets.reduce((n, p) => n + p.block, 0) +

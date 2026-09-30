@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.21",
-  content: "1.1.22",
+  rules: "1.3.22",
+  content: "1.1.23",
   observation: 1,
   actions: 1,
 };
@@ -1563,7 +1563,7 @@ export const glossary = {
   Setting:
     "A Necklace, Bracelet or Ring with its own printed effect and one Gem socket.",
   Bracelet:
-    "Passive equipment block protecting the player after Allies. Refills each enemy turn and requires no activation.",
+    "Equipment block protecting the player after Allies. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack; passive Armor still applies.",
   Ring: "Equipment with a printed effect and a Gem socket. Rootbound Ring adds one separate hit on your first damaging activation each player turn.",
   Necklace: "Equipment with a printed effect and a Gem socket.",
   Crown: "Head equipment with a printed effect and no Gem socket.",

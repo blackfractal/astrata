@@ -331,7 +331,7 @@ function render(frame = null) {
       })
       .join("")}</div>${
       b.reaction
-        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "Bracelet") + " absorbs this hit."}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
+        ? `<div class="panel pulse" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4><p>${b.reaction.stage === "ally" ? "Choose an Ally or let your equipment take the hit." : "Choose which " + (b.reaction.stage === "shield" ? "Shield portion" : "item") + " absorbs this hit." + (b.reaction.stage === "bracelet" ? " Or take the hit and save item block; Armor still applies." : "")}</p><div class="row wrap">${actions.map((a) => actionButton(a)).join("")}</div></div>`
         : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
     }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,

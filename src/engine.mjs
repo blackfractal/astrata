@@ -328,6 +328,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.21",
           "1.3.20",
           "1.3.19",
           "1.3.18",
@@ -2286,7 +2287,7 @@ export class Game {
             { takeDamage: h.damage },
           );
         }
-        if (h.stage === "bracelet")
+        if (h.stage === "bracelet") {
           for (const p of b.bracelets.filter((x) => x.block > 0))
             add(
               "bracelet",
@@ -2294,6 +2295,13 @@ export class Game {
               { uid: p.uid },
               { block: p.block, element: p.element },
             );
+          add(
+            "skipEquipment",
+            "Take hit — save item block",
+            {},
+            { takeDamage: h.damage, preserveEquipmentBlock: true },
+          );
+        }
         return actions;
       }
       if (b.phase === "place") {
@@ -2698,6 +2706,12 @@ export class Game {
       }
       case "intercept":
         this.intercept(a.slot);
+        this.pump();
+        break;
+      case "skipEquipment":
+        this.log("You let the hit through without using item block.");
+        b.reaction.stage = "player";
+        this.advanceHit();
         this.pump();
         break;
       case "takeHit":

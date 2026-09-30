@@ -456,3 +456,10 @@ All208 tests pass; focused tests include AI selection of a susceptible target ov
 
 
 Package1.3.37 changes only the human double-click shortcut to target the topmost displayed eligible enemy. Rules/content/policy unchanged; all208 tests and eight packaged shortcut GUI cases pass. No repeated AI batch; package1.3.36 immunity evaluation remains current.
+
+
+## Optional equipment block — package1.3.38
+
+Rules1.3.22/content1.1.23/policyweighted-druid-v1.11. New skipEquipment legal choice preserves item block and accepts remaining damage through normal Armor. Policy recognizes it explicitly and prefers usable block; weights unchanged, no training. Five archived seeds825183–187: loss/win9/loss/loss/loss, rounds20/19/14/12/19, decisions368/309/195/177/388, unchanged from immunity evaluation. All finish without errors or stalls. Compressed state/decision archives and source snapshots: reports/optional-equipment-block-evaluation/.
+
+All212 tests and packaged skip/partial-block/multiple-hit UI checks pass. Deliberate skipping is exercised by focused tests rather than inferred from AI outcomes; five games do not establish balance.
