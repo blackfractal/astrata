@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.78. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.36; rules 1.3.21).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.79. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.37; rules 1.3.21).
 
 Placed cards now show elemental accents, active Shield portions with their remaining block, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
 
@@ -32,7 +32,7 @@ The active phase outlines Insight, Focus or Channel in soft green. Placed cards 
 
 Battles now use a fixed 16:9 composition: player and equipment left, Mind Grid center, enemies right, phase arrows above, and revealed cards below. Equipment surrounds the portrait; glowing wrist icons can select a legal block. Battle tools contains logs, rules and AI controls. Large hands and encounters scroll within their panels. Settings offers 1280×720, 1440×810, 1600×900 and 1920×1080 window sizes plus fullscreen; the stage scales proportionally with black bars on other aspect ratios. Windows are not freely resizable. Restart the app to load this update.
 
-Double-click a placed card's activation button to commit its only complete legal choice. Multiple targets or attunements still require selection. Transmute now visibly names the changed card (for example, Water Blast) and fixes its activation element until it leaves the grid or is transmuted again; existing Shield portions retain their elements.
+Double-click a placed card's activation button to attack the topmost eligible enemy in the current display order. Multiple attunements still require selection; single-click lets you choose any legal enemy. Other sole-choice activations retain their shortcut. Transmute now visibly names the changed card (for example, Water Blast) and fixes its activation element until it leaves the grid or is transmuted again; existing Shield portions retain their elements.
 
 Ward now has 2 total activations instead of 3; it still starts with 10 ward value and gains 10 per activation.
 

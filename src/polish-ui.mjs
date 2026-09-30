@@ -279,9 +279,24 @@ function activationChooser(ctx, slot, dragging = false) {
       if (!e.target.closest(`[data-activate-slot="${slot}"]`)) return;
       e.preventDefault();
       e.stopImmediatePropagation();
-      if (ctx.busy() || filtered.length !== 1) return;
+      if (ctx.busy()) return;
+      let candidates = filtered;
+      if (stage === "target") {
+        // Enemy cards render in top-to-bottom order. Resolve only this choice;
+        // attunement, friendly-card targets and destinations stay explicit.
+        const topEnemy = [
+          ...ctx.app.querySelectorAll(".enemy[data-enemy-uid]"),
+        ].find((el) =>
+          filtered.some((a) => a.target === Number(el.dataset.enemyUid)),
+        );
+        if (!topEnemy) return;
+        candidates = filtered.filter(
+          (a) => a.target === Number(topEnemy.dataset.enemyUid),
+        );
+      }
+      if (candidates.length !== 1) return;
       // Revalidate the complete decision, including any chosen attunement.
-      const action = ctx.game.legal().find((a) => a.key === filtered[0].key);
+      const action = ctx.game.legal().find((a) => a.key === candidates[0].key);
       if (!action) return;
       clearTargeting();
       run(ctx, action);

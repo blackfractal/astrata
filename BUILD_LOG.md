@@ -644,3 +644,12 @@ All208 tests pass, including ten new cases covering actual activations, all seve
 Five archived headless seeds825183–187 complete: loss/win9/loss/loss/loss, rounds20/19/14/12/19, decisions368/309/195/177/388. Outcomes match the previous batch; first seed uses one additional decision. No crashes, illegal moves or stalls. Full versioned archives/source snapshots are retained in reports/enemy-immunity-evaluation/. This small sample establishes playability, not balance.
 
 Additional implementation, verification, documentation and packaging time: approximately20 minutes. Runnable release and CRC-verified ZIP refreshed. User's running app/profile untouched; local implementation commit only, no push.
+
+
+## Post-build polish — double-click the top enemy, round 42
+
+2026-09-29. Jonathan requested double-click attacks the enemy currently in the topmost slot. The activation chooser now resolves enemy targeting from rendered top-to-bottom order, then revalidates the exact legal action before committing once. It retains chosen attunement and leaves unresolved multiple attunements, friendly-card targets and destinations explicit. Single-click/manual targeting and sole-choice/targetless shortcuts remain. After a kill, the next attack uses the new top enemy; no fixed UID or original enemy is remembered. Package1.3.37/design4.79; rules1.3.21/content1.1.22/policy1.10 unchanged.
+
+All208 rules tests pass. Eight isolated packaged GUI cases pass: single-click/cancel, sole enemy, multiple enemies, reversed UID order and successive top-enemy kill, manually choosing the lower enemy, multiple attunements with subsequent top targeting, zero Channel, and targetless Kiln charging. Used-this-turn reactivation remains inert; no renderer errors. Updated tools/double-activation-ui-test.mjs and reports/double-activation-verification.json. Corrected its old 5-column attunement fixture for the current seven-column board. No AI rerun for this UI-only shortcut; preceding immunity evaluation remains applicable.
+
+Additional implementation, verification, documentation and packaging time: approximately5 minutes. Runnable release and CRC-verified ZIP refreshed. User's running app/profile untouched; local implementation commit only, no push.

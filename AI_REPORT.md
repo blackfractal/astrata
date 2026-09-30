@@ -453,3 +453,6 @@ Package1.3.35 replaces proximity-only links with real-effect energy connections.
 Rules1.3.21/content1.1.22; weighted-druid-v1.10 discounts immune Burn/Poison/Corrode targets and counts susceptible enemies for area Burn. Existing weights retained; no training. Five fully archived headless seeds825183–187 completed with loss/win9/loss/loss/loss, rounds20/19/14/12/19 and decisions368/309/195/177/388. Outcomes match package1.3.34; seed825183 takes one additional decision. No illegal moves, crashes or stalls. Reports and compressed per-decision state archives with build sources: reports/enemy-immunity-evaluation/.
 
 All208 tests pass; focused tests include AI selection of a susceptible target over an immune one, every element/status pair, charge/Fusion paths and Glare/save transitions. Packaged GUI checks all three immunities. Five runs are a playability regression sample, insufficient to establish balance.
+
+
+Package1.3.37 changes only the human double-click shortcut to target the topmost displayed eligible enemy. Rules/content/policy unchanged; all208 tests and eight packaged shortcut GUI cases pass. No repeated AI batch; package1.3.36 immunity evaluation remains current.

@@ -3,7 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.19", checks: [], errors: [] };
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  checks: [],
+  errors: [],
+};
 const settle = (p) =>
   p.waitForFunction(() => !document.querySelector(".presentation-bar"));
 function base(count = 1, id = "thorn") {
@@ -77,23 +81,62 @@ await check(
   },
 );
 await check(
-  "Two enemies remain an explicit choice after double-click; clicking one still works.",
+  "Double-click attacks the top displayed enemy once when two enemies are available.",
   base(2),
   async (p) => {
     await activate(p).dblclick({ force: true });
-    assert.equal(await p.locator(".enemy.target-option").count(), 2);
-    assert.equal(await p.locator(".resources b").nth(2).textContent(), "10");
-    await enemy(p).click();
     await settle(p);
     assert.match(await enemy(p).textContent(), /96 \/ 100 HP/);
+    assert.match(
+      await p.locator('[data-enemy-uid="901"]').textContent(),
+      /100 \/ 100 HP/,
+    );
+    assert.equal(await p.locator(".resources b").nth(2).textContent(), "9");
+    assert.equal(await p.locator(".targeting-bar").count(), 0);
   },
 );
-const attuned = base(1, "blast");
-attuned.s.battle.grid[5] = [attuned.instance(attuned.newCard("thorn"))];
-attuned.s.battle.grid[7] = [attuned.instance(attuned.newCard("thorn"))];
-attuned.s.battle.grid[7][0].element = "Water";
+const reordered = base(2);
+reordered.s.battle.enemies.reverse();
+reordered.s.battle.enemies[0].hp = 1;
+reordered.s.battle.grid[20] = [reordered.instance(reordered.newCard("thorn"))];
 await check(
-  "One enemy with multiple attunements does not auto-pick; after choosing Earth, double-click commits the one remaining decision.",
+  "Uses display order rather than UID; after the top enemy dies, the next attack targets the new top enemy.",
+  reordered,
+  async (p) => {
+    assert.equal(
+      await p.locator(".enemy").first().getAttribute("data-enemy-uid"),
+      "901",
+    );
+    await activate(p).dblclick({ force: true });
+    await settle(p);
+    assert.equal(await p.locator('[data-enemy-uid="901"]').count(), 0);
+    assert.match(await enemy(p).textContent(), /100 \/ 100 HP/);
+    await p.locator('[data-activate-slot="20"]').dblclick({ force: true });
+    await settle(p);
+    assert.match(await enemy(p).textContent(), /96 \/ 100 HP/);
+    assert.equal(await p.locator(".resources b").nth(2).textContent(), "8");
+  },
+);
+await check(
+  "Single-click targeting still allows selecting the lower enemy.",
+  base(2),
+  async (p) => {
+    await activate(p).click();
+    await p.locator('[data-enemy-uid="901"].target-option').click();
+    await settle(p);
+    assert.match(await enemy(p).textContent(), /100 \/ 100 HP/);
+    assert.match(
+      await p.locator('[data-enemy-uid="901"]').textContent(),
+      /96 \/ 100 HP/,
+    );
+  },
+);
+const attuned = base(2, "blast");
+attuned.s.battle.grid[5] = [attuned.instance(attuned.newCard("thorn"))];
+attuned.s.battle.grid[13] = [attuned.instance(attuned.newCard("thorn"))];
+attuned.s.battle.grid[13][0].element = "Water";
+await check(
+  "Multiple attunements stay explicit; after choosing Earth, double-click attacks the top of two enemies.",
   attuned,
   async (p) => {
     await activate(p).dblclick({ force: true });
@@ -103,7 +146,7 @@ await check(
     );
     assert.equal(await p.locator(".resources b").nth(2).textContent(), "10");
     await p.locator('[data-slot="5"].target-option').click();
-    assert.equal(await p.locator(".enemy.target-option").count(), 1);
+    assert.equal(await p.locator(".enemy.target-option").count(), 2);
     await activate(p).dblclick({ force: true });
     await settle(p);
     assert.match(await enemy(p).textContent(), /96 \/ 100 HP/);
