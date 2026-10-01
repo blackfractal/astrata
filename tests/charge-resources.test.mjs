@@ -109,7 +109,7 @@ test("every charged card builds charge without an enemy target or premature effe
     assert.equal(action(g, 0).length, 0);
   }
 });
-test("Kiln releases 30 on only the chosen enemy and Burn 2 on all enemies on its third activation", () => {
+test("Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its third activation", () => {
   const g = setup(),
     b = g.s.battle,
     c = put(g, "kiln", 0);
@@ -129,7 +129,7 @@ test("Kiln releases 30 on only the chosen enemy and Burn 2 on all enemies on its
   g.act(choices.find((a) => a.target === 901));
   assert.deepEqual(
     b.enemies.map((e) => e.hp),
-    [100, 70],
+    [100, 80],
   );
   assert.deepEqual(
     b.enemies.map((e) => e.status.burn),
@@ -149,6 +149,7 @@ test("Kiln on-place Fire charges can make the first activation a targeted releas
   b.focus = 2;
   g.act(g.legal().find((a) => a.type === "place" && a.slot === 1));
   assert.equal(b.grid[1][0].charge, 2);
+  b.enemies[0].hp = 10;
   g.act(g.legal().find((a) => a.type === "activatePhase"));
   g.act(action(g, 1).find((a) => a.target === 900));
   assert.ok(b.enemies[0].hp <= 0);

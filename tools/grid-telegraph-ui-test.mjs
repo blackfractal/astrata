@@ -19,7 +19,7 @@ const marks = (p) =>
 for (const [id, cycle, initial, changed, targets] of [
   ["hart", 2, [0, 1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13], [7, 8]],
   ["colossus", 2, [0, 7, 14, 21, 28, 35], [1, 8, 15, 22, 29, 36], [1, 8]],
-  ["choir", 0, [0, 1], [1, 7], [7, 8]],
+  ["choir", 0, [0, 1], [1, 8], [7, 8]],
 ]) {
   const g = new Game(8);
   g.s.equipment = {};

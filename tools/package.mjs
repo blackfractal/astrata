@@ -131,6 +131,8 @@ for (const name of [
   "store-verification.json",
   "return-start-verification.json",
   "direction-pad-verification.json",
+  "boss-balance-verification.json",
+  "boss-balance-evaluation",
   "early-motes-verification.json",
   "early-motes-evaluation",
   "healer-verification.json",

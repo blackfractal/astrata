@@ -202,8 +202,53 @@ export function cardAllowance(b, c, i) {
     : 0;
   return Math.max(0, d.limit + plus - c.used);
 }
+// Value recoverable damage/defense across the whole stack, including covered cards.
+// Charged damage is one eventual release, never multiplied by lifetime activations.
 export function stackValue(b, i) {
+  const slot = b.grid[i];
+  let pileOrder = 0;
+  const power = [...slot].reverse().reduce((sum, c) => {
+    const d = cards[c.id],
+      f = d.effects,
+      allowance = cardAllowance(b, c, i);
+    const usable =
+      allowance > 0 &&
+      (!d.charge || allowance >= Math.max(1, d.charge - c.charge));
+    let damage = usable
+      ? f.randomDamage
+        ? (1 + f.randomDamage) / 2
+        : cardPower(b, c, i)
+      : 0;
+    if (usable && d.stack === "pile") damage += 2 * pileOrder++;
+    if (
+      f.prism &&
+      ["Fire", "Earth", "Wind", "Water"].every((el) =>
+        gridNeighbors(b, i).some((j) => top(b.grid[j]).element === el),
+      )
+    )
+      damage *= 4;
+    if (f.all) damage *= b.enemies.filter((e) => e.hp > 0).length;
+    const bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
+    const shield =
+      allowance > 0 && f.shield
+        ? f.shield +
+          bonus +
+          (f.matchingShield || 0) * matchingNeighbors(b, c, i)
+        : 0;
+    const storedShield = b.shields
+      .filter((x) => x.owner === c.uid)
+      .reduce((n, x) => n + x.block, 0);
+    const ward = Math.max(
+      c.ward || 0,
+      allowance > 0 && f.ward ? f.ward + bonus : 0,
+    );
+    return (
+      sum +
+      Math.max(damage, shield, storedShield, ward, d.type === "Ally" ? c.hp : 0)
+    );
+  }, 0);
   return {
+    power,
     focus: b.grid[i].reduce(
       (n, c) => n + (cards[c.id].focus === 99 ? 0 : cards[c.id].focus),
       0,
@@ -276,6 +321,7 @@ export function gridTargets(b, t) {
     targets = valued
       .sort(
         (a, z) =>
+          z.value.power - a.value.power ||
           z.value.focus - a.value.focus ||
           (z.value.activations === a.value.activations
             ? 0
@@ -330,6 +376,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.30",
           "1.3.29",
           "1.3.28",
           "1.3.27",
@@ -1248,6 +1295,8 @@ export class Game {
     });
   }
   tell(e) {
+    if (enemies[e.id].tier === "Archon" && e.purifyPending)
+      return { name: "Purify", purify: true, damage: 0 };
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
     if (t.currentElement) t.element = e.element;
@@ -1348,7 +1397,7 @@ export class Game {
         const e = b.enemies.find((x) => x.uid === j.uid && x.hp > 0);
         if (!e) continue;
         const t = this.tell(e);
-        e.cycle++;
+        if (!t.purify) e.cycle++;
         this.log(
           e.name +
             ": " +
@@ -1359,8 +1408,21 @@ export class Game {
         );
         if (e.id === "hart" && e.hp <= e.maxHp / 2)
           this.applyFriendlyStatus("burn", 1, { source: e.uid });
-        if (e.id === "choir" && e.hp <= e.maxHp / 2 && e.cycle % 4 === 1)
+        if (
+          e.id === "choir" &&
+          e.hp <= e.maxHp / 2 &&
+          t.name === "Shatter Hymn"
+        )
           e.guard += 8;
+        if (t.purify) {
+          e.status = { ...e.status, ...blankStatus() };
+          e.purifyPending = false;
+          this.present("status", {
+            target: "enemy",
+            uid: e.uid,
+            name: "Purify · Burn, Poison and Corrode cleared",
+          });
+        }
         if (t.randomElement) {
           e.element = this.pick(ELEMENTS);
           const cleared = clearImmuneStatus(e);
@@ -1380,6 +1442,14 @@ export class Game {
             name: t.name + " · " + e.element,
           });
         }
+        if (
+          !t.purify &&
+          enemies[e.id].tier === "Archon" &&
+          e.cycle % enemies[e.id].rotation.length === 0
+        )
+          e.purifyPending = ["burn", "poison", "corrode"].some(
+            (k) => e.status[k] > 0,
+          );
         if (t.grid) this.gridAttack(t);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;

@@ -140,7 +140,7 @@ export function gridTelegraphs(ctx) {
         : t.kind === "column"
           ? "Fullest column; ties choose the leftmost column."
           : t.target === "valuable"
-            ? "Two most valuable complete stacks: sum printed Focus, then remaining activations, then reading order. Both targets are chosen before destruction."
+            ? "Two most dangerous complete stacks: total damage/defense potential, then printed Focus, remaining activations and reading order. Both targets are chosen before destruction."
             : "Tallest complete stack; ties choose the first occupied space in reading order.";
     const help = `${t.enemy} — ${t.name}: destroys ${t.cards} card${t.cards === 1 ? "" : "s"} on the upcoming enemy turn. ${rule} Covered cards count. Live preview: changes with your placements, Recalls and remaining activations.`;
     const enemy = ctx.app.querySelector(`[data-enemy-uid="${t.source}"] .info`);

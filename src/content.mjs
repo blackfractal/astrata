@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.30",
-  content: "1.1.29",
+  rules: "1.3.31",
+  content: "1.1.30",
   observation: 1,
   actions: 1,
 };
@@ -184,8 +184,8 @@ card(
   "Spell",
   2,
   4,
-  { damage: 30, burnAll: 2 },
-  "Charge 3: deal 30 to one enemy and apply Burn 2 to all enemies. Charging needs no target; choose an enemy only when firing. On place: +1 Charge per Fire neighbor.",
+  { damage: 20, burnAll: 2 },
+  "Charge 3: deal 20 to one enemy and apply Burn 2 to all enemies. Charging needs no target; choose an enemy only when firing. On place: +1 Charge per Fire neighbor.",
   { charge: 3, onPlaceCharge: true },
 );
 card(
@@ -534,8 +534,8 @@ card(
   "Object",
   1,
   2,
-  { channel: 3 },
-  "Gain 3 Channel this turn.",
+  { channel: 2 },
+  "Gain 2 Channel this turn (net +1 after this activation).",
   { rarity: "rare" },
 );
 card(
@@ -942,7 +942,11 @@ function enemy(
     hp,
     movement,
     rotation,
-    signature,
+    signature:
+      signature +
+      (tier === "Archon"
+        ? " At the end of each full move cycle, if afflicted by Burn, Poison or Corrode, spends its next move on Purify to clear all three, then resumes its cycle."
+        : ""),
     counter,
     nemesis: "Slow decks",
     grouped: ["bat", "beetle", "ashling"].includes(id),
@@ -1276,7 +1280,7 @@ enemy(
     effect("Silence", { grid: "sever", target: "connected" }),
     attack("Chorus", 10, "Water"),
   ],
-  "Shatter Hymn destroys the two most valuable complete stacks: total printed Focus, then remaining activations, then reading order. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
+  "Shatter Hymn destroys the two most valuable complete stacks: combined damage/defense potential, then printed Focus, remaining activations and reading order. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
   "Recall threatened stacks and use Earth attacks. Prepare for Wind and Water attacks, then use Allies and equipment to survive Final Note on death.",
   {
     schedule: "Pursue 0, 1, 2, 3, 4; Hunt on round 6.",
@@ -1485,6 +1489,8 @@ export const glossary = {
   Sever: "Ignores and contributes no adjacency or patterns.",
   Stack:
     "Place onto a compatible occupied slot. Top card determines covered functionality.",
+  Purify:
+    "After a full move cycle, an afflicted boss spends its next move clearing all its Burn, Poison and Corrode. Status damage still ticks before this move; then the normal cycle resumes. Purify does not heal HP or advance cycle scaling.",
   Charge:
     "Builds through paid activations, once per turn unless Blink permits more. Charging needs no enemy target; choose a target only when the effect fires at its threshold. Recall resets Charge.",
   Herald: "Defeat to reveal this Stratum’s Archon.",

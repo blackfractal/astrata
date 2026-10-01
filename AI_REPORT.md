@@ -533,3 +533,18 @@ Package1.3.52 adds eight-direction map buttons that invoke existing legal move a
 
 
 Package1.3.53/content1.1.29 reduces Plasma Ball base damage10→8 while retaining +2 per successive pile ball. All246 regression tests pass with updated expected combat totals. No new AI runs or training; prior evaluations remain historical and do not establish balance for this content revision. Rules1.3.30/policy1.12 unchanged.
+
+
+# Boss cleansing and card balance — package1.3.54
+
+Rules1.3.31/content1.1.30; policy weighted-druid-v1.12 unchanged, no training. Conduit nets1 Channel, Kiln deals20, Archons insert conditional Purify turns, and Hymn targets combat-value stacks. All254 rule tests and packaged charge/Purify/Hymn GUI checks pass. Full versioned traces and sources: reports/boss-balance-evaluation/.
+
+| Seed | Outcome | Field round | Decisions | Cause/result |
+| --- | --- | --- | --- | --- |
+| 825183 | Win | 18 | 527 | Cinder Hart defeated; 5 HP remaining |
+| 825184 | Loss | 13 | 222 | Coal |
+| 825185 | Loss | 20 | 266 | Antler |
+| 825186 | Loss | 15 | 283 | Slap |
+| 825187 | Loss | 19 | 305 | Void fist |
+
+All five runs terminate without stalls or execution errors. One Cinder Hart victory establishes a completed run with this version; four losses and the small sample do not establish boss balance, a reliable win rate or a controlled comparison with older versions. No further tuning inferred from these runs.

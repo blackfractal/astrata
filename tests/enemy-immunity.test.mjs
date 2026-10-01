@@ -74,7 +74,7 @@ test("Kiln still damages a Water target but its area Burn skips only Water enemi
   c.charge = 2;
   b.enemies[1].element = "Earth";
   activate(g);
-  assert.equal(b.enemies[0].hp, 185);
+  assert.equal(b.enemies[0].hp, 190);
   assert.deepEqual(
     b.enemies.map((e) => e.status.burn),
     [0, 2],
@@ -116,6 +116,7 @@ test("Glare uses current-form immunity, clears existing status immediately, and 
     assert.equal(e.status[key], 0);
     assert.equal(g.observe().battle.enemies[0].statusImmunity, key);
     e.cycle = 3;
+    e.purifyPending = false; // Isolate a later Glare after its intervening cycle/Purify.
     g.pick = () => "Arcane";
     b.jobs = [{ kind: "enemyAction", uid: e.uid }];
     g.pump();

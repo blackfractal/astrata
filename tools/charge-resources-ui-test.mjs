@@ -105,7 +105,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
     for (const i of [0, 4]) {
       assert.match(
         await page.locator(`[data-activate-slot="${i}"]`).textContent(),
-        /Charge 1\/3/,
+        /Charge · 3 to fire/,
       );
       await page.locator(`[data-activate-slot="${i}"]`).click();
       await settle(page);
@@ -145,7 +145,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
   try {
     assert.match(
       await page.locator('[data-activate-slot="0"]').textContent(),
-      /Deal 30.*Burn 2 to all/,
+      /Deal 20.*Burn 2 to all/,
     );
     await page.locator('[data-activate-slot="0"]').click();
     assert.equal(
@@ -160,7 +160,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
     );
     assert.match(
       await page.locator('[data-enemy-uid="901"]').textContent(),
-      /70 \/ 100 HP/,
+      /80 \/ 100 HP/,
     );
     for (const uid of [900, 901])
       assert.match(
@@ -169,7 +169,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
       );
     await page.screenshot({ path: dir + "/kiln-fired.png" });
     report.checks.push(
-      "Charged Kiln requests one target, deals 30 only to that target, and visibly applies Burn 2 to both",
+      "Charged Kiln requests one target, deals 20 only to that target, and visibly applies Burn 2 to both",
     );
   } finally {
     await app.close();

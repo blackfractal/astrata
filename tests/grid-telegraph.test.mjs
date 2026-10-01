@@ -25,7 +25,7 @@ function act(g, type, predicate = () => true) {
 for (const [id, cycle, occupied, initial, after] of [
   ["hart", 2, [0, 1, 7, 8], [0, 1], [7, 8]],
   ["colossus", 2, [0, 1, 7, 8], [0, 7], [1, 8]],
-  ["choir", 0, [0, 1, 7, 8], [0, 1], [1, 7]],
+  ["choir", 0, [0, 1, 7, 8], [0, 1], [8, 1]],
 ])
   test(`${id} preview breaks ties deterministically, retargets after Recall, and matches actual destruction`, () => {
     const g = base(id, cycle),
@@ -59,7 +59,7 @@ test("Line previews count covered cards and outline empty cells along the threat
   assert.deepEqual(t.spaces, [0, 7, 14, 21, 28, 35]);
   assert.equal(t.cards, 4);
 });
-test("Choir counts covered Focus value and selects two distinct stacks with reading-order ties", () => {
+test("Choir counts covered combat value and selects two distinct stacks with reading-order ties", () => {
   const g = base("choir", 0);
   put(g, 4);
   put(g, 7);
@@ -116,7 +116,7 @@ test("Shared targeting retains other grid effects' newest and connected tie rule
   assert.deepEqual(gridTargets(b, { target: "connected" }), [0]); // all three isolated, reading-order tie
 });
 
-test("Choir prioritizes Focus over height, uses remaining allowance for ties, and handles fewer than two stacks", () => {
+test("Choir prioritizes defense over height, excludes spent output, and handles fewer than two stacks", () => {
   const g = base("choir", 0),
     b = g.s.battle;
   b.grid[0] = [

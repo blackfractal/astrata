@@ -85,6 +85,7 @@ function tellText(t) {
   return [
     t.name,
     t.damage ? `${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}` : "",
+    t.purify ? "Remove Burn, Poison and Corrode" : "",
     t.pierce ? "Pierce" : "",
     t.cull ? "Cull" : "",
     t.grid === "row"
