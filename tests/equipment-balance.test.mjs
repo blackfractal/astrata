@@ -57,7 +57,7 @@ test("Ring fires once across a Plasma pile, an area attack, and a multi-element 
   let g = setup();
   for (let i = 0; i < 4; i++) put(g, "plasma", 0);
   activate(g, 0);
-  assert.equal(g.s.battle.enemies[0].hp, 946);
+  assert.equal(g.s.battle.enemies[0].hp, 954);
   g = setup(true);
   put(g, "storm", 0);
   activate(g, 0);
@@ -140,7 +140,7 @@ test("Ring retains socketed elemental damage; other damage gear keeps its own tr
   h.s.equipment.head = h.s.inventory.at(-1).uid;
   for (let i = 0; i < 4; i++) put(h, "plasma", 0);
   activate(h, 0);
-  assert.equal(h.s.battle.enemies[0].hp, 942);
+  assert.equal(h.s.battle.enemies[0].hp, 950);
 });
 test("Bronze Bracelet refills two block per enemy turn and starting gem previews match new equipment", () => {
   const g = new Game(12);

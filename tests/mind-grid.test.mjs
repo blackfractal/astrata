@@ -116,7 +116,7 @@ test("sixth-row bonuses, corner Keystone and last-slot Towers use expanded geome
   tower.magnified = true;
   put(g, "plasma", 0);
   const upper = put(g, "plasma", 0);
-  assert.equal(cardPower(b, upper, 0), 20);
+  assert.equal(cardPower(b, upper, 0), 16);
 });
 test("boss line selection and telegraphs include the last row and column, all stacks counted", () => {
   const g = base(),

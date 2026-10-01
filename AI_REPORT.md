@@ -530,3 +530,6 @@ Package1.3.51 changes pause-menu navigation to autosave and return to Start. No 
 
 
 Package1.3.52 adds eight-direction map buttons that invoke existing legal move actions. No rules/content/policy changes or new AI evaluation. Packaged GUI verifies all directions, edge/zero-movement restrictions, keyboard activation, autosave, animation locking and direct enemy entry while tile clicks retain inspection. No renderer errors; historical run results remain tied to their recorded versions.
+
+
+Package1.3.53/content1.1.29 reduces Plasma Ball base damage10→8 while retaining +2 per successive pile ball. All246 regression tests pass with updated expected combat totals. No new AI runs or training; prior evaluations remain historical and do not establish balance for this content revision. Rules1.3.30/policy1.12 unchanged.

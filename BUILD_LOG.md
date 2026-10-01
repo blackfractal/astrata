@@ -810,3 +810,10 @@ Packaged GUI verification passes in separate Field and battle profiles: autosave
 Packaged GUI verification passes four scenarios: all eight directions with exact coordinates and movement costs, edge restrictions and keyboard activation, enemy inspection versus direct arrow battle entry, and zero-movement disabling. Also verifies ordinary tile movement, autosave and disabled controls during movement animations. Realistic four-pair spawn previews exposed overflow in the fixed 16:9 stage; set map/wrapper to570px so the preview and controls fit together without scrolling. Final screenshot reviewed, no renderer errors. Evidence: reports/direction-pad-verification.json and reports/screenshots/direction-pad/controls.png. No rules or AI batch rerun for this UI-only change; previous246 rule tests and prior five-run reports remain historical.
 
 Additional implementation, verification, documentation and packaging time: approximately15 minutes. Runnable release and CRC-verified ZIP refreshed. Local commit only, no push; user app/profile untouched.
+
+
+## Post-build polish — Plasma Ball base damage, round 58
+
+2026-10-01. Jonathan asked whether Plasma Ball started at10 damage and suggested8. Confirmed and reduced base damage to8; the successive-ball +2 progression remains, making a four-ball pile8+10+12+14=44 before gear and elemental modifiers. Updated main design and both worked examples. Package1.3.53/content1.1.29/design4.95; rules1.3.30/policy1.12 unchanged.
+
+All246 tests pass after updating existing fixed Plasma damage expectations for pile activations, per-turn limits, Ring/other gear and Tower multiplication. No additional tests or AI batch for this content-value adjustment. Additional implementation, verification, documentation and packaging time: approximately5 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, no push; user app/profile untouched.

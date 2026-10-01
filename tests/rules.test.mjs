@@ -289,7 +289,7 @@ test("seed plus choices replay identically through a full run", () => {
   assert.equal(a.s.mode, "result");
   assert.deepEqual(a.s, b.s);
 });
-test("Plasma pile produces the documented 10+12+14+16 before gear", () => {
+test("Plasma pile produces the documented 8+10+12+14 before gear", () => {
   const g = battle();
   g.s.equipment = {};
   const b = g.s.battle;
@@ -300,7 +300,7 @@ test("Plasma pile produces the documented 10+12+14+16 before gear", () => {
   for (let i = 0; i < 4; i++) put(g, "plasma", 0);
   b.phase = "activate";
   act(g, "activate");
-  assert.equal(b.enemies[0].hp, 948);
+  assert.equal(b.enemies[0].hp, 956);
   assert.ok(b.grid[0].every((c) => c.used === 1));
 });
 test("Fusion spends the covered Spell allowance; top spent never exposes it", () => {
@@ -372,8 +372,8 @@ test("Consecutive Tower doubles matching level, including a covered Pile level",
   g.s.battle.turn++;
   act(g, "activate", (a) => a.slot === 0);
   assert.ok(mag.magnified);
-  assert.equal(g.cardPower(upper, 4), 20);
-  assert.equal(g.cardPower(p, 4), 10);
+  assert.equal(g.cardPower(upper, 4), 16);
+  assert.equal(g.cardPower(p, 4), 8);
 });
 test("upgraded Sapling gets initial HP once, not bonus damage twice", () => {
   const g = battle();

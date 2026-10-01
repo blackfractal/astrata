@@ -94,7 +94,7 @@ test("stack-triggered cards each consume their own per-turn opportunity", () => 
   assert.equal(c.used, 1);
   assert.equal(lower.used, 1);
   assert.equal(extra.used, 1);
-  assert.equal(before - b.enemies[0].hp, 10);
+  assert.equal(before - b.enemies[0].hp, 8);
 });
 test("moving a used card and restoring its exact state cannot refresh the turn opportunity", () => {
   const { g, b, c } = setup();
