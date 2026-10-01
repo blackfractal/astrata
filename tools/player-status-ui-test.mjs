@@ -112,8 +112,15 @@ for (const scenario of ["curses", "enemies"])
         },
         { sources, scenario },
       );
-      if (scenario === "curses") await p.locator('[data-cell="61"]').click();
-      else
+      if (scenario === "curses") {
+        await p.locator('[data-cell="61"]').click();
+        await p
+          .getByRole("button", {
+            name: "Move here · start battle",
+            exact: true,
+          })
+          .click();
+      } else
         await p.getByRole("button", { name: "End turn", exact: true }).click();
       if (mode === "skip") await p.locator("[data-skip]").click();
       if (mode === "normal") {

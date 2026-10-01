@@ -32,6 +32,14 @@ try {
   page.on("pageerror", (e) => report.errors.push(e.message));
   await page.locator('[data-ui="continue"]').click();
   await page.locator('[data-cell="61"]').click();
+  if (
+    await page
+      .getByRole("button", { name: "Move here · start battle", exact: true })
+      .isVisible()
+  )
+    await page
+      .getByRole("button", { name: "Move here · start battle", exact: true })
+      .click();
   await page.waitForSelector(".deal-card.face-down");
   assert.equal(await page.locator(".deal-card").count(), 4);
   await page.waitForFunction(

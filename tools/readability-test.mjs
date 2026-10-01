@@ -134,6 +134,14 @@ for (const [name, phase, resource, id, used, pulse] of [
   const { app, page } = await open(g);
   try {
     await page.locator('[data-cell="61"]').click();
+    if (
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .isVisible()
+    )
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .click();
     await page.waitForSelector(".presentation-bar");
     async function brightness(label) {
       const styles = await page.locator(".field .tile").evaluateAll((xs) =>

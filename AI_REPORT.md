@@ -506,3 +506,18 @@ Package1.3.47/content1.1.27 reduces Fire Wolf Fire Bite from Burn4 to Burn2. Act
 
 
 Package1.3.48/rules1.3.28 introduces tabbed catalogs and requires a visiting Healer for cursed-item removal; restricted stock cannot be bought. Policy1.12/content1.1.27 unchanged. All239 tests pass with healer legality, payment, stale-action and legacy-save coverage; packaged tabbed Buy/Sell/Healer flows also pass. No training or new full-run evaluation; older runs remain evidence for their recorded versions.
+
+
+# Gentler opening Motes — package1.3.49
+
+Rules1.3.29/content1.1.28; policy weighted-druid-v1.12 unchanged, no training. First four spawn pairs use a dedicated easy pool; Bat/Beetle/Moth spend non-damaging turns reducing next-turn resources. Full archives and source snapshots: reports/early-motes-evaluation/.
+
+| Seed | Outcome | Field round | Decisions | Cause |
+| --- | --- | --- | --- | --- |
+| 825183 | Loss | 8 | 110 | Fire Bite |
+| 825184 | Loss | 16 | 228 | The Bitter Crossing |
+| 825185 | Loss | 7 | 71 | Whirl |
+| 825186 | Loss | 13 | 150 | Whirl |
+| 825187 | Loss | 19 | 345 | Void fist |
+
+All five complete without errors or stalls. All six fights encountered during pairs1–4 were won; seed825185 encountered none. Zero wins overall: this is execution/early-progression evidence, not proof of overall balance or end-to-end victory for this version. The new pool changes RNG consumption and downstream encounters, so comparison with old runs sharing seed numbers is not a controlled balance experiment. All243 unit tests and packaged temporary-resource/map-inspection checks pass. No further tuning inferred from this small sample.

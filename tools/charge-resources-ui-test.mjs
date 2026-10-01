@@ -3,7 +3,13 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.13", rules: "1.3.10", checks: [], errors: [] };
+import { VERSION } from "../src/content.mjs";
+const report = {
+  package: JSON.parse(await fs.readFile("package.json", "utf8")).version,
+  rules: VERSION.rules,
+  checks: [],
+  errors: [],
+};
 const dir = "reports/screenshots/charge-resources";
 await fs.mkdir(dir, { recursive: true });
 async function open(g, fast = true) {
@@ -57,6 +63,14 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
       sample();
     });
     await page.locator('[data-cell="61"]').click();
+    if (
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .isVisible()
+    )
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .click();
     if (mode === "skip") {
       await page.locator(".deal-card").first().waitFor();
       await page.locator("[data-skip]").click();

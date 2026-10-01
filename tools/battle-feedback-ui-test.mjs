@@ -250,6 +250,14 @@ function put(g, id, i) {
       sample();
     });
     await page.locator('[data-cell="61"]').click();
+    if (
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .isVisible()
+    )
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .click();
     await settle(page);
     const phases = await page.evaluate(() => window.resourcePhases);
     assert.ok(

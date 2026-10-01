@@ -9,6 +9,7 @@ import {
   ENEMY_STATUS_IMMUNITY,
   cycle,
   VERSION,
+  EARLY_MOTES,
   MIND_COLUMNS,
   MIND_ROWS,
   MIND_SIZE,
@@ -329,6 +330,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.28",
           "1.3.27",
           "1.3.26",
           "1.3.25",
@@ -703,6 +705,46 @@ export class Game {
       );
     }
   }
+  fieldEnemyPreview(e) {
+    const d = enemies[e.enemy],
+      restless = e.restless || 0;
+    const age =
+      e.born == null ? null : Math.max(0, this.s.field.round - e.born);
+    let movement = d.movement;
+    if (movement === "Hunter") movement = "Hunter · moves directly onto you";
+    else if (movement === "Sentinel") movement = "Sentinel · stationary";
+    else if (movement === "Archon") {
+      const step = (age ?? 0) + 1;
+      const hunt = step >= 6 || (d.bossMode === "hunter" && step >= 5);
+      const spaces =
+        d.bossMode === "hunter" || (d.bossMode === "sentinel" && step <= 3)
+          ? 0
+          : step - 1;
+      movement = hunt
+        ? "Hunt · moves directly onto you"
+        : `Archon · ${spaces} spaces this enemy movement`;
+    } else
+      movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
+    return {
+      age,
+      born: e.born ?? null,
+      restless,
+      movement,
+      hp: d.hp,
+      count: e.count || 1,
+      rotation: d.rotation.map((_, cycle) =>
+        this.tell({
+          ...d,
+          ...e,
+          id: d.id,
+          cycle,
+          buff: 0,
+          hp: d.hp,
+          maxHp: d.hp,
+        }),
+      ),
+    };
+  }
   groupSize(id, round) {
     if (!enemies[id].grouped || round <= 4) return 1;
     return (round <= 10 ? 1 : 2) + Math.floor(this.rand() * 2);
@@ -733,12 +775,16 @@ export class Game {
         if (["Mote", "Eidolon", "Archon"].includes(type)) {
           if (type === "Archon") e.enemy = this.s.archon;
           else {
-            let d = this.s.enemyDecks[type];
-            if (!d.length)
-              this.s.enemyDecks[type] = d = this.shuffle(
-                Object.values(enemies)
-                  .filter((x) => x.tier === type && !x.summonOnly)
-                  .map((x) => x.id),
+            const opening = type === "Mote" && f.spawned <= 8;
+            const deckKey = opening ? "EarlyMote" : type;
+            let d = this.s.enemyDecks[deckKey];
+            if (!d?.length)
+              this.s.enemyDecks[deckKey] = d = this.shuffle(
+                opening
+                  ? EARLY_MOTES
+                  : Object.values(enemies)
+                      .filter((x) => x.tier === type && !x.summonOnly)
+                      .map((x) => x.id),
               );
             e.enemy = d.pop();
           }
@@ -1144,7 +1190,7 @@ export class Game {
     const b = this.s.battle,
       bonus = this.bonuses();
     b.focus = bonus.focus + b.permanent.focus + b.next.focus;
-    b.channel = bonus.channel;
+    b.channel = Math.max(0, bonus.channel - (b.next.channelLoss || 0));
     b.insight = Math.max(
       1,
       bonus.insight +
@@ -1153,7 +1199,7 @@ export class Game {
     );
     if (b.discard.some((c) => c.id === "bone"))
       b.focus = Math.max(1, Math.floor(b.focus / 2));
-    b.focus = Math.max(1, b.focus);
+    b.focus = Math.max(0, Math.max(1, b.focus) - (b.next.focusLoss || 0));
   }
   reveal() {
     const b = this.s.battle;
@@ -1317,6 +1363,11 @@ export class Game {
         }
         if (t.grid) this.gridAttack(t);
         if (t.insight) b.next.insight += t.insight;
+        if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;
+        if (t.channel)
+          b.next.channelLoss = (b.next.channelLoss || 0) - t.channel;
+        if (t.insight || t.focus || t.channel)
+          this.present("resources", { name: `${t.name} · next turn only` });
         if (t.howl)
           for (const wolf of b.enemies)
             if (wolf.name.includes("Wolf")) wolf.buff += t.howl;

@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.28",
-  content: "1.1.27",
+  rules: "1.3.29",
+  content: "1.1.28",
   observation: 1,
   actions: 1,
 };
@@ -920,6 +920,7 @@ const attack = (name, damage, element = "Arcane", extra = {}) => ({
   ...extra,
 });
 const effect = (name, extra) => ({ name, element: "Arcane", ...extra });
+export const EARLY_MOTES = ["bat", "beetle", "moth", "wisp"];
 export const enemies = {};
 function enemy(
   id,
@@ -957,11 +958,11 @@ enemy(
   "Wanderer",
   [
     attack("Flit", 4, "Wind"),
+    effect("Screech", { insight: -2 }),
     attack("Wingbeat", 4, "Wind"),
-    effect("Screech", { insight: -1 }),
   ],
-  "Shrinks the next reveal.",
-  "Finish it before Screech.",
+  "Screech deals no damage; reveal two fewer cards next turn only.",
+  "Use the quiet turn to prepare your board.",
 );
 enemy(
   "sludge",
@@ -1027,10 +1028,10 @@ enemy(
   "Wanderer",
   [
     attack("Chime", 4, "Earth"),
-    effect("Harden", { guard: 5 }),
+    effect("Dulling Chime", { focus: -1 }),
     attack("Crack", 6, "Earth"),
   ],
-  "Gains a small shell.",
+  "Dulling Chime deals no damage; lose 1 Focus next turn only.",
   "Fire breaks its shell quickly.",
   { herald: true },
 );
@@ -1057,12 +1058,9 @@ enemy(
   "Light",
   14,
   "Skittish",
-  [
-    effect("Dazzle", { grid: "freeze", target: "newest" }),
-    attack("Dust", 4, "Light"),
-  ],
-  "Freezes the newest card for a turn.",
-  "Spread your usable activations.",
+  [effect("Dazzle", { channel: -1 }), attack("Dust", 4, "Light")],
+  "Dazzle deals no damage; lose 1 Channel next turn only.",
+  "Build your board during its non-attacking turn.",
 );
 enemy(
   "imp",

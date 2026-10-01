@@ -56,7 +56,7 @@ test("refill respects gear, permanent and delayed bonuses, and enemy Insight cha
   b.next = { focus: 2, insight: 3 };
   b.enemies = b.enemies.slice(0, 1);
   b.enemies[0].id = "bat";
-  b.enemies[0].cycle = 2;
+  b.enemies[0].cycle = 1;
   g.capturePresentation = true;
   g.endTurn();
   const refreshed = g.presentation.find((x) => x.kind === "resources").state
@@ -65,7 +65,7 @@ test("refill respects gear, permanent and delayed bonuses, and enemy Insight cha
     [refreshed.insight, refreshed.focus, refreshed.channel],
     [7, 4, 3],
   );
-  assert.equal(b.revealInsight, 6);
+  assert.equal(b.revealInsight, 5);
   assert.deepEqual([b.insight, b.focus, b.channel], [0, 4, 3]);
   assert.deepEqual(b.next, { focus: 0, insight: 0 });
 });

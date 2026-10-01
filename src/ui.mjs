@@ -101,7 +101,9 @@ function tellText(t) {
     ...["burn", "poison", "corrode"]
       .filter((k) => t[k])
       .map((k) => k[0].toUpperCase() + k.slice(1) + " " + t[k]),
-    t.insight ? `${t.insight} Insight next turn` : "",
+    ...["insight", "focus", "channel"]
+      .filter((k) => t[k])
+      .map((k) => `${t[k]} ${k[0].toUpperCase() + k.slice(1)} next turn only`),
     t.guard ? "Gain " + t.guard + " guard" : "",
     t.flicker ? "Negate next offensive activation" : "",
     t.howl ? "Wolves gain " + t.howl + " attack" : "",
@@ -282,7 +284,7 @@ function render(frame = null) {
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
           e = foe || entities[0];
-        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
+        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
       },
     ).join("")}</div><div class="row spread"><div class="queue">${
       Array.from(
@@ -733,10 +735,29 @@ function bind(root = app) {
           entities = game.s.field.entities.filter(
             (e) => e.x === i % 11 && e.y === Math.floor(i / 11),
           );
-        if (entities.length)
+        if (entities.length) {
+          const move = game
+            .legal()
+            .find(
+              (a) =>
+                a.type === "move" &&
+                a.x === i % 11 &&
+                a.y === Math.floor(i / 11),
+            );
           dialog(
-            `<h2>Across the Weald</h2>${entities.map((e) => (e.enemy ? `<div class="row" style="margin:20px 0">${img("enemy-" + e.enemy)}<div><h3>${enemies[e.enemy].name}${(e.count || 1) > 1 ? " ×" + e.count : ""}</h3><p>${enemies[e.enemy].movement} · ${enemies[e.enemy].schedule || ""} · Restless ${e.restless}</p><p>${enemies[e.enemy].signature}</p><small>${enemies[e.enemy].counter}</small></div></div>` : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`)).join("")}`,
+            `<h2>Across the Weald</h2>${entities
+              .map((e) => {
+                if (!e.enemy)
+                  return `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`;
+                const d = enemies[e.enemy],
+                  preview = game.fieldEnemyPreview(e);
+                return `<article class="field-enemy-preview"><div class="row">${img("enemy-" + e.enemy)}<div><h3>${d.name}${preview.count > 1 ? " ×" + preview.count : ""}</h3><p>${d.element} · ${preview.hp} HP each · ${d.tier}</p><p class="enemy-age">${preview.age == null ? "Spawn age unavailable for this older save" : `Spawned in pair ${preview.born} · ${preview.age === 0 ? "Just appeared" : `${preview.age} movement rounds old`}`}</p><p class="enemy-restless">Restless ${preview.restless} · +${preview.restless} damage per attack hit</p><p>${preview.movement}</p><p>${d.signature}</p></div></div><h4>If fought now · first cycle</h4>${preview.rotation.map((t) => `<p>${text(tellText(t))}</p>`).join("")}</article>`;
+              })
+              .join(
+                "",
+              )}<p class="muted">Restless increases after spawn pairs 4, 8 and 12, not every movement turn. It adds attack damage, not HP. Movement increases for Stalkers, Wanderers and Skittish enemies; Sentinels stay still and Hunters/Archons follow their own rules. Each completed battle cycle adds another +1 attack damage.</p>${move ? actionButton({ ...move, label: "Move here · start battle" }, "primary") : ""}`,
           );
+        }
       }),
   );
 }

@@ -70,6 +70,14 @@ for (const mode of ["normal", "skip", "fast", "reduced"]) {
       });
     });
     await page.locator('[data-cell="61"]').click();
+    if (
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .isVisible()
+    )
+      await page
+        .getByRole("button", { name: "Move here · start battle", exact: true })
+        .click();
     await page.waitForSelector(".deal-card.face-down");
     assert.equal(
       await page.locator(".phasebar .active").textContent(),
