@@ -128,6 +128,35 @@ function card(c, { select = false } = {}) {
 function actionButton(a, cls = "") {
   return `<button class="${cls}" data-action="${esc(a.key)}">${esc(a.label)}</button>`;
 }
+function directionPad(field, actions) {
+  const directions = [
+    [-1, -1, "northwest", -45],
+    [0, -1, "north", 0],
+    [1, -1, "northeast", 45],
+    [-1, 0, "west", -90],
+    null,
+    [1, 0, "east", 90],
+    [-1, 1, "southwest", -135],
+    [0, 1, "south", 180],
+    [1, 1, "southeast", 135],
+  ];
+  return `<div class="direction-pad" role="group" aria-label="Move on the map">${directions
+    .map((d) => {
+      if (!d)
+        return '<span class="direction-center" aria-hidden="true">•</span>';
+      const [dx, dy, name, angle] = d;
+      const action = actions.find(
+        (a) =>
+          a.type === "move" && a.x === field.x + dx && a.y === field.y + dy,
+      );
+      const destination = field.entities
+        .filter((e) => e.x === field.x + dx && e.y === field.y + dy)
+        .map((e) => (e.enemy ? enemies[e.enemy].name : e.type))
+        .join(", ");
+      return `<button class="direction-button" data-direction="${name}" aria-label="Move ${name}" title="${esc(action ? `Move ${name}${destination ? " · " + destination : ""}` : `Cannot move ${name}`)}" ${action ? `data-action="${esc(action.key)}"` : "disabled"}><svg viewBox="0 0 24 24" aria-hidden="true" style="transform:rotate(${angle}deg)"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>`;
+    })
+    .join("")}</div>`;
+}
 function phaseBar(b, actions) {
   const arrow = (type, label, hint) => {
     const action = actions.find((a) => a.type === type);
@@ -295,12 +324,12 @@ function render(frame = null) {
             .map(esc)
             .join(" + ")}</span></div>`,
       ).join("") || "<small>The Archon has arrived.</small>"
-    }</div>${actions
+    }</div><div class="field-movement-controls">${actions
       .filter((a) => a.type === "wait")
       .map((a) => actionButton(a, "primary"))
       .join(
         "",
-      )}</div><small>Click a lit neighboring tile. Diagonals are allowed. Entering an occupied tile ends movement.</small></div></section>${sidebar(o)}</div>`;
+      )}${directionPad(f, actions)}</div></div><small>Click a lit neighboring tile. Diagonals are allowed. Entering an occupied tile ends movement.</small></div></section>${sidebar(o)}</div>`;
   } else if (o.mode === "battle") {
     const b = o.battle;
     let selectedActions =

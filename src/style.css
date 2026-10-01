@@ -2814,3 +2814,68 @@ header {
   color: #e3b78f;
   font-weight: bold;
 }
+
+/* Explicit movement beside End Movement; clicking enemy tiles still inspects. */
+#app .field-wrap:has(.direction-pad) {
+  width: 570px;
+}
+#app .field-wrap:has(.direction-pad) .field {
+  width: 100%;
+}
+.field-movement-controls {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+}
+.field-movement-controls > button {
+  padding: 8px 14px;
+}
+.direction-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 28px);
+  grid-template-rows: repeat(3, 28px);
+  gap: 3px;
+  padding: 5px;
+  border: 1px solid #687252;
+  background: #13271fee;
+  border-radius: 5px;
+}
+.direction-pad .direction-button {
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border: 1px solid #738565;
+  background: #263e2e;
+  color: #ead398;
+  border-radius: 3px;
+}
+.direction-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.direction-pad .direction-button:hover:not(:disabled) {
+  background: #476140;
+  border-color: #e5cd8e;
+}
+.direction-pad .direction-button:focus-visible {
+  outline: 2px solid #f4df9d;
+  outline-offset: 2px;
+}
+.direction-pad .direction-button:disabled {
+  color: #677569;
+  background: #18241d;
+  border-color: #354536;
+  opacity: 0.55;
+}
+.direction-center {
+  display: grid;
+  place-items: center;
+  color: #d4bd7c;
+  font-size: 22px;
+}

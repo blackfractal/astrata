@@ -527,3 +527,6 @@ Package1.3.50/rules1.3.30 restricts both first-pair locations to the16-space rad
 
 
 Package1.3.51 changes pause-menu navigation to autosave and return to Start. No rules/content/policy changes or new AI evaluation. Packaged Field/battle save-and-Continue checks pass; existing battle restart semantics and archived run identity are preserved.
+
+
+Package1.3.52 adds eight-direction map buttons that invoke existing legal move actions. No rules/content/policy changes or new AI evaluation. Packaged GUI verifies all directions, edge/zero-movement restrictions, keyboard activation, autosave, animation locking and direct enemy entry while tile clicks retain inspection. No renderer errors; historical run results remain tied to their recorded versions.

@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.93. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.51; rules 1.3.30).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.94. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.52; rules 1.3.30).
 
 Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
 
@@ -132,3 +132,5 @@ The first four spawn pairs use Bat, Bell Beetle, Veil Moth and Spark-Wisp; pair5
 Both first-pair spawns appear exactly two movement steps from the player, independently choosing among the 16 spaces around the 5×5 perimeter. Later pairs keep normal Location rolls.
 
 The pause menu’s Return to Start autosaves and opens the start screen; Continue resumes the saved run. The start-screen Quit closes the application.
+
+Eight directional arrow buttons beside End Movement move directly, including onto enemy spaces. Clicking an enemy tile still opens inspection.
