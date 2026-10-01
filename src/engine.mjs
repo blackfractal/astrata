@@ -330,6 +330,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.29",
           "1.3.28",
           "1.3.27",
           "1.3.26",
@@ -760,15 +761,33 @@ export class Game {
     this.s.mode = "field";
     if (f.spawned < 32) {
       this.batch();
+      // First pair: sample independently from the radius-two square perimeter.
+      const openingLocations = [];
+      if (f.spawned === 0)
+        for (let dy = -2; dy <= 2; dy++)
+          for (let dx = -2; dx <= 2; dx++)
+            if (
+              Math.max(Math.abs(dx), Math.abs(dy)) === 2 &&
+              f.x + dx >= 0 &&
+              f.x + dx <= 10 &&
+              f.y + dy >= 0 &&
+              f.y + dy <= 10
+            )
+              openingLocations.push({ x: f.x + dx, y: f.y + dy });
       // Place the complete pair before resolving collisions with the player.
       for (const type of f.queue.splice(0, 2)) {
         f.spawned++;
         const die = () => Math.floor(this.rand() * 6);
+        const location = openingLocations.length
+          ? this.pick(openingLocations)
+          : {
+              x: type === "Archon" ? 5 : die() + die(),
+              y: type === "Archon" ? 5 : die() + die(),
+            };
         const e = {
           uid: this.uid(),
           type,
-          x: type === "Archon" ? 5 : die() + die(),
-          y: type === "Archon" ? 5 : die() + die(),
+          ...location,
           restless: 0,
           born: f.round,
         };

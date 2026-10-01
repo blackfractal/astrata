@@ -1,6 +1,6 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.91. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.49; rules 1.3.29).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.92. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.50; rules 1.3.30).
 
 Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
 
@@ -128,3 +128,5 @@ Corrode now uses rust-brown pitted metal and flakes. Newly inflicted Burn/Poison
 Market Buy has Cards/Gems/Equipment tabs; Sell has Grimoire/Equipment tabs. Equipped items have gold outlines and labels. Cursed objects and Hexes remain inspectable but gray and unavailable for market transactions; a visiting Tavern Healer handles removal.
 
 The first four spawn pairs use Bat, Bell Beetle, Veil Moth and Spark-Wisp; pair5 unlocks the full Mote pool and Eidolons. Bat, Beetle and Moth have non-damaging turns reducing next-turn Insight/Focus/Channel. Click map enemies to inspect age, Restless, effective movement and the first attack cycle before choosing Move here to enter a reachable fight.
+
+Both first-pair spawns appear exactly two movement steps from the player, independently choosing among the 16 spaces around the 5×5 perimeter. Later pairs keep normal Location rolls.

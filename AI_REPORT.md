@@ -521,3 +521,6 @@ Rules1.3.29/content1.1.28; policy weighted-druid-v1.12 unchanged, no training. F
 | 825187 | Loss | 19 | 345 | Void fist |
 
 All five complete without errors or stalls. All six fights encountered during pairs1–4 were won; seed825185 encountered none. Zero wins overall: this is execution/early-progression evidence, not proof of overall balance or end-to-end victory for this version. The new pool changes RNG consumption and downstream encounters, so comparison with old runs sharing seed numbers is not a controlled balance experiment. All243 unit tests and packaged temporary-resource/map-inspection checks pass. No further tuning inferred from this small sample.
+
+
+Package1.3.50/rules1.3.30 restricts both first-pair locations to the16-space radius-two perimeter around the player. Content1.1.28/policy1.12 unchanged. All246 tests pass, including100seed opening placement and exhaustive16-location checks. No new AI batch or training; the prior1.3.49 runs remain historical, and changed location RNG means they do not establish this version’s balance.
