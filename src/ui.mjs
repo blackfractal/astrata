@@ -568,13 +568,31 @@ async function ui(name) {
       close();
       break;
     }
+    case "saveAndHome":
+      auto = false;
+      clearTimeout(autoTimer);
+      busy = true;
+      try {
+        await persist();
+        game = null;
+        selectedHand = null;
+        selectedSlot = null;
+        reason = "";
+        close();
+        menu();
+      } catch (e) {
+        toast("Could not save the run: " + e.message);
+      } finally {
+        busy = false;
+      }
+      break;
     case "quit":
       await persist();
       await storage.quit();
       break;
     case "pause":
       dialog(
-        `<h2>A moment of stillness</h2><div class="column"><button data-close>Resume</button><button data-ui="settings">Settings</button><button data-ui="quit">Return to Desktop · autosaves first</button><button class="danger" data-ui="abandon">Abandon Run · deletes the save</button></div>`,
+        `<h2>A moment of stillness</h2><div class="column"><button data-close>Resume</button><button data-ui="settings">Settings</button><button data-ui="saveAndHome">Return to Start · autosaves first</button><button class="danger" data-ui="abandon">Abandon Run · deletes the save</button></div>`,
       );
       break;
     case "abandon":

@@ -129,6 +129,7 @@ for (const name of [
   "adjacency-verification.json",
   "polish-robustness",
   "store-verification.json",
+  "return-start-verification.json",
   "early-motes-verification.json",
   "early-motes-evaluation",
   "healer-verification.json",

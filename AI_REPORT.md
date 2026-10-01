@@ -524,3 +524,6 @@ All five complete without errors or stalls. All six fights encountered during pa
 
 
 Package1.3.50/rules1.3.30 restricts both first-pair locations to the16-space radius-two perimeter around the player. Content1.1.28/policy1.12 unchanged. All246 tests pass, including100seed opening placement and exhaustive16-location checks. No new AI batch or training; the prior1.3.49 runs remain historical, and changed location RNG means they do not establish this version’s balance.
+
+
+Package1.3.51 changes pause-menu navigation to autosave and return to Start. No rules/content/policy changes or new AI evaluation. Packaged Field/battle save-and-Continue checks pass; existing battle restart semantics and archived run identity are preserved.
