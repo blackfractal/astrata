@@ -464,7 +464,7 @@ function itemDetails(ctx, uid) {
         (a.type === "socket" && a.gem === uid),
     );
   ctx.dialog(
-    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="item-options">${
+    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
       ["equip", "unequip", "socket", "unsocket", "sell"]
         .map((type) => {
           const list = choices.filter(
@@ -667,18 +667,20 @@ function tavern(ctx) {
       entries
         .map((x) => {
           const restricted = x.d.cursed || x.d.type === "Hex";
-          return `<article class="market-item ${restricted ? "healer-only" : x.a ? "" : "unavailable"}">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.d.text)}</p>${restricted ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-stock-view="${x.index}">View</button>${!restricted && x.a ? button(ctx, { ...x.a, label: "Buy · " + x.price + " Gold" }) : `<button disabled title="${restricted ? healerRequired : `Needs ${x.price} Gold; ${o.gold} available`}">${restricted ? "Buy unavailable" : `Buy · ${x.price} Gold`}</button>`}</div></article>`;
+          return `<article class="market-item ${restricted ? "healer-only" : x.a ? "" : "unavailable"}">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.d.text)}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-stock-view="${x.index}">View</button>${!restricted && x.a ? button(ctx, { ...x.a, label: "Buy · " + x.price + " Gold" }) : `<button disabled title="${restricted ? healerRequired : `Needs ${x.price} Gold; ${o.gold} available`}">${restricted ? "Buy unavailable" : `Buy · ${x.price} Gold`}</button>`}</div></article>`;
         })
         .join("") || "<p>Sold out</p>",
     );
     bindMarketCategories(ctx, content);
+  } else if (service === "grimoire") {
+    content.innerHTML = scribeCatalog(ctx);
+    bindCatalog(ctx, content);
   } else {
     const types =
       {
         rest: ["heal"],
         gossip: ["gossip"],
         healer: ["removeHex", "sell"],
-        grimoire: ["upgrade", "remove"],
       }[service] || [];
     const list = actions.filter(
       (a) =>
@@ -762,6 +764,42 @@ function bindMarketCategories(ctx, root) {
     };
   }
 }
+function scribeCatalog(ctx) {
+  const { o, actions } = ctx;
+  return `<div class="market-stock scribe-stock">${
+    o.deck
+      .map((c) => {
+        const d = cards[c.id],
+          u = d.upgrade,
+          restricted = d.type === "Hex";
+        const offers = restricted
+          ? []
+          : actions.filter((a) => a.type === "upgrade" && a.uid === c.uid);
+        const requirements = u
+          ? [
+              u.gold ? `${u.gold} Gold` : null,
+              u.hp ? `${u.hp} HP (must survive)` : null,
+              u.element ? `an equipped ${u.element}-imbued Setting` : null,
+              u.sacrifice ? `another ${d.rarity} card as a sacrifice` : null,
+            ]
+              .filter(Boolean)
+              .join(" + ")
+          : "";
+        const reason = restricted
+          ? healerRequired
+          : c.upgrade
+            ? "Already upgraded"
+            : !u
+              ? "No upgrade available"
+              : o.tutorial
+                ? "Not available in this tutorial lesson"
+                : `Requires ${requirements}`;
+        const controls = offers.map((a) => button(ctx, a)).join("");
+        return `<article class="market-item ${restricted ? "healer-only" : offers.length ? "" : "unavailable"}" data-scribe-card="${c.uid}">${ctx.img("card-" + c.id)}<h4>${d.name}${c.upgrade ? " +" : ""}</h4><p>${ctx.text(d.text)}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : u ? `<p data-tooltip="${ctx.esc(upgradeHelp(d))}">${ctx.text(upgradeHelp(d))}</p>` : ""}<div class="store-controls"><button data-owned-card="${c.uid}">View</button>${offers.length > 1 ? `<details><summary>Choose upgrade sacrifice</summary>${controls}</details>` : controls || `<button disabled title="${ctx.esc(reason)}" data-tooltip="${ctx.esc(reason)}">${c.upgrade ? "Upgraded" : "Upgrade unavailable"}</button>`}</div></article>`;
+      })
+      .join("") || "<p>No cards in your Grimoire.</p>"
+  }</div>`;
+}
 function sellCatalog(ctx) {
   const { o, actions } = ctx;
   const body =
@@ -773,8 +811,10 @@ function sellCatalog(ctx) {
                 !d.cursed &&
                 actions.find((a) => a.type === "sell" && a.uid === x.uid),
               gem = o.inventory.find((g) => g.uid === x.gem),
-              equipped = Object.values(o.equipment).includes(x.uid);
-            return `<article class="market-item ${d.cursed ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}</p>${d.cursed ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${d.cursed ? healerRequired : "Unsocket this Gem before selling"}">Sell unavailable</button>`}</div></article>`;
+              setting = o.inventory.find((i) => i.gem === x.uid),
+              equipped =
+                !!setting || Object.values(o.equipment).includes(x.uid);
+            return `<article class="market-item ${d.cursed ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}${setting ? "<br>Socketed in " + items[setting.id].name : ""}</p>${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${d.cursed ? healerRequired : "Sale unavailable during this tutorial lesson"}">Sell unavailable</button>`}</div></article>`;
           })
           .join("")
       : o.deck
@@ -784,7 +824,7 @@ function sellCatalog(ctx) {
               a =
                 !restricted &&
                 actions.find((a) => a.type === "remove" && a.uid === c.uid);
-            return `<article class="market-item ${restricted ? "healer-only" : ""}" data-catalog-card="${c.uid}">${ctx.img("card-" + c.id)}<h4>${d.name}${c.upgrade ? " +" : ""}</h4><p>${ctx.text(d.text)}</p>${restricted ? `<p class="healer-required">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-card="${c.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : o.shop.removeUsed ? "Removal already used at this Tavern" : "Needs 40 Gold"}">${restricted ? "Removal unavailable" : o.shop.removeUsed ? "Removal used" : "Remove unavailable"}</button>`}</div></article>`;
+            return `<article class="market-item ${restricted ? "healer-only" : ""}" data-catalog-card="${c.uid}">${ctx.img("card-" + c.id)}<h4>${d.name}${c.upgrade ? " +" : ""}</h4><p>${ctx.text(d.text)}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-card="${c.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : o.shop.removeUsed ? "Removal already used at this Tavern" : "Needs 40 Gold"}">${restricted ? "Removal unavailable" : o.shop.removeUsed ? "Removal used" : "Remove unavailable"}</button>`}</div></article>`;
           })
           .join("");
   return marketCategories(

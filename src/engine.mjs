@@ -387,6 +387,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.33",
           "1.3.32",
           "1.3.31",
           "1.3.30",
@@ -2413,16 +2414,14 @@ export class Game {
       this.equipChoices(add);
       for (const inst of s.inventory) {
         const d = items[inst.id];
-        if (!s.inventory.some((x) => x.gem === inst.uid)) {
-          const value = Math.floor(d.worth / 2);
-          if (!d.cursed || (shop.healer && s.gold >= value))
-            add(
-              "sell",
-              `${d.cursed ? "Remove" : "Sell"} ${d.name} · ${d.cursed ? "-" : "+"}${value} Gold`,
-              { uid: inst.uid, value },
-              { sale: value, cursed: !!d.cursed },
-            );
-        }
+        const value = Math.floor(d.worth / 2);
+        if (!d.cursed || (shop.healer && s.gold >= value))
+          add(
+            "sell",
+            `${d.cursed ? "Remove" : "Sell"} ${d.name} · ${d.cursed ? "-" : "+"}${value} Gold`,
+            { uid: inst.uid, value },
+            { sale: value, cursed: !!d.cursed },
+          );
         if (d.socket) {
           if (inst.gem)
             add("unsocket", "Unsocket " + d.name, { uid: inst.uid });

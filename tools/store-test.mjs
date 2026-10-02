@@ -17,6 +17,11 @@ g.s.shop.stock = [
 ];
 const curse = g.addItem("curseRing");
 const hex = g.addCard("rust");
+const socketed = g.addItem("sapphire");
+g.getItem(g.s.equipment.wrist2).gem = socketed.uid;
+const spareSetting = g.addItem("bronze"),
+  spareGem = g.addItem("ruby");
+spareSetting.gem = spareGem.uid;
 const profile = path.resolve(".tmp/store-check-" + Date.now());
 await fs.mkdir(profile, { recursive: true });
 await fs.writeFile(path.join(profile, "save.json"), JSON.stringify(g.s));
@@ -86,7 +91,7 @@ try {
   ]);
   assert.equal(
     await page.locator(".market-equipped").count(),
-    Object.values(g.s.equipment).filter(Boolean).length,
+    Object.values(g.s.equipment).filter(Boolean).length + 2,
   );
   const cursed = page.locator(`[data-catalog-item="${curse.uid}"]`);
   assert.ok(
@@ -114,6 +119,27 @@ try {
   await page.locator("[data-owned-view]").first().click();
   assert.ok(await page.locator("#modal .full-art").count());
   await page.locator("[data-close]").click();
+  const socketedRow = page.locator(`[data-catalog-item="${socketed.uid}"]`);
+  assert.match(await socketedRow.textContent(), /Equipped.*Socketed in/s);
+  await socketedRow.locator("[data-action]").click();
+  await socketedRow.waitFor({ state: "detached" });
+  let state = JSON.parse(
+    await fs.readFile(path.join(profile, "save.json"), "utf8"),
+  );
+  assert.equal(
+    state.inventory.find((x) => x.uid === g.s.equipment.wrist2).gem,
+    null,
+  );
+  assert.ok(!state.inventory.some((x) => x.uid === socketed.uid));
+  await page
+    .locator(`[data-catalog-item="${spareSetting.uid}"] [data-action]`)
+    .click();
+  await page
+    .locator(`[data-catalog-item="${spareSetting.uid}"]`)
+    .waitFor({ state: "detached" });
+  const freedGem = page.locator(`[data-catalog-item="${spareGem.uid}"]`);
+  assert.equal(await freedGem.locator(".equipped-label").count(), 0);
+  assert.ok(await freedGem.locator("[data-action]").isEnabled());
   const braceletRow = page.locator(
     `[data-catalog-item="${g.s.equipment.wrist2}"]`,
   );
@@ -148,6 +174,45 @@ try {
     path: "reports/screenshots/polish/store-sell-remove.png",
     fullPage: true,
   });
+  await page.locator('[data-tavern="grimoire"]').click();
+  state = JSON.parse(
+    await fs.readFile(path.join(profile, "save.json"), "utf8"),
+  );
+  assert.equal(
+    await page.locator("[data-scribe-card]").count(),
+    state.deck.length,
+  );
+  assert.equal(await page.getByRole("button", { name: /^Remove / }).count(), 0);
+  assert.equal(
+    await page.locator(".scribe-stock .healer-only [data-action]").count(),
+    0,
+  );
+  const scribeRow = page
+    .locator("[data-scribe-card]")
+    .filter({ has: page.locator("[data-upgrade-preview]") })
+    .first();
+  await scribeRow.locator("[data-owned-card]").click();
+  assert.ok(await page.locator("#modal .full-art").count());
+  await page.locator("[data-close]").click();
+  const upgradeUid = Number(await scribeRow.getAttribute("data-scribe-card"));
+  await scribeRow.locator("[data-upgrade-preview]").first().hover();
+  await page.locator("#hover-help:visible").waitFor();
+  await page.screenshot({
+    path: "reports/screenshots/polish/scribe-gallery.png",
+    fullPage: true,
+  });
+  await scribeRow.locator("[data-upgrade-preview]").first().click();
+  await page.waitForFunction(
+    (uid) =>
+      document
+        .querySelector(`[data-scribe-card="${uid}"]`)
+        ?.textContent.includes("Upgraded"),
+    upgradeUid,
+  );
+  state = JSON.parse(
+    await fs.readFile(path.join(profile, "save.json"), "utf8"),
+  );
+  assert.equal(state.deck.find((c) => c.uid === upgradeUid).upgrade, true);
   await page.locator('[data-tavern="healer"]').click();
   await page
     .getByRole("button", { name: /^Remove Ring of the Ash Oath/ })
@@ -180,6 +245,9 @@ try {
         viewSell: true,
         cardCatalog: true,
         oneRemoval: true,
+        socketedGemSale: true,
+        settingSaleRetainsGem: true,
+        scribeGalleryViewUpgrade: true,
       },
       null,
       2,
