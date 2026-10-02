@@ -270,7 +270,9 @@ async function act(a, controller = { kind: "human" }) {
     game.capturePresentation = true;
     const action =
       typeof a === "string" ? game.legal().find((x) => x.key === a) : a;
+    const independent = game.s.tutorial?.lesson === "independent";
     game.act(action);
+    if (independent) game.s.tutorial.independentIntroDismissed = true;
     if (action.type === "tutorialRetry") {
       const retryOf = runId;
       runId = crypto.randomUUID();
@@ -527,7 +529,20 @@ function render(frame = null) {
     },
   });
   app.classList.toggle("presenting", !!frame);
-  paintTutorial({ game, act, close, busy: () => busy }, !!frame);
+  paintTutorial(
+    {
+      game,
+      act,
+      close,
+      busy: () => busy,
+      dismissIndependent: async () => {
+        game.s.tutorial.independentIntroDismissed = true;
+        await persist();
+        render();
+      },
+    },
+    !!frame,
+  );
 }
 function botControls() {
   return `<div class="row" style="margin-top:20px"><button data-ui="botStep" class="quiet">AI step</button><button data-ui="botToggle" class="quiet">${auto ? "Stop AI" : "Watch AI"}</button></div>`;

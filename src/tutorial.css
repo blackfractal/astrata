@@ -74,19 +74,59 @@
   color: #f5ebcc;
   border: 1px solid #dfca8c;
   background: #394f32;
-  animation: tutorial-pulse 1.5s ease-in-out infinite;
+  outline: 2px solid #ffe6a0;
+  animation:
+    tutorial-pulse 1.1s ease-in-out infinite,
+    tutorial-wobble 1.1s ease-in-out infinite;
 }
 .tutorial-target {
-  outline: 2px solid #ebd585 !important;
+  outline: 3px solid #ffe6a0 !important;
   outline-offset: 3px;
-  animation: tutorial-pulse 1.5s ease-in-out infinite !important;
+  animation: tutorial-pulse 1.1s ease-in-out infinite !important;
 }
 @keyframes tutorial-pulse {
-  50% {
+  0%,
+  100% {
+    outline-offset: 2px;
     box-shadow:
-      0 0 0 5px #d5c67b35,
-      0 0 20px #e9d17a55;
+      0 0 0 2px #e6c66545,
+      0 0 8px #e9d17a55;
   }
+  50% {
+    outline-offset: 5px;
+    box-shadow:
+      0 0 0 8px #e6c66580,
+      0 0 30px #ffe6a0b0;
+  }
+}
+.tutorial-target-control {
+  animation:
+    tutorial-pulse 1.1s ease-in-out infinite,
+    tutorial-wobble 1.1s ease-in-out infinite !important;
+}
+@keyframes tutorial-wobble {
+  0%,
+  100% {
+    outline-offset: 1px;
+  }
+  50% {
+    outline-offset: 7px;
+  }
+}
+.tutorial-hint-target {
+  outline-width: 2px !important;
+  animation: tutorial-gentle 2s ease-in-out infinite !important;
+}
+@keyframes tutorial-gentle {
+  50% {
+    box-shadow: 0 0 12px #e9d17a60;
+  }
+}
+.tutorial-idle-guide {
+  border-top-width: 1px;
+}
+.tutorial-idle-guide p {
+  margin-top: 12px;
 }
 .in-tutorial [data-ui="botStep"],
 .in-tutorial [data-ui="botToggle"] {
@@ -96,6 +136,7 @@
   .tutorial-target,
   .tutorial-next {
     animation: none !important;
+    scale: 1 !important;
     box-shadow: 0 0 0 4px #d5c67b40;
   }
 }
