@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.33",
-  content: "1.1.33",
+  content: "1.1.34",
   observation: 1,
   actions: 1,
 };
@@ -109,7 +109,7 @@ card(
   "Arcane",
   "Object",
   0,
-  1,
+  2,
   { insight: 2 },
   "+2 Insight next turn.",
 );

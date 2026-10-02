@@ -904,3 +904,10 @@ Map callouts now sit on the left, clear of the field and movement controls. Othe
 All6 tutorial tests pass, covering the complete deterministic sequence, save/resume at every guided decision, older-save migration, completion/retry, statistics and normal-pool isolation. The packaged full122-decision mouse walkthrough passes through Warden victory, replay and normal-save preservation with no renderer errors. Focused packaged checks confirm Water Blast and post-gossip copy fits onscreen and the new saved acknowledgement resumes/advances correctly. Reviewed screenshots of the left-side pursuit lesson, elemental lesson and Traveler explanation. Updated reports/tutorial-verification.json. No balance change, training or new five-run evaluation.
 
 Additional implementation, verification, documentation and packaging time: approximately7 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.
+
+
+## Post-build polish — two Clear Mind activations, round 66
+
+2026-10-01. Jonathan requested two activations for Clear Mind instead of one. Increased its printed allowance1→2. Placement0 Focus, activation1 Channel, +2 Insight next turn, Recall1 Focus and the default once-per-turn restriction remain unchanged. Allowance derives from current content minus uses, so existing field copies retain their used count with the higher limit. Package1.3.61/content1.1.34/design4.103; rules1.3.33 and policy unchanged.
+
+All264 existing tests pass. A focused engine check activates Clear Mind on two successive turns, verifies1 Channel spent and6 Insight revealed each following turn, rejects a repeated activation in the same turn, and confirms no third activation. No new AI evaluation or training; balance reports remain tied to their recorded versions. Additional implementation, verification, documentation and packaging time: approximately3 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.
