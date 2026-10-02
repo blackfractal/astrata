@@ -1,0 +1,2107 @@
+{
+  "packageVersion": "1.3.55",
+  "version": {
+    "rules": "1.3.32",
+    "content": "1.1.31",
+    "observation": 1,
+    "actions": 1
+  },
+  "runId": "d4d9ccfc-d3a6-48fc-8e4b-e2abf2a20447",
+  "outcome": "win",
+  "steps": [
+    {
+      "lesson": "welcome",
+      "action": {
+        "type": "tutorialNext",
+        "step": "welcome",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"welcome\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 0
+    },
+    {
+      "lesson": "gold",
+      "action": {
+        "type": "tutorialNext",
+        "step": "gold",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"gold\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 0
+    },
+    {
+      "lesson": "gold-move",
+      "action": {
+        "type": "move",
+        "x": 6,
+        "y": 5,
+        "label": "Move to 7, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Gold"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":6,\"y\":5}]"
+      },
+      "hp": 70,
+      "gold": 0
+    },
+    {
+      "lesson": "gold-gained",
+      "action": {
+        "type": "tutorialNext",
+        "step": "gold-gained",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"gold-gained\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "item-move",
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 5,
+        "label": "Move to 8, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":5}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "ring-take",
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Rootbound Ring",
+        "effects": {
+          "item": "ring"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "inventory-open",
+      "action": {
+        "type": "tutorialUI",
+        "step": "inventory-open",
+        "control": "inventory",
+        "label": "Your belongings",
+        "key": "[\"tutorialUI\",{\"step\":\"inventory-open\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "ring-equip",
+      "action": {
+        "type": "equip",
+        "item": 28,
+        "slot": "finger2",
+        "label": "Equip Rootbound Ring · finger2",
+        "effects": {
+          "gear": {
+            "damage": 2,
+            "firstAttackOnly": true
+          }
+        },
+        "costs": {},
+        "key": "[\"equip\",{\"item\":28,\"slot\":\"finger2\"}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "gear-ready",
+      "action": {
+        "type": "tutorialNext",
+        "step": "gear-ready",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"gear-ready\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "mote-move",
+      "action": {
+        "type": "move",
+        "x": 8,
+        "y": 5,
+        "label": "Move to 9, 6",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Mote"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":8,\"y\":5}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "reveal",
+      "action": {
+        "type": "tutorialNext",
+        "step": "reveal",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"reveal\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "grimoire-open",
+      "action": {
+        "type": "tutorialUI",
+        "step": "grimoire-open",
+        "control": "grimoire",
+        "label": "Your Grimoire",
+        "key": "[\"tutorialUI\",{\"step\":\"grimoire-open\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "focus",
+      "action": {
+        "type": "tutorialNext",
+        "step": "focus",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"focus\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "shield-place",
+      "action": {
+        "type": "place",
+        "uid": 16,
+        "slot": 18,
+        "label": "Place Shield · slot 19",
+        "effects": {
+          "card": "shield",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":16,\"slot\":18}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "focus-empty",
+      "action": {
+        "type": "tutorialNext",
+        "step": "focus-empty",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"focus-empty\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "first-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "tell3",
+      "action": {
+        "type": "tutorialNext",
+        "step": "tell3",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"tell3\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "shield-activate",
+      "action": {
+        "type": "activate",
+        "slot": 18,
+        "target": null,
+        "element": "Arcane",
+        "label": "Shield · Arcane",
+        "effects": {
+          "shield": 4,
+          "matchingShield": 1,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":18,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "first-enemy",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "shield-block3",
+      "action": {
+        "type": "block",
+        "uid": 30,
+        "slot": 18,
+        "label": "Arcane Shield · 4 block",
+        "effects": {
+          "block": 4,
+          "element": "Arcane",
+          "column": 4
+        },
+        "costs": {},
+        "key": "[\"block\",{\"uid\":30,\"slot\":18}]"
+      },
+      "hp": 70,
+      "gold": 200,
+      "remainingDamage": 3
+    },
+    {
+      "lesson": "shield-expiry",
+      "action": {
+        "type": "tutorialNext",
+        "step": "shield-expiry",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"shield-expiry\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "blast-place",
+      "action": {
+        "type": "place",
+        "uid": 20,
+        "slot": 22,
+        "label": "Place Blast · slot 23",
+        "effects": {
+          "card": "blast",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":20,\"slot\":22}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "second-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "second-shield",
+      "action": {
+        "type": "activate",
+        "slot": 18,
+        "target": null,
+        "element": "Arcane",
+        "label": "Shield · Arcane",
+        "effects": {
+          "shield": 4,
+          "matchingShield": 1,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":18,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "first-blast",
+      "action": {
+        "type": "activate",
+        "slot": 22,
+        "target": 29,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Mosswing",
+        "effects": {
+          "damage": 4,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":22,\"target\":29,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "second-enemy",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "shield-block5",
+      "action": {
+        "type": "block",
+        "uid": 31,
+        "slot": 18,
+        "label": "Arcane Shield · 4 block",
+        "effects": {
+          "block": 4,
+          "element": "Arcane",
+          "column": 4
+        },
+        "costs": {},
+        "key": "[\"block\",{\"uid\":31,\"slot\":18}]"
+      },
+      "hp": 70,
+      "gold": 200,
+      "remainingDamage": 5
+    },
+    {
+      "lesson": "bracelet-block1",
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 block",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "hp": 70,
+      "gold": 200,
+      "remainingDamage": 1
+    },
+    {
+      "lesson": "synergy-place",
+      "action": {
+        "type": "place",
+        "uid": 21,
+        "slot": 23,
+        "label": "Place Blast · slot 24",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":21,\"slot\":23}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "synergy",
+      "action": {
+        "type": "tutorialNext",
+        "step": "synergy",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"synergy\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "third-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "synergy-kill",
+      "action": {
+        "type": "activate",
+        "slot": 23,
+        "target": 29,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Mosswing",
+        "effects": {
+          "damage": 5,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":23,\"target\":29,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 200
+    },
+    {
+      "lesson": "ward-reward",
+      "action": {
+        "type": "rewardCard",
+        "id": "ward",
+        "label": "Take Ward",
+        "effects": {
+          "card": "ward"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"ward\"}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "first-back",
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "pursuit",
+      "action": {
+        "type": "tutorialNext",
+        "step": "pursuit",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"pursuit\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "pursuit-move",
+      "action": {
+        "type": "move",
+        "x": 9,
+        "y": 4,
+        "label": "Move to 10, 5",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":9,\"y\":4}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "caught",
+      "action": {
+        "type": "tutorialNext",
+        "step": "caught",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"caught\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "ward-place",
+      "action": {
+        "type": "place",
+        "uid": 32,
+        "slot": 16,
+        "label": "Place Ward · slot 17",
+        "effects": {
+          "card": "ward",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":32,\"slot\":16}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "ward-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "ward-activate",
+      "action": {
+        "type": "activate",
+        "slot": 16,
+        "target": null,
+        "element": "Arcane",
+        "label": "Ward · Arcane",
+        "effects": {
+          "ward": 10,
+          "damage": 0,
+          "card": "ward",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "ward-enemy",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "ward-block",
+      "action": {
+        "type": "ward",
+        "uid": 32,
+        "slot": 16,
+        "label": "Ward · 20 ward",
+        "effects": {
+          "ward": 20,
+          "column": 2
+        },
+        "costs": {},
+        "key": "[\"ward\",{\"uid\":32,\"slot\":16}]"
+      },
+      "hp": 70,
+      "gold": 218,
+      "remainingDamage": 3
+    },
+    {
+      "lesson": "ward-persists",
+      "action": {
+        "type": "tutorialNext",
+        "step": "ward-persists",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"ward-persists\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "sapling-place",
+      "action": {
+        "type": "place",
+        "uid": 24,
+        "slot": 20,
+        "label": "Place Sapling · slot 21",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":24,\"slot\":20}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "sapling-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "sapling-attack",
+      "action": {
+        "type": "activate",
+        "slot": 20,
+        "target": 34,
+        "element": "Earth",
+        "label": "Sapling · Earth → Rootling",
+        "effects": {
+          "hpDamage": true,
+          "damage": 4,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":20,\"target\":34,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "rootling-rest",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-shield",
+      "action": {
+        "type": "place",
+        "uid": 17,
+        "slot": 18,
+        "label": "Place Shield · slot 19",
+        "effects": {
+          "card": "shield",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":17,\"slot\":18}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-shield-activate",
+      "action": {
+        "type": "activate",
+        "slot": 18,
+        "target": null,
+        "element": "Arcane",
+        "label": "Shield · Arcane",
+        "effects": {
+          "shield": 4,
+          "matchingShield": 1,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":18,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-sapling-attack",
+      "action": {
+        "type": "activate",
+        "slot": 20,
+        "target": 34,
+        "element": "Earth",
+        "label": "Sapling · Earth → Rootling",
+        "effects": {
+          "hpDamage": true,
+          "damage": 4,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":20,\"target\":34,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route",
+      "action": {
+        "type": "tutorialNext",
+        "step": "route",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"route\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-enemy",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 218
+    },
+    {
+      "lesson": "route-ally",
+      "action": {
+        "type": "intercept",
+        "slot": 20,
+        "label": "Sapling intercepts · 4 HP",
+        "effects": {
+          "allyHp": 4,
+          "element": "Earth",
+          "swallow": false,
+          "column": 6
+        },
+        "costs": {},
+        "key": "[\"intercept\",{\"slot\":20}]"
+      },
+      "hp": 70,
+      "gold": 218,
+      "remainingDamage": 30
+    },
+    {
+      "lesson": "route-block",
+      "action": {
+        "type": "block",
+        "uid": 35,
+        "slot": 18,
+        "label": "Arcane Shield · 4 block",
+        "effects": {
+          "block": 4,
+          "element": "Arcane",
+          "column": 4
+        },
+        "costs": {},
+        "key": "[\"block\",{\"uid\":35,\"slot\":18}]"
+      },
+      "hp": 70,
+      "gold": 218,
+      "remainingDamage": 26
+    },
+    {
+      "lesson": "route-ward",
+      "action": {
+        "type": "ward",
+        "uid": 32,
+        "slot": 16,
+        "label": "Ward · 17 ward",
+        "effects": {
+          "ward": 17,
+          "column": 2
+        },
+        "costs": {},
+        "key": "[\"ward\",{\"uid\":32,\"slot\":16}]"
+      },
+      "hp": 70,
+      "gold": 218,
+      "remainingDamage": 22
+    },
+    {
+      "lesson": "route-bracelet",
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 block",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "hp": 70,
+      "gold": 218,
+      "remainingDamage": 5
+    },
+    {
+      "lesson": "route-done",
+      "action": {
+        "type": "tutorialNext",
+        "step": "route-done",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"route-done\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 67,
+      "gold": 218
+    },
+    {
+      "lesson": "rootling-blast",
+      "action": {
+        "type": "place",
+        "uid": 21,
+        "slot": 22,
+        "label": "Place Blast · slot 23",
+        "effects": {
+          "card": "blast",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":21,\"slot\":22}]"
+      },
+      "hp": 67,
+      "gold": 218
+    },
+    {
+      "lesson": "rootling-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 67,
+      "gold": 218
+    },
+    {
+      "lesson": "rootling-kill",
+      "action": {
+        "type": "activate",
+        "slot": 22,
+        "target": 34,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Rootling",
+        "effects": {
+          "damage": 4,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":22,\"target\":34,\"element\":\"Arcane\"}]"
+      },
+      "hp": 67,
+      "gold": 218
+    },
+    {
+      "lesson": "water-reward",
+      "action": {
+        "type": "rewardCard",
+        "id": "water",
+        "label": "Take Water Blast",
+        "effects": {
+          "card": "water"
+        },
+        "costs": {},
+        "key": "[\"rewardCard\",{\"id\":\"water\"}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "rootling-back",
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "gem-road",
+      "action": {
+        "type": "tutorialNext",
+        "step": "gem-road",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"gem-road\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "gem-step",
+      "action": {
+        "type": "move",
+        "x": 10,
+        "y": 3,
+        "label": "Move to 11, 4",
+        "effects": {
+          "movement": 1,
+          "occupants": []
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":10,\"y\":3}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "gem-move",
+      "action": {
+        "type": "move",
+        "x": 10,
+        "y": 2,
+        "label": "Move to 11, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Item"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":10,\"y\":2}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "gem-take",
+      "action": {
+        "type": "takeItem",
+        "index": 0,
+        "label": "Take Sapphire",
+        "effects": {
+          "item": "sapphire"
+        },
+        "costs": {},
+        "key": "[\"takeItem\",{\"index\":0}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "gem-save",
+      "action": {
+        "type": "tutorialNext",
+        "step": "gem-save",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"gem-save\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "curses",
+      "action": {
+        "type": "tutorialNext",
+        "step": "curses",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"curses\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "ember-move",
+      "action": {
+        "type": "move",
+        "x": 9,
+        "y": 2,
+        "label": "Move to 10, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Mote"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":9,\"y\":2}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "elements",
+      "action": {
+        "type": "tutorialNext",
+        "step": "elements",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"elements\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "water-place",
+      "action": {
+        "type": "place",
+        "uid": 36,
+        "slot": 22,
+        "label": "Place Water Blast · slot 23",
+        "effects": {
+          "card": "water",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":36,\"slot\":22}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "water-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "water-attack",
+      "action": {
+        "type": "activate",
+        "slot": 22,
+        "target": 38,
+        "element": "Water",
+        "label": "Water Blast · Water → Ember Mote",
+        "effects": {
+          "damage": 7,
+          "card": "water",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":22,\"target\":38,\"element\":\"Water\"}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "ember-enemy",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 67,
+      "gold": 236
+    },
+    {
+      "lesson": "ember-bracelet",
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 block",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "hp": 67,
+      "gold": 236,
+      "remainingDamage": 3
+    },
+    {
+      "lesson": "attune-place",
+      "action": {
+        "type": "place",
+        "uid": 20,
+        "slot": 23,
+        "label": "Place Blast · slot 24",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":20,\"slot\":23}]"
+      },
+      "hp": 66,
+      "gold": 236
+    },
+    {
+      "lesson": "attune-phase",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 66,
+      "gold": 236
+    },
+    {
+      "lesson": "attune-attack",
+      "action": {
+        "type": "activate",
+        "slot": 23,
+        "target": 38,
+        "element": "Water",
+        "label": "Blast · Water → Ember Mote",
+        "effects": {
+          "damage": 4,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":23,\"target\":38,\"element\":\"Water\"}]"
+      },
+      "hp": 66,
+      "gold": 236
+    },
+    {
+      "lesson": "element-back",
+      "action": {
+        "type": "continueReward",
+        "label": "Return to the Field",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"continueReward\",{}]"
+      },
+      "hp": 66,
+      "gold": 254
+    },
+    {
+      "lesson": "cycle",
+      "action": {
+        "type": "tutorialNext",
+        "step": "cycle",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"cycle\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 254
+    },
+    {
+      "lesson": "tavern-move",
+      "action": {
+        "type": "move",
+        "x": 8,
+        "y": 2,
+        "label": "Move to 9, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Tavern"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":8,\"y\":2}]"
+      },
+      "hp": 66,
+      "gold": 254
+    },
+    {
+      "lesson": "scribe",
+      "action": {
+        "type": "tutorialUI",
+        "step": "scribe",
+        "control": "tavern:grimoire",
+        "label": "Visit the Scribe",
+        "key": "[\"tutorialUI\",{\"step\":\"scribe\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 254
+    },
+    {
+      "lesson": "upgrade",
+      "action": {
+        "type": "upgrade",
+        "uid": 20,
+        "label": "Upgrade Blast · 50 Gold",
+        "effects": {
+          "upgrade": 1
+        },
+        "costs": {
+          "gold": 50,
+          "hp": 0
+        },
+        "key": "[\"upgrade\",{\"uid\":20}]"
+      },
+      "hp": 66,
+      "gold": 254
+    },
+    {
+      "lesson": "market",
+      "action": {
+        "type": "tutorialUI",
+        "step": "market",
+        "control": "tavern:market",
+        "label": "Visit the Market",
+        "key": "[\"tutorialUI\",{\"step\":\"market\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 204
+    },
+    {
+      "lesson": "market-equipment",
+      "action": {
+        "type": "tutorialUI",
+        "step": "market-equipment",
+        "control": "market:Equipment",
+        "label": "Choose Equipment",
+        "key": "[\"tutorialUI\",{\"step\":\"market-equipment\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 204
+    },
+    {
+      "lesson": "helmet-buy",
+      "action": {
+        "type": "buy",
+        "index": 0,
+        "price": 75,
+        "label": "Buy Sturdy Metal Helmet · 75 Gold",
+        "effects": {
+          "item": "crown"
+        },
+        "costs": {
+          "gold": 75
+        },
+        "key": "[\"buy\",{\"index\":0,\"price\":75}]"
+      },
+      "hp": 66,
+      "gold": 204
+    },
+    {
+      "lesson": "jeweler",
+      "action": {
+        "type": "tutorialUI",
+        "step": "jeweler",
+        "control": "tavern:equipment",
+        "label": "Visit the Jeweler",
+        "key": "[\"tutorialUI\",{\"step\":\"jeweler\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 129
+    },
+    {
+      "lesson": "helmet-equip",
+      "action": {
+        "type": "equip",
+        "item": 40,
+        "slot": "head",
+        "label": "Equip Sturdy Metal Helmet · head",
+        "effects": {
+          "gear": {
+            "shield": 2
+          }
+        },
+        "costs": {},
+        "key": "[\"equip\",{\"item\":40,\"slot\":\"head\"}]"
+      },
+      "hp": 66,
+      "gold": 129
+    },
+    {
+      "lesson": "socket",
+      "action": {
+        "type": "socket",
+        "uid": 13,
+        "gem": 37,
+        "label": "Socket Sapphire into Bronze Bracelet",
+        "effects": {
+          "gear": {}
+        },
+        "costs": {},
+        "key": "[\"socket\",{\"uid\":13,\"gem\":37}]"
+      },
+      "hp": 66,
+      "gold": 129
+    },
+    {
+      "lesson": "traveler",
+      "action": {
+        "type": "tutorialUI",
+        "step": "traveler",
+        "control": "tavern:gossip",
+        "label": "Hear the rumors",
+        "key": "[\"tutorialUI\",{\"step\":\"traveler\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 129
+    },
+    {
+      "lesson": "gossip",
+      "action": {
+        "type": "gossip",
+        "label": "Gossip · Archon and next healer · 15 Gold",
+        "effects": {
+          "information": 1
+        },
+        "costs": {
+          "gold": 15
+        },
+        "key": "[\"gossip\",{}]"
+      },
+      "hp": 66,
+      "gold": 129
+    },
+    {
+      "lesson": "innkeeper",
+      "action": {
+        "type": "tutorialUI",
+        "step": "innkeeper",
+        "control": "tavern:rest",
+        "label": "Rest at the inn",
+        "key": "[\"tutorialUI\",{\"step\":\"innkeeper\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 66,
+      "gold": 114
+    },
+    {
+      "lesson": "rest",
+      "action": {
+        "type": "heal",
+        "label": "Rest · heal 20 HP · 20 Gold",
+        "effects": {
+          "heal": 4
+        },
+        "costs": {
+          "gold": 20
+        },
+        "key": "[\"heal\",{}]"
+      },
+      "hp": 66,
+      "gold": 114
+    },
+    {
+      "lesson": "healer",
+      "action": {
+        "type": "tutorialUI",
+        "step": "healer",
+        "control": "tavern:healer",
+        "label": "Meet the Healer",
+        "key": "[\"tutorialUI\",{\"step\":\"healer\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "healer-help",
+      "action": {
+        "type": "tutorialNext",
+        "step": "healer-help",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"healer-help\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "leave-tavern",
+      "action": {
+        "type": "leave",
+        "label": "Leave the Lantern Rest",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"leave\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "final-intro",
+      "action": {
+        "type": "tutorialNext",
+        "step": "final-intro",
+        "label": "Continue lesson",
+        "key": "[\"tutorialNext\",{\"step\":\"final-intro\"}]",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {}
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "final-move",
+      "action": {
+        "type": "move",
+        "x": 7,
+        "y": 2,
+        "label": "Move to 8, 3",
+        "effects": {
+          "movement": 1,
+          "occupants": [
+            "Eidolon"
+          ]
+        },
+        "costs": {},
+        "key": "[\"move\",{\"x\":7,\"y\":2}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "place",
+        "uid": 16,
+        "slot": 0,
+        "label": "Place Shield · slot 1",
+        "effects": {
+          "card": "shield",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":16,\"slot\":0}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": null,
+        "element": "Arcane",
+        "label": "Shield · Arcane",
+        "effects": {
+          "shield": 6,
+          "matchingShield": 1,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "place",
+        "uid": 20,
+        "slot": 1,
+        "label": "Place Blast · slot 2",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":20,\"slot\":1}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": 41,
+        "element": "Arcane",
+        "label": "Blast · Arcane → The Patient Warden",
+        "effects": {
+          "damage": 7,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":41,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 0,
+        "target": null,
+        "element": "Arcane",
+        "label": "Shield · Arcane",
+        "effects": {
+          "shield": 6,
+          "matchingShield": 1,
+          "damage": 0,
+          "card": "shield",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":0,\"target\":null,\"element\":\"Arcane\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "block",
+        "uid": 43,
+        "slot": 0,
+        "label": "Arcane Shield · 6 block",
+        "effects": {
+          "block": 6,
+          "element": "Arcane",
+          "column": 0
+        },
+        "costs": {},
+        "key": "[\"block\",{\"uid\":43,\"slot\":0}]"
+      },
+      "hp": 70,
+      "gold": 94,
+      "remainingDamage": 5
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "place",
+        "uid": 24,
+        "slot": 2,
+        "label": "Place Sapling · slot 3",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":24,\"slot\":2}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "place",
+        "uid": 25,
+        "slot": 3,
+        "label": "Place Clear Mind · slot 4",
+        "effects": {
+          "card": "clear",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 0
+        },
+        "key": "[\"place\",{\"uid\":25,\"slot\":3}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 1,
+        "target": 41,
+        "element": "Earth",
+        "label": "Blast · Earth → The Patient Warden",
+        "effects": {
+          "damage": 7,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":1,\"target\":41,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 41,
+        "element": "Earth",
+        "label": "Sapling · Earth → The Patient Warden",
+        "effects": {
+          "hpDamage": true,
+          "damage": 4,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":41,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "place",
+        "uid": 21,
+        "slot": 9,
+        "label": "Place Blast · slot 10",
+        "effects": {
+          "card": "blast",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":21,\"slot\":9}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 2,
+        "target": 41,
+        "element": "Earth",
+        "label": "Sapling · Earth → The Patient Warden",
+        "effects": {
+          "hpDamage": true,
+          "damage": 6,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":2,\"target\":41,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    },
+    {
+      "lesson": "independent",
+      "action": {
+        "type": "activate",
+        "slot": 9,
+        "target": 41,
+        "element": "Earth",
+        "label": "Blast · Earth → The Patient Warden",
+        "effects": {
+          "damage": 4,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":9,\"target\":41,\"element\":\"Earth\"}]"
+      },
+      "hp": 70,
+      "gold": 94
+    }
+  ],
+  "hp": 70,
+  "encounters": [
+    {
+      "round": 3,
+      "enemies": [
+        "Mosswing"
+      ],
+      "outcome": "victory",
+      "hpStart": 70,
+      "turns": 3,
+      "hpEnd": 70
+    },
+    {
+      "round": 4,
+      "enemies": [
+        "Rootling"
+      ],
+      "outcome": "victory",
+      "hpStart": 70,
+      "turns": 4,
+      "hpEnd": 67
+    },
+    {
+      "round": 6,
+      "enemies": [
+        "Ember Mote"
+      ],
+      "outcome": "victory",
+      "hpStart": 67,
+      "turns": 2,
+      "hpEnd": 66
+    },
+    {
+      "round": 8,
+      "enemies": [
+        "The Patient Warden"
+      ],
+      "outcome": "victory",
+      "hpStart": 70,
+      "turns": 4,
+      "hpEnd": 70
+    }
+  ]
+}

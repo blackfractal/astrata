@@ -1,13 +1,20 @@
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const fs = require("node:fs");
 const path = require("node:path");
+const { recordTutorial } = require("./tutorial-profile.cjs");
 const { createArchive } = require("./run-archive.cjs");
 let win, runArchive;
 function archive() {
   return (runArchive ||= createArchive(base(), {
     packageVersion: require("./package.json").version,
     sources: Object.fromEntries(
-      ["engine.mjs", "content.mjs", "policy.mjs", "death.mjs"].map((name) => [
+      [
+        "engine.mjs",
+        "content.mjs",
+        "policy.mjs",
+        "death.mjs",
+        "tutorial.mjs",
+      ].map((name) => [
         name,
         fs.readFileSync(path.join(__dirname, "src", name), "utf8"),
       ]),
@@ -79,13 +86,17 @@ ipcMain.handle("load", () => {
   archive().importHistory(read("history.json", []));
   return {
     save: read("save.json", null),
+    tutorialSave: read("tutorial-save.json", null),
+    tutorialStats: read("tutorial-stats.json", {}),
     settings: read("settings.json", {}),
     history: read("history.json", []),
   };
 });
 ipcMain.handle("record", (_, event) => archive().record(event));
-ipcMain.handle("save", (_, state) => {
-  const previous = read("save.json", null);
+ipcMain.handle("save", (_, state, options = {}) => {
+  const isTutorial = !!state?.tutorial || !!options.tutorial;
+  const saveFile = isTutorial ? "tutorial-save.json" : "save.json";
+  const previous = read(saveFile, null);
   if (
     !state ||
     (previous &&
@@ -97,8 +108,19 @@ ipcMain.handle("save", (_, state) => {
       previous,
       state ? "Replaced by a new journey" : "Abandoned by player",
     );
-  if (state) write("save.json", state);
-  else fs.rmSync(path.join(base(), "save.json"), { force: true });
+  if (state) {
+    write(saveFile, state);
+    if (isTutorial)
+      write(
+        "tutorial-stats.json",
+        recordTutorial(
+          read("tutorial-stats.json", {}),
+          state,
+          "start",
+          state.uiMeta?.runId,
+        ),
+      );
+  } else fs.rmSync(path.join(base(), saveFile), { force: true });
 });
 ipcMain.handle("result", (_, result) => {
   result = archive().result(result);
@@ -107,7 +129,20 @@ ipcMain.handle("result", (_, result) => {
     history.push(result);
     write("history.json", history);
   }
-  fs.rmSync(path.join(base(), "save.json"), { force: true });
+  if (result.tutorial)
+    write(
+      "tutorial-stats.json",
+      recordTutorial(
+        read("tutorial-stats.json", {}),
+        result,
+        "complete",
+        result.runId,
+      ),
+    );
+  fs.rmSync(
+    path.join(base(), result.tutorial ? "tutorial-save.json" : "save.json"),
+    { force: true },
+  );
 });
 ipcMain.handle("settings", (_, settings) => {
   write("settings.json", settings);

@@ -58,6 +58,12 @@ function createArchive(
       schema: 1,
       runId: event.runId,
       source,
+      runType:
+        event.state?.tutorial || event.result?.tutorial
+          ? "tutorial"
+          : "standard",
+      tutorialId:
+        event.state?.tutorial?.id || event.result?.tutorial?.id || null,
       seed: event.state?.seed ?? event.result?.seed,
       startedAt: event.kind === "start" ? now : null,
       archivedAt: now,

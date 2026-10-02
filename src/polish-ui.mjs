@@ -595,6 +595,10 @@ export function showEquipment(ctx) {
 }
 function tavern(ctx) {
   const { o, actions, app } = ctx;
+  if (o.tutorial?.lesson === "helmet-buy") {
+    marketTab = "buy";
+    marketCategory.buy = "Equipment";
+  }
   const host = app.querySelector(".layout>section");
   const service = ctx.service === "shop" ? "market" : ctx.service;
   const services = [
@@ -736,6 +740,7 @@ function bindMarketCategories(ctx, root) {
     el.onclick = () => {
       marketCategory[marketTab] = el.dataset.marketCategory;
       ctx.render();
+      ctx.tutorialSignal?.("market:" + el.dataset.marketCategory);
     };
     el.onkeydown = (e) => {
       const i = tabs.indexOf(el);
@@ -1058,7 +1063,7 @@ export function enhance(ctx) {
           if (!ctx.busy() && can && e.detail < 2) activationChooser(ctx, i);
         };
       }
-      el.onclick = () => {
+      el.onclick = (e) => {
         if (ctx.busy()) return;
         const a = game
           .legal()
@@ -1070,7 +1075,8 @@ export function enhance(ctx) {
                 .querySelector(`[data-hand="${a.uid}"]`)
                 ?.classList.contains("selected"),
           );
-        if (a) run(ctx, a);
+        if (a && !(game.s.tutorial?.lesson === "shield-place" && e.detail > 0))
+          run(ctx, a);
         else if (c) showCard(ctx, c, i);
       };
       el.onkeydown = (e) => {
@@ -1170,9 +1176,22 @@ export function enhance(ctx) {
                 ["ward", "block", "intercept"].includes(a.type) && a.slot === i,
             );
         const available = options();
+        const tutorialWaiting =
+          o.tutorial &&
+          !available.length &&
+          game
+            .baseLegal()
+            .some(
+              (a) =>
+                ["ward", "block", "intercept"].includes(a.type) && a.slot === i,
+            );
         const control = el.querySelector(".slot-activate");
         if (control) {
-          control.textContent = available.length ? "Defend" : "Cannot defend";
+          control.textContent = available.length
+            ? "Defend"
+            : tutorialWaiting
+              ? "Later in lesson"
+              : "Cannot defend";
           control.classList.toggle("available", !!available.length);
           control.setAttribute("aria-disabled", !available.length);
           control.removeAttribute("data-activate-slot");
@@ -1231,7 +1250,9 @@ export function enhance(ctx) {
             ? "Click to absorb this hit. It cannot travel back toward the enemy."
             : passed
               ? "The attack has passed this column."
-              : "No eligible defense against this hit.";
+              : tutorialWaiting
+                ? "Follow the highlighted defense for this lesson."
+                : "No eligible defense against this hit.";
         const view = document.createElement("button");
         view.className = "defense-view";
         view.textContent = "View";

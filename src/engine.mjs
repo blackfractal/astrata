@@ -1,3 +1,13 @@
+import {
+  tutorialActions,
+  tutorialAfter,
+  tutorialGuide,
+  tutorialBattle,
+  tutorialBattleReady,
+  tutorialDrawIndex,
+  tutorialReward,
+  tutorialTavern,
+} from "./tutorial.mjs";
 import { describeDeath } from "./death.mjs";
 import {
   cards,
@@ -376,6 +386,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.31",
           "1.3.30",
           "1.3.29",
           "1.3.28",
@@ -433,7 +444,8 @@ export class Game {
       }
       this.normalizeRewards();
       this.normalizeSpawns();
-      if (this.s.mode === "battle") this.s.checkpoint = clone(this.s);
+      if (this.s.mode === "battle" && !this.s.tutorial)
+        this.s.checkpoint = clone(this.s);
       return;
     }
     this.s = {
@@ -493,12 +505,12 @@ export class Game {
     this.s.enemyDecks = {
       Mote: this.shuffle(
         Object.values(enemies)
-          .filter((e) => e.tier === "Mote" && !e.summonOnly)
+          .filter((e) => e.tier === "Mote" && !e.summonOnly && !e.tutorialOnly)
           .flatMap((e) => (e.movement === "Skittish" ? [e.id] : [e.id, e.id])),
       ),
       Eidolon: this.shuffle(
         Object.values(enemies)
-          .filter((e) => e.tier === "Eidolon")
+          .filter((e) => e.tier === "Eidolon" && !e.tutorialOnly)
           .map((e) => e.id),
       ),
     };
@@ -800,6 +812,13 @@ export class Game {
   beginRound() {
     if (this.s.mode === "result") return;
     const f = this.s.field;
+    if (this.s.tutorial) {
+      f.round++;
+      f.stage = "player";
+      f.moves = this.bonuses().movement;
+      this.s.mode = "field";
+      return;
+    }
     f.round++;
     f.stage = "player";
     f.moves = this.bonuses().movement;
@@ -849,7 +868,10 @@ export class Game {
                 opening
                   ? EARLY_MOTES
                   : Object.values(enemies)
-                      .filter((x) => x.tier === type && !x.summonOnly)
+                      .filter(
+                        (x) =>
+                          x.tier === type && !x.summonOnly && !x.tutorialOnly,
+                      )
                       .map((x) => x.id),
               );
             e.enemy = d.pop();
@@ -891,7 +913,9 @@ export class Game {
         return this.resolveTile();
       }
       if (e.type === "Item") {
-        const options = [this.drawDeck("itemDeck", Object.keys(items))];
+        const options = [
+          e.item || this.drawDeck("itemDeck", Object.keys(items)),
+        ];
         s.mode = "item";
         s.itemOffer = options;
         return;
@@ -1032,6 +1056,7 @@ export class Game {
     };
   }
   beginBattle(entities) {
+    tutorialBattle(this, entities);
     const s = this.s;
     delete s.checkpoint;
     s.mode = "battle";
@@ -1117,7 +1142,8 @@ export class Game {
       hpStart: s.hp,
     });
     this.beginTurn(openingStatuses);
-    s.checkpoint = clone({ ...s, checkpoint: undefined });
+    tutorialBattleReady(this);
+    if (!s.tutorial) s.checkpoint = clone({ ...s, checkpoint: undefined });
   }
   neighbors(i) {
     return gridNeighbors(this.s.battle, i);
@@ -1280,7 +1306,9 @@ export class Game {
         b.discard = [];
       }
       if (!b.deck.length) break;
-      const at = Math.floor(this.rand() * b.deck.length);
+      const at = this.s.tutorial
+        ? tutorialDrawIndex(this, n)
+        : Math.floor(this.rand() * b.deck.length);
       b.hand.push(b.deck.splice(at, 1)[0]);
     }
     b.milky = b.hand.some((c) => c.id === "milky");
@@ -2106,6 +2134,7 @@ export class Game {
         setting: boss,
       };
       this.normalizeRewards();
+      if (tutorialReward(this)) return;
       delete s.checkpoint;
       this.log("Victory. Choose a card or skip.");
     }
@@ -2126,7 +2155,13 @@ export class Game {
       encounter.hpEnd = s.hp;
       encounter.turns = s.battle?.turn;
     }
-    this.log(win ? "Stratum 1 Complete." : "You Died: " + cause);
+    this.log(
+      win
+        ? s.tutorial
+          ? "The First Clearing complete."
+          : "Stratum 1 Complete."
+        : "You Died: " + cause,
+    );
   }
   openTavern() {
     this.s.mode = "tavern";
@@ -2155,6 +2190,7 @@ export class Game {
     };
     delete this.s.nextTavernHealer;
     delete this.s.nextHealerHint;
+    tutorialTavern(this);
   }
   equipChoices(add) {
     const s = this.s;
@@ -2187,6 +2223,9 @@ export class Game {
     }
   }
   legal() {
+    return tutorialActions(this, this.baseLegal());
+  }
+  baseLegal() {
     const s = this.s,
       b = s.battle,
       actions = [];
@@ -2979,6 +3018,7 @@ export class Game {
         this.pump();
         break;
     }
+    tutorialAfter(this, a);
     return this.observe();
   }
   removeItem(uid) {
@@ -2992,6 +3032,18 @@ export class Game {
     const s = this.s;
     const o = {
       version: VERSION,
+      tutorial: s.tutorial
+        ? {
+            id: s.tutorial.id,
+            version: s.tutorial.version,
+            name: s.tutorial.name,
+            completed: s.tutorial.completed,
+            fight: s.tutorial.fight,
+            step: s.tutorial.step,
+            lesson: s.tutorial.lesson,
+            guide: tutorialGuide(this),
+          }
+        : null,
       mode: s.mode,
       classId: s.classId,
       hp: Math.max(0, s.hp),
@@ -3051,7 +3103,7 @@ export class Game {
   }
   save() {
     return clone(
-      this.s.mode === "battle" && this.s.checkpoint
+      this.s.mode === "battle" && this.s.checkpoint && !this.s.tutorial
         ? this.s.checkpoint
         : this.s,
     );

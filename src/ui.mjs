@@ -1,3 +1,10 @@
+import {
+  startTutorial,
+  TUTORIAL,
+  TUTORIAL_STEPS,
+  tutorialGuide,
+} from "./tutorial.mjs";
+import { paintTutorial, clearTutorialUI } from "./tutorial-ui.mjs";
 import { deathMessage, deathSummary } from "./death.mjs";
 import { runRecord } from "./run-record.mjs";
 import { installStage } from "./stage.mjs";
@@ -23,15 +30,28 @@ const storage = window.desktop || {
   },
   load: async () =>
     JSON.parse(localStorage.getItem("astrata") || '{"history":[]}'),
-  save: async (save) => {
+  save: async (save, options = {}) => {
     const d = await storage.load();
-    localStorage.setItem("astrata", JSON.stringify({ ...d, save }));
+    if (save?.tutorial)
+      browserTutorialStats(d, save, "start", save.uiMeta?.runId);
+    localStorage.setItem(
+      "astrata",
+      JSON.stringify({
+        ...d,
+        [save?.tutorial || options.tutorial ? "tutorialSave" : "save"]: save,
+      }),
+    );
   },
   result: async (r) => {
     const d = await storage.load();
+    if (r.tutorial) browserTutorialStats(d, r, "complete", r.runId);
     localStorage.setItem(
       "astrata",
-      JSON.stringify({ ...d, save: null, history: [...(d.history || []), r] }),
+      JSON.stringify({
+        ...d,
+        [r.tutorial ? "tutorialSave" : "save"]: null,
+        history: [...(d.history || []).filter((x) => x.runId !== r.runId), r],
+      }),
     );
   },
   settings: async (settings) => {
@@ -40,6 +60,27 @@ const storage = window.desktop || {
   },
   quit: () => window.close(),
 };
+function browserTutorialStats(data, state, event, id) {
+  if (!id) return;
+  const stats = (data.tutorialStats ||= {});
+  const t = (stats[state.tutorial.id] ||= {
+    starts: [],
+    completions: [],
+    firstCompletedAt: null,
+  });
+  const at = new Date().toISOString();
+  if (event === "start" && !t.starts.some((x) => x.runId === id))
+    t.starts.push({ runId: id, at, version: state.tutorial.version });
+  if (
+    event === "complete" &&
+    state.tutorial.completed &&
+    state.outcome === "win" &&
+    !t.completions.some((x) => x.runId === id)
+  ) {
+    t.completions.push({ runId: id, at, version: state.tutorial.version });
+    t.firstCompletedAt ||= at;
+  }
+}
 let data = await storage.load(),
   game = null,
   selectedHand = null,
@@ -201,10 +242,11 @@ function sidebar(o) {
     )}</div><div><button data-ui="help" class="quiet">Rules & keywords ↗</button><div class="row"><button data-ui="botStep" title="Let the weighted bot choose one legal action">AI step</button><button data-ui="botToggle">${auto ? "Stop AI" : "Watch AI"}</button></div><div class="botbar">${esc(reason || "The AI uses the same visible state and legal choices as you.")}</div></div></aside>`;
 }
 function menu() {
+  clearTutorialUI();
   app.classList.remove("battle-scene");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}<button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· The First Clearing</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
   bind();
 }
 async function persist() {
@@ -217,7 +259,7 @@ async function persist() {
   } else {
     const save = { ...game.save(), uiMeta: { runId, elapsed } };
     await storage.save(save);
-    data.save = save;
+    data[game.s.tutorial ? "tutorialSave" : "save"] = save;
   }
 }
 async function act(a, controller = { kind: "human" }) {
@@ -229,6 +271,16 @@ async function act(a, controller = { kind: "human" }) {
     const action =
       typeof a === "string" ? game.legal().find((x) => x.key === a) : a;
     game.act(action);
+    if (action.type === "tutorialRetry") {
+      const retryOf = runId;
+      runId = crypto.randomUUID();
+      started = Date.now();
+      elapsed = 0;
+      resultsShown = false;
+      await storage.record(
+        runRecord(game, runId, "start", { settings, retryOf }),
+      );
+    }
     audio.emit("decision");
     selectedHand = null;
     selectedSlot = null;
@@ -262,7 +314,11 @@ function schedule() {
     autoTimer = setTimeout(stepBot, 250);
 }
 async function stepBot() {
-  if (!game || game.s.mode === "result") {
+  if (
+    !game ||
+    game.s.mode === "result" ||
+    (game.s.tutorial && tutorialGuide(game)?.kind !== "free")
+  ) {
     auto = false;
     return;
   }
@@ -285,6 +341,12 @@ function render(frame = null) {
   app.classList.remove("battle-scene");
   const o = frame || game.observe(),
     actions = frame ? [] : game.legal();
+  if (o.tutorial && o.mode === "tavern")
+    service =
+      [...TUTORIAL_STEPS.slice(0, o.tutorial.step)]
+        .reverse()
+        .find((x) => x.control?.startsWith("tavern:"))
+        ?.control.split(":")[1] || "shop";
   let body = "";
   if (o.pendingArmor) {
     body = `<div class="result"><h2>Three Armors, one traveler</h2><p>Choose what to keep.</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div></div>`;
@@ -304,7 +366,7 @@ function render(frame = null) {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">Stratum one</div><h2>The Whispering Weald</h2></div><div class="muted">${f.moves} movement remaining<br><small>${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16</small></div></div><div class="field-wrap"><div class="field">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum 1 tutorial" : "Stratum one"}</div><h2>${o.tutorial ? TUTORIAL.name : "The Whispering Weald"}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field">${Array.from(
       { length: 121 },
       (_, i) => {
         const x = i % 11,
@@ -324,7 +386,10 @@ function render(frame = null) {
             .slice(i * 2, i * 2 + 2)
             .map(esc)
             .join(" + ")}</span></div>`,
-      ).join("") || "<small>The Archon has arrived.</small>"
+      ).join("") ||
+      (o.tutorial
+        ? "<small>The Clearing reveals its path one lesson at a time.</small>"
+        : "<small>The Archon has arrived.</small>")
     }</div><div class="field-movement-controls">${actions
       .filter((a) => a.type === "wait")
       .map((a) => actionButton(a, "primary"))
@@ -409,7 +474,16 @@ function render(frame = null) {
   } else if (o.mode === "result") {
     auto = false;
     clearTimeout(autoTimer);
-    if (!resultsShown) {
+    if (o.tutorial) {
+      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">Stratum 1 tutorial</div><h1 style="font-size:48px">${o.outcome === "win" ? "The First Clearing Complete" : "The Warden awaits another try"}</h1><p>${o.outcome === "win" ? "You have learned the path. The Whispering Weald is ready when you are." : "Retry this final fight with your restored starting equipment, cards and health."}</p>${
+        o.outcome === "win"
+          ? '<button class="primary" data-ui="new">Begin a normal journey →</button>'
+          : actions
+              .filter((a) => a.type === "tutorialRetry")
+              .map((a) => actionButton(a, "primary"))
+              .join("")
+      }<button data-ui="home">Return to Start</button><small>Tutorial results are recorded separately from normal Stratum victories.</small></div></section>`;
+    } else if (!resultsShown) {
       body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum 1 Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? "For a moment, the branches grow still. Your first journey is complete." : esc(deathMessage(o))}</p><button class="primary" data-ui="results">View results →</button></div></section>`;
     } else
       body = resultMarkup(data.history?.find((h) => h.runId === runId) || o);
@@ -442,19 +516,22 @@ function render(frame = null) {
     inspect: inspectCard,
     saveSettings: () => storage.settings(settings),
     service,
+    tutorialSignal,
     setService: (value) => {
       service = value;
       render();
+      tutorialSignal("tavern:" + value);
     },
   });
   app.classList.toggle("presenting", !!frame);
+  paintTutorial({ game, act, close, busy: () => busy }, !!frame);
 }
 function botControls() {
   return `<div class="row" style="margin-top:20px"><button data-ui="botStep" class="quiet">AI step</button><button data-ui="botToggle" class="quiet">${auto ? "Stop AI" : "Watch AI"}</button></div>`;
 }
 function resultMarkup(o) {
   const st = o.stats;
-  return `<section class="result"><div class="result-title"><div class="eyebrow">Druid · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? "Stratum 1 Complete" : esc(deathSummary(o))} · Seed ${o.seed}</p><small>Build ${esc(o.packageVersion || "not recorded")} · Rules ${esc(o.version?.rules || "unknown")} · Content ${esc(o.version?.content || "unknown")}</small></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
+  return `<section class="result"><div class="result-title"><div class="eyebrow">${o.tutorial ? "Tutorial" : "Druid"} · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? (o.tutorial ? "Tutorial Complete" : "Stratum 1 Complete") : esc(deathSummary(o))} · Seed ${o.seed}</p><small>Build ${esc(o.packageVersion || "not recorded")} · Rules ${esc(o.version?.rules || "unknown")} · Content ${esc(o.version?.content || "unknown")}</small></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
 }
 let backdropPressed = false;
 modal.addEventListener("pointerdown", (event) => {
@@ -532,16 +609,75 @@ function showSettings() {
       )}</select></label><label>Fast animations <input id="fast" type="checkbox" ${settings.fast ? "checked" : ""}></label><label>Music <input id="music" type="range" min="0" max="100" value="${settings.music}"></label><label>Effects <input id="effects" type="range" min="0" max="100" value="${settings.effects}"></label><small>This edition is silent. Volume settings are retained for future audio.</small><div style="margin-top:20px"><button class="primary" data-ui="applySettings">Apply</button></div>`,
   );
 }
+async function tutorialSignal(control) {
+  const a = game
+    ?.legal()
+    .find((a) => a.type === "tutorialUI" && a.control === control);
+  if (a) await act(a);
+}
 async function ui(name) {
   if (busy) return;
   switch (name) {
     case "new":
+      if (!data.tutorialStats?.stratum1?.firstCompletedAt) {
+        await ui(data.tutorialSave ? "continueTutorial" : "tutorialStart");
+        break;
+      }
       if (data.save) {
         dialog(
           '<h2>Begin a new journey?</h2><p>This forfeits the saved run.</p><button class="danger" data-ui="newConfirmed">Forfeit & begin</button>',
         );
       } else await ui("newConfirmed");
       break;
+    case "tutorialMenu": {
+      const t = data.tutorialStats?.stratum1;
+      dialog(
+        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p><small>Strata 2 and 3 tutorials will arrive with their future Strata. Your normal Continue save is kept when you play a tutorial.</small>`,
+      );
+      break;
+    }
+    case "tutorialStart":
+      if (data.tutorialSave) {
+        dialog(
+          '<h2>Restart The First Clearing?</h2><p>This replaces only the unfinished tutorial. Your normal journey is preserved.</p><button data-ui="tutorialConfirmed">Restart tutorial</button>',
+        );
+        break;
+      }
+      await ui("tutorialConfirmed");
+      break;
+    case "tutorialConfirmed":
+      close();
+      game = startTutorial(new Game(TUTORIAL.seed));
+      service = "shop";
+      runId = crypto.randomUUID();
+      started = Date.now();
+      elapsed = 0;
+      resultsShown = false;
+      await storage.record(runRecord(game, runId, "start", { settings }));
+      await persist();
+      data = await storage.load();
+      render();
+      break;
+    case "continueTutorial": {
+      const saved = data.tutorialSave;
+      if (!saved) break;
+      close();
+      game = new Game(0, saved);
+      runId = saved.uiMeta?.runId || crypto.randomUUID();
+      started = Date.now() - (saved.uiMeta?.elapsed || 0);
+      resultsShown = false;
+      await storage.record(
+        runRecord(game, runId, "resume", {
+          settings,
+          elapsedMs: Date.now() - started,
+          resumedFrom: saved.version,
+        }),
+      );
+      await persist();
+      render();
+      if (game.s.tutorial.lesson === "ring-equip") inventory();
+      break;
+    }
     case "newConfirmed":
       close();
       game = new Game();
@@ -632,7 +768,7 @@ async function ui(name) {
       break;
     case "abandonConfirmed":
       auto = false;
-      await storage.save(null);
+      await storage.save(null, { tutorial: !!game?.s.tutorial });
       game = null;
       data = await storage.load();
       close();
@@ -640,11 +776,16 @@ async function ui(name) {
       break;
     case "inventory":
       inventory();
+      if (game.s.tutorial) {
+        await tutorialSignal("inventory");
+        inventory();
+      }
       break;
     case "grimoire":
       dialog(
         `<h2>Your Grimoire</h2><p>Unordered. Every card returns after battle.</p><div class="catalog">${game.s.deck.map((c) => card(c)).join("")}</div>`,
       );
+      await tutorialSignal("grimoire");
       break;
     case "piles": {
       const b = game.observe().battle;
@@ -670,7 +811,7 @@ async function ui(name) {
     case "history":
       data = await storage.load();
       dialog(
-        `<h2>Run History</h2><div class="choices">${(data.history || []).map((h, i) => `<button data-history="${i}">Druid · ${h.outcome} · Round ${h.field.round} · Seed ${h.seed}</button>`).join("") || "<p>No journeys recorded yet.</p>"}</div>`,
+        `<h2>Run History</h2><div class="choices">${(data.history || []).map((h, i) => `<button data-history="${i}">${h.tutorial ? "Tutorial" : "Druid"} · ${h.outcome} · Round ${h.field.round} · Seed ${h.seed}</button>`).join("") || "<p>No journeys recorded yet.</p>"}</div>`,
       );
       break;
     case "botStep":

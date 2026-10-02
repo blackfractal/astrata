@@ -3,7 +3,8 @@ import path from "node:path";
 import { cards, items, enemies, events, locations } from "../src/content.mjs";
 import { artPaths } from "../src/art-paths.mjs";
 const expected = [
-  "location-field-topdown", "location-tavern-interior",
+  "location-field-topdown",
+  "location-tavern-interior",
   ...Object.keys(cards).map((x) => "card-" + x),
   ...Object.keys(items).map((x) => "item-" + x),
   ...Object.keys(enemies).map((x) => "enemy-" + x),
@@ -42,9 +43,12 @@ const result = {
   noProvenance,
   cards: Object.keys(cards).length,
   motes: Object.values(enemies).filter(
-    (x) => x.tier === "Mote" && !x.summonOnly,
+    (x) => x.tier === "Mote" && !x.summonOnly && !x.tutorialOnly,
   ).length,
-  eidolons: Object.values(enemies).filter((x) => x.tier === "Eidolon").length,
+  eidolons: Object.values(enemies).filter(
+    (x) => x.tier === "Eidolon" && !x.tutorialOnly,
+  ).length,
+  tutorialEnemies: Object.values(enemies).filter((x) => x.tutorialOnly).length,
   archons: Object.values(enemies).filter((x) => x.tier === "Archon").length,
   items: Object.keys(items).length,
   events: events.length,

@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.31",
-  content: "1.1.30",
+  rules: "1.3.32",
+  content: "1.1.31",
   observation: 1,
   actions: 1,
 };
@@ -1303,6 +1303,69 @@ enemy(
   "Counter this Mini-Void's own element; later Chaotic Glares do not change it.",
   { summonOnly: true },
 );
+// Authored tutorial encounters never enter normal spawning pools.
+enemy(
+  "tutorialMosswing",
+  "Mosswing",
+  "Mote",
+  "Arcane",
+  13,
+  "Sentinel",
+  [
+    attack("Soft Wing", 3, "Arcane"),
+    attack("Wingbeat", 5, "Arcane"),
+    effect("Rest", {}),
+  ],
+  "A patient first opponent: 3 damage, then 5, then a pause.",
+  "Prepare Shield, then combine Shield with Bracelet.",
+  { tutorialOnly: true },
+);
+enemy(
+  "tutorialRootling",
+  "Rootling",
+  "Mote",
+  "Arcane",
+  18,
+  "Stalker",
+  [
+    attack("Root Tap", 3, "Arcane"),
+    effect("Gathering Strength", {}),
+    attack("Heavy Bough", 30, "Arcane"),
+    effect("Recover", {}),
+  ],
+  "Gathers strength before a 30-damage blow, then rests.",
+  "Build a right-to-left route through Ally, Shield, Ward and Bracelet.",
+  { tutorialOnly: true, speed: 2 },
+);
+enemy(
+  "tutorialEmber",
+  "Ember Mote",
+  "Mote",
+  "Fire",
+  21,
+  "Sentinel",
+  [attack("Ember Puff", 3, "Fire"), effect("Breathe", {})],
+  "A Fire enemy; Poison cannot affect it.",
+  "Water attacks exploit its weakness.",
+  { tutorialOnly: true },
+);
+enemy(
+  "tutorialWarden",
+  "The Patient Warden",
+  "Eidolon",
+  "Earth",
+  32,
+  "Sentinel",
+  [
+    effect("Patient Vigil", {}),
+    attack("Measured Tap", 5, "Arcane"),
+    effect("Lowered Staff", {}),
+  ],
+  "Pauses, makes one modest attack, then rests. Attacks slowly strengthen each cycle.",
+  "Use its pauses to place cards; Shield and Bracelet answer its attack.",
+  { tutorialOnly: true },
+);
+
 export const events = [
   {
     id: "spring",
@@ -1609,6 +1672,7 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  tutorialWarden: "Even a patient teacher can end a lesson.",
   choir: "They sang of destruction, then delivered it.",
   hart: "The forest bowed before its antlers. You did not bow quickly enough.",
   colossus: "You stared into the void. It took that personally.",

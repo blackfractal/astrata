@@ -126,5 +126,13 @@ export const artPaths = {
   "location-tavern": "assets/location-tavern.png",
   "location-druid": "assets/location-druid.png",
   "location-field-topdown": "assets/location-field-topdown.png",
-  "location-tavern-interior": "assets/location-tavern-interior.png"
+  "location-tavern-interior": "assets/location-tavern-interior.png",
 };
+
+// Tutorial counterparts share the existing generated creature illustrations.
+Object.assign(artPaths, {
+  "enemy-tutorialMosswing": artPaths["enemy-bat"],
+  "enemy-tutorialRootling": artPaths["enemy-beetle"],
+  "enemy-tutorialEmber": artPaths["enemy-wisp"],
+  "enemy-tutorialWarden": artPaths["enemy-mason"],
+});

@@ -124,7 +124,9 @@ test("starter strength and enemy HP match the revised balance, including summons
     88, 92, 6,
   ];
   assert.deepEqual(
-    Object.values(enemies).map((e) => e.hp),
+    Object.values(enemies)
+      .filter((e) => !e.tutorialOnly)
+      .map((e) => e.hp),
     before.map((h) => Math.ceil(Math.ceil((h * 115) / 100) * 1.5)),
   );
 });

@@ -16,12 +16,16 @@ const packageVersion = JSON.parse(
 ).version;
 const sources = Object.fromEntries(
   await Promise.all(
-    ["engine.mjs", "content.mjs", "policy.mjs", "death.mjs"].map(
-      async (name) => [
-        name,
-        await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),
-      ],
-    ),
+    [
+      "engine.mjs",
+      "content.mjs",
+      "policy.mjs",
+      "death.mjs",
+      "tutorial.mjs",
+    ].map(async (name) => [
+      name,
+      await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),
+    ]),
   ),
 );
 const archive = createArchive(dir, {

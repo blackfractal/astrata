@@ -23732,5 +23732,399 @@
     },
     "file": "assets/location-tavern-interior.png",
     "generatedAt": "2026-09-26T21:53:41.269Z"
+  },
+  {
+    "id": "enemy-tutorialMosswing",
+    "name": "Mosswing",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_lightningDPMSDE.safetensors",
+    "seed": 310088,
+    "prompt": "Painterly dark fantasy game illustration, hand painted oil and gouache, expressive brush strokes, atmospheric chiaroscuro, muted jade green and warm amber, bone ivory highlights, exquisite subject silhouette. Bat, strange fantasy creature, Wind aspect, Shrinks the next reveal., whole creature centered. Ashen ancient forest world, centered composition, richly textured, no text, no letters, no border, no watermark.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_lightningDPMSDE.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Painterly dark fantasy game illustration, hand painted oil and gouache, expressive brush strokes, atmospheric chiaroscuro, muted jade green and warm amber, bone ivory highlights, exquisite subject silhouette. Bat, strange fantasy creature, Wind aspect, Shrinks the next reveal., whole creature centered. Ashen ancient forest world, centered composition, richly textured, no text, no letters, no border, no watermark.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, logo, blurry, ugly, extra limbs, photo, 3d render, modern objects, collage, multiple panels",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 310088,
+          "steps": 8,
+          "cfg": 2,
+          "sampler_name": "euler",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-bat"
+        }
+      }
+    },
+    "file": "assets/enemy-bat.png",
+    "generatedAt": "2026-09-26T19:47:31.176Z",
+    "reusedFrom": "enemy-bat",
+    "usage": "Tutorial counterpart reusing existing generated illustration; no new generation."
+  },
+  {
+    "id": "enemy-tutorialRootling",
+    "name": "Rootling",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_lightningDPMSDE.safetensors",
+    "seed": 310093,
+    "prompt": "Painterly dark fantasy game illustration, hand painted oil and gouache, expressive brush strokes, atmospheric chiaroscuro, muted jade green and warm amber, bone ivory highlights, exquisite subject silhouette. Bell Beetle, strange fantasy creature, Earth aspect, Gains a small shell., whole creature centered. Ashen ancient forest world, centered composition, richly textured, no text, no letters, no border, no watermark.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_lightningDPMSDE.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Painterly dark fantasy game illustration, hand painted oil and gouache, expressive brush strokes, atmospheric chiaroscuro, muted jade green and warm amber, bone ivory highlights, exquisite subject silhouette. Bell Beetle, strange fantasy creature, Earth aspect, Gains a small shell., whole creature centered. Ashen ancient forest world, centered composition, richly textured, no text, no letters, no border, no watermark.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, logo, blurry, ugly, extra limbs, photo, 3d render, modern objects, collage, multiple panels",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 310093,
+          "steps": 8,
+          "cfg": 2,
+          "sampler_name": "euler",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-beetle"
+        }
+      }
+    },
+    "file": "assets/enemy-beetle.png",
+    "generatedAt": "2026-09-26T19:47:41.384Z",
+    "reusedFrom": "enemy-beetle",
+    "usage": "Tutorial counterpart reusing existing generated illustration; no new generation."
+  },
+  {
+    "id": "enemy-tutorialEmber",
+    "name": "Ember Mote",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910048,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a small floating orange flame spirit with two bright eyes, no body, no legs, a magical will-o-wisp:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a small floating orange flame spirit with two bright eyes, no body, no legs, a magical will-o-wisp:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910048,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-wisp-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-wisp-v3.png",
+    "generatedAt": "2026-09-26T20:01:02.137Z",
+    "revision": 3,
+    "reusedFrom": "enemy-wisp",
+    "usage": "Tutorial counterpart reusing existing generated illustration; no new generation."
+  },
+  {
+    "id": "enemy-tutorialWarden",
+    "name": "The Patient Warden",
+    "machine": "http://spark-86e6.local:8188",
+    "model": "dreamshaperXL_alpha2Xl10.safetensors",
+    "seed": 910054,
+    "prompt": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hulking hollow stone golem carrying a massive hammer, moss-covered sculpted humanoid, portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+    "workflow": {
+      "1": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "dreamshaperXL_alpha2Xl10.safetensors"
+        }
+      },
+      "2": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "Traditional oil painting for a dark fantasy grimoire, visible expressive brushstrokes on rough canvas, matte gouache texture, dramatic chiaroscuro. (a hulking hollow stone golem carrying a massive hammer, moss-covered sculpted humanoid, portrait:1.3). A single bold central subject filling the painting. Restrained jade green shadows, warm ochre highlights, bone ivory and muted natural pigments. Soft painterly background with subtle ancient forest atmosphere, illustrated collectible card art, no text.",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "3": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "text": "text, letters, watermark, landscape, distant subject, tiny subject, empty forest, 3d render, photograph, photorealistic, product photography, glossy plastic, flat vector icon, anime, cartoon, chibi, white background",
+          "clip": [
+            "1",
+            1
+          ]
+        }
+      },
+      "4": {
+        "class_type": "EmptyLatentImage",
+        "inputs": {
+          "width": 640,
+          "height": 640,
+          "batch_size": 1
+        }
+      },
+      "5": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "positive": [
+            "2",
+            0
+          ],
+          "negative": [
+            "3",
+            0
+          ],
+          "latent_image": [
+            "4",
+            0
+          ],
+          "seed": 910054,
+          "steps": 20,
+          "cfg": 6,
+          "sampler_name": "dpmpp_2m",
+          "scheduler": "karras",
+          "denoise": 1
+        }
+      },
+      "6": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "5",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        }
+      },
+      "7": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "6",
+            0
+          ],
+          "filename_prefix": "astrata_01/enemy-mason-v3"
+        }
+      }
+    },
+    "file": "assets/enemy-mason-v3.png",
+    "generatedAt": "2026-09-26T20:01:26.514Z",
+    "revision": 3,
+    "reusedFrom": "enemy-mason",
+    "usage": "Tutorial counterpart reusing existing generated illustration; no new generation."
   }
 ]

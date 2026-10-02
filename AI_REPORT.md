@@ -548,3 +548,20 @@ Rules1.3.31/content1.1.30; policy weighted-druid-v1.12 unchanged, no training. C
 | 825187 | Loss | 19 | 305 | Void fist |
 
 All five runs terminate without stalls or execution errors. One Cinder Hart victory establishes a completed run with this version; four losses and the small sample do not establish boss balance, a reliable win rate or a controlled comparison with older versions. No further tuning inferred from these runs.
+
+
+# Tutorial and normal-game isolation — package1.3.55
+
+Rules1.3.32/content1.1.31; policy weighted-druid-v1.12 unchanged, no training. Tutorial walkthrough uses authored legal actions until the final fight, then the ordinary weighted policy. It completes119 decisions with70HP, all four encounters won. This validates the instructional path, not autonomous exploration or balance. Full traces/source snapshots: reports/tutorial-evaluation. Packaged GUI independently completes the path with real controls; exact-step resume, replay, retry, statistics, keyboard/reduced-motion controls and normal-save isolation pass. All259 rule tests pass.
+
+Five normal runs in reports/tutorial-normal-evaluation retain the same outcomes, HP, rounds and decision totals as package1.3.54:
+
+|Seed|Outcome|Field round|Decisions|Cause/result|
+|---|---|---|---|---|
+|825183|Win|18|527|Cinder Hart defeated;5HP|
+|825184|Loss|13|222|Coal|
+|825185|Loss|20|266|Antler|
+|825186|Loss|15|283|Slap|
+|825187|Loss|19|305|Void fist|
+
+No stalls or illegal actions. Tutorial enemies are excluded from normal pools. These seeds support regression isolation, not broad balance or a reliable win rate. Tutorial completions are labeled separately and must be excluded from normal Stratum win-rate calculations.

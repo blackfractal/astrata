@@ -1,0 +1,105 @@
+/* A small illuminated field guide, leaving the battlefield and hand readable. */
+#tutorial-layer {
+  position: fixed;
+  left: var(--stage-left);
+  top: var(--stage-top);
+  width: 1600px;
+  height: 900px;
+  transform: scale(var(--stage-scale));
+  transform-origin: top left;
+  pointer-events: none;
+  z-index: 90;
+}
+#tutorial-layer[hidden] {
+  display: none;
+}
+.tutorial-guide {
+  position: absolute;
+  width: 270px;
+  padding: 19px;
+  border: 1px solid #c5b477;
+  border-top: 3px solid #ead39a;
+  background: linear-gradient(155deg, #263c2c, #101e18);
+  box-shadow: 0 12px 30px #0008;
+  color: #efe9d2;
+  pointer-events: auto;
+}
+.tutorial-road .tutorial-guide {
+  right: 22px;
+  top: 168px;
+}
+.tutorial-battle .tutorial-guide {
+  left: 14px;
+  bottom: 46px;
+  width: 226px;
+  padding: 14px;
+}
+.tutorial-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #d4c18b;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.tutorial-guide h2 {
+  font-size: 22px;
+  margin: 14px 0 9px;
+  line-height: 1.1;
+  color: #f1dcab;
+}
+.tutorial-guide p {
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0 0 15px;
+}
+.tutorial-guide small {
+  color: #c4ccb4;
+  font-size: 12px;
+}
+.tutorial-progress {
+  height: 2px;
+  background: #62725b;
+  margin-top: 10px;
+}
+.tutorial-progress i {
+  display: block;
+  background: #dec778;
+  height: 100%;
+}
+.tutorial-next {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  color: #f5ebcc;
+  border: 1px solid #dfca8c;
+  background: #394f32;
+  animation: tutorial-pulse 1.5s ease-in-out infinite;
+}
+.tutorial-target {
+  outline: 2px solid #ebd585 !important;
+  outline-offset: 3px;
+  animation: tutorial-pulse 1.5s ease-in-out infinite !important;
+}
+@keyframes tutorial-pulse {
+  50% {
+    box-shadow:
+      0 0 0 5px #d5c67b35,
+      0 0 20px #e9d17a55;
+  }
+}
+.in-tutorial [data-ui="botStep"],
+.in-tutorial [data-ui="botToggle"] {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutorial-target,
+  .tutorial-next {
+    animation: none !important;
+    box-shadow: 0 0 0 4px #d5c67b40;
+  }
+}
+
+.in-tutorial .battle-scene .battle-dock .incoming-attack {
+  padding-left: 245px;
+}

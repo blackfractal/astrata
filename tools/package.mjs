@@ -27,6 +27,7 @@ for (const name of [
   "index.html",
   "desktop.cjs",
   "run-archive.cjs",
+  "tutorial-profile.cjs",
   "preload.cjs",
 ])
   await fs.cp(path.join(root, name), path.join(app, name), { recursive: true });
@@ -132,6 +133,10 @@ for (const name of [
   "return-start-verification.json",
   "direction-pad-verification.json",
   "boss-balance-verification.json",
+  "tutorial-verification.json",
+  "tutorial-evaluation",
+  "tutorial-normal-evaluation",
+  "tutorial-edge-verification.json",
   "boss-balance-evaluation",
   "early-motes-verification.json",
   "early-motes-evaluation",
