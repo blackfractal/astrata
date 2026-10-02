@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 1,
+  version: 2,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -251,20 +251,20 @@ place(
   "ward-place",
   "ward",
   16,
-  "Place Ward in the marked space nearer to you. It starts with 10 stored block. Isolated means it needs empty neighboring spaces to activate.",
+  "Place Ward in the marked space nearer to you. It starts with 0 block and cannot defend until activated. Isolated means it needs empty neighboring spaces to activate.",
 );
 phase("ward-phase");
 activate(
   "ward-activate",
   16,
-  "Activate Ward to add 10 more block: it now stores 20. Unlike Shield, that stock will persist across rounds.",
+  "Activate Ward to gain 10 block: it now stores 10. Unlike Shield, that stock will persist across rounds.",
 );
 end("ward-enemy");
 defend("ward-block", "ward", 16, "Choose Ward to absorb the 3-damage attack.");
 note(
   "ward-persists",
-  "17 block remains",
-  "Ward kept its remaining 17 block into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
+  "7 block remains",
+  "Ward kept its remaining 7 block into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
   '[data-slot="16"]',
 );
 place(
@@ -323,18 +323,18 @@ defend(
   "route-ward",
   "ward",
   16,
-  "Click Ward. Its stored 17 block absorb 17, leaving 5 damage.",
+  "Click Ward. Its stored 7 block absorb 7, leaving 15 damage.",
 );
 defend(
   "route-bracelet",
   "bracelet",
   null,
-  "Click your Bracelet. It stops 2, then the final 3 automatically reach the Druid because no defenses remain.",
+  "Click your Bracelet. It stops 2, then the final 13 automatically reach the Druid because no defenses remain.",
 );
 note(
   "route-done",
   "Every layer matters",
-  "You took only 3 of the original 30 damage. Each hit showed the actual HP or block lost. The attack never moved backward toward the enemy.",
+  "You took 13 of the original 30 damage. Each hit showed the actual HP or block lost. The attack never moved backward toward the enemy.",
   ".battle-player, header .hp",
 );
 place(

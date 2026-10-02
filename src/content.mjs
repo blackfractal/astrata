@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.32",
-  content: "1.1.31",
+  content: "1.1.32",
   observation: 1,
   actions: 1,
 };
@@ -284,8 +284,8 @@ card(
   1,
   2,
   { ward: 10 },
-  "Isolated. On place: 10 ward value. Activate: +10. Absorbs incoming damage when chosen.",
-  { ward: 10, condition: "isolated", tower: true },
+  "Isolated. Starts with 0 ward value. Activate: +10. Absorbs incoming damage when chosen.",
+  { ward: 0, condition: "isolated", tower: true },
 );
 card(
   "magnify",
@@ -524,8 +524,8 @@ card(
   1,
   2,
   { ward: 8 },
-  "On place: 8 ward value. +8 ward value. Stack on a Tower; covered Wards still absorb.",
-  { ward: 8, tower: true, stack: "tower", coveredWards: true },
+  "Starts with 0 ward value. Activate: +8. Stack on a Tower; covered Wards still absorb.",
+  { ward: 0, tower: true, stack: "tower", coveredWards: true },
 );
 card(
   "conduit",
@@ -1537,7 +1537,7 @@ export const glossary = {
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
-  Ward: "Persistent defense chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
+  Ward: "Starts at 0; activate to build persistent defense. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Shield:
     "Block expires after the enemy turn. Choose which portion absorbs a hit.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",

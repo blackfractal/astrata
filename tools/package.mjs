@@ -136,6 +136,7 @@ for (const name of [
   "tutorial-verification.json",
   "tutorial-evaluation",
   "tutorial-normal-evaluation",
+  "ward-zero-evaluation",
   "tutorial-edge-verification.json",
   "boss-balance-evaluation",
   "early-motes-verification.json",

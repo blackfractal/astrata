@@ -565,3 +565,20 @@ Five normal runs in reports/tutorial-normal-evaluation retain the same outcomes,
 |825187|Loss|19|305|Void fist|
 
 No stalls or illegal actions. Tutorial enemies are excluded from normal pools. These seeds support regression isolation, not broad balance or a reliable win rate. Tutorial completions are labeled separately and must be excluded from normal Stratum win-rate calculations.
+
+
+# Zero initial Ward — package1.3.56
+
+Content1.1.32; rules1.3.32/policy1.12 unchanged. Ward and Living Lattice now require activation to gain any absorption. All260 tests pass. Tutorial revision2 completes119 decisions with70HP after real Tavern healing; the defense lesson now leaves13 damage for the player. Fresh versioned tutorial trace retained alongside prior-version archives in reports/tutorial-evaluation.
+
+Five normal runs in reports/ward-zero-evaluation complete without stalls or illegal actions:
+
+|Seed|Outcome|Field round|Decisions|Cause/result|
+|---|---|---|---|---|
+|825183|Win|18|527|Cinder Hart defeated;5HP|
+|825184|Loss|13|222|Coal|
+|825185|Loss|20|266|Antler|
+|825186|Loss|15|283|Slap|
+|825187|Loss|19|272|Void fist|
+
+First four results match the prior version. Seed825187 enters Void-Colossus at7HP instead of20 and dies on the first boss turn instead of the sixth. This is a small execution sample, not sufficient evidence of balanced Wards or overall difficulty. No training.

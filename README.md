@@ -1,10 +1,12 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.97. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.55; rules 1.3.32).
+A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.98. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.56; rules 1.3.32).
 
 First New Game enters **The First Clearing**, the Stratum 1 tutorial. Follow the glowing callouts through movement, equipment, combat, defense routing, elements and Tavern services, then fight the Patient Warden independently. Required actions pulse; explanations wait for Continue. Tutorial saves resume at the exact lesson. The home screen's Tutorial menu offers replay, while Resume tutorial continues an unfinished lesson. Tutorial saves and statistics are separate from normal journeys, so replay preserves Continue. After first completion, New Game starts the normal Druid journey. Strata 2 and 3 tutorials are future work.
 
 Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
+
+Ward cards start with **0 Ward** and must be activated before they can absorb damage. Ward gains10 per activation; Living Lattice gains8. Stored value persists across turns; Recall/replacement starts again at0.
 
 Click highlighted cards to defend. Wards, Shields and Allies are offered together: after a card absorbs damage, only its column and columns closer to the player remain eligible. Equipment is the final stop. Click the pulsing Druid portrait to take the hit and preserve unused defenses; all eligible cards and equipment pulse too. View opens card details, and mixed Shield portions are chosen beside their card. Each new hit resets the route. Taunt and explicit targeting remain exceptions; Pierce/Cull/status bypasses still apply.
 

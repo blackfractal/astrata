@@ -57,14 +57,14 @@ test("Wards are selectable and exhausted activations do not prevent absorption",
 });
 test("covered Wards inert unless top explicitly permits", () => {
   const g = battle(),
-    w = put(g, "ward", 0);
+    w = put(g, "ward", 0, { ward: 10 });
   put(g, "palimpsest", 0);
   hit(g, 4);
   assert.equal(w.ward, 10);
   assert.equal(g.s.hp, 66);
   const h = battle(),
-    v = put(h, "ward", 0);
-  put(h, "lattice", 0);
+    v = put(h, "ward", 0, { ward: 10 });
+  put(h, "lattice", 0, { ward: 8 });
   hit(h, 12);
   act(h, "ward", (x) => x.uid === v.uid);
   act(h, "ward");
@@ -111,7 +111,7 @@ test("Taunt forces the latest taunting Ally", () => {
 });
 test("Pierce and player status bypass grid but meet Bracelet and Armor", () => {
   const g = battle();
-  const w = put(g, "ward", 0);
+  const w = put(g, "ward", 0, { ward: 10 });
   put(g, "familiar", 1);
   g.s.battle.bracelets = [{ uid: 900, block: 3, element: "Arcane" }];
   hit(g, 7, { stage: "bracelet", pierce: true });
@@ -454,4 +454,37 @@ test("Wanderer stops on the player instead of completing its rolled path", () =>
   assert.equal(g.s.mode, "battle");
   assert.equal(g.s.field.entities[0].x, 5);
   assert.equal(g.s.field.entities[0].y, 5);
+});
+
+test("Ward cards start empty, require activation, persist earned value and Recall resets to zero", () => {
+  for (const [id, gain] of [
+    ["ward", 10],
+    ["lattice", 8],
+  ]) {
+    const g = battle(),
+      b = g.s.battle;
+    b.hand = [g.newCard(id)];
+    b.focus = 1;
+    act(g, "place", (a) => a.slot === 0);
+    const c = b.grid[0][0];
+    assert.equal(c.ward, 0);
+    assert.equal(c.zeroWard, false);
+    assert.equal(g.activeWards().length, 0);
+    act(g, "activatePhase");
+    const channel = b.channel;
+    act(g, "activate", (a) => a.slot === 0);
+    assert.equal(c.ward, gain);
+    assert.equal(b.channel, channel - 1);
+    hit(g, 3);
+    act(g, "ward");
+    assert.equal(c.ward, gain - 3);
+    g.beginTurn();
+    assert.equal(c.ward, gain - 3);
+    b.focus = 1;
+    act(g, "recall", (a) => a.slot === 0);
+    const reset = g.instance(b.discard.find((x) => x.uid === c.uid));
+    assert.equal(reset.ward, 0);
+    assert.equal(reset.used, 0);
+    assert.equal(reset.zeroWard, false);
+  }
 });

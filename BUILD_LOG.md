@@ -847,3 +847,14 @@ All259 rule tests pass, including every forced lesson, invalid-action rejection,
 Versioned deterministic walkthrough and source snapshots: reports/tutorial-evaluation. Five normal AI runs825183–187 independently archived in reports/tutorial-normal-evaluation: same one win/four losses and decisions527/222/266/283/305 as package1.3.54, no stalls or illegal actions. This supports regression isolation for those seeds, not universal balance. No training. Content audit passes132 selected assets with provenance, including four tutorial aliases. GUI evidence: tutorial-verification.json and tutorial-edge-verification.json.
 
 Additional implementation, verification, documentation and packaging time: approximately60 minutes. Runnable release and CRC-verified distribution ZIP refreshed; local commit only, no push. User app/profile untouched.
+
+
+## Post-build polish — activate before Ward can defend, round 61
+
+2026-10-01. Jonathan requested removing Ward's free10 absorption on placement. Ward now starts0 and gains10 only through activation. Applied the same rule to Living Lattice, removing its free8 while retaining +8 per activation. Activation allowance remains2. Fresh0 is activatable, distinct from a Ward depleted by damage; earned value still persists, and Recall/replacement starts0 again. Already stored values in exact-state saves are preserved; fresh placements and ordinary battle restarts use the new values. Main design4.98 updates Ward rules, sample card, corrected two-activation worked example and tutorial. Package1.3.56/content1.1.32; rules1.3.32/policy1.12 unchanged.
+
+Tutorial revision2 now explicitly teaches empty placement and activation to10. After the opening3-damage hit,7 remains. The later30-damage route uses Ally4 → Shield4 → Ward7 → Bracelet2 → player13, leaving57HP (56 after the elemental lesson); Tavern healing still restores70. No extra free resources or compensating defense added. Existing tutorial saves retain their stored combat state; new tutorial starts use revision2.
+
+All260 rule tests pass, including actual placement/activation costs, unavailable defense at0, persistence and Recall for both Ward cards. Updated existing defense fixtures to explicitly represent previously earned Ward. Versioned119-decision headless tutorial completes at70HP; full packaged GUI tutorial, save/resume, replay and normal-save preservation verified. Five normal AI runs archived with source snapshots in reports/ward-zero-evaluation: one win/four losses, decisions527/222/266/283/272. Seed825187 reaches Void-Colossus with7HP rather than20 and loses on turn1 rather than6; this small sample does not establish overall balance. No training or other balance changes.
+
+Additional implementation, verification, documentation and packaging time: approximately8 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, no push. User app/profile untouched.
