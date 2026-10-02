@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 3,
+  version: 4,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -93,7 +93,7 @@ action(
 ui(
   "inventory-open",
   "Your belongings",
-  "Click Inventory. Items you wear appear in Equipped; everything else stays in the Satchel.",
+  "Click Inventory in the top-right corner of the screen. Items you wear appear in Equipped; everything else stays in the Satchel.",
   "inventory",
   '[data-ui="inventory"]',
 );
@@ -126,7 +126,7 @@ note(
 ui(
   "grimoire-open",
   "Your Grimoire",
-  "Open the Grimoire to see your deck. Undrawn cards remain there; discarded cards recycle when it empties.",
+  "Open the Grimoire in the top-right corner of the screen to see your deck. Undrawn cards remain there; discarded cards recycle when it empties.",
   "grimoire",
   '[data-ui="grimoire"]',
 );
@@ -422,7 +422,7 @@ phase("water-phase");
 activate(
   "water-attack",
   22,
-  "Water Blast’s 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy to see the elemental preview.",
+  "Water Blast’s 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
 );
 end("ember-enemy");
 defend(
@@ -529,6 +529,12 @@ action(
   "Learn what lies ahead",
   "Pay 15 Gold for gossip. It reveals Cinder Hart, the Archon of this lesson’s imagined onward journey. You will not fight that boss in the tutorial.",
   { type: "gossip" },
+);
+note(
+  "gossip-learned",
+  "Prepare for the Archon",
+  "You learned that the Archon boss is the Cinder Hart, a strong Fire enemy! If this were a real run, you would now know to stock up on Water cards and defenses against Fire. You will not fight this boss in the tutorial.",
+  ".tavern-service",
 );
 ui(
   "innkeeper",
@@ -853,6 +859,6 @@ export function normalizeTutorial(s) {
         e.y = 3;
       }
     }
-    t.version = TUTORIAL.version;
   }
+  t.version = TUTORIAL.version;
 }

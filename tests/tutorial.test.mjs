@@ -193,7 +193,7 @@ test("Earlier tutorial saves remap lesson IDs and preserve a reachable item afte
       e.y = 6;
     }
     const h = new Game(0, saved);
-    assert.equal(h.s.tutorial.version, 3);
+    assert.equal(h.s.tutorial.version, TUTORIAL.version);
     assert.ok(h.legal().length);
     walk(h);
     assert.equal(h.s.hp, 70);

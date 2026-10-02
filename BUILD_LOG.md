@@ -893,3 +893,14 @@ No combat/rule balance or policy training changed; prior versioned tutorial and 
 2026-10-01. Jonathan requested removing the Tutorial menu footer about future Strata tutorials and preserving the normal Continue save. Removed the entire footer; available tutorial, Resume and statistics remain. Removed the future-tutorial teaser from the player README too. Package1.3.59/design4.101; no rules, content or save behavior changes.
 
 Verification: JavaScript syntax and packaged Tutorial menu checked using an isolated profile. Runnable release and CRC-verified ZIP refreshed. Additional implementation, verification and packaging time: approximately3 minutes. Local commit only; user app/profile untouched.
+
+
+## Post-build polish — clearer tutorial placement and preparation advice, round 65
+
+2026-10-01. Jonathan requested left-side overworld/Stratum callouts, explicit top-right directions for Inventory and Grimoire, holding the Water Blast drag to preview elemental damage, and an explanation of how Traveler gossip informs boss preparation. Package1.3.60/design4.102/tutorial revision4; rules/content/policy unchanged.
+
+Map callouts now sit on the left, clear of the field and movement controls. Other screens retain their existing placement. Inventory and Grimoire instructions identify the top-right corner. Water Blast explicitly says to drag over the enemy without releasing the mouse button to preview the elemental damage change, then release to attack. A new acknowledgement after purchasing gossip explains that Cinder Hart is a strong Fire boss and that a normal journey would call for stocking up on Water cards and defenses against Fire. Saved lessons remap by stable ID and adopt tutorial revision4; existing progress and resources remain intact. The tutorial now has103 authored steps and122 decisions in the reference GUI walkthrough.
+
+All6 tutorial tests pass, covering the complete deterministic sequence, save/resume at every guided decision, older-save migration, completion/retry, statistics and normal-pool isolation. The packaged full122-decision mouse walkthrough passes through Warden victory, replay and normal-save preservation with no renderer errors. Focused packaged checks confirm Water Blast and post-gossip copy fits onscreen and the new saved acknowledgement resumes/advances correctly. Reviewed screenshots of the left-side pursuit lesson, elemental lesson and Traveler explanation. Updated reports/tutorial-verification.json. No balance change, training or new five-run evaluation.
+
+Additional implementation, verification, documentation and packaging time: approximately7 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.

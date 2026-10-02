@@ -188,7 +188,11 @@ export function paintTutorial(ctx, frame = false) {
   }
   layer.hidden = !!frame;
   layer.className =
-    ctx.game.s.mode === "battle" ? "tutorial-battle" : "tutorial-road";
+    ctx.game.s.mode === "battle"
+      ? "tutorial-battle"
+      : ctx.game.s.mode === "field"
+        ? "tutorial-road tutorial-field"
+        : "tutorial-road";
   if (guide.kind === "free" && ctx.game.s.tutorial.independentIntroDismissed) {
     layer.hidden = true;
     hint = null;
