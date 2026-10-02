@@ -886,3 +886,10 @@ Required targets and acknowledgement buttons now have bright gold outlines, a mu
 All264 rule tests pass, including legal-arrow priority, defense-route eligibility, no state mutation and confinement to the final tutorial battle. Packaged UI checks pass one-time acknowledgement, dismissal by first combat action, persistence across Continue, real15-second timing plus controlled-clock boundary checks, input timer reset, modal suppression, arrow/defense highlights, no automatic action, actual Shield drag with stronger cues and reduced-motion behavior. Existing keyboard, pursuit, Tavern resume, abandonment isolation and final retry checks also pass. No renderer errors; idle-arrow/defense screenshots reviewed. Test timing was stabilized by installing the virtual clock before Continue; pulse assertions allow display pixel rounding. Reports/tutorial-hints-verification.json and updated tutorial-edge-verification.json retain evidence.
 
 No combat/rule balance or policy training changed; prior versioned tutorial and five-run evaluations remain historical. Additional implementation, verification, documentation and packaging time: approximately15 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, no push; user app/profile untouched.
+
+
+## Post-build polish — keep future tutorials a surprise, round 64
+
+2026-10-01. Jonathan requested removing the Tutorial menu footer about future Strata tutorials and preserving the normal Continue save. Removed the entire footer; available tutorial, Resume and statistics remain. Removed the future-tutorial teaser from the player README too. Package1.3.59/design4.101; no rules, content or save behavior changes.
+
+Verification: JavaScript syntax and packaged Tutorial menu checked using an isolated profile. Runnable release and CRC-verified ZIP refreshed. Additional implementation, verification and packaging time: approximately3 minutes. Local commit only; user app/profile untouched.

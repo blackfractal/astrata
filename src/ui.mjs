@@ -650,7 +650,7 @@ async function ui(name) {
     case "tutorialMenu": {
       const t = data.tutorialStats?.stratum1;
       dialog(
-        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p><small>Strata 2 and 3 tutorials will arrive with their future Strata. Your normal Continue save is kept when you play a tutorial.</small>`,
+        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p>`,
       );
       break;
     }
