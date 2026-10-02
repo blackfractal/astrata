@@ -1,3 +1,4 @@
+import { fieldEntitiesAt } from "./field-display.mjs";
 import {
   startTutorial,
   TUTORIAL,
@@ -373,7 +374,7 @@ function render(frame = null) {
       (_, i) => {
         const x = i % 11,
           y = Math.floor(i / 11),
-          entities = f.entities.filter((e) => e.x === x && e.y === y),
+          entities = fieldEntitiesAt(f, x, y),
           foe = entities.find((e) => e.enemy),
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
@@ -939,9 +940,7 @@ function bind(root = app) {
     (el) =>
       (el.onclick = () => {
         const i = Number(el.dataset.tile),
-          entities = game.s.field.entities.filter(
-            (e) => e.x === i % 11 && e.y === Math.floor(i / 11),
-          );
+          entities = fieldEntitiesAt(game.s.field, i % 11, Math.floor(i / 11));
         if (entities.length) {
           const move = game
             .legal()

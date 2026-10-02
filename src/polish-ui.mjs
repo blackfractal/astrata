@@ -1,3 +1,4 @@
+import { fieldEntitiesAt } from "./field-display.mjs";
 import { attackOrb } from "./impact-effects.mjs";
 import { eventTrades } from "./trade-ui.mjs";
 import {
@@ -930,7 +931,7 @@ export function enhance(ctx) {
       el.dataset.cell = i;
       const x = i % 11,
         y = Math.floor(i / 11),
-        foe = o.field.entities.find((e) => e.enemy && e.x === x && e.y === y);
+        foe = fieldEntitiesAt(o.field, x, y).find((e) => e.enemy);
       if (foe) el.querySelector("img")?.setAttribute("data-token", foe.uid);
       el.querySelector(".player-mark")?.setAttribute("data-player-token", "");
       const entity = o.field.entities.find(

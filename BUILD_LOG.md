@@ -924,3 +924,14 @@ The Scribe shows all owned cards with artwork, descriptions, View and Upgrade. E
 All267 tests pass, including three new cases for Gem sales, equipped/spare Setting sales retaining ordinary/Cursed Gems, Healer removal of socketed Cursed Gems, exact Gold changes, no duplicate sale and saved state. Packaged store GUI verification covers actual socketed Gem and Setting sales, label updates, retained Gems, card gallery/View/benefit hover/upgrade, no Scribe removal, market restrictions and Healer treatment. Tutorial edge checks and full122-decision tutorial through completion pass with the new Scribe controls. Reviewed store/Scribe screenshots, no renderer errors. The first UI test assertion expected numeric1 for an upgrade flag; corrected to the engine's boolean true. Reports updated. No new AI evaluation or training; prior balance reports remain versioned historical evidence.
 
 Additional implementation, verification, documentation and packaging time: approximately10 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.
+
+
+## Post-build polish — Archon map priority, round 68
+
+2026-10-01. Jonathan reported Sludge hiding Void-Colossus at6,6 and requested bosses always appear over other occupants. Package1.3.63/design4.105; rules/content/policy unchanged.
+
+A shared display helper orders a tile's filtered occupants Archon first, then other enemies, then pickups. The renderer, movement-token identity and inspection use this same selection. Occupancy count and all inspection details remain; underlying entity order and encounter/movement rules are untouched. Applies regardless of spawn/arrival order and to existing saves.
+
+Packaged GUI checks verify Void-Colossus, Cinder Hart and Glass Choir over Sludge plus Gold, with both boss-first and Mote-first entity order. Assert correct art mapping, Archon token UID, occupancy count3, boss-first inspection with other enemy still present, and unchanged source entity order. Reviewed screenshot at6,6. Existing four direction-pad scenarios pass movement/edge/inspection behavior with no renderer errors. Test asset assertion uses the selected art manifest paths (Hart and Choir have versioned filenames). Reports/archon-map-verification.json and direction-pad-verification.json updated. No new rule tests, AI evaluation or training for this presentation fix.
+
+Additional implementation, verification, documentation and packaging time: approximately5 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.

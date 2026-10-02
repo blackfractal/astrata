@@ -130,6 +130,7 @@ for (const name of [
   "adjacency-verification.json",
   "polish-robustness",
   "store-verification.json",
+  "archon-map-verification.json",
   "return-start-verification.json",
   "direction-pad-verification.json",
   "boss-balance-verification.json",
