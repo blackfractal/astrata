@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.34",
-  content: "1.1.34",
+  content: "1.1.35",
   observation: 1,
   actions: 1,
 };
@@ -1258,12 +1258,12 @@ enemy(
   153,
   "Archon",
   [
-    attack("Antler", 9, "Fire"),
+    attack("Antler", 9, "Fire", { burn: 2 }),
     effect("Brand", { grid: "lock", target: "newest", burn: 2 }),
     effect("Wildfire", { grid: "row", target: "row" }),
     attack("Stampede", 6, "Earth", { hits: 2 }),
   ],
-  "Below half HP adds Burn 1 each enemy turn.",
+  "Antler and Brand each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
   "Water spells and a Fire Bracelet buy time.",
   { schedule: "Wait 4 rounds, then Hunt.", bossMode: "hunter" },
 );

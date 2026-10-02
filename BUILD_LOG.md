@@ -935,3 +935,12 @@ A shared display helper orders a tile's filtered occupants Archon first, then ot
 Packaged GUI checks verify Void-Colossus, Cinder Hart and Glass Choir over Sludge plus Gold, with both boss-first and Mote-first entity order. Assert correct art mapping, Archon token UID, occupancy count3, boss-first inspection with other enemy still present, and unchanged source entity order. Reviewed screenshot at6,6. Existing four direction-pad scenarios pass movement/edge/inspection behavior with no renderer errors. Test asset assertion uses the selected art manifest paths (Hart and Choir have versioned filenames). Reports/archon-map-verification.json and direction-pad-verification.json updated. No new rule tests, AI evaluation or training for this presentation fix.
 
 Additional implementation, verification, documentation and packaging time: approximately5 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.
+
+
+## Post-build polish — Cinder Hart Antler Burn, round 69
+
+2026-10-02. Jonathan found Cinder Hart too easy and requested extra player Burn on one attack. Added Burn2 to Antler's existing9 Fire damage. Builder selected2 as a modest initial amount because Brand already applies2 and the half-HP passive applies1 every enemy turn. Updated the enemy description and design sample row. Package1.3.64/content1.1.35/design4.106; rules1.3.34 and policy unchanged.
+
+Uses existing attack-status timing: Antler's Burn applies after the hit resolves even if direct damage was fully blocked, stacks with existing Burn and ticks at the next player turn. Brand, row destruction, Stampede and half-HP passive unchanged. All267 tests pass. Focused checks fully block Antler with a Ward: full-HP boss causes2 Burn damage then leaves1; half-HP boss combines passive1 plus Antler2, ticks3 and leaves2. Following Brand still reportsBurn2. Packaged GUI confirms Antler Tell displays Burn2; screenshot retained. No new AI training/evaluation or claim of demonstrated balance; further tuning follows playtesting.
+
+Additional implementation, verification, documentation and packaging time: approximately4 minutes. Runnable release and CRC-verified ZIP refreshed; local commit only, user app/profile untouched.
