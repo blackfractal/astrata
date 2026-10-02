@@ -54,9 +54,27 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
   assert.equal(g.s.revealedArchon, "hart");
   assert.ok(g.s.tutorial.finalStart);
   assert.deepEqual(g.s, walk(begin()).s);
+  assert.equal(checkpoints["pursuit-move"].field.moves, 2);
+  assert.equal(checkpoints["pursuit-one-left"].mode, "field");
+  assert.equal(checkpoints["pursuit-one-left"].field.moves, 1);
+  const waiting = checkpoints["pursuit-one-left"].field.entities.find(
+    (e) => e.enemy === "tutorialRootling",
+  );
+  assert.deepEqual([waiting.x, waiting.y], [8, 4]);
+  assert.equal(checkpoints["gem-move"].field.moves, 2);
+  assert.equal(checkpoints["movement-forfeit"].field.moves, 0);
+  assert.equal(checkpoints["movement-forfeit"].mode, "item");
+  assert.equal(
+    checkpoints["movement-forfeit"].field.round,
+    checkpoints["gem-move"].field.round,
+  );
+  assert.equal(
+    checkpoints["gem-save"].field.round,
+    checkpoints["gem-move"].field.round + 1,
+  );
   const chase = checkpoints["caught"];
   assert.equal(chase.battle.enemies[0].id, "tutorialRootling");
-  assert.deepEqual([chase.field.x, chase.field.y], [9, 4]);
+  assert.deepEqual([chase.field.x, chase.field.y], [10, 3]);
 });
 test("Exact-step save/resume works at every guided decision and preserves legal choices without checkpoint nesting", () => {
   let g = begin();
@@ -147,4 +165,45 @@ test("Tutorial starts and completions are durable, idempotent and never credited
     recordTutorial(stats, { outcome: "win" }, "complete", "normal"),
     stats,
   );
+});
+
+test("Earlier tutorial saves remap lesson IDs and preserve a reachable item after the longer chase", () => {
+  for (const lesson of [
+    "pursuit-move",
+    "caught",
+    "gem-road",
+    "gem-move",
+    "socket",
+    "independent",
+  ]) {
+    const g = walk(begin(), lesson);
+    const saved = g.save();
+    saved.tutorial.version = 2;
+    saved.tutorial.step = 999;
+    if (["caught", "gem-road"].includes(lesson)) {
+      saved.field.x = 9;
+      saved.field.y = 4;
+    }
+    if (lesson === "pursuit-move") {
+      saved.field.moves = 1;
+      const e = saved.field.entities.find(
+        (e) => e.enemy === "tutorialRootling",
+      );
+      e.x = 8;
+      e.y = 6;
+    }
+    const h = new Game(0, saved);
+    assert.equal(h.s.tutorial.version, 3);
+    assert.ok(h.legal().length);
+    walk(h);
+    assert.equal(h.s.hp, 70);
+  }
+  const old = walk(begin(), "gem-road").save();
+  old.tutorial.version = 2;
+  old.tutorial.lesson = "gem-step";
+  old.field.x = 9;
+  old.field.y = 4;
+  const resumed = new Game(0, old);
+  assert.equal(resumed.s.tutorial.lesson, "gem-road");
+  walk(resumed);
 });

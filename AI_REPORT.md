@@ -582,3 +582,6 @@ Five normal runs in reports/ward-zero-evaluation complete without stalls or ille
 |825187|Loss|19|272|Void fist|
 
 First four results match the prior version. Seed825187 enters Void-Colossus at7HP instead of20 and dies on the first boss turn instead of the sixth. This is a small execution sample, not sufficient evidence of balanced Wards or overall difficulty. No training.
+
+
+Package1.3.57/rules1.3.33/content1.1.33 updates tutorial movement and lesson migration, not normal combat balance. Tutorial revision3 now has102 authored steps; the reference run completes121 decisions at70HP. Unit coverage verifies Rootling waits through the first move, pursues after the second, one-step pickup forfeits remaining movement, and earlier tutorial saves retain a reachable sequence. All261 tests and full packaged walkthrough/edge/art checks pass. Fresh trace and sources are in reports/tutorial-evaluation. No training or additional normal five-run batch; reports/ward-zero-evaluation remains historical evidence for1.3.56. New art has no policy effect.

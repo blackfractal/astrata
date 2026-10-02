@@ -173,11 +173,52 @@ try {
       );
     }
     if (
-      ["shield-place", "route-ally", "socket", "independent"].includes(step) &&
+      [
+        "shield-place",
+        "route-ally",
+        "route-done",
+        "socket",
+        "independent",
+        "pursuit-one-left",
+        "movement-forfeit",
+        "caught",
+        "elements",
+      ].includes(step) &&
       !report.steps.includes(step)
     ) {
       await p.mouse.move(5, 5);
       await p.screenshot({ path: dir + "/" + step + ".png" });
+    }
+    if (step === "pursuit-one-left") {
+      assert.equal(state.mode, "field");
+      assert.equal(state.field.moves, 1);
+      const enemy = state.field.entities.find(
+        (e) => e.enemy === "tutorialRootling",
+      );
+      assert.deepEqual([enemy.x, enemy.y], [8, 4]);
+      report.checks.push(
+        "First pursuit step leaves 1 movement and Rootling stationary; second step triggers pursuit.",
+      );
+    }
+    if (step === "movement-forfeit") {
+      assert.equal(state.field.moves, 0);
+      assert.equal(state.mode, "item");
+      assert.match(
+        await p.locator(".tutorial-guide").textContent(),
+        /remaining point was forfeited/,
+      );
+      report.checks.push(
+        "First-step item landing forfeits the unused movement point before pickup confirmation.",
+      );
+    }
+    if (
+      ["focus", "caught", "elements", "independent"].includes(step) &&
+      !report.steps.includes(step)
+    ) {
+      const id = state.battle.enemies[0].id;
+      const portrait = p.locator(`.enemy img[src$="enemy-${id}.png"]`).first();
+      assert.ok(await portrait.count(), "dedicated tutorial portrait " + id);
+      await portrait.evaluate((img) => img.decode());
     }
     const a =
       step === "independent"

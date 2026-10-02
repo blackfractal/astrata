@@ -134,6 +134,8 @@ for (const name of [
   "direction-pad-verification.json",
   "boss-balance-verification.json",
   "tutorial-verification.json",
+  "tutorial-art-prompts.json",
+  "tutorial-art-verification.json",
   "tutorial-evaluation",
   "tutorial-normal-evaluation",
   "ward-zero-evaluation",

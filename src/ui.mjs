@@ -366,7 +366,7 @@ function render(frame = null) {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum 1 tutorial" : "Stratum one"}</div><h2>${o.tutorial ? TUTORIAL.name : "The Whispering Weald"}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum 1 tutorial" : "Stratum one"}</div><h2>${o.tutorial ? TUTORIAL.name : "The Whispering Weald"}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field ${o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
       { length: 121 },
       (_, i) => {
         const x = i % 11,
@@ -442,6 +442,9 @@ function render(frame = null) {
   } else if (o.mode === "tavern") {
     body = `<div class="layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {
+    const pausedPickup =
+      o.mode === "item" && tutorialGuide(game)?.kind === "note";
+    const offers = pausedPickup ? game.baseLegal() : actions;
     const title =
       o.mode === "item"
         ? "Something left behind"
@@ -452,7 +455,7 @@ function render(frame = null) {
             : o.reward.setting
               ? "A Setting for the journey"
               : "The way is clear";
-    body = `<div class="layout"><section><div class="eyebrow">${o.mode === "reward" ? "Victory" : "Discovery"}</div><h2 style="margin:8px 0 28px">${title}</h2><div class="catalog">${actions
+    body = `<div class="layout"><section><div class="eyebrow">${o.mode === "reward" ? "Victory" : "Discovery"}</div><h2 style="margin:8px 0 28px">${title}</h2>${pausedPickup ? `<p class="tutorial-movement"><b>${o.field.moves} movement remaining</b> · The unused point was forfeited on arrival.</p>` : ""}<div class="catalog">${offers
       .filter((a) => a.id || a.type === "takeItem")
       .map((a) => {
         const id =
@@ -463,7 +466,7 @@ function render(frame = null) {
           isCard =
             a.type === "rewardCard" ||
             (a.type === "takeItem" && o.itemOffer[a.index].startsWith("card:"));
-        return `<div>${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div style="margin-top:12px">${actionButton(a, "primary")}</div></div>`;
+        return `<div>${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div style="margin-top:12px">${pausedPickup ? "<button disabled>Continue the lesson to collect</button>" : actionButton(a, "primary")}</div></div>`;
       })
       .join("")}</div><div class="row" style="margin-top:30px">${actions
       .filter((a) =>

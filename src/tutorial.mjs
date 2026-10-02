@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 2,
+  version: 3,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -231,7 +231,7 @@ back("first-back");
 note(
   "pursuit",
   "An item beyond your reach",
-  "An item lies northeast, but a Rootling is approaching. Move toward the item, then watch the enemy follow one space at a time and stop on your space.",
+  "An item lies northeast, but a Rootling is approaching. You have 2 movement points. Take both steps before the Rootling gets its movement turn.",
   ".field, .direction-pad",
   "pursuit",
 );
@@ -239,7 +239,19 @@ move(
   "pursuit-move",
   9,
   4,
-  "Take the northeast step toward the distant item. This uses your last movement; the Rootling then gets its turn.",
+  "Take your first northeast step toward the distant item. You will still have 1 movement point; the Rootling waits.",
+);
+note(
+  "pursuit-one-left",
+  "One more step is yours",
+  "You moved 1 space and have 1 movement point left. The Rootling has not moved. You may move up to 2 spaces before enemies take their turn.",
+  ".field, .direction-pad, .section-head .muted",
+);
+move(
+  "pursuit-second",
+  10,
+  3,
+  "Take your second northeast step. Movement reaches 0; now watch the Rootling move one space at a time onto you.",
 );
 note(
   "caught",
@@ -334,7 +346,7 @@ defend(
 note(
   "route-done",
   "Every layer matters",
-  "You took 13 of the original 30 damage. Each hit showed the actual HP or block lost. The attack never moved backward toward the enemy.",
+  "You took only 13 of the original 30 damage. Each hit showed the actual HP or block lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your blocking cards wisely!",
   ".battle-player, header .hp",
 );
 place(
@@ -358,12 +370,22 @@ back("rootling-back");
 note(
   "gem-road",
   "Return to the item",
-  "The way is clear. Continue northeast toward the item you saw before the chase.",
+  "The next movement turn has begun. You have 2 movement points again, and the item is only 1 space north. Landing on an encounter or pickup ends your movement, even if a point remains.",
   ".field",
   "gem-road",
 );
-move("gem-step", 10, 3, "Move northeast, one step closer to the item.");
-move("gem-move", 10, 2, "Move north onto the item.");
+move(
+  "gem-move",
+  10,
+  2,
+  "Move north onto the item using your first step of this turn.",
+);
+note(
+  "movement-forfeit",
+  "Stopping costs the remaining movement",
+  "You used only 1 step to reach this item, but movement is now 0: the remaining point was forfeited. Landing on a pickup or encounter ends your movement for that turn. Finish this pickup before the next movement turn begins.",
+  ".catalog, .tutorial-movement",
+);
 action(
   "gem-take",
   "A Sapphire",
@@ -655,8 +677,8 @@ function enter(g) {
       break;
     case "pursuit":
       spawn(g, "Item", 10, 2, { item: "sapphire" });
-      spawn(g, "Mote", 8, 6, { enemy: "tutorialRootling", count: 1 });
-      f.moves = 1;
+      spawn(g, "Mote", 8, 4, { enemy: "tutorialRootling", count: 1 });
+      f.moves = 2;
       break;
     case "gem-road":
       f.moves = 2;
@@ -798,4 +820,39 @@ export function tutorialTavern(g) {
     healUsed: false,
     removeUsed: false,
   };
+}
+
+export function normalizeTutorial(s) {
+  const t = s.tutorial;
+  if (!t) return;
+  const old = t.version < 3;
+  if (old && t.lesson === "gem-step") t.lesson = "gem-road";
+  const index = steps.findIndex((step) => step.id === t.lesson);
+  if (index < 0) throw Error("Unknown saved tutorial lesson: " + t.lesson);
+  t.step = index;
+  if (old) {
+    if (["pursuit", "pursuit-move"].includes(t.lesson)) {
+      s.field.moves = 2;
+      const rootling = s.field.entities.find(
+        (e) => e.enemy === "tutorialRootling",
+      );
+      if (rootling) {
+        rootling.x = 8;
+        rootling.y = 4;
+      }
+    }
+    const caught = steps.findIndex((step) => step.id === "caught");
+    const gemRoad = steps.findIndex((step) => step.id === "gem-road");
+    if (index >= caught && index <= gemRoad) {
+      s.field.x = 10;
+      s.field.y = 3;
+      for (const e of s.field.entities.filter(
+        (e) => e.enemy === "tutorialRootling",
+      )) {
+        e.x = 10;
+        e.y = 3;
+      }
+    }
+    t.version = TUTORIAL.version;
+  }
 }

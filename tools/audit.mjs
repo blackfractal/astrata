@@ -4,6 +4,7 @@ import { cards, items, enemies, events, locations } from "../src/content.mjs";
 import { artPaths } from "../src/art-paths.mjs";
 const expected = [
   "location-field-topdown",
+  "location-weald-topdown",
   "location-tavern-interior",
   ...Object.keys(cards).map((x) => "card-" + x),
   ...Object.keys(items).map((x) => "item-" + x),
@@ -30,7 +31,10 @@ const noProvenance = expected.filter(
         m.id === id &&
         m.file === artPaths[id] &&
         m.prompt &&
-        m.seed &&
+        (m.seed ||
+          (m.provider === "built-in image_gen" &&
+            m.sha256 &&
+            m.workflow?.tool === "image_gen.imagegen")) &&
         m.machine &&
         m.model &&
         m.workflow,

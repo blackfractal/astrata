@@ -1,5 +1,5 @@
 {
-  "package": "1.3.56",
+  "package": "1.3.57",
   "steps": [
     "welcome",
     "gold",
@@ -37,6 +37,8 @@
     "first-back",
     "pursuit",
     "pursuit-move",
+    "pursuit-one-left",
+    "pursuit-second",
     "caught",
     "ward-place",
     "ward-phase",
@@ -65,8 +67,8 @@
     "water-reward",
     "rootling-back",
     "gem-road",
-    "gem-step",
     "gem-move",
+    "movement-forfeit",
     "gem-take",
     "gem-save",
     "curses",
@@ -124,7 +126,9 @@
   "checks": [
     "First New Game goes straight to tutorial map; existing normal save remains byte-identical.",
     "Initial mouse click placement cannot bypass required Shield drag.",
+    "First pursuit step leaves 1 movement and Rootling stationary; second step triggers pursuit.",
     "Quit/relaunch during incoming defense resumes exact lesson, 22 remaining damage and prior defense route.",
+    "First-step item landing forfeits the unused movement point before pickup confirmation.",
     "Full mouse tutorial completed, including actual placement/attack drags, double-click attacks, item/Gem drags, every Tavern service and independent Warden victory; completion and replay stats persist separately.",
     "After completion New Game follows normal class selection with its normal forfeiture warning; replay tutorial save remains independent."
   ],

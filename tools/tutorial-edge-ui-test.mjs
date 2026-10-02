@@ -86,9 +86,9 @@ await scenario(
 );
 await scenario(
   "normal-speed-pursuit-animation",
-  fixture("pursuit-move"),
+  fixture("pursuit-second"),
   async (p, profile) => {
-    const a = fixture("pursuit-move").legal()[0];
+    const a = fixture("pursuit-second").legal()[0];
     await p
       .locator("[data-action=" + JSON.stringify(a.key) + "]")
       .first()
@@ -101,7 +101,7 @@ await scenario(
       await fs.readFile(profile + "/tutorial-save.json", "utf8"),
     );
     assert.equal(s.battle.enemies[0].id, "tutorialRootling");
-    assert.deepEqual([s.field.x, s.field.y], [9, 4]);
+    assert.deepEqual([s.field.x, s.field.y], [10, 3]);
   },
   false,
 );

@@ -1,5 +1,6 @@
 import {
   tutorialActions,
+  normalizeTutorial,
   tutorialAfter,
   tutorialGuide,
   tutorialBattle,
@@ -386,6 +387,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.32",
           "1.3.31",
           "1.3.30",
           "1.3.29",
@@ -426,6 +428,7 @@ export class Game {
       )
         throw Error("This save uses an incompatible rules version.");
       this.s = clone(saved);
+      normalizeTutorial(this.s);
       normalizeMindGrid(this.s);
       normalizeEnemyImmunities(this.s);
       this.s.version = VERSION;
