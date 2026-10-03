@@ -1013,3 +1013,12 @@ All283 tests pass. New coverage exercises a committed Shield→Blast→Shield ch
 Five headless smoke games825183–825187 finish without errors, all losses, rounds11/19/20/13/11 and decisions204/336/245/220/125. Reports/full versioned traces in reports/attunement-relay-evaluation; tutorial archive preserved separately. Policy unchanged, no training or statistical balance conclusion; targeted tests establish relay correctness rather than relying on incidental policy use.
 
 Additional implementation, verification, documentation and packaging time: approximately9 minutes. Runnable release and CRC-verified ZIP refreshed. Real app/profile untouched; local commit only, nothing pushed.
+
+
+## Post-build polish — Modest Stratum1 boss damage increase, round 75
+
+2026-10-02. Jonathan found Stratum1 easier after recent changes and requested a small damage increase to all three bosses. Builder chose +1 per hit for regular damaging moves: Cinder Hart Antler9→10 Fire and Stampede6→7 Earth twice; Void-Colossus both Void Fists10→11 in its current element; Glass Choir Refrain7→8 Wind twice and Chorus10→11 Water. Double-hit moves gain2 total. Final Note remains fixed20 Light Cull because it is already a large defense-bypassing finisher; rotation pressure is the intended increase. HP, statuses, patterns, telegraphs and existing scaling unchanged. Package1.3.70/content1.1.41/design4.112; rules1.3.39/policy1.13 unchanged. Main design updated, historical entries retained.
+
+All283 tests pass, including adjusted first-cycle and post-Glare damage expectations. A focused runtime check verifies all six damaging rotation entries at normal HP/first cycle and half HP/next cycle: twelve Tell-versus-actual-hit cases, including both hits and normal+4 combined scaling. Final Note remains20. Evidence: reports/boss-damage-verification.json. No new AI batch, training or statistical claim that difficulty is now correct; previous1.3.69 reports remain historical. New enemy actions read the updated content; already queued damage in an exact-state save retains its recorded amount.
+
+Additional implementation, verification, documentation and packaging time: approximately3 minutes. Runnable release and CRC-verified ZIP refreshed. Jonathan's actual app and profile untouched. Local commit only; nothing pushed.

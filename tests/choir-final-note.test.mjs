@@ -30,7 +30,7 @@ test("Chorus replaces turn four and Final Note is explicitly warned", () => {
   e.cycle = 3;
   assert.equal(g.tell(e).name, "Chorus");
   assert.equal(g.tell(e).element, "Water");
-  assert.equal(g.tell(e).damage, 10);
+  assert.equal(g.tell(e).damage, 11);
   assert.match(enemies.choir.signature, /On death: Final Note deals 20 Light/);
 });
 test("Killing blow resolves fixed Light 20 before rewards, then disintegrates", () => {

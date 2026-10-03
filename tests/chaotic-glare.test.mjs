@@ -22,8 +22,8 @@ test("Colossus opens with two Chaos fists, Collapse, then non-damaging Glare", (
     e = g.s.battle.enemies[0];
   assert.equal(e.element, "Chaos");
   for (const [cycle, name, damage] of [
-    [0, "Void fist", 10],
-    [1, "Void fist", 10],
+    [0, "Void fist", 11],
+    [1, "Void fist", 11],
     [2, "Collapse", 0],
     [3, "Chaotic Glare", 0],
   ]) {
@@ -61,7 +61,7 @@ for (const element of GLARE_ELEMENTS)
       assert.equal(g.tell(e).element, element);
       const hp = g.s.hp;
       end(g);
-      assert.equal(g.s.hp, hp - 11);
+      assert.equal(g.s.hp, hp - 12);
     }
     assert.equal(g.tell(e).name, "Collapse");
   });

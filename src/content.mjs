@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.39",
-  content: "1.1.40",
+  content: "1.1.41",
   observation: 1,
   actions: 2,
 };
@@ -1247,8 +1247,8 @@ enemy(
   173,
   "Archon",
   [
-    attack("Void fist", 10, "Chaos", { currentElement: true }),
-    attack("Void fist", 10, "Chaos", { currentElement: true }),
+    attack("Void fist", 11, "Chaos", { currentElement: true }),
+    attack("Void fist", 11, "Chaos", { currentElement: true }),
     effect("Collapse", { grid: "column", target: "column" }),
     effect("Chaotic Glare", { randomElement: true }),
   ],
@@ -1267,10 +1267,10 @@ enemy(
   153,
   "Archon",
   [
-    attack("Antler", 9, "Fire", { burn: 2 }),
+    attack("Antler", 10, "Fire", { burn: 2 }),
     effect("Brand", { grid: "lock", target: "newest", burn: 2 }),
     effect("Wildfire", { grid: "row", target: "row" }),
-    attack("Stampede", 6, "Earth", { hits: 2 }),
+    attack("Stampede", 7, "Earth", { hits: 2 }),
   ],
   "Antler and Brand each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
   "Water attacks and Water defenses counter Antler; Fire defenses counter Stampede.",
@@ -1285,9 +1285,9 @@ enemy(
   "Archon",
   [
     effect("Shatter Hymn", { grid: "destroy", target: "valuable", count: 2 }),
-    attack("Refrain", 7, "Wind", { hits: 2 }),
+    attack("Refrain", 8, "Wind", { hits: 2 }),
     effect("Silence", { grid: "sever", target: "connected" }),
-    attack("Chorus", 10, "Water"),
+    attack("Chorus", 11, "Water"),
   ],
   "Shatter Hymn destroys the two most valuable complete stacks: combined damage/defense potential, then printed Focus, remaining activations and reading order. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
   "Recall threatened stacks and use Earth attacks. Prepare for Wind and Water attacks, then use Allies and equipment to survive Final Note on death.",
