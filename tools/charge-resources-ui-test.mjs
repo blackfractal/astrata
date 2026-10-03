@@ -105,7 +105,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
     for (const i of [0, 4]) {
       assert.match(
         await page.locator(`[data-activate-slot="${i}"]`).textContent(),
-        /Charge · 3 to fire/,
+        /Charge 0\/[23] · \+1/,
       );
       await page.locator(`[data-activate-slot="${i}"]`).click();
       await settle(page);

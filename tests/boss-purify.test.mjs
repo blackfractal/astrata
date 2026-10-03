@@ -135,7 +135,7 @@ test("Hymn targets charged damage and banked Ward defense over expensive utility
   put(g, "magnify", 12);
   assert.deepEqual(gridTargets(b, g.tell(b.enemies[0])), [0, 4]);
   assert.equal(stackValue(b, 4).power, 20); // Charge does not hide eventual power.
-  kiln.used = 3;
+  kiln.used = 6;
   kiln.charge = 0; // Cannot reach the threshold with one use left.
   assert.deepEqual(gridTargets(b, g.tell(b.enemies[0])), [0, 8]);
   ward.ward = 0;
@@ -157,7 +157,7 @@ test("Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln two one-C
   g.act(g.legal().find((a) => a.type === "place" && a.slot === 1));
   const kiln = b.grid[1][0];
   assert.equal(kiln.charge, 1);
-  assert.equal(g.allowance(kiln, 1), 4);
+  assert.equal(g.allowance(kiln, 1), 7);
   put(g, "conduit", 5);
   b.phase = "activate";
   b.channel = 2;

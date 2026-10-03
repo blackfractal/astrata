@@ -96,6 +96,33 @@ export function matchingNeighborSlots(b, c, i) {
     );
   });
 }
+export function chargeSources(b, c, i) {
+  const element = cards[c.id].chargeElement;
+  return element
+    ? gridNeighbors(b, i).filter(
+        (j) => attunementSourceElement(b, top(b.grid[j])) === element,
+      )
+    : [];
+}
+export function chargeGain(b, c, i) {
+  const d = cards[c.id];
+  return Math.min(
+    Math.max(0, (d.charge || 0) - (c.charge || 0)),
+    chargeSources(b, c, i).length ? 2 : 1,
+  );
+}
+export function chargeActivations(b, c, i) {
+  const d = cards[c.id];
+  if (!d.charge || c.charge >= d.charge) return 1;
+  return Math.ceil((d.charge - (c.charge || 0)) / chargeGain(b, c, i)) + 1;
+}
+function normalizeCharges(state) {
+  for (const c of state.battle?.grid?.flat() || []) {
+    const required = cards[c.id]?.charge;
+    if (required) c.charge = Math.min(required, Math.max(0, c.charge || 0));
+  }
+  if (state.checkpoint) normalizeCharges(state.checkpoint);
+}
 export function matchingNeighbors(b, c, i) {
   return matchingNeighborSlots(b, c, i).length;
 }
@@ -265,8 +292,7 @@ export function stackValue(b, i) {
       f = d.effects,
       allowance = cardAllowance(b, c, i);
     const usable =
-      allowance > 0 &&
-      (!d.charge || allowance >= Math.max(1, d.charge - c.charge));
+      allowance > 0 && (!d.charge || allowance >= chargeActivations(b, c, i));
     let damage = usable
       ? f.randomDamage
         ? (1 + f.randomDamage) / 2
@@ -429,6 +455,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.42",
           "1.3.40",
           "1.3.41",
           "1.3.39",
@@ -483,6 +510,7 @@ export class Game {
       normalizeMindGrid(this.s);
       normalizeEnemyImmunities(this.s);
       normalizeCardCaps(this.s);
+      normalizeCharges(this.s);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1966,9 +1994,11 @@ export class Game {
     c.lastActivationElement = element || c.element;
     c.used++;
     if (d.charge) {
-      c.charge++;
-      if (c.charge < d.charge) return;
-      c.charge -= d.charge;
+      if (c.charge < d.charge) {
+        c.charge += chargeGain(b, c, i);
+        return;
+      }
+      c.charge = 0;
     }
     if (f.transmute) {
       const victim = top(b.grid[a.cardTarget]);
@@ -2165,12 +2195,14 @@ export class Game {
       c = top(slot),
       d = cards[c.id];
     if (!this.activationAvailable(c, a.slot)) return;
-    const charging = d.charge && c.charge + 1 < d.charge;
+    const charging = d.charge && c.charge < d.charge;
     this.present("activate", {
       slot: a.slot,
       name: charging
-        ? `${d.name} · Charge ${c.charge + 1}/${d.charge}`
-        : d.name,
+        ? `${d.name} · Charge ${c.charge + chargeGain(b, c, a.slot)}/${d.charge}`
+        : d.charge
+          ? `${d.name} · Release`
+          : d.name,
     });
     b.channel -= d.channel;
     const ctx = {};
@@ -2765,7 +2797,7 @@ export class Game {
           )
             continue;
           const els = attunementElements(b, c, i);
-          const charging = !!(d.charge && c.charge + 1 < d.charge);
+          const charging = !!(d.charge && c.charge < d.charge);
           const targets =
             charging ||
             f.all ||
@@ -2800,13 +2832,15 @@ export class Game {
               for (const ex of extras)
                 add(
                   "activate",
-                  `${d.name}${charging ? " · Charge" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
                     ...(charging
                       ? {
                           charging: true,
-                          chargeGain: 1,
+                          chargeGain: chargeGain(b, c, i),
+                          canRelease:
+                            this.allowance(c, i) >= chargeActivations(b, c, i),
                           chargedDamage: this.cardPower(c, i),
                           chargedBurnAll: f.burnAll || 0,
                         }
@@ -2814,7 +2848,10 @@ export class Game {
                     damage: charging ? 0 : this.cardPower(c, i),
                     ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
                     card: c.id,
-                    charge: d.charge ? d.charge - c.charge : 0,
+                    charge: d.charge ? chargeActivations(b, c, i) : 0,
+                    ...(d.charge
+                      ? { charges: c.charge, chargeRequired: d.charge }
+                      : {}),
                   },
                   { channel: d.channel },
                 );
@@ -3064,9 +3101,12 @@ export class Game {
         inst.maxHp = Math.max(inst.maxHp, inst.hp);
         capAllyHP(inst);
         if (d.onPlaceCharge)
-          inst.charge += this.neighbors(a.slot).filter(
-            (j) => top(b.grid[j]).element === "Fire",
-          ).length;
+          inst.charge = Math.min(
+            d.charge,
+            this.neighbors(a.slot).filter(
+              (j) => top(b.grid[j]).element === "Fire",
+            ).length,
+          );
         if (d.onPlaceFocus) b.focus += d.onPlaceFocus;
         break;
       }

@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.16";
+    this.id = "weighted-druid-v1.17";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -47,7 +47,7 @@ export class WeightedPolicy {
     if (!d) return 0;
     const e = d.effects;
     return (
-      (e.damage || 0) / (d.charge || 1) +
+      (e.damage || 0) / (d.charge ? d.charge + 1 : 1) +
       (d.hp || 0) * 0.6 +
       (e.ward || 0) * 0.55 +
       (e.shield || 0) * 0.4 +
@@ -262,6 +262,11 @@ export class WeightedPolicy {
       case "endTurn":
         return [-1, "Advance after worthwhile actions are used."];
       case "activate": {
+        if (f.charging && f.canRelease === false)
+          return [
+            -2,
+            "Preserve Channel: this card lacks enough uses to release.",
+          ];
         const target = b.enemies.find((e) => e.uid === a.target);
         const threat = b.enemies.reduce(
           (sum, e) => sum + (e.tell.damage || 0) * (e.tell.hits || 1),

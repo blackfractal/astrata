@@ -63,12 +63,12 @@ for (const mode of ["cards", "purify"]) {
     if (mode === "cards") {
       assert.match(
         await p.locator('[data-activate-slot="1"]').textContent(),
-        /Charge · 2 to fire/,
+        /Charge 1\/2 · \+1/,
       );
       await p.locator('[data-slot="1"] .name').click();
       assert.match(
         await p.locator("#modal").textContent(),
-        /Charge 1\/3 · 2 activation\(s\) to fire/,
+        /Charge 1\/2 · 2 activation\(s\) to fire/,
       );
       await p.keyboard.press("Escape");
       assert.match(
@@ -87,12 +87,12 @@ for (const mode of ["cards", "purify"]) {
       await p.locator('[data-slot="1"] .name').click();
       assert.match(
         await p.locator("#modal").textContent(),
-        /Charge 2\/3 · 1 activation\(s\) to fire/,
+        /Charge 2\/2 · 1 activation\(s\) to fire/,
       );
       await p.mouse.move(5, 5);
       await p.screenshot({ path: dir + "/kiln-charge.png" });
       report.checks.push(
-        "One-Fire Kiln shows 2 activations to fire and separate 1/3 current charge; next click is targetless and gives 2/3 with 1 to fire. Conduit costs 1 and grants 2, taking Channel 2 to 3.",
+        "One-Fire Kiln shows 2 activations to fire and separate 1/2 current charge; next click fills to 2/2 without damage, then a separate activation releases. Conduit costs 1 and grants 2, taking Channel 2 to 3.",
       );
     } else {
       assert.match(

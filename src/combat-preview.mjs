@@ -17,7 +17,7 @@ export function attackPreview(b, c, i, enemy, element = c.element) {
     !(f.damage || f.hpDamage) ||
     f.randomDamage ||
     d.stack === "pile" ||
-    (d.charge && c.charge + 1 < d.charge)
+    (d.charge && c.charge < d.charge)
   )
     return null;
   const power = cardPower(b, c, i),

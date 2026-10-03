@@ -702,3 +702,10 @@ Rules1.3.35/content1.1.36; unchanged weighted-druid-v1.12, no training. Five smo
 | 825187 | loss | 19 | 294 | Void fist |
 
 All five lost. These are integration smoke results, not evidence of an optimal policy or a statistically established balance change. Complete traces and source/version snapshots: reports/element-defense-evaluation. The deterministic First Clearing tutorial passed122 decisions at70HP in both headless and packaged graphical verification.
+
+
+## Separate Charge/release — 1.3.80
+
+Rules1.3.43/content1.1.47, weighted-druid-v1.17. Legal actions report charging gain, current/required charges and activations through release; policy amortizes delayed damage over that full cost and avoids charging with insufficient remaining uses. Card-value estimates include the separate release. No learned training.
+
+Five smoke runs825183–825187 completed without invalid decisions or stalls: all losses, rounds20/19/16/8/19 and decisions329/300/211/124/363. Complete traces and source/version snapshots retained in reports/charge-release-evaluation. These are integration checks, not statistical evidence of human difficulty or card balance. The314-test suite and seven packaged UI cases separately verify Kiln/Seed schedules and charging-versus-release behavior.

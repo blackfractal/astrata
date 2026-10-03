@@ -1,6 +1,7 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
 import {
   activationGrowth,
+  chargeSources,
   conduitActive,
   defensiveElement,
   matchingNeighborSlots,
@@ -110,6 +111,15 @@ export function boardConnections(b) {
     if (active && d.effects.growAfterAttack && activationGrowth(b, c, i) > 0)
       for (const j of m.neighbors)
         add(j, i, "benefit", c.element, "Growth after attack");
+    if (active && d.chargeElement && c.charge < d.charge)
+      for (const j of chargeSources(b, c, i))
+        add(
+          j,
+          i,
+          "benefit",
+          d.chargeElement,
+          "Watering: +2 Charge per activation",
+        );
     if (active && d.effects.row && !c.sever)
       for (const [j, other] of b.grid.entries())
         if (

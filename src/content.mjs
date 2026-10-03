@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.42",
-  content: "1.1.46",
+  rules: "1.3.43",
+  content: "1.1.47",
   observation: 1,
   actions: 2,
 };
@@ -183,10 +183,10 @@ card(
   "Fire",
   "Spell",
   2,
-  4,
+  7,
   { damage: 20, burnAll: 2 },
-  "Charge 3: deal 20 to one enemy and apply Burn 2 to all enemies. Charging needs no target; choose an enemy only when firing. On place: +1 Charge per Fire neighbor.",
-  { charge: 3, onPlaceCharge: true },
+  "Charge 2. When fully charged, spend a separate activation to deal 20 damage to one enemy and Burn 2 to all enemies, then reset to 0. On place: +1 Charge per adjacent Fire card, maximum 2.",
+  { charge: 2, onPlaceCharge: true },
 );
 card(
   "cinder",
@@ -365,8 +365,8 @@ card(
   1,
   2,
   hit(14),
-  "Charge 2: deal 14 damage.",
-  { charge: 2 },
+  "Charge 1. When fully charged, spend a separate activation to deal 14 damage, then reset to 0.",
+  { charge: 1 },
 );
 card(
   "prism",
@@ -458,10 +458,10 @@ card(
   "Earth",
   "Spell",
   1,
-  4,
-  { damage: 20 },
-  "Charge 3: deal 20 damage.",
-  { charge: 3 },
+  7,
+  { damage: 16 },
+  "Charge 3. Charging adds 2 instead of 1 while adjacent to any Water card, including an activated Water attunement. When fully charged, spend a separate activation to deal 16 Earth damage, then reset to 0. Excess charges are lost.",
+  { charge: 3, chargeElement: "Water" },
 );
 card(
   "storm",
@@ -578,8 +578,8 @@ card(
   2,
   3,
   { damage: 30, all: true },
-  "Charge 3: deal 30 to all enemies.",
-  { charge: 3, rarity: "legendary" },
+  "Charge 2. When fully charged, spend a separate activation to deal 30 to all enemies, then reset to 0.",
+  { charge: 2, rarity: "legendary" },
 );
 card(
   "square",
@@ -1566,7 +1566,7 @@ export const glossary = {
   Purify:
     "After a full move cycle, an afflicted boss spends its next move clearing all its Burn, Poison and Corrode. Status damage still ticks before this move; then the normal cycle resumes. Purify does not heal HP or advance cycle scaling.",
   Charge:
-    "Builds through paid activations, once per turn unless Blink permits more. Charging needs no enemy target; choose a target only when the effect fires at its threshold. Recall resets Charge.",
+    "Current / required charges, separate from activation allowance. Each charging activation adds 1 unless the card says otherwise, capped at the requirement, and deals no damage. Once full, a separate paid activation releases the effect and resets Charge to 0. Charging is targetless; only a targeted release selects an enemy. Both steps consume an activation and Channel, once per turn unless Blink. Recall resets Charge.",
   Herald: "Defeat to reveal this Stratum’s Archon.",
   Restless: "+1 movement and attack per batch survived.",
   Pierce: "Skips Wards, Shields and Allies. Equipment still protects.",

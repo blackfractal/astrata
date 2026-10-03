@@ -170,7 +170,7 @@ await check(
   async (p) => {
     await activate(p).dblclick({ force: true });
     await settle(p);
-    assert.match(await activate(p).textContent(), /Charge.*2 to fire/);
+    assert.match(await activate(p).textContent(), /Charge 1\/2 · \+1/);
     assert.equal(await p.locator(".resources b").nth(2).textContent(), "9");
     assert.match(await enemy(p).textContent(), /100 \/ 100 HP/);
   },

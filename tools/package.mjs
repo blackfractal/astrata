@@ -53,6 +53,8 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "evaluation",
+  "charge-release-verification.json",
+  "charge-release-evaluation",
   "area-impact-verification.json",
   "reward-layout-verification.json",
   "random-rite-evaluation",
