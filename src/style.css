@@ -2881,11 +2881,86 @@ header {
 }
 
 /* The tutorial keeps the open field; the main Stratum is woodland. */
-.field.weald-field { background-image: url("../assets/location-weald-topdown.png"); }
+.field.weald-field {
+  background-image: url("../assets/location-weald-topdown.png");
+}
 
-.gear-shield-bonus { color: #e6cc80; font-weight: 800; white-space: nowrap; }
-.gear-power-sphere { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, #fffbe0 10%, #eed38c 40%, #b6914580 70%); box-shadow: 0 0 18px #f5da91; }
-.target-elements button.target-selected { outline: 2px solid #e6cc80; }
+.gear-shield-bonus {
+  color: #e6cc80;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.gear-power-sphere {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbe0 10%, #eed38c 40%, #b6914580 70%);
+  box-shadow: 0 0 18px #f5da91;
+}
+.target-elements button.target-selected {
+  outline: 2px solid #e6cc80;
+}
 
 /* Loss appears centered above the held attack orb, then reveals its remainder. */
-.impact-number.attack-impact-number { z-index: 67; animation: none; }
+.impact-number.attack-impact-number {
+  z-index: 67;
+  animation: none;
+}
+
+/* Reward previews share a silhouette; the detail popup retains the complete text. */
+.reward-catalog {
+  align-items: flex-start;
+  gap: 24px;
+}
+.reward-option {
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.reward-catalog .card {
+  width: 210px;
+  height: 340px;
+  min-height: 340px;
+  overflow: hidden;
+}
+.reward-catalog .card img {
+  height: 140px;
+  flex: 0 0 140px;
+}
+.reward-catalog .card .body {
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+}
+.reward-catalog .card h4 {
+  margin: 3px 0 5px;
+  min-height: 38.4px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.reward-catalog .card .text {
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.reward-catalog .card .meta {
+  margin-top: auto;
+  padding-top: 9px;
+}
+.reward-choice {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+.reward-choice button {
+  text-align: center;
+}

@@ -458,7 +458,7 @@ function render(frame = null) {
             : o.reward.setting
               ? "A Setting for the journey"
               : "The way is clear";
-    body = `<div class="layout"><section><div class="eyebrow">${o.mode === "reward" ? "Victory" : "Discovery"}</div><h2 style="margin:8px 0 28px">${title}</h2>${pausedPickup ? `<p class="tutorial-movement"><b>${o.field.moves} movement remaining</b> · The unused point was forfeited on arrival.</p>` : ""}<div class="catalog">${offers
+    body = `<div class="layout"><section><div class="eyebrow">${o.mode === "reward" ? "Victory" : "Discovery"}</div><h2 style="margin:8px 0 28px">${title}</h2>${pausedPickup ? `<p class="tutorial-movement"><b>${o.field.moves} movement remaining</b> · The unused point was forfeited on arrival.</p>` : ""}<div class="catalog reward-catalog">${offers
       .filter((a) => a.id || a.type === "takeItem")
       .map((a) => {
         const id =
@@ -469,7 +469,7 @@ function render(frame = null) {
           isCard =
             a.type === "rewardCard" ||
             (a.type === "takeItem" && o.itemOffer[a.index].startsWith("card:"));
-        return `<div>${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div style="margin-top:12px">${pausedPickup ? "<button disabled>Continue the lesson to collect</button>" : actionButton(a, "primary")}</div></div>`;
+        return `<div class="reward-option">${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div class="reward-choice">${pausedPickup ? "<button disabled>Continue the lesson to collect</button>" : actionButton(a, "primary")}</div></div>`;
       })
       .join("")}</div><div class="row" style="margin-top:30px">${actions
       .filter((a) =>
