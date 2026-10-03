@@ -24243,5 +24243,32 @@
     ],
     "generatedAt": "2026-10-03",
     "sourceNote": "Style matched to existing Beetle and Imp art; replaces framed cartoon leech. Original revisions retained."
+  },
+  {
+    "id": "card-bastion",
+    "name": "Heartwood Bastion",
+    "revision": 1,
+    "provider": "built-in image_gen",
+    "machine": "OpenAI image generation tool",
+    "model": "Not exposed by tool",
+    "seed": null,
+    "prompt": "Use case: stylized-concept. Create one square full-bleed game-card illustration for Heartwood Bastion, a legendary Earth Ward in Astrata. The three input images are style references only: match their painterly dark fantasy forest, broad angular brushwork, muted jade/olive greens, amber light and atmospheric depth. Subject: a magnificent ancient hollow oak grown into a protective living bastion, massive interwoven roots forming a broad fortified arch and layered wooden ramparts, a warm amber heartwood glow illuminating a sheltered interior. It should read as a defensive magical structure rather than a humanoid or a conventional stone castle. Centered imposing silhouette clearly readable at small card size, lush moss and ferns, distant misty forest behind, subtle golden magical ward light threaded through the roots. No people, no creatures, no text, no card frame, no border, no watermark, no photorealism or 3D rendering. Keep a strong subject contrast and match the visual language of the referenced Ward, Living Lattice, and Grove Titan art.",
+    "references": [
+      "assets/card-ward.png",
+      "assets/card-lattice.png",
+      "assets/card-grove.png"
+    ],
+    "workflow": {
+      "tool": "image_gen.imagegen",
+      "transparent_background": false
+    },
+    "file": "assets/card-bastion.png",
+    "sha256": "233e0d0c414be89772c13ed74a7863dde91eabf805a86549af21e956aac4f061",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "generatedAt": "2026-10-03",
+    "sourceNote": "New legendary Ward; third distinct boss-reward option. Style matched to existing forest card art."
   }
 ]

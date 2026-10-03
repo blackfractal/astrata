@@ -82,6 +82,7 @@ test("Blink permits paid repeats while respecting allowance and Channel", () => 
 });
 test("stack-triggered cards each consume their own per-turn opportunity", () => {
   const { g, b, c } = setup("plasma");
+  b.enemies[0].element = "Arcane"; // Keep this per-turn fixture free of Colossus summons.
   const lower = g.instance(g.newCard("plasma"));
   b.grid[0].unshift(lower);
   g.act(action(g));

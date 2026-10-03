@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.43",
-  content: "1.1.47",
+  rules: "1.3.44",
+  content: "1.1.48",
   observation: 1,
   actions: 2,
 };
@@ -569,6 +569,17 @@ card(
   { hpDamage: true },
   "20 HP. Deal current HP as damage. +1 HP per neighbor each turn.",
   { hp: 20, growth: true, rarity: "legendary" },
+);
+card(
+  "bastion",
+  "Heartwood Bastion",
+  "Earth",
+  "Ward",
+  2,
+  3,
+  { ward: 18 },
+  "Starts with 0 ward value. Activate: +18 ward value. No isolation required. Tower.",
+  { ward: 0, tower: true, rarity: "legendary" },
 );
 card(
   "eclipse",

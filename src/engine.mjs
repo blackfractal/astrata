@@ -455,6 +455,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.43",
           "1.3.42",
           "1.3.40",
           "1.3.41",
@@ -625,6 +626,13 @@ export class Game {
   normalizeRewards() {
     const s = this.s;
     if (s.reward?.cards) {
+      if (
+        s.reward.boss &&
+        (s.reward.cards.length !== 3 ||
+          new Set(s.reward.cards).size !== 3 ||
+          s.reward.cards.some((id) => cards[id]?.rarity !== "legendary"))
+      )
+        s.reward.cards = this.legendaryOffer();
       s.reward.cards = [...s.reward.cards];
       for (let i = 0; i < s.reward.cards.length; i++) {
         const id = s.reward.cards[i];
@@ -798,6 +806,12 @@ export class Game {
         !["surge"].includes(c.id) &&
         (!reward || !["blast", "shield"].includes(c.id)),
     );
+  }
+  legendaryOffer() {
+    const pool = this.pool("legendary", true).map((c) => c.id);
+    if (pool.length < 3)
+      throw Error("Boss rewards require at least three legendary cards.");
+    return this.shuffle(pool).slice(0, 3);
   }
   rareOffer(count = 1, reward = true) {
     const pool = this.pool("rare", reward),
@@ -2292,7 +2306,7 @@ export class Game {
       s.status = blankStatus();
       s.mode = "reward";
       s.reward = {
-        cards: boss ? this.rareOffer(3, true) : this.offer(elite || skittish),
+        cards: boss ? this.legendaryOffer() : this.offer(elite || skittish),
         boss,
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
         setting: boss,
@@ -2300,7 +2314,11 @@ export class Game {
       this.normalizeRewards();
       if (tutorialReward(this)) return;
       delete s.checkpoint;
-      this.log("Victory. Choose a card or skip.");
+      this.log(
+        boss
+          ? "Victory. Choose one legendary card."
+          : "Victory. Choose a card or skip.",
+      );
     }
   }
   finish(win, cause = "", hit = null) {
@@ -2513,7 +2531,7 @@ export class Game {
       if (s.reward.cards) {
         for (const id of s.reward.cards)
           add("rewardCard", "Take " + cards[id].name, { id }, { card: id });
-        add("skipReward", "Skip card");
+        if (!s.reward.boss) add("skipReward", "Skip card");
       } else if (s.reward.gem) {
         for (const id of [s.reward.gem])
           add(

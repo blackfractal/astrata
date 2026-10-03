@@ -173,6 +173,7 @@ for (const name of [
   "polish-playthrough.json",
   "gui-verification.json",
   "manual-controls-verification.json",
+  "legendary-rewards-verification.json",
   "content-audit.json",
   "art-manifest.json",
   "asset-selections.json",

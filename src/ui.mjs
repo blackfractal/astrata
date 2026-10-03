@@ -452,7 +452,9 @@ function render(frame = null) {
       o.mode === "item"
         ? "Something left behind"
         : o.reward.cards
-          ? "The spoils of victory"
+          ? o.reward.boss
+            ? "Choose one legendary card"
+            : "The spoils of victory"
           : o.reward.gem
             ? "A glimmer to keep"
             : o.reward.setting

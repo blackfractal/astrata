@@ -55,7 +55,7 @@ test("victory rolls one Gem and one Setting while retaining choose-one card rewa
   assert.equal(g.s.reward.cards.length, 3);
   assert.equal(typeof g.s.reward.gem, "string");
   assert.equal(typeof g.s.reward.setting, "string");
-  g.act(g.legal().find((a) => a.type === "skipReward"));
+  g.act(g.legal().find((a) => a.type === "rewardCard"));
   assert.equal(g.legal().length, 1);
   assert.equal(g.legal()[0].type, "rewardGem");
   g.act(g.legal()[0]);

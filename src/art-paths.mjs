@@ -46,6 +46,7 @@ export const artPaths = {
   "card-tide": "assets/card-tide-v3.png",
   "card-sun": "assets/card-sun-v3.png",
   "card-grove": "assets/card-grove.png",
+  "card-bastion": "assets/card-bastion.png",
   "card-eclipse": "assets/card-eclipse-v3.png",
   "card-square": "assets/card-square-v3.png",
   "card-clean": "assets/card-clean-v3.png",
