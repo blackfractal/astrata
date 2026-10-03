@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.36",
-  content: "1.1.37",
+  rules: "1.3.37",
+  content: "1.1.38",
   observation: 1,
   actions: 2,
 };
@@ -827,7 +827,7 @@ for (const element of ["Fire", "Water", "Earth", "Wind"])
     "torso",
     { armor: 2 },
     65,
-    `Choose this Armor once per incoming hit: prevent 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Free to use or skip. Does not reduce ongoing status damage or supply card attunement.`,
+    `Armor holds 2 block each enemy round: up to 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Block drains across hits and refills each enemy turn. Free to use or skip. Does not reduce ongoing status damage or supply card attunement.`,
     { element },
   );
 item(
@@ -844,7 +844,7 @@ item(
   "torso",
   { armor: 1 },
   60,
-  "Choose once per incoming hit to prevent 1 damage. Free to use or skip; ongoing status damage bypasses Armor.",
+  "Holds 1 block, draining across hits and refilling each enemy turn. Free to use or skip; ongoing status damage bypasses Armor.",
 );
 item(
   "quickArmor",
@@ -901,7 +901,7 @@ item(
   "torso",
   { armor: 2, corrode: 1 },
   90,
-  "Cursed: forced equip. Choose once per incoming hit to prevent 2 damage, or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
+  "Cursed: forced equip. Holds 2 block, draining across hits and refilling each enemy turn; use or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
   { cursed: true },
 );
 item(
@@ -1596,7 +1596,7 @@ export const glossary = {
   Block:
     "Temporary defense from Shields or Bracelets. Elemental block gains +50% against the element it beats, loses 50% against its weakness, rounded up; same element and Arcane are neutral. Shield block expires after the enemy turn; Bracelet block refills each enemy turn.",
   Armor:
-    "Select an Armor icon to protect once per incoming hit, without Channel, or click the Druid to skip unused defenses. Armor shares the equipment position with Bracelets; using equipment passes grid defenses. Elemental protection: 3 favorable, 1 weak, 2 neutral. Ongoing status damage bypasses it. Healing/movement effects remain passive.",
+    "Select an Armor icon to spend its remaining block without Channel, or click the Druid to skip unused defenses. Numeric Armor block drains across hits and refills at each enemy turn, like Bracelets. Mirror reflects once per battle. Armor shares the equipment position with Bracelets; using equipment passes grid defenses. Elemental protection: 3 favorable, 1 weak, 2 neutral. Ongoing status damage bypasses it. Healing/movement effects remain passive.",
   Hex: "A harmful card in your Grimoire. Its printed text explains when it applies. Tavern Hex treatment is separate from ordinary card removal.",
   Curse:
     "A harmful item effect. Cursed equipment may be forced into a slot and cannot be freely removed; its treatment has a printed cost.",

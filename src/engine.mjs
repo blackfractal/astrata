@@ -382,6 +382,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.36",
           "1.3.35",
           "1.3.34",
           "1.3.33",
@@ -430,6 +431,13 @@ export class Game {
       normalizeMindGrid(this.s);
       normalizeEnemyImmunities(this.s);
       this.s.version = VERSION;
+      if (this.s.battle) {
+        // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
+        // otherwise initialize once, then future saves retain the exact remainder.
+        this.s.battle.armorBlock ??= this.s.battle.reaction?.armorUsed
+          ? 0
+          : this.armorCapacity();
+      }
       for (const c of this.s.battle?.grid?.flat() || [])
         if (cards[c.id].type === "Ally" && c.maxHp == null)
           c.maxHp = Math.max(
@@ -1097,6 +1105,7 @@ export class Game {
       next: { focus: 0, insight: 0 },
       shields: [],
       bracelets: [],
+      armorBlock: this.armorCapacity(),
       jobs: [],
       reaction: null,
       relief: 0,
@@ -1342,6 +1351,12 @@ export class Game {
         : 0);
     return t;
   }
+  armorCapacity() {
+    return (
+      this.equipped().find((x) => x.slot === "torso")?.definition.effect
+        .armor || 0
+    );
+  }
   endTurn() {
     const b = this.s.battle;
     b.discard.push(...b.hand);
@@ -1359,6 +1374,7 @@ export class Game {
     b.phase = "enemy";
     this.refillResources();
     this.present("resources", { name: "Resources refreshed" });
+    b.armorBlock = this.armorCapacity();
     b.bracelets = this.equipped()
       .filter((x) => x.definition.effect.block)
       .map((x) => ({
@@ -1592,8 +1608,7 @@ export class Game {
         .filter(
           (x) =>
             x.slot === "torso" &&
-            !h.armorUsed &&
-            (x.definition.effect.armor > 0 ||
+            ((x.definition.effect.armor > 0 && b.armorBlock > 0) ||
               (x.definition.effect.reflect && !b.mirror)),
         )
         .map((x) => ({
@@ -1601,8 +1616,7 @@ export class Game {
           name: x.definition.name,
           element: x.element,
           protection: Math.ceil(
-            (x.definition.effect.armor || 0) *
-              defenseRate(x.element, h.element),
+            b.armorBlock * defenseRate(x.element, h.element),
           ),
           reflect: !!x.definition.effect.reflect && !b.mirror,
         })),
@@ -3037,12 +3051,15 @@ export class Game {
       case "armor": {
         const h = b.reaction;
         const armor = this.defenseChoices().armors.find((x) => x.uid === a.uid);
-        h.armorUsed = true;
+        let loss;
         h.weaknessBonus = 0;
         h.weaknessElement = null;
-        const stopped = armor.reflect
-          ? h.damage
-          : Math.min(h.damage, armor.protection);
+        const result = armor.reflect
+          ? { remaining: 0, block: b.armorBlock }
+          : blockHit(b.armorBlock, armor.element, h.damage, h.element);
+        const stopped = h.damage - result.remaining;
+        loss = armor.reflect ? stopped : b.armorBlock - result.block;
+        b.armorBlock = result.block;
         if (armor.reflect) {
           b.mirror = true;
           const enemy = b.enemies.find((e) => e.uid === h.source);
@@ -3057,7 +3074,7 @@ export class Game {
           {
             item: a.uid,
             amount: stopped,
-            loss: stopped,
+            loss,
             name: armor.reflect ? "Reflected" : "Armor protects",
           },
           { kind: "item", uid: a.uid },

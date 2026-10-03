@@ -1,3 +1,9 @@
+# Draining Armor — package1.3.67
+
+Rules1.3.37/content1.1.38; policy weighted-druid-v1.13 unchanged. All279 tests and ten packaged defense-controls scenarios pass, including a multi-hit volley and visible loss-over-orb check. Five unattended runs825183–825187 finish without errors: all losses, rounds11/19/20/13/11, decisions204/336/245/220/125. These match the preceding smoke outcomes; they do not establish balance significance or guarantee Armor coverage in each trajectory. Targeted tests cover the changed rule directly. No training. Full versioned traces in reports/armor-pool-evaluation. Earlier tutorial evidence belongs to1.3.66; tutorial content did not change.
+
+---
+
 # Optional Armor and prepared attunement — package1.3.66
 
 Rules1.3.36/content1.1.37/actions2/tutorial6; weighted-druid-v1.13 adds optional Armor scoring and makes skip-all account for unreduced incoming damage. No training performed. All276 unit tests pass; packaged interaction, elemental defense, double-click and full122-decision tutorial checks pass. Headless tutorial completes at70HP. The normal player save was not used or modified.

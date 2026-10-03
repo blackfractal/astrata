@@ -121,7 +121,10 @@ export function arrangeBattle(ctx) {
         }
       };
     }
-    const bracelet = o.battle.bracelets.find((b) => b.uid === uid);
+    const bracelet =
+      slot.dataset.equipSlot === "torso" && def?.effect.armor
+        ? { block: o.battle.armorBlock }
+        : o.battle.bracelets.find((b) => b.uid === uid);
     slot.classList.toggle("defense-empty", !!bracelet && bracelet.block <= 0);
     slot.classList.toggle(
       "attack-ready",

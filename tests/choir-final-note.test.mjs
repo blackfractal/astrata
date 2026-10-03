@@ -93,6 +93,7 @@ test("Cull skips intact Wards and Shields, permits Ally/equipment defense, and r
   ];
   b.bracelets = [{ uid: 911, block: 1, element: "Arcane", name: "Bracelet" }];
   g.s.equipment.torso = g.addItem("stoneArmor").uid;
+  b.armorBlock = 1; // Controlled fixture equips after battle setup.
   const hp = g.s.hp,
     gold = g.s.gold;
   act(g, "activate");

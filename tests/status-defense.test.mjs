@@ -62,14 +62,15 @@ for (const status of ["burn", "poison", "corrode"])
     assert.equal(frame.amount, 3);
     assert.equal(frame.armor, undefined);
   });
-test("Husk subtracts two from every enemy attack, rather than negating two attacks", () => {
+test("Husk has only two total block across enemy attacks before its next refill", () => {
   const g = base(),
     hp = g.s.hp;
   hit(g, 6);
   hit(g, 6);
   hit(g, 6);
   hit(g, 1);
-  assert.equal(g.s.hp, hp - 12);
+  assert.equal(g.s.hp, hp - 17);
+  assert.equal(g.s.battle.armorBlock, 0);
 });
 test("Bracelet block can precede selected armor for enemy attacks", () => {
   const g = base(),

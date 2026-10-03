@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.66", checks: [], errors: [] };
+const report = { package: "1.3.67", checks: [], errors: [] };
 await fs.mkdir("reports/screenshots/defense-controls", { recursive: true });
 function fixture(id = "shield", neighbors = 2) {
   const g = new Game(12);
@@ -241,7 +241,7 @@ await check(
     await settle();
     let s = await state();
     assert.equal(s.battle.reaction.damage, 7);
-    assert.equal(s.battle.reaction.armorUsed, true);
+    assert.equal(s.battle.armorBlock, 0);
     assert.ok(!(await el.getAttribute("class")).includes("block-available"));
     await p
       .locator(`.battle-player [data-item-uid="${s.equipment.wrist2}"]`)
@@ -261,6 +261,65 @@ await check(
     assert.equal(s.hp, 60);
     assert.equal(s.battle.bracelets[0].block, 2);
   },
+);
+const volley = structuredClone(armor.s);
+volley.battle.jobs = [
+  {
+    kind: "hit",
+    damage: 10,
+    element: "Earth",
+    source: 900,
+    name: "Second strike",
+  },
+];
+await check(
+  "Armor drains across the volley; loss is centered above the held orb",
+  { s: volley },
+  async (p, state, settle) => {
+    const uid = (await state()).equipment.torso;
+    await p.locator(`.battle-player [data-item-uid="${uid}"]`).click();
+    const tag = p.locator(".attack-impact-number");
+    await tag.waitFor();
+    const geometry = await tag.evaluate((el) => {
+      const orb = document.querySelector(".held-attack.attack-orb-overlay"),
+        a = el.getBoundingClientRect(),
+        b = orb.getBoundingClientRect();
+      return {
+        above: +getComputedStyle(el).zIndex > +getComputedStyle(orb).zIndex,
+        dx: Math.abs(a.x + a.width / 2 - b.x - b.width / 2),
+        dy: Math.abs(a.y + a.height / 2 - b.y - b.height / 2),
+        text: el.textContent,
+      };
+    });
+    assert.equal(geometry.above, true);
+    assert.ok(geometry.dx < 2 && geometry.dy < 2);
+    assert.equal(geometry.text, "−2");
+    await p.screenshot({
+      path: "reports/screenshots/defense-controls/armor-impact.png",
+    });
+    await settle();
+    assert.equal((await state()).battle.armorBlock, 0);
+    assert.match(
+      await p
+        .locator(`.battle-player [data-item-uid="${uid}"] .block-left`)
+        .textContent(),
+      /0 block/,
+    );
+    await p.locator(".battle-player .player-portrait").click();
+    await settle();
+    assert.equal((await state()).battle.reaction.damage, 10);
+    assert.ok(
+      !(
+        await p
+          .locator(`.battle-player [data-item-uid="${uid}"]`)
+          .getAttribute("class")
+      ).includes("block-available"),
+    );
+    await p.locator(".battle-player .player-portrait").click();
+    await settle();
+    assert.equal((await state()).hp, 53);
+  },
+  false,
 );
 assert.deepEqual(report.errors, []);
 await fs.writeFile(

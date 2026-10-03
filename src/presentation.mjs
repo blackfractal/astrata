@@ -201,7 +201,7 @@ export async function playFrames(before, frames, after, render, isFast) {
       ? spellImpact(el, element, { duration: ms(500), reduced })
       : null;
     el?.classList.add("impact");
-    const tag = floating(el, label);
+    const tag = floating(el, label, attack ? "attack-impact-number" : "");
     if (tag && Object.values(statusVisual).includes(element)) {
       tag.classList.add("status-impact-number");
       tag.style.top = parseFloat(tag.style.top) - 55 + "px";

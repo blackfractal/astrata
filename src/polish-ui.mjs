@@ -651,7 +651,10 @@ function gearMarkup(ctx, editable = false) {
       const x = o.inventory.find((x) => x.uid === uid),
         d = items[x?.id],
         g = x && o.inventory.find((g) => g.uid === x.gem),
-        block = o.battle?.bracelets.find((b) => b.uid === uid);
+        block =
+          o.battle && slot === "torso" && d?.effect.armor
+            ? { block: o.battle.armorBlock }
+            : o.battle?.bracelets.find((b) => b.uid === uid);
       const canDefend = legal.some(
         (a) => ["bracelet", "armor"].includes(a.type) && a.uid === uid,
       );

@@ -115,6 +115,7 @@ test("leftover bonus is discarded before equipment, while Bracelet and Armor sti
   const g = setup([["Earth", 2]]);
   g.addItem("fireArmor");
   g.s.equipment.torso = g.s.inventory.at(-1).uid;
+  g.s.battle.armorBlock = 2; // Controlled fixture equips after battle setup.
   g.s.battle.bracelets = [
     { uid: 1000, block: 2, element: "Arcane", name: "Test Bracelet" },
   ];

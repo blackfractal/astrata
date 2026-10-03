@@ -976,3 +976,18 @@ All276 unit tests pass, including new Armor ordering/refresh/save, optional refl
 Five versioned AI smoke runs825183–825187 complete without invalid decisions or errors, all losses: rounds11/19/20/13/11, decisions204/336/245/220/125. Policy now evaluates optional Armor and skip-all damage; no training or claim of balance significance. Full traces/source versions in reports/defense-controls-evaluation; tutorial trace separately archived. Historical evaluations preserved.
 
 Additional implementation, verification, documentation and packaging time: approximately20 minutes. Runnable release and CRC-verified ZIP refreshed. Jonathan's running app and real save profile untouched; restart to load changes. Local commit only; nothing pushed.
+
+
+## Post-build polish — Draining Armor and orb loss layering, round 72
+
+2026-10-02. Jonathan observed Armor blocking two hits at full power in one Glass Choir attack and requested it drain like Bracelets, plus the loss number appearing over the held energy ball. Package1.3.67/rules1.3.37/content1.1.38/design4.109. Actions2/tutorial6/policy weighted-druid-v1.13 unchanged.
+
+Numeric Armor now holds its printed base block in battle. It drains across every hit/enemy and refills only at the start of each enemy turn, using the same elemental conversion and leftover rounding as Bracelets. Partial block persists, skipping and ongoing statuses do not consume it, and empty Armor is unavailable. Equipment shows remaining block and depleted styling. Mirror remains optional once per battle; passive healing/movement remain unchanged. Legacy1.3.36 saves initialize a pool once, using zero if the current hit records Armor already spent; older rounds cannot be reconstructed because prior saves never stored a pool. New saves preserve the exact remainder. Numeric popups show actual base block spent, as with Bracelets (e.g.2 Fire block may stop3 Earth damage).
+
+Attack-path loss numbers are centered above the orb at z-index67 (orb66), without the upward drift. They appear with impact, then disappear to reveal the persistent remaining-damage orb. Applies to cards, equipment and player, including reduced motion. Other floating/status numbers retain their behavior. Item and hover descriptions and main design updated; previous per-hit refresh is explicitly superseded.
+
+All279 tests pass. Coverage includes partial block, multiple hits/enemies, refill, saved remainder, legacy initialization, status bypass and existing reflection/death-attack behavior. Updated controlled fixtures that equipped Armor after battle setup to initialize its pool, and the old Husk per-hit expectation. Ten packaged defense-controls scenarios pass with no renderer errors. New actual-animation check asserts loss/orb centers and stacking, zero-block label, unavailable Armor on second hit, and final HP; screenshot reviewed. Prior attunement/helmet controls regressions also pass.
+
+Five headless smoke games825183–825187 complete without errors, all losses, matching preceding outcomes/rounds/decision counts11/19/20/13/11 and204/336/245/220/125. Full traces/source metadata in reports/armor-pool-evaluation. No training or statistical balance conclusion. Full tutorial not rerun for this focused change; preceding1.3.66 tutorial evidence retained as historical.
+
+Additional implementation, verification, documentation and packaging time: approximately7 minutes. Release executable and CRC-verified ZIP refreshed. Jonathan's running app and save profile untouched. Local commit only, nothing pushed.

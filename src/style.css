@@ -2886,3 +2886,6 @@ header {
 .gear-shield-bonus { color: #e6cc80; font-weight: 800; white-space: nowrap; }
 .gear-power-sphere { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle, #fffbe0 10%, #eed38c 40%, #b6914580 70%); box-shadow: 0 0 18px #f5da91; }
 .target-elements button.target-selected { outline: 2px solid #e6cc80; }
+
+/* Loss appears centered above the held attack orb, then reveals its remainder. */
+.impact-number.attack-impact-number { z-index: 67; animation: none; }
