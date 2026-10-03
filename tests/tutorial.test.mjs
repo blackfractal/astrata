@@ -32,15 +32,15 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
   assert.equal(checkpoints["focus-empty"].battle.focus, 0);
   assert.equal(checkpoints["shield-expiry"].battle.shields.length, 0);
   assert.equal(checkpoints["bracelet-block1"].battle.reaction.damage, 1);
-  assert.equal(checkpoints["ward-persists"].battle.grid[16][0].ward, 7);
+  assert.equal(checkpoints["ward-persists"].battle.grid[18][0].ward, 7);
   assert.deepEqual(
-    ["route-ally", "route-block", "route-ward", "route-bracelet"].map(
+    ["route-block", "route-ally", "route-ward", "route-bracelet"].map(
       (k) => checkpoints[k].battle.reaction.damage,
     ),
-    [30, 26, 22, 15],
+    [30, 26, 19, 12],
   );
-  assert.equal(checkpoints["route-done"].hp, 57);
-  assert.equal(checkpoints["cycle"].hp, 56);
+  assert.equal(checkpoints["route-done"].hp, 59);
+  assert.equal(checkpoints["cycle"].hp, 58);
   assert.equal(g.s.hp, 70);
   assert.equal(
     g.s.inventory.find((x) => x.id === "bronze").gem,
@@ -74,6 +74,11 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
   );
   const chase = checkpoints["caught"];
   assert.equal(chase.battle.enemies[0].id, "tutorialRootling");
+  assert.equal(chase.battle.turn, 0);
+  assert.equal(chase.battle.hand.length, 0);
+  assert.equal(chase.battle.reaction.damage, 3);
+  assert.equal(checkpoints["ward-place"].hp, 69);
+  assert.equal(checkpoints["route"].battle.grid[19][0].hp, 7);
   assert.deepEqual([chase.field.x, chase.field.y], [10, 3]);
 });
 test("Exact-step save/resume works at every guided decision and preserves legal choices without checkpoint nesting", () => {

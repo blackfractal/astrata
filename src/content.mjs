@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.45",
-  content: "1.1.50",
+  rules: "1.3.46",
+  content: "1.1.51",
   observation: 1,
   actions: 2,
 };
@@ -1369,16 +1369,17 @@ enemy(
   "Rootling",
   "Mote",
   "Arcane",
-  18,
+  19,
   "Stalker",
   [
+    attack("Root Tap", 3, "Arcane"),
     attack("Root Tap", 3, "Arcane"),
     effect("Gathering Strength", {}),
     attack("Heavy Bough", 30, "Arcane"),
     effect("Recover", {}),
   ],
   "Gathers strength before a 30-damage blow, then rests.",
-  "Build a right-to-left route through Ally, Shield, Ward and Bracelet.",
+  "Build a right-to-left route through Shield, Ally, Ward and Bracelet.",
   { tutorialOnly: true, speed: 2 },
 );
 enemy(
@@ -1402,11 +1403,11 @@ enemy(
   "Sentinel",
   [
     effect("Patient Vigil", {}),
-    attack("Measured Tap", 5, "Arcane"),
+    attack("Measured Tap", 12, "Arcane"),
     effect("Lowered Staff", {}),
   ],
-  "Pauses, makes one modest attack, then rests. Attacks slowly strengthen each cycle.",
-  "Use its pauses to place cards; Shield and Bracelet answer its attack.",
+  "Pauses, attacks for 12, then rests. Attacks slowly strengthen each cycle.",
+  "Use its pauses to place cards; combine Shields, Wards, Allies and equipment to answer its attack.",
   { tutorialOnly: true },
 );
 

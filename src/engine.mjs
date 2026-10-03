@@ -456,6 +456,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.45",
           "1.3.44",
           "1.3.43",
           "1.3.42",
@@ -534,6 +535,30 @@ export class Game {
       ) {
         this.s.battle.revealInsight ??= this.s.battle.insight;
         this.s.battle.insight = 0;
+      }
+      if (this.s.tutorial?.restartRootling) {
+        delete this.s.tutorial.restartRootling;
+        const encounter = this.s.stats.encounters.at(-1);
+        if (encounter?.outcome === "in progress") {
+          this.s.hp = encounter.hpStart;
+          this.s.stats.encounters.pop();
+        }
+        const e = this.s.battle.enemies.find(
+          (e) => e.id === "tutorialRootling",
+        );
+        this.beginBattle(
+          [
+            {
+              uid: e.entityUid || e.uid,
+              enemy: "tutorialRootling",
+              restless: 0,
+            },
+          ],
+          { enemyFirst: true },
+        );
+        this.log(
+          "Tutorial updated: replaying the Rootling lesson with enemy-first movement and the new formation.",
+        );
       }
       this.normalizeRewards();
       this.normalizeSpawns();
@@ -1007,9 +1032,10 @@ export class Game {
     }
     this.resolveTile();
   }
-  resolveTile() {
+  resolveTile(enemyFirst = false) {
     if (this.s.pendingArmor) {
       this.s.pendingTile = true;
+      this.s.pendingEnemyFirst ||= enemyFirst;
       return;
     }
     const s = this.s,
@@ -1017,7 +1043,9 @@ export class Game {
       here = f.entities.filter((e) => e.x === f.x && e.y === f.y),
       foes = here.filter((e) => e.enemy);
     if (foes.length) {
-      this.beginBattle(foes);
+      enemyFirst ||= !!s.pendingEnemyFirst;
+      delete s.pendingEnemyFirst;
+      this.beginBattle(foes, { enemyFirst });
       return;
     }
     const e = here[0];
@@ -1148,7 +1176,7 @@ export class Game {
           (x) => Math.sign(f.y - x.y) * (type === "Skittish" ? -1 : 1),
         );
     }
-    this.resolveTile();
+    this.resolveTile(reaching.size > 0);
   }
   instance(c) {
     const d = cards[c.id];
@@ -1171,13 +1199,14 @@ export class Game {
       status: blankStatus(),
     });
   }
-  beginBattle(entities) {
+  beginBattle(entities, { enemyFirst = false } = {}) {
     tutorialBattle(this, entities);
     const s = this.s;
     delete s.checkpoint;
     s.mode = "battle";
     s.battle = {
       turn: 0,
+      enemyFirst,
       phase: "place",
       columns: MIND_COLUMNS,
       rows: MIND_ROWS,
@@ -1261,9 +1290,16 @@ export class Game {
       outcome: "in progress",
       hpStart: s.hp,
     });
-    this.beginTurn(openingStatuses);
+    if (enemyFirst) {
+      this.log(
+        "Caught during enemy movement: enemies act before your first Reveal.",
+      );
+      for (const detail of openingStatuses) this.present("status", detail);
+      this.endTurn();
+    } else this.beginTurn(openingStatuses);
     tutorialBattleReady(this);
-    if (!s.tutorial) s.checkpoint = clone({ ...s, checkpoint: undefined });
+    if (!s.tutorial && s.mode === "battle")
+      s.checkpoint = clone({ ...s, checkpoint: undefined });
   }
   neighbors(i) {
     return gridNeighbors(this.s.battle, i);

@@ -51,7 +51,9 @@ test("a Restless Bat stops at first contact while subsequent enemies finish befo
   const moves = g.presentation.filter((e) => e.kind === "move");
   assert.equal(moves.filter((e) => e.uid === 900).length, 1);
   assert.ok(moves.every((e) => e.state.mode === "field"));
-  assert.equal(g.presentation.at(-1).kind, "reveal");
+  assert.equal(g.presentation.at(-1).kind, "incoming");
+  assert.equal(g.s.battle.turn, 0);
+  assert.equal(g.s.battle.enemyFirst, true);
   assert.equal(moves.at(-1).uid, 902);
   assert.ok(
     moves.slice(1).every((frame) => {

@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 6,
+  version: 7,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -79,7 +79,7 @@ move("gold-move", 6, 5, "Click the glowing east arrow to move onto the Gold.");
 note(
   "gold-gained",
   "Gold collected",
-  "Your Gold increased by 200. These coins will pay for the Tavern lessons later. Ordinary journeys offer smaller, variable caches.",
+  "Your Gold increased by 200. These coins will pay for Tavern upgrades later. Gold left on the Field depletes over time, so collect it quickly! Ordinary journeys offer smaller, variable caches.",
   "header .gold",
   "ring",
 );
@@ -153,7 +153,7 @@ phase("first-phase");
 note(
   "tell3",
   "Read the Tell",
-  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 block for this turn. Channel starts at 2.",
+  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 block for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the card’s activation limit is its total uses across rounds before Recall or the next battle restores it.",
   ".enemy .tell, .resources > span:nth-child(3)",
 );
 activate(
@@ -189,7 +189,7 @@ activate(
 activate(
   "first-blast",
   22,
-  "Attack by dragging Blast onto Mosswing, or double-click its Activate button to hit the top enemy. Blast deals 4; your Ring adds a separate 2.",
+  "You began with 2 Channel. The Shield used 1, leaving 1 to activate Blast. Drag Blast onto Mosswing, or double-click its Activate button to hit the top enemy. Blast deals 4; your Ring adds a separate 2.",
 );
 end("second-enemy");
 defend(
@@ -256,40 +256,46 @@ move(
 note(
   "caught",
   "Enemies move too",
-  "The Rootling moved onto your space and started a battle. On ordinary maps, inspect enemy movement and age before deciding where to go.",
+  "The Rootling landed on you during enemy movement, so it acts first, before you reveal or place any cards. Your Bracelet can still defend. Moving onto an enemy yourself lets you take the first turn.",
   ".enemy",
+);
+defend(
+  "ambush-bracelet",
+  "bracelet",
+  null,
+  "Use your Bracelet against the Rootling’s opening 3-damage attack. It absorbs 2; the remaining 1 reaches you. Then your first Reveal begins.",
 );
 place(
   "ward-place",
   "ward",
-  16,
+  18,
   "Place Ward in the marked space nearer to you. It starts with 0 block and cannot defend until activated. Isolated means it needs empty neighboring spaces to activate.",
 );
 phase("ward-phase");
 activate(
   "ward-activate",
-  16,
+  18,
   "Activate Ward to gain 10 block: it now stores 10. Unlike Shield, that stock will persist across rounds.",
 );
 end("ward-enemy");
-defend("ward-block", "ward", 16, "Choose Ward to absorb the 3-damage attack.");
+defend("ward-block", "ward", 18, "Choose Ward to absorb the 3-damage attack.");
 note(
   "ward-persists",
   "7 block remains",
   "Ward kept its remaining 7 block into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
-  '[data-slot="16"]',
+  '[data-slot="18"]',
 );
 place(
   "sapling-place",
   "sapling",
-  20,
-  "Place Sapling on the far-right marked space. Allies have HP, can attack, and may intercept incoming attacks.",
+  19,
+  "Place Sapling in column 6, directly beside Ward in column 5. Allies have HP, can attack, and may intercept incoming attacks.",
 );
 phase("sapling-phase");
 activate(
   "sapling-attack",
-  20,
-  "Activate Sapling to attack with its current 4 HP; your Ring adds 2. After attacking, Sapling gains 1 HP per adjacent card, capped at 10. It has no neighbors here, so gains none. It can still defend after attacking.",
+  19,
+  "Activate Sapling to attack with its current 4 HP; your Ring adds 2. After attacking, Sapling gains 1 HP per adjacent card, capped at 10. Ward is adjacent, so Sapling grows to 5 HP after this attack. It can still defend after attacking.",
 );
 end(
   "rootling-rest",
@@ -298,55 +304,55 @@ end(
 place(
   "route-shield",
   "shield",
-  18,
-  "Place Shield between Sapling on the right and Ward on the left. This is the route the next attack will take.",
+  20,
+  "Place Shield in column 7, beside Sapling in column 6. Ward, Sapling and Shield now form an adjacent line, with Sapling in the middle.",
 );
 phase("route-phase");
 activate(
   "route-shield-activate",
-  18,
-  "Activate Shield to create 4 block between your Ally and Ward.",
+  20,
+  "Double-click Shield’s activation to use it without attunement. This creates 4 block on the right, before the attack reaches Sapling and Ward.",
 );
 activate(
   "route-sapling-attack",
-  20,
-  "Use Sapling’s second attack. It spends its final attack allowance, but its remaining HP can still intercept damage.",
+  19,
+  "Sapling attacks for its current 5 HP, then grows by 2 beside Ward and Shield, reaching 7 HP. Its attack allowance is spent, but its HP can still absorb attacks.",
 );
 note(
   "route",
   "Block from right to left",
-  "Rootling is winding up a 30-damage attack. Choose Sapling, then Shield, then Ward, then Bracelet. Once the attack passes a column, cards farther right cannot defend it. In normal play you may skip a defense or click your Druid to take the hit.",
-  '.enemy .tell, [data-slot="20"], [data-slot="18"], [data-slot="16"]',
+  "Rootling is winding up a 30-damage attack. Choose Shield, then Sapling, then Ward, then Bracelet. Once the attack passes a column, cards farther right cannot defend it. In normal play you may skip a defense or click your Druid to take the hit.",
+  '.enemy .tell, [data-slot="19"], [data-slot="20"], [data-slot="18"]',
 );
 end("route-enemy");
 defend(
-  "route-ally",
-  "intercept",
-  20,
-  "Click Sapling. Its 4 HP absorb 4 damage. It dies and enters Destroyed until the next battle. Watch the remaining 26 damage stop here.",
-);
-defend(
   "route-block",
   "block",
-  18,
-  "Click Shield. Its 4 block stop 4 more damage. The remaining 22 continue leftward.",
+  20,
+  "Click Shield first. Its 4 block stop 4 of the 30 damage; 26 continue toward Sapling.",
+);
+defend(
+  "route-ally",
+  "intercept",
+  19,
+  "Click Sapling. Its 7 HP absorb 7 damage. It dies and enters Destroyed until the next battle. The remaining 19 continue leftward to Ward.",
 );
 defend(
   "route-ward",
   "ward",
-  16,
-  "Click Ward. Its stored 7 block absorb 7, leaving 15 damage.",
+  18,
+  "Click Ward. Its stored 7 block absorb 7, leaving 12 damage.",
 );
 defend(
   "route-bracelet",
   "bracelet",
   null,
-  "Click your Bracelet. It stops 2, then the final 13 automatically reach the Druid because no defenses remain.",
+  "Click your Bracelet. It stops 2, then the final 10 automatically reach the Druid because no defenses remain.",
 );
 note(
   "route-done",
   "Every layer matters",
-  "You took only 13 of the original 30 damage. Each hit showed the actual HP or block lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your blocking cards wisely!",
+  "You took only 10 of the original 30 damage. Each hit showed the actual HP or block lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your blocking cards wisely!",
   ".battle-player, header .hp",
 );
 place(
@@ -414,7 +420,7 @@ move(
 note(
   "elements",
   "Fire meets Water",
-  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Arcane stays neutral. The enemy’s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
+  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemy’s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
   ".enemy",
 );
 place("water-place", "water", 22, "Place Water Blast on the marked space.");
@@ -453,7 +459,7 @@ action(
 note(
   "cycle",
   "Remember the cycle",
-  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Use this same cycle for attacks, defensive attunements and equipment: +50% damage, block or Armor protection against the element you beat; -50% against your weakness, rounded up. Earth Armor protects best against Wind and worst against Fire. Same-element and Arcane matchups are neutral. Chaos and Light are mutually strong.",
+  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Use this same cycle for attacks, defensive attunements and equipment: +50% damage, block or Armor protection against the element you beat; -50% against your weakness, rounded up. Earth Armor protects best against Wind and worst against Fire. Other element matchups are non-interacting, including same-element and Arcane (non-elemental) matchups. Chaos and Light are mutually strong against each other.",
   ".field",
   "tavern",
 );
@@ -461,7 +467,7 @@ move(
   "tavern-move",
   8,
   2,
-  "Move west into the Lantern Rest. You have enough Gold for every lesson.",
+  "Move west into the Lantern Rest. Time to spend some hard-earned gold!",
 );
 ui(
   "scribe",
@@ -513,7 +519,7 @@ action(
 action(
   "socket",
   "Imbue the Bracelet",
-  "Drag the Sapphire into the Bracelet’s Gem socket, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet blocks 3 against Fire, 1 against Wind, and 2 otherwise.",
+  "Drag the Sapphire onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet blocks 3 against Fire, 1 against Wind, and 2 otherwise.",
   { type: "socket", itemId: "bronze", gemId: "sapphire" },
   '.satchel, [data-equip-slot="wrist2"]',
 );
@@ -859,6 +865,16 @@ export function normalizeTutorial(s) {
         e.y = 3;
       }
     }
+  }
+  if (
+    t.version < 7 &&
+    s.mode === "battle" &&
+    t.fight === 2 &&
+    !s.battle.enemyFirst
+  ) {
+    t.restartRootling = true;
+    t.lesson = "caught";
+    t.step = steps.findIndex((step) => step.id === "caught");
   }
   t.version = TUTORIAL.version;
 }

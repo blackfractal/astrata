@@ -773,6 +773,19 @@ function bindEquipment(ctx, root) {
   const current = () => ctx.game.legal();
   function dropAction(el) {
     if (!drag) return null;
+    const setting =
+      el.dataset.socket ||
+      el.dataset.itemDetail ||
+      (el.dataset.equipSlot ? ctx.o.equipment[el.dataset.equipSlot] : null);
+    if (setting && drag.item != null) {
+      const socket = current().find(
+        (a) =>
+          a.type === "socket" &&
+          a.uid === Number(setting) &&
+          a.gem === drag.item,
+      );
+      if (socket) return socket;
+    }
     if (el.dataset.equipSlot)
       return current().find(
         (a) =>
@@ -798,11 +811,15 @@ function bindEquipment(ctx, root) {
   }
   function markDrops() {
     root
-      .querySelectorAll("[data-equip-slot],[data-socket],[data-unsocket-drop]")
+      .querySelectorAll(
+        "[data-equip-slot],[data-socket],[data-item-detail],[data-unsocket-drop]",
+      )
       .forEach((el) => el.classList.toggle("drop-ready", !!dropAction(el)));
   }
   root
-    .querySelectorAll("[data-equip-slot],[data-socket],[data-unsocket-drop]")
+    .querySelectorAll(
+      "[data-equip-slot],[data-socket],[data-item-detail],[data-unsocket-drop]",
+    )
     .forEach((el) => {
       el.ondragover = (e) => {
         if (dropAction(el)) {
@@ -811,9 +828,10 @@ function bindEquipment(ctx, root) {
         }
       };
       el.ondrop = async (e) => {
+        const a = dropAction(el);
+        if (!a) return;
         e.preventDefault();
         stop(e);
-        const a = dropAction(el);
         drag = null;
         if (a) {
           const keepOpen = root === ctx.modal;

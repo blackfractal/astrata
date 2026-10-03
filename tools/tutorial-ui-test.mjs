@@ -90,7 +90,7 @@ async function perform(g, a) {
       .locator(`.satchel [data-item-uid="${a.gem}"]`)
       .dragTo(
         p
-          .locator(`.tavern-service [data-socket="${a.uid}"]`)
+          .locator(`.tavern-service .gear-item[data-item-uid="${a.uid}"]`)
           .filter({ visible: true })
           .last(),
       );
@@ -105,7 +105,7 @@ async function perform(g, a) {
       await p
         .locator(`[data-slot="${a.slot}"]`)
         .dragTo(p.locator(`[data-enemy-uid="${a.target}"]`));
-    } else if (a.target != null)
+    } else if (a.target != null || step === "route-shield-activate")
       await p.locator(`[data-activate-slot="${a.slot}"]`).dblclick();
     else await p.locator(`[data-activate-slot="${a.slot}"]`).click();
     return;
@@ -170,10 +170,10 @@ try {
       await settle();
       const now = await saved();
       assert.equal(now.tutorial.lesson, step);
-      assert.equal(now.battle.reaction.damage, 22);
+      assert.equal(now.battle.reaction.damage, 19);
       resumed = true;
       report.checks.push(
-        "Quit/relaunch during incoming defense resumes exact lesson, 22 remaining damage and prior defense route.",
+        "Quit/relaunch during incoming defense resumes exact lesson, 19 remaining damage and prior defense route.",
       );
     }
     if (
@@ -208,7 +208,10 @@ try {
           copy,
           /Earth Armor protects best against Wind and worst against Fire/,
         );
-        assert.match(copy, /Same-element and Arcane matchups are neutral/);
+        assert.match(
+          copy,
+          /Other element matchups are non-interacting, including same-element and Arcane/,
+        );
       }
       if (step === "socket")
         assert.match(

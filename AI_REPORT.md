@@ -714,3 +714,8 @@ Five smoke runs825183–825187 completed without invalid decisions or stalls: al
 ## Stratum 1 boss pressure and destruction animations — 1.3.84
 
 Rules1.3.45/content1.1.50, weighted-druid-v1.17 unchanged, no learned training. Five fully archived smoke runs825283–825287 completed without invalid actions, stalls or crashes. Results: loss/loss/loss/win/loss; Field rounds14/14/19/20/19, decisions215/250/247/248/266. The win defeated Void-Colossus in9battle turns and finished with8HP; another run lost to Collapse, and the last lost to Cinder Hart. Two runs ended before the Archon. Full decisions, states, source and version snapshots: reports/boss-pressure-evaluation. These are integration checks, not a measured human win rate or evidence that every boss is balanced. Targeted rules/UI tests independently cover all three bosses and new move formulas.
+
+
+## Enemy-first movement encounters — 1.3.85
+
+Rules1.3.46/content1.1.51; unchanged weighted-druid-v1.17, no learned training. Five archived integration runs825383–825387 completed without invalid actions, stalls or crashes. All five lost; Field rounds16/16/11/15/6, decisions208/203/160/188/129; causes Burn/Lance/Claw/Lance/Bite. Full decisions, states and source/version snapshots: reports/enemy-first-evaluation. These smoke runs verify execution, not human difficulty or an optimized policy for the new incentive to enter encounters yourself. Deterministic tutorial and packaged UI walkthrough separately complete the revised tutorial, including the12-damage Patient Warden.
