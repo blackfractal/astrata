@@ -1,5 +1,6 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
 import {
+  activationGrowth,
   offense,
   defenseRate,
   adjacent,
@@ -18,7 +19,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.14";
+    this.id = "weighted-druid-v1.15";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -56,7 +57,7 @@ export class WeightedPolicy {
       (e.burn || 0) * 2 +
       (e.corrode || 0) * 6 +
       (e.hpDamage ? 8 : 0) +
-      (d.growth ? 8 : 0) -
+      (d.growth ? 8 : e.growAfterAttack ? 4 : 0) -
       (d.focus - 1) * 3 -
       (d.type === "Hex" ? 40 : 0)
     );
@@ -204,6 +205,7 @@ export class WeightedPolicy {
         n = this.cardValue(c.id, o) * 0.5 + 2;
         if (e.focusPermanent) n += b.turn < 5 ? 12 : 2;
         if (c.growth) n += 8 + ns.length * 3;
+        if (e.growAfterAttack) n += 4 + ns.length * 1.5;
         if (e.damage && !hasOffense) n += 8;
         if (e.shield && existing) n -= 12;
         if (c.condition === "isolated") n += ns.length ? -30 : 4;
@@ -222,7 +224,17 @@ export class WeightedPolicy {
             ).length * 2;
         if (c.attune)
           n += ns.some((i) => b.grid[i].at(-1).element !== "Arcane") ? 1 : 0;
-        for (const i of ns) if (cards[b.grid[i].at(-1).id].growth) n += 3;
+        for (const i of ns) {
+          const neighbor = b.grid[i].at(-1),
+            def = cards[neighbor.id];
+          if (def.growth) n += 3;
+          else if (
+            def.effects.growAfterAttack &&
+            neighbor.used < def.limit &&
+            neighbor.hp < def.hpCap
+          )
+            n += 1.5;
+        }
         if (slot.length && !c.stack) n -= 50;
         if (
           c.stack === "supersede" &&
@@ -299,6 +311,8 @@ export class WeightedPolicy {
             b.grid.flat().filter((x) => x.lock || x.sever || x.freeze).length *
             4;
         if (f.allyHeal) n += 4;
+        if (f.growAfterAttack && target && !target.flicker)
+          n += activationGrowth(b, b.grid[a.slot].at(-1), a.slot) * 0.6;
         if (f.magnify) n += 3;
         if (f.shift || f.transmute) n -= 4;
         return [
@@ -334,7 +348,9 @@ export class WeightedPolicy {
           result = allyHit(b.reaction, c.element, c.hp, f.swallow);
         return [
           (b.reaction.damage - result.remaining) * w.survival -
-            (d.growth ? 8 : 0) -
+            (d.growth || (d.effects.growAfterAttack && c.used < d.limit)
+              ? 8
+              : 0) -
             (d.effects.heal ? 5 : 0) +
             (f.swallow ? b.reaction.damage : 0) +
             ((f.column ?? 0) + 1) * 2,

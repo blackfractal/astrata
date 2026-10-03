@@ -16,6 +16,7 @@ import {
 } from "./battle-feedback.mjs";
 import { cards, items, enemies } from "./content.mjs";
 import {
+  activationGrowth,
   blockHit,
   allyHit,
   incomingDamageText,
@@ -85,7 +86,10 @@ function effect(c, slot, ctx) {
   return (
     [
       f.damage || f.hpDamage
-        ? damageMarkup(ctx.o.battle, c, slot)
+        ? damageMarkup(ctx.o.battle, c, slot) +
+          (f.growAfterAttack
+            ? ` → +${activationGrowth(ctx.o.battle, c, slot)} HP`
+            : "")
         : f.randomDamage
           ? "Deal 1–" + f.randomDamage
           : null,

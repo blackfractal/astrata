@@ -1,5 +1,6 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
 import {
+  activationGrowth,
   attunementElements,
   attunementSourceElement,
   gridNeighbors,
@@ -101,6 +102,9 @@ export function boardConnections(b) {
           c.element,
           d.growth ? "Growth from neighbor" : "Adjacency bonus",
         );
+    if (active && d.effects.growAfterAttack && activationGrowth(b, c, i) > 0)
+      for (const j of m.neighbors)
+        add(j, i, "benefit", c.element, "Growth after attack");
     if (active && d.effects.row && !c.sever)
       for (const [j, other] of b.grid.entries())
         if (

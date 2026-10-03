@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.39",
-  content: "1.1.41",
+  rules: "1.3.40",
+  content: "1.1.42",
   observation: 1,
   actions: 2,
 };
@@ -131,9 +131,9 @@ card(
   "Ally",
   1,
   2,
-  { hpDamage: true },
-  "Deal damage equal to HP. Each player turn: +1 HP per neighbor.",
-  { hp: 4, growth: true },
+  { hpDamage: true, growAfterAttack: 1 },
+  "4 HP, maximum 10. Attack for current HP, then gain 1 HP per orthogonally adjacent card, up to 10 HP. No passive growth.",
+  { hp: 4, hpCap: 10 },
 );
 card(
   "ignis",

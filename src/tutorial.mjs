@@ -289,7 +289,7 @@ phase("sapling-phase");
 activate(
   "sapling-attack",
   20,
-  "Activate Sapling to attack with its current 4 HP. Your Ring adds 2. It can still defend even though it has attacked this turn.",
+  "Activate Sapling to attack with its current 4 HP; your Ring adds 2. After attacking, Sapling gains 1 HP per adjacent card, capped at 10. It has no neighbors here, so gains none. It can still defend after attacking.",
 );
 end(
   "rootling-rest",

@@ -1,3 +1,19 @@
+# Sapling attack-then-growth — package1.3.72
+
+Rules1.3.40/content1.1.42/policy weighted-druid-v1.15. Sapling now attacks for current HP, then gains1 per adjacent card up to10; no passive growth. Policy evaluates the bounded activation benefit separately from immediate damage and stops treating exhausted Sapling as an indefinitely growing attacker. No training. All295 unit tests pass; three packaged UI cases verify damage-before-growth, health cap, neighbor links and legacy cap migration with no renderer errors. The authored tutorial completes122decisions at70HP.
+
+| Seed | Outcome | Round | Decisions |
+| --- | --- | --- | --- |
+| 825183 | loss | 20 | 330 |
+| 825184 | loss | 19 | 357 |
+| 825185 | loss | 16 | 202 |
+| 825186 | loss | 12 | 228 |
+| 825187 | loss | 20 | 256 |
+
+Five complete unattended runs, all losses, without invalid decisions or stalls. Rules and policy both changed; trajectories are regression evidence, not a controlled estimate of this card's balance or a human difficulty claim. Full versioned traces/source snapshots: reports/sapling-growth-evaluation. UI report/screenshots: reports/sapling-verification.json and screenshots/sapling. Historical evaluations remain below.
+
+---
+
 # Equipment evaluation — package1.3.71
 
 Policy weighted-druid-v1.14 replaces1.13; rules1.3.39/content1.1.41 unchanged. Reflection, Shield activation bonuses, Recall discounts, once-per-turn versus repeat attack triggers, negative movement and damaging status drawbacks are scored. Owned-item comparisons include socket effects and Dew/Sapphire synergy, with a curse penalty; existing elemental attunements have no unconditional score advantage without a matchup. Socketed Weeping Garnet is evaluated according to its suppressed inventory Poison. Shield-only helmets have no bonus value in a deck with no Shields. Useful empty-slot equipment is favored without shuffling already-equipped items. Shared valuation covers pickups, purchases, trades and sacrifice costs; this is not a shopping planner or learned policy.

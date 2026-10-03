@@ -84,6 +84,30 @@ export function matchingNeighbors(b, c, i) {
   if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
   return gridNeighbors(b, i).filter((j) => top(b.grid[j]).id === c.id).length;
 }
+// Shared by resolution, UI and policy; added HP never enters the current attack.
+export function activationGrowth(b, c, i) {
+  const d = cards[c.id];
+  if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
+  return Math.max(
+    0,
+    Math.min(
+      (d.effects.growAfterAttack || 0) * gridNeighbors(b, i).length,
+      (d.hpCap ?? Infinity) - c.hp,
+    ),
+  );
+}
+function capAllyHP(c) {
+  const cap = cards[c.id]?.hpCap;
+  if (cap != null) {
+    c.hp = Math.min(c.hp, cap);
+    c.maxHp = cap;
+  }
+  return c;
+}
+function normalizeCardCaps(state) {
+  for (const c of state.battle?.grid?.flat() || []) capAllyHP(c);
+  if (state.checkpoint) normalizeCardCaps(state.checkpoint);
+}
 export function enemyDamage(n, element, enemy) {
   let damage = offense(n, element, enemy.element);
   if (enemy.resist === element) damage = Math.ceil(damage / 2);
@@ -390,6 +414,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.39",
           "1.3.38",
           "1.3.37",
           "1.3.36",
@@ -440,6 +465,7 @@ export class Game {
       normalizeTutorial(this.s);
       normalizeMindGrid(this.s);
       normalizeEnemyImmunities(this.s);
+      normalizeCardCaps(this.s);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1058,7 +1084,7 @@ export class Game {
   }
   instance(c) {
     const d = cards[c.id];
-    return {
+    return capAllyHP({
       ...c,
       used: 0,
       lastActivatedTurn: 0,
@@ -1075,7 +1101,7 @@ export class Game {
       freeze: 0,
       zeroWard: false,
       status: blankStatus(),
-    };
+    });
   }
   beginBattle(entities) {
     tutorialBattle(this, entities);
@@ -1261,6 +1287,7 @@ export class Game {
       if (cards[c.id].growth) {
         c.hp += this.neighbors(i).length;
         c.maxHp = Math.max(c.maxHp || 0, c.hp);
+        capAllyHP(c);
       }
       for (const k of ["burn", "poison", "corrode"]) {
         c.hp -= c.status[k] || 0;
@@ -1939,6 +1966,7 @@ export class Game {
     if (f.selfGrowth) {
       c.maxHp = Math.max(c.maxHp || 0, c.hp) + f.selfGrowth;
       c.hp += f.selfGrowth;
+      capAllyHP(c);
     }
     if (f.taunt) {
       for (const x of this.allies()) {
@@ -1982,6 +2010,7 @@ export class Game {
       if (ally) {
         ally.hp += f.allyHeal;
         ally.maxHp = Math.max(ally.maxHp || 0, ally.hp);
+        capAllyHP(ally);
       }
     }
     if (f.cleanse) s.status = blankStatus();
@@ -1991,6 +2020,7 @@ export class Game {
     if (f.focus) b.next.focus += f.focus;
     if (f.focusPermanent) b.permanent.focus += f.focusPermanent;
     if (f.channel) b.channel += f.channel;
+    let attackResolved = false;
     if (
       f.damage ||
       f.hpDamage ||
@@ -2023,6 +2053,7 @@ export class Game {
           continue;
         }
         if (context.blocked?.has(e.uid)) continue;
+        attackResolved = true;
         const old = e.hp;
         let n = f.randomDamage
           ? 1 + Math.floor(this.rand() * f.randomDamage)
@@ -2055,6 +2086,22 @@ export class Game {
         for (const k of ["burn", "poison", "corrode"])
           if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus, i);
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
+      }
+    }
+    if (f.growAfterAttack && attackResolved) {
+      const gain = activationGrowth(b, c, i);
+      if (gain > 0) {
+        c.hp += gain;
+        c.maxHp = Math.max(c.maxHp || 0, c.hp);
+        capAllyHP(c);
+        this.present("activate", {
+          slot: i,
+          name: `+${gain} HP`,
+          growth: gain,
+        });
+        this.log(
+          `${d.name} gains ${gain} HP after attacking (${c.hp}/${d.hpCap}).`,
+        );
       }
     }
     if (f.burnAll) {
@@ -2979,6 +3026,7 @@ export class Game {
         )
           inst.hp += d.bondHP;
         inst.maxHp = Math.max(inst.maxHp, inst.hp);
+        capAllyHP(inst);
         if (d.onPlaceCharge)
           inst.charge += this.neighbors(a.slot).filter(
             (j) => top(b.grid[j]).element === "Fire",

@@ -82,7 +82,7 @@ test("far-edge Shield matching/attunement and Ally growth/statuses use new neigh
   ally.status.poison = 2;
   const hp = ally.hp;
   g.beginTurn();
-  assert.equal(ally.hp, hp + 1 - 2);
+  assert.equal(ally.hp, hp - 2); // Sapling no longer grows at turn start.
 });
 test("bottom-right 2×2 formation doubles once, respects Sever and cannot cross a row boundary", () => {
   const g = base(),

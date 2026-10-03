@@ -241,7 +241,7 @@ test("Real effects connect: Keystone allowance, growth and adjacent damage, with
   put(g, "sapling", 9);
   assert.ok(
     boardConnections(b).some(
-      (l) => l.from === 8 && l.to === 9 && l.reason === "Growth from neighbor",
+      (l) => l.from === 8 && l.to === 9 && l.reason === "Growth after attack",
     ),
   );
   const snapshot = structuredClone(g.s);
