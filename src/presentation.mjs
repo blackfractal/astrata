@@ -131,9 +131,10 @@ export async function playFrames(before, frames, after, render, isFast) {
     element = null,
     attack = null,
     boost = null,
+    revealTarget = true,
   ) {
     // Reveal the acting/struck foe inside crowded encounters without moving the stage.
-    for (const node of [from, el]) {
+    for (const node of revealTarget ? [from, el] : []) {
       if (node?.matches(".enemy")) {
         const panel = node.closest(".enemy-line"),
           r = node.getBoundingClientRect(),
@@ -218,7 +219,8 @@ export async function playFrames(before, frames, after, render, isFast) {
   }
   try {
     render(before);
-    for (const frame of frames) {
+    for (let frameIndex = 0; frameIndex < frames.length; frameIndex++) {
+      const frame = frames[frameIndex];
       if (skip) break;
       bar.querySelector("span").textContent =
         frame.kind === "move"
@@ -231,7 +233,50 @@ export async function playFrames(before, frames, after, render, isFast) {
               activate: "Activation",
             }[frame.kind] ||
             "Resolving";
-      if (frame.kind === "reveal") {
+      if (frame.parallelGroup != null) {
+        // Damage still resolves in engine order. Animate different targets together,
+        // keeping each target's follow-up Ring hit/status in its original order.
+        const batch = [frame];
+        while (frames[frameIndex + 1]?.parallelGroup === frame.parallelGroup)
+          batch.push(frames[++frameIndex]);
+        const lanes = new Map();
+        for (const hit of batch) {
+          if (!lanes.has(hit.uid)) lanes.set(hit.uid, []);
+          lanes.get(hit.uid).push(hit);
+        }
+        await Promise.all(
+          [...lanes.values()].map(async (hits) => {
+            for (const hit of hits) {
+              if (skip) break;
+              const from =
+                hit.sourceItem != null
+                  ? item(hit.sourceItem) || player()
+                  : card(hit.sourceSlot);
+              if (hit.sourceItem != null) from?.classList.add("gear-proc");
+              try {
+                await flash(
+                  enemy(hit.uid),
+                  hit.kind === "status" ? hit.name : "−" + hit.amount,
+                  hit.dead,
+                  from,
+                  hit.kind === "status"
+                    ? statusVisual[hit.statusEffect]
+                    : hit.element,
+                  null,
+                  null,
+                  false,
+                );
+              } finally {
+                if (hit.sourceItem != null) from?.classList.remove("gear-proc");
+              }
+            }
+          }),
+        );
+        // Keep all targets mounted until every projectile, hit and death finishes.
+        previous = batch.at(-1).state;
+        render(previous);
+        continue;
+      } else if (frame.kind === "reveal") {
         const masked = structuredClone(frame.state);
         masked.battle.phase = "start";
         masked.battle.insight =

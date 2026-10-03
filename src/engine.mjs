@@ -634,6 +634,13 @@ export class Game {
         state: this.observe(),
       });
   }
+  markAreaPresentation(start, slot) {
+    if (!this.capturePresentation) return;
+    for (const frame of this.presentation.slice(start)) {
+      frame.parallelGroup = start;
+      frame.sourceSlot ??= slot;
+    }
+  }
   rand() {
     let x = this.s.rng;
     x ^= x << 13;
@@ -2068,6 +2075,7 @@ export class Game {
       // Claim before Flicker/guard so a negated opening attack cannot bank the Ring.
       // All targets, Pile members and Fusion effects share this turn marker.
       if (firstAttack) b.firstAttackTurn = b.turn;
+      const areaStart = this.presentation?.length || 0;
       for (const e of targets) {
         if (!e || e.hp <= 0) continue;
         if (e.flicker) {
@@ -2112,6 +2120,7 @@ export class Game {
           if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus, i);
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
+      if (f.all) this.markAreaPresentation(areaStart, i);
     }
     if (f.growAfterAttack && attackResolved) {
       const gain = activationGrowth(b, c, i);
@@ -2130,6 +2139,7 @@ export class Game {
       }
     }
     if (f.burnAll) {
+      const areaStart = this.presentation?.length || 0;
       for (const e of b.enemies.filter((e) => e.hp > 0)) {
         if (context.blocked?.has(e.uid)) continue;
         if (e.flicker) {
@@ -2141,6 +2151,7 @@ export class Game {
         }
         this.applyEnemyStatus(e, "burn", f.burnAll + bonus, i);
       }
+      this.markAreaPresentation(areaStart, i);
     }
     if (d.destroyAfterActivation) {
       this.present("activate", { slot: i, name: d.name + " is Destroyed" });
