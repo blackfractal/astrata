@@ -66,7 +66,7 @@ test("Existing summons retain their elements after a real Glare and through save
   g.pick = pick;
   assert.equal(e.element, "Water");
   assert.equal(minis(g)[0].element, "Fire");
-  assert.equal(g.s.hp, 997); // Existing Fire summon attacks for two after Glare.
+  assert.equal(g.s.hp, 992); // Glare hits for five; existing Fire summon then attacks for two.
   g.damageEnemy(e, 1, "Fire", {});
   assert.equal(minis(g).length, 1);
   g.damageEnemy(e, 1, "Water", {});

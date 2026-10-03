@@ -2974,3 +2974,18 @@ header {
 .card-art-detail .full-art { width:100%; }
 .card-stat-breakdown { font-size:14px; color:#dfd3ae; line-height:1.5; }
 .shield-value, .damage-value { cursor:help; }
+
+/* Boss destruction: fire consumes a row, gravity swallows a column, song shatters stacks. */
+.boss-effect { position:fixed; z-index:65; pointer-events:none; }
+.wildfire-line { overflow:visible; filter:drop-shadow(0 0 7px #ff751bcc); }
+.wildfire-core { position:absolute; top:46%; width:100%; height:12%; background:linear-gradient(0deg,#d92e0c,#ffb22d,#fff2b0,#ff7b16); box-shadow:0 0 19px 8px #ff620a99; border-radius:50%; }
+.wildfire-flame { position:absolute; bottom:42%; width:6%; height:var(--flame-height); background:linear-gradient(0deg,#ffe995 8%,#ffae24 35%,#f45116 75%,#c21c1100); border-radius:70% 10% 65% 30%; transform:rotate(var(--flame-lean)); opacity:.9; }
+.collapse-hole { display:grid; place-items:center; border-radius:50%; background:radial-gradient(ellipse,#090810 12%,#231d3888 42%,#b4b6c744 58%,transparent 72%); filter:drop-shadow(0 0 5px #a4a1b7); }
+.collapse-hole svg { position:absolute;width:100%;height:100%;fill:none;stroke:#dddbf3;stroke-width:1.5; }
+.collapse-hole span { color:#fff; font:bold 17px Candara,sans-serif;text-shadow:0 1px 4px #000; }
+.collapse-hole[data-empty="false"] span { font-size:12px; }
+.hymn-notes { color:#f5df9e;filter:drop-shadow(0 0 4px #ffe39c); }
+.hymn-notes svg { width:100%;height:100%;overflow:visible; }
+.hymn-staff { stroke:currentColor;stroke-width:1;opacity:.6; }
+.hymn-score { fill:currentColor;stroke:currentColor;stroke-width:3;stroke-linecap:round; }
+.held-attack.collapse-bolt { position:fixed;z-index:66; }

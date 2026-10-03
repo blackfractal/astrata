@@ -175,6 +175,8 @@ for (const name of [
   "manual-controls-verification.json",
   "legendary-rewards-verification.json",
   "upgrade-badge-verification.json",
+  "boss-pressure-verification.json",
+  "boss-pressure-evaluation",
   "content-audit.json",
   "art-manifest.json",
   "asset-selections.json",

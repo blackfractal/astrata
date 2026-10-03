@@ -709,3 +709,8 @@ All five lost. These are integration smoke results, not evidence of an optimal p
 Rules1.3.43/content1.1.47, weighted-druid-v1.17. Legal actions report charging gain, current/required charges and activations through release; policy amortizes delayed damage over that full cost and avoids charging with insufficient remaining uses. Card-value estimates include the separate release. No learned training.
 
 Five smoke runs825183–825187 completed without invalid decisions or stalls: all losses, rounds20/19/16/8/19 and decisions329/300/211/124/363. Complete traces and source/version snapshots retained in reports/charge-release-evaluation. These are integration checks, not statistical evidence of human difficulty or card balance. The314-test suite and seven packaged UI cases separately verify Kiln/Seed schedules and charging-versus-release behavior.
+
+
+## Stratum 1 boss pressure and destruction animations — 1.3.84
+
+Rules1.3.45/content1.1.50, weighted-druid-v1.17 unchanged, no learned training. Five fully archived smoke runs825283–825287 completed without invalid actions, stalls or crashes. Results: loss/loss/loss/win/loss; Field rounds14/14/19/20/19, decisions215/250/247/248/266. The win defeated Void-Colossus in9battle turns and finished with8HP; another run lost to Collapse, and the last lost to Cinder Hart. Two runs ended before the Archon. Full decisions, states, source and version snapshots: reports/boss-pressure-evaluation. These are integration checks, not a measured human win rate or evidence that every boss is balanced. Targeted rules/UI tests independently cover all three bosses and new move formulas.

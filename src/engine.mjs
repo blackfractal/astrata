@@ -456,6 +456,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.44",
           "1.3.43",
           "1.3.42",
           "1.3.40",
@@ -1448,9 +1449,22 @@ export class Game {
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
     if (t.currentElement) t.element = e.element;
+    // Forecast from the current board; enemyAction snapshots this before grid effects.
+    if (t.damagePerEmpty) {
+      const targets = this.s.battle ? gridTargets(this.s.battle, t) : [];
+      t.collapsedColumn = targets.length ? targets[0] % MIND_COLUMNS : 0;
+      t.emptySpaces = MIND_ROWS - targets.length;
+      t.damage = t.emptySpaces * t.damagePerEmpty;
+    }
+    if (t.damagePerAlly) {
+      t.allyCount = (this.s.battle?.grid || [])
+        .flat()
+        .filter((c) => cards[c.id].type === "Ally" && c.hp > 0).length;
+      t.damage += t.allyCount * t.damagePerAlly;
+    }
     t.damage =
       (t.damage || 0) +
-      (t.damage
+      (t.damage && !t.fixedDamage
         ? Math.floor(e.cycle / d.rotation.length) +
           (e.restless || 0) +
           e.buff +
@@ -1558,7 +1572,7 @@ export class Game {
             ": " +
             t.name +
             (t.damage
-              ? ` · ${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}`
+              ? ` · ${t.damage} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
               : ""),
         );
         if (e.id === "hart" && e.hp <= e.maxHp / 2)
@@ -1582,6 +1596,7 @@ export class Game {
           e.element = this.pick(
             ELEMENTS.filter((element) => element !== "Arcane"),
           );
+          t.element = e.element;
           const cleared = clearImmuneStatus(e);
           if (cleared)
             this.log(
@@ -1607,7 +1622,7 @@ export class Game {
           e.purifyPending = ["burn", "poison", "corrode"].some(
             (k) => e.status[k] > 0,
           );
-        if (t.grid) this.gridAttack(t);
+        if (t.grid) this.gridAttack(t, e);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;
         if (t.channel)
@@ -1629,7 +1644,12 @@ export class Game {
               this.applyFriendlyStatus(
                 k,
                 t[k],
-                { source: e.uid },
+                {
+                  source: e.uid,
+                  ...(t.gridSourceSlot != null
+                    ? { gridSourceSlot: t.gridSourceSlot }
+                    : {}),
+                },
                 t.allyStatus && allies.length ? allies[0].i : null,
               );
             }
@@ -1655,6 +1675,7 @@ export class Game {
           amount: j.damage,
           element: j.element,
           name: j.name,
+          collapseOrigins: j.collapseOrigins,
         });
         this.advanceHit();
       }
@@ -1747,10 +1768,13 @@ export class Game {
       ...detail,
       element: h.element,
       attackPath: true,
+      collapseOrigins:
+        !h.lastImpact && h.collapseOrigins ? h.collapseOrigins : null,
       pathFrom,
       pathTo: node,
       remaining: node.kind === "player" ? 0 : h.damage,
     });
+    h.lastImpact = true;
   }
   advanceHit() {
     const s = this.s,
@@ -1873,9 +1897,11 @@ export class Game {
           ? tell.grid === "row"
             ? Math.floor(targets[0] / MIND_COLUMNS)
             : targets[0] % MIND_COLUMNS
-          : null;
+          : tell.damagePerEmpty
+            ? tell.collapsedColumn
+            : null;
         const spaces =
-          targets.length && ["row", "column"].includes(tell.grid)
+          line !== null && ["row", "column"].includes(tell.grid)
             ? b.grid
                 .map((_, i) => i)
                 .filter((i) =>
@@ -1894,17 +1920,47 @@ export class Game {
             targets,
             spaces,
             cards: targets.reduce((n, i) => n + b.grid[i].length, 0),
+            damage: tell.damage || 0,
+            element: tell.element,
+            emptySpaces: tell.emptySpaces,
+            damagePerEmpty: tell.damagePerEmpty,
+            burn: tell.burn || 0,
           },
         ];
       });
   }
-  gridAttack(t) {
+  gridAttack(t, source = null) {
     const b = this.s.battle;
     const targets = gridTargets(b, t).map((i) => ({
       i,
       slot: b.grid[i],
       c: top(b.grid[i]),
     }));
+    const visual =
+      source?.id === "hart" && t.grid === "row"
+        ? "wildfire"
+        : source?.id === "colossus" && t.grid === "column"
+          ? "collapse"
+          : source?.id === "choir" && t.grid === "destroy"
+            ? "hymn"
+            : null;
+    const line = targets.length
+      ? t.grid === "row"
+        ? Math.floor(targets[0].i / MIND_COLUMNS)
+        : targets[0].i % MIND_COLUMNS
+      : 0;
+    const spaces =
+      visual === "wildfire"
+        ? Array.from(
+            { length: MIND_COLUMNS },
+            (_, i) => line * MIND_COLUMNS + i,
+          )
+        : visual === "collapse"
+          ? Array.from({ length: MIND_ROWS }, (_, i) => i * MIND_COLUMNS + line)
+          : targets.map((x) => x.i);
+    if (visual === "collapse")
+      t.collapseOrigins = spaces.filter((i) => !b.grid[i].length);
+    if (visual === "wildfire") t.gridSourceSlot = spaces[0];
     for (const x of targets) {
       if (["destroy", "row", "column"].includes(t.grid)) {
         b.destroyed.push(...x.slot);
@@ -1912,14 +1968,25 @@ export class Game {
       } else if (t.grid === "siphon") x.c.used++;
       else if (t.grid === "freeze") x.c.freeze = b.turn + 1;
       else x.c[t.grid] = true;
-      this.present("hit", {
-        target: "card",
-        slot: x.i,
-        name: t.name,
-        dead: ["destroy", "row", "column"].includes(t.grid),
-      });
+      if (!visual)
+        this.present("hit", {
+          target: "card",
+          slot: x.i,
+          name: t.name,
+          dead: ["destroy", "row", "column"].includes(t.grid),
+        });
       this.log(`${t.name} targets slot ${x.i + 1}.`);
     }
+    if (visual)
+      this.present("gridDestruction", {
+        name: t.name,
+        visual,
+        source: source.uid,
+        spaces,
+        targets: targets.map((x) => x.i),
+        empty: t.collapseOrigins || [],
+        damage: t.damage || 0,
+      });
   }
   applyEnemyStatus(e, status, value, sourceSlot = null) {
     if (enemyStatusImmunity(e) === status) {

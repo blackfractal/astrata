@@ -17,15 +17,15 @@ function end(g) {
   g.s.battle.phase = "activate";
   g.act(g.legal().find((a) => a.type === "endTurn"));
 }
-test("Colossus opens with two Chaos fists, Collapse, then non-damaging Glare", () => {
+test("Colossus opens with two Chaos fists, Collapse, then piercing Glare", () => {
   const g = base(),
     e = g.s.battle.enemies[0];
   assert.equal(e.element, "Chaos");
   for (const [cycle, name, damage] of [
     [0, "Void fist", 11],
     [1, "Void fist", 11],
-    [2, "Collapse", 0],
-    [3, "Chaotic Glare", 0],
+    [2, "Collapse", 30],
+    [3, "Chaotic Glare", 5],
   ]) {
     e.cycle = cycle;
     assert.equal(g.tell(e).name, name);
@@ -33,7 +33,7 @@ test("Colossus opens with two Chaos fists, Collapse, then non-damaging Glare", (
   }
   const hp = g.s.hp;
   end(g);
-  assert.equal(g.s.hp, hp);
+  assert.equal(g.s.hp, hp - 5);
   assert.equal(e.cycle, 4);
   assert.ok(GLARE_ELEMENTS.includes(e.element));
   assert.ok(

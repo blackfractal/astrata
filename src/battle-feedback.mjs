@@ -145,7 +145,12 @@ export function gridTelegraphs(ctx) {
           : t.target === "valuable"
             ? "Two most dangerous complete stacks: total damage/defense potential, then printed Focus, remaining activations and reading order. Both targets are chosen before destruction."
             : "Tallest complete stack; ties choose the first occupied space in reading order.";
-    const help = `${t.enemy} — ${t.name}: destroys ${t.cards} card${t.cards === 1 ? "" : "s"} on the upcoming enemy turn. ${rule} Covered cards count. Live preview: changes with your placements, Recalls and remaining activations.`;
+    const extra = t.damagePerEmpty
+      ? ` Then ${t.damage} Arcane damage: ${t.emptySpaces} spaces empty before destruction × ${t.damagePerEmpty}. Destroyed cards cannot defend.`
+      : t.burn
+        ? ` Then inflicts Burn ${t.burn} on the player.`
+        : "";
+    const help = `${t.enemy} — ${t.name}: destroys ${t.cards} card${t.cards === 1 ? "" : "s"} on the upcoming enemy turn.${extra} ${rule} Covered cards count. Live preview: changes with your placements, Recalls and remaining activations.`;
     const enemy = ctx.app.querySelector(`[data-enemy-uid="${t.source}"] .info`);
     const label = document.createElement("div");
     label.className = "grid-threat-label";

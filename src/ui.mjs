@@ -127,7 +127,16 @@ const img = (id, cls = "") =>
 function tellText(t) {
   return [
     t.name,
-    t.damage ? `${t.damage} ${t.element}${t.hits ? " ×" + t.hits : ""}` : "",
+    t.damage || (t.damagePerEmpty && t.emptySpaces != null)
+      ? `${t.damage || 0} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
+      : "",
+    t.randomElement ? "Change element randomly" : "",
+    t.damagePerEmpty
+      ? `${t.damagePerEmpty} per empty space before Collapse; hit after destruction${t.emptySpaces != null ? ` (${t.emptySpaces} empty)` : ""}`
+      : "",
+    t.damagePerAlly
+      ? `+${t.damagePerAlly} per Ally per hit${t.allyCount != null ? ` (${t.allyCount} Allies)` : ""}`
+      : "",
     t.purify ? "Remove Burn, Poison and Corrode" : "",
     t.pierce ? "Pierce" : "",
     t.cull ? "Cull" : "",

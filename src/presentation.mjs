@@ -1,3 +1,4 @@
+import { bossDestruction, collapseFlight } from "./boss-effects.mjs";
 import { stageBounds } from "./stage.mjs";
 import {
   spellImpact,
@@ -386,6 +387,17 @@ export async function playFrames(before, frames, after, render, isFast) {
         await Promise.all(opens);
         await pause(300);
         if (!skip) render(frame.state);
+      } else if (frame.kind === "gridDestruction") {
+        await bossDestruction(frame, {
+          card,
+          player,
+          enemy,
+          ms,
+          pause,
+          reduced,
+          skip: () => skip,
+        });
+        render(frame.state);
       } else if (frame.kind === "resources") {
         render(frame.state);
         await pause(220);
@@ -400,13 +412,15 @@ export async function playFrames(before, frames, after, render, isFast) {
               ? card(frame.slot)
               : enemy(frame.uid);
         const from =
-          frame.sourceItem != null
-            ? item(frame.sourceItem)
-            : frame.source != null
-              ? enemy(frame.source)
-              : frame.sourceSlot != null
-                ? card(frame.sourceSlot)
-                : null;
+          frame.gridSourceSlot != null
+            ? card(frame.gridSourceSlot)
+            : frame.sourceItem != null
+              ? item(frame.sourceItem)
+              : frame.source != null
+                ? enemy(frame.source)
+                : frame.sourceSlot != null
+                  ? card(frame.sourceSlot)
+                  : null;
         if (frame.sourceItem != null) from?.classList.add("gear-proc");
         try {
           await flash(
@@ -495,7 +509,7 @@ export async function playFrames(before, frames, after, render, isFast) {
         render(frame.state);
       } else if (frame.kind === "incoming") {
         source = { enemy: frame.source, element: frame.element };
-        const el = enemy(frame.source);
+        const el = frame.collapseOrigins ? null : enemy(frame.source);
         await flash(
           el,
           `${frame.name} · ${frame.amount} ${frame.element || ""}`,
@@ -536,6 +550,14 @@ export async function playFrames(before, frames, after, render, isFast) {
           );
         if (frame.sourceItem != null) from?.classList.add("gear-proc");
         try {
+          if (frame.collapseOrigins?.length)
+            await collapseFlight(frame.collapseOrigins, el, {
+              card,
+              ms,
+              pause,
+              reduced,
+              skip: () => skip,
+            });
           await flash(
             el,
             frame.loss != null
@@ -544,7 +566,7 @@ export async function playFrames(before, frames, after, render, isFast) {
                 ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
                 : frame.name || "Hit",
             frame.dead,
-            from,
+            frame.collapseOrigins?.length ? null : from,
             frame.amount != null
               ? statusVisual[frame.statusTick] ||
                   frame.element ||
@@ -588,7 +610,7 @@ export async function playFrames(before, frames, after, render, isFast) {
     bar.remove();
     document
       .querySelectorAll(
-        ".impact-number,.attack-bolt,.spell-impact,.attack-orb-overlay",
+        ".impact-number,.attack-bolt,.spell-impact,.attack-orb-overlay,.boss-effect",
       )
       .forEach((el) => el.remove());
   }

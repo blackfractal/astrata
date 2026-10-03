@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.44",
-  content: "1.1.49",
+  rules: "1.3.45",
+  content: "1.1.50",
   observation: 1,
   actions: 2,
 };
@@ -1269,10 +1269,19 @@ enemy(
   [
     attack("Void fist", 11, "Chaos", { currentElement: true }),
     attack("Void fist", 11, "Chaos", { currentElement: true }),
-    effect("Collapse", { grid: "column", target: "column" }),
-    effect("Chaotic Glare", { randomElement: true }),
+    effect("Collapse", {
+      grid: "column",
+      target: "column",
+      damagePerEmpty: 5,
+      fixedDamage: true,
+    }),
+    attack("Chaotic Glare", 5, "Random", {
+      randomElement: true,
+      pierce: true,
+      fixedDamage: true,
+    }),
   ],
-  "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
+  "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane, then deals 5 damage in that new element with Pierce (equipment can defend). Collapse destroys the fullest column, then deals 5 Arcane damage per space empty in that column before destruction. These two attacks do not gain cycle or half-HP damage bonuses; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
   "Start with Light attacks, then adapt to its new element. Disperse cards across columns.",
   {
     schedule: "Wait 3 rounds, then pursue 3, 4, then Hunt.",
@@ -1289,10 +1298,10 @@ enemy(
   [
     attack("Antler", 10, "Fire", { burn: 2 }),
     effect("Brand", { grid: "lock", target: "newest", burn: 2 }),
-    effect("Wildfire", { grid: "row", target: "row" }),
+    effect("Wildfire", { grid: "row", target: "row", burn: 2 }),
     attack("Stampede", 7, "Earth", { hits: 2 }),
   ],
-  "Antler and Brand each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
+  "Antler, Brand and Wildfire each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
   "Water attacks and Water defenses counter Antler; Fire defenses counter Stampede.",
   { schedule: "Wait 4 rounds, then Hunt.", bossMode: "hunter" },
 );
@@ -1306,10 +1315,16 @@ enemy(
   [
     effect("Shatter Hymn", { grid: "destroy", target: "valuable", count: 2 }),
     attack("Refrain", 8, "Wind", { hits: 2 }),
-    effect("Silence", { grid: "sever", target: "connected" }),
+    attack("Silence", 2, "Light", {
+      grid: "sever",
+      target: "connected",
+      hits: 3,
+      damagePerAlly: 2,
+      fixedDamage: true,
+    }),
     attack("Chorus", 11, "Water"),
   ],
-  "Shatter Hymn destroys the two most valuable complete stacks: combined damage/defense potential, then printed Focus, remaining activations and reading order. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
+  "Shatter Hymn destroys the two most valuable complete stacks: combined damage/defense potential, then printed Focus, remaining activations and reading order. Silence Severs the most connected card, then attacks three times for 2 Light damage plus 2 per living Ally card on the grid (including covered Allies), counted once before the first hit; no cycle or half-HP damage bonuses. At half HP or lower gains 8 Guard each Shatter Hymn. On death: Final Note deals 20 Light damage with Cull before victory, bypassing Wards and Shields. Allies, Bracelets and Armor can defend; prepare before the killing blow; this death attack does not scale.",
   "Recall threatened stacks and use Earth attacks. Prepare for Wind and Water attacks, then use Allies and equipment to survive Final Note on death.",
   {
     schedule: "Pursue 0, 1, 2, 3, 4; Hunt on round 6.",
