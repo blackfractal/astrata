@@ -1,7 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
-import { ELEMENTS, enemies } from "../src/content.mjs";
+import { enemies } from "../src/content.mjs";
+const GLARE_ELEMENTS = ["Fire", "Earth", "Wind", "Water", "Chaos", "Light"];
 function base() {
   const g = new Game(8);
   g.s.equipment = {};
@@ -34,19 +35,19 @@ test("Colossus opens with two Chaos fists, Collapse, then non-damaging Glare", (
   end(g);
   assert.equal(g.s.hp, hp);
   assert.equal(e.cycle, 4);
-  assert.ok(ELEMENTS.includes(e.element));
+  assert.ok(GLARE_ELEMENTS.includes(e.element));
   assert.ok(
     g.presentation.some((f) => f.name === "Chaotic Glare · " + e.element),
   );
 });
-for (const element of ELEMENTS)
+for (const element of GLARE_ELEMENTS)
   test(`Glare supports ${element}; both fists and live details use it`, () => {
     const g = base(),
       e = g.s.battle.enemies[0];
     e.cycle = 3;
     const originalPick = g.pick.bind(g);
     g.pick = (pool) => {
-      assert.deepEqual(pool, ELEMENTS);
+      assert.deepEqual([...pool].sort(), [...GLARE_ELEMENTS].sort());
       return element;
     };
     end(g);
@@ -64,7 +65,7 @@ for (const element of ELEMENTS)
     }
     assert.equal(g.tell(e).name, "Collapse");
   });
-test("Fire form takes Water +50%, Earth half; Arcane form is neutral", () => {
+test("Fire form takes Water +50%, Earth half; legacy saved Arcane form remains neutral", () => {
   const g = base(),
     e = g.s.battle.enemies[0];
   for (const [form, incoming, expected] of [

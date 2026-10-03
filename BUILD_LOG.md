@@ -991,3 +991,10 @@ All279 tests pass. Coverage includes partial block, multiple hits/enemies, refil
 Five headless smoke games825183–825187 complete without errors, all losses, matching preceding outcomes/rounds/decision counts11/19/20/13/11 and204/336/245/220/125. Full traces/source metadata in reports/armor-pool-evaluation. No training or statistical balance conclusion. Full tutorial not rerun for this focused change; preceding1.3.66 tutorial evidence retained as historical.
 
 Additional implementation, verification, documentation and packaging time: approximately7 minutes. Release executable and CRC-verified ZIP refreshed. Jonathan's running app and save profile untouched. Local commit only, nothing pushed.
+
+
+## Post-build polish — Exclude Arcane from Chaotic Glare, round 73
+
+2026-10-02. Jonathan requested removing Arcane from Void-Colossus's Chaotic Glare choices. Package1.3.68/rules1.3.38/content1.1.39/design4.110. Glare now uniformly chooses Fire, Earth, Wind, Water, Chaos or Light using the same seeded RNG; choosing its current element remains possible. Updated boss description and main design. Existing saved Arcane forms and Mini-Voids retain their element; the next Glare must select from the six allowed elements. Legacy rules1.3.37 accepted. Attunement chaining remains a discussed proposal, not implemented.
+
+Updated existing Glare tests to assert the exact six-element selection pool and verify both following attacks for every choice. Legacy Arcane matchup and seeded replay/save tests retained. All278 tests pass (removed the now-invalid Arcane Glare-choice case). No new AI batch or training for this narrow pool change; previous reports remain historical. Additional implementation, verification, documentation and packaging time: approximately3 minutes. Runnable release and CRC-verified ZIP refreshed. Real app/profile untouched; local commit only, nothing pushed.

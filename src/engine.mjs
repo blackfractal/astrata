@@ -382,6 +382,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.37",
           "1.3.36",
           "1.3.35",
           "1.3.34",
@@ -1472,7 +1473,9 @@ export class Game {
           });
         }
         if (t.randomElement) {
-          e.element = this.pick(ELEMENTS);
+          e.element = this.pick(
+            ELEMENTS.filter((element) => element !== "Arcane"),
+          );
           const cleared = clearImmuneStatus(e);
           if (cleared)
             this.log(

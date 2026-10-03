@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.37",
-  content: "1.1.38",
+  rules: "1.3.38",
+  content: "1.1.39",
   observation: 1,
   actions: 2,
 };
@@ -1252,7 +1252,7 @@ enemy(
     effect("Collapse", { grid: "column", target: "column" }),
     effect("Chaotic Glare", { randomElement: true }),
   ],
-  "Chaotic Glare randomly changes its element, including Arcane; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
+  "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
   "Start with Light attacks, then adapt to its new element. Disperse cards across columns.",
   {
     schedule: "Wait 3 rounds, then pursue 3, 4, then Hunt.",
