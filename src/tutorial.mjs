@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 4,
+  version: 5,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -414,7 +414,7 @@ move(
 note(
   "elements",
   "Fire meets Water",
-  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Arcane stays neutral. The enemy’s Tell also shows the element of its attack.",
+  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Arcane stays neutral. The enemy’s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
   ".enemy",
 );
 place("water-place", "water", 22, "Place Water Blast on the marked space.");
@@ -453,7 +453,7 @@ action(
 note(
   "cycle",
   "Remember the cycle",
-  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Chaos swallows Light; Light overwhelms Chaos. The verbs describe attack advantage. Both Chaos and Light are strong against each other.",
+  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Use this same cycle for attacks, defensive attunements and equipment: +50% damage, block or Armor protection against the element you beat; -50% against your weakness, rounded up. Earth Armor protects best against Wind and worst against Fire. Same-element and Arcane matchups are neutral. Chaos and Light are mutually strong.",
   ".field",
   "tavern",
 );
@@ -513,7 +513,7 @@ action(
 action(
   "socket",
   "Imbue the Bracelet",
-  "Drag the Sapphire into the Bracelet’s Gem socket, or inspect the Gem and choose the Bracelet. Your Bracelet now has Water defense.",
+  "Drag the Sapphire into the Bracelet’s Gem socket, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet blocks 3 against Fire, 1 against Wind, and 2 otherwise.",
   { type: "socket", itemId: "bronze", gemId: "sapphire" },
   '.satchel, [data-equip-slot="wrist2"]',
 );
@@ -533,7 +533,7 @@ action(
 note(
   "gossip-learned",
   "Prepare for the Archon",
-  "You learned that the Archon boss is the Cinder Hart, a strong Fire enemy! If this were a real run, you would now know to stock up on Water cards and defenses against Fire. You will not fight this boss in the tutorial.",
+  "You learned that the Archon boss is the Cinder Hart, a strong Fire enemy! If this were a real run, you would now know to stock up on Water attacks, Water-attuned Shields, Sapphire Bracelets and Water Armor to counter Fire. You will not fight this boss in the tutorial.",
   ".tavern-service",
 );
 ui(

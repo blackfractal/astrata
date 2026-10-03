@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.34",
-  content: "1.1.35",
+  rules: "1.3.35",
+  content: "1.1.36",
   observation: 1,
   actions: 1,
 };
@@ -718,7 +718,7 @@ item(
   "wrist",
   { block: 2 },
   40,
-  "Refill 2 block each enemy turn.",
+  "Refill 2 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
 item(
@@ -727,7 +727,7 @@ item(
   "wrist",
   { block: 5 },
   90,
-  "Refill 5 block each enemy turn.",
+  "Refill 5 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
 item(
@@ -736,7 +736,7 @@ item(
   "wrist",
   { block: 10 },
   190,
-  "Refill 10 block each enemy turn.",
+  "Refill 10 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
   { socket: true, forbid: ["channelGem"] },
 );
 item(
@@ -790,9 +790,17 @@ for (const [id, name, element] of [
   ["topaz", "Topaz", "Wind"],
   ["sapphire", "Sapphire", "Water"],
 ])
-  item(id, name, "gem", {}, 45, `Imbues a Setting with ${element}.`, {
-    element,
-  });
+  item(
+    id,
+    name,
+    "gem",
+    {},
+    45,
+    `Imbues a Setting with ${element}. Attacks and block gain +50% against ${cycle[element]}, and lose 50% against ${Object.keys(cycle).find((e) => cycle[e] === element)}. Same-element and unrelated matchups are neutral. Round up.`,
+    {
+      element,
+    },
+  );
 for (const [id, name, effect] of [
   ["focusGem", "Amber Thought", { focus: 1 }],
   ["channelGem", "Storm Opal", { channel: 1 }],
@@ -817,9 +825,10 @@ for (const element of ["Fire", "Water", "Earth", "Wind"])
     element.toLowerCase() + "Armor",
     element + " Armor",
     "torso",
-    { resist: element },
+    { armor: 2 },
     65,
-    "Halve " + element + " damage from enemy attacks to the player.",
+    `Reduce each enemy attack reaching you by 2: 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Does not reduce Burn, Poison or Corrode damage.`,
+    { element },
   );
 item(
   "holyArmor",
@@ -1264,7 +1273,7 @@ enemy(
     attack("Stampede", 6, "Earth", { hits: 2 }),
   ],
   "Antler and Brand each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
-  "Water spells and a Fire Bracelet buy time.",
+  "Water attacks and Water defenses counter Antler; Fire defenses counter Stampede.",
   { schedule: "Wait 4 rounds, then Hunt.", bossMode: "hunter" },
 );
 enemy(
@@ -1525,7 +1534,7 @@ export const glossary = {
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "On activation choose an adjacent element, or Arcane if none is available. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements.",
+    "On activation choose an adjacent element, or Arcane if none is available. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
@@ -1539,7 +1548,7 @@ export const glossary = {
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
   Ward: "Starts at 0; activate to build persistent defense. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Shield:
-    "Block expires after the enemy turn. Choose which portion absorbs a hit.",
+    "Block expires after the enemy turn. Choose which portion absorbs a hit. Attuned block uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",
   Burn: "Water enemies are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Poison:
@@ -1585,9 +1594,9 @@ export const glossary = {
   Resist:
     "A printed resistance halves damage from its named element, rounded up. It is separate from the elemental cycle.",
   Block:
-    "Temporary defense from Shields or Bracelets. Each portion keeps its element and remaining block; Shield block expires after the enemy turn, Bracelet block refills each enemy turn.",
+    "Temporary defense from Shields or Bracelets. Elemental block gains +50% against the element it beats, loses 50% against its weakness, rounded up; same element and Arcane are neutral. Shield block expires after the enemy turn; Bracelet block refills each enemy turn.",
   Armor:
-    "Equipment that protects only the player, after grid defenses and Bracelets. Its printed effect determines the protection.",
+    "Passive protection after grid defenses and Bracelets, applied to each enemy attack reaching the player. Elemental Armor has 2 base reduction: 3 against the element it beats, 1 against its weakness, 2 otherwise. Ongoing status damage bypasses Armor.",
   Hex: "A harmful card in your Grimoire. Its printed text explains when it applies. Tavern Hex treatment is separate from ordinary card removal.",
   Curse:
     "A harmful item effect. Cursed equipment may be forced into a slot and cannot be freely removed; its treatment has a printed cost.",
@@ -1657,17 +1666,17 @@ export const glossary = {
   "Pack Movement":
     "When a matching pack member arrives on the player, other pack members move toward the player too. Arriving enemies remain there until the battle begins.",
   Arcane:
-    "No elemental matchup: Arcane damage receives no elemental-cycle bonus or penalty.",
-  Fire: "Fire deals +50% damage to Earth and -50% to Water, rounded up. Fire defense has its own Shield/equipment rules. Fire enemies are immune to Poison.",
+    "No elemental matchup: Arcane attacks, block and Armor protection receive no elemental-cycle bonus or penalty.",
+  Fire: "Fire burns Earth. Fire attacks, Shield block, Bracelet block and Armor protection gain +50% against Earth and lose 50% against Water, rounded up. Same-element matchups are neutral. Fire enemies are immune to Poison.",
   Earth:
-    "Earth deals +50% damage to Wind and -50% to Fire, rounded up. Earth defense has its own Shield/equipment rules.",
-  Wind: "Wind deals +50% damage to Water and -50% to Earth, rounded up. Wind defense has its own Shield/equipment rules.",
+    "Earth blocks Wind. Earth attacks, Shield block, Bracelet block and Armor protection gain +50% against Wind and lose 50% against Fire, rounded up. Same-element matchups are neutral.",
+  Wind: "Wind dries Water. Wind attacks, Shield block, Bracelet block and Armor protection gain +50% against Water and lose 50% against Earth, rounded up. Same-element matchups are neutral.",
   Water:
-    "Water deals +50% damage to Fire and -50% to Wind, rounded up. Water defense has its own Shield/equipment rules. Water enemies are immune to Burn.",
+    "Water douses Fire. Water attacks, Shield block, Bracelet block and Armor protection gain +50% against Fire and lose 50% against Wind, rounded up. Same-element matchups are neutral. Water enemies are immune to Burn.",
   Chaos:
-    "Chaos and Light each deal +50% damage to the other, rounded up; they sit outside the four-element cycle. Chaos enemies are immune to Corrode.",
+    "Chaos and Light each gain +50% attack damage and block against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral. Chaos enemies are immune to Corrode.",
   Light:
-    "Light and Chaos each deal +50% damage to the other, rounded up; they sit outside the four-element cycle.",
+    "Light and Chaos each gain +50% attack damage and block against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral.",
 };
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.

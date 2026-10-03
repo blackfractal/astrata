@@ -73,5 +73,5 @@ test("Shield previews and stored block include adjacency at activation time, wit
   b.grid[1] = [];
   assert.equal(g.shieldPower(a, 0), 4);
   assert.equal(b.shields[0].block, 5);
-  assert.equal(blockHit(b.shields[0].block, "Fire", 10, "Fire").remaining, 0);
+  assert.equal(blockHit(b.shields[0].block, "Fire", 10, "Earth").remaining, 2);
 });

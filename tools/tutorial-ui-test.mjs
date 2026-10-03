@@ -183,11 +183,53 @@ try {
         "movement-forfeit",
         "caught",
         "elements",
+        "cycle",
+        "gossip-learned",
       ].includes(step) &&
       !report.steps.includes(step)
     ) {
       await p.mouse.move(5, 5);
       await p.screenshot({ path: dir + "/" + step + ".png" });
+    }
+    if (["elements", "cycle", "socket", "gossip-learned"].includes(step)) {
+      const guide = p.locator(".tutorial-guide");
+      const copy = await guide.textContent();
+      if (step === "elements")
+        assert.match(
+          copy,
+          /same cycle applies to defensive attunements and equipment/,
+        );
+      if (step === "cycle") {
+        assert.match(
+          copy,
+          /Earth Armor protects best against Wind and worst against Fire/,
+        );
+        assert.match(copy, /Same-element and Arcane matchups are neutral/);
+      }
+      if (step === "socket")
+        assert.match(
+          copy,
+          /blocks 3 against Fire, 1 against Wind, and 2 otherwise/,
+        );
+      if (step === "gossip-learned")
+        assert.match(
+          copy,
+          /Water-attuned Shields, Sapphire Bracelets and Water Armor/,
+        );
+      const fits = await guide.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return (
+          r.left >= 0 &&
+          r.top >= 0 &&
+          r.right <= innerWidth &&
+          r.bottom <= innerHeight &&
+          el.scrollHeight <= el.clientHeight + 1
+        );
+      });
+      assert.ok(fits, step + " tutorial text fits on screen");
+      report.checks.push(
+        step + ": unified elemental guidance visible and within viewport.",
+      );
     }
     if (step === "pursuit-one-left") {
       assert.equal(state.mode, "field");

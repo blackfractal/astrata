@@ -588,3 +588,18 @@ Package1.3.57/rules1.3.33/content1.1.33 updates tutorial movement and lesson mig
 
 
 Package1.3.58 adds optional UI suggestions during the independent tutorial fight, using current legal actions and the unchanged weighted policy. Suggestions never execute decisions or mutate game state; exhausted-phase arrows take priority. All264 tests and packaged timing/defense/save-resume/drag/reduced-motion checks pass, including a real15-second wait. No new combat balance, training or five-run evaluation; earlier results retain their recorded versions. See reports/tutorial-hints-verification.json.
+
+
+## Unified elemental defense — 1.3.65
+
+Rules1.3.35/content1.1.36; unchanged weighted-druid-v1.12, no training. Five smoke runs completed under the new rules.
+
+| Seed | Outcome | Field round | Decisions | Cause |
+|---|---|---:|---:|---|
+| 825183 | loss | 11 | 204 | Fire Bite |
+| 825184 | loss | 19 | 336 | Void fist |
+| 825185 | loss | 20 | 246 | Stampede |
+| 825186 | loss | 14 | 242 | Coal |
+| 825187 | loss | 19 | 294 | Void fist |
+
+All five lost. These are integration smoke results, not evidence of an optimal policy or a statistically established balance change. Complete traces and source/version snapshots: reports/element-defense-evaluation. The deterministic First Clearing tutorial passed122 decisions at70HP in both headless and packaged graphical verification.

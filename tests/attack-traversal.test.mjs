@@ -93,7 +93,7 @@ test("Elemental block floats actual block spent; weak Ally shows only HP lost an
     hb = h.s.battle;
   hb.bracelets = [{ uid: 99, name: "Fire", block: 2, element: "Fire" }];
   hb.jobs = [
-    { kind: "hit", damage: 6, element: "Fire", source: 900, name: "Fire" },
+    { kind: "hit", damage: 6, element: "Earth", source: 900, name: "Earth" },
   ];
   h.pump();
   act(h, "bracelet");

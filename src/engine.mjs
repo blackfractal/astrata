@@ -41,17 +41,17 @@ function normalizeEnemyImmunities(state) {
   if (state.checkpoint) normalizeEnemyImmunities(state.checkpoint);
 }
 const statusName = (k) => k[0].toUpperCase() + k.slice(1);
+export function elementalRate(from, to) {
+  return from === "Arcane" || to === "Arcane"
+    ? 1
+    : cycle[from] === to
+      ? 1.5
+      : cycle[to] === from
+        ? 0.5
+        : 1;
+}
 export function offense(n, from, to) {
-  return Math.ceil(
-    n *
-      (from === "Arcane" || to === "Arcane"
-        ? 1
-        : cycle[from] === to
-          ? 1.5
-          : cycle[to] === from
-            ? 0.5
-            : 1),
-  );
+  return Math.ceil(n * elementalRate(from, to));
 }
 export function gridNeighbors(b, i) {
   if (top(b.grid[i])?.sever) return [];
@@ -168,13 +168,7 @@ export function incomingDamageText(hit) {
   return `${hit.damage} ${hit.element} base damage remaining${hit.stage === "ally" && hit.weaknessBonus ? ` + ${hit.weaknessBonus} weakness bonus against ${hit.weaknessElement}` : ""}`;
 }
 export function defenseRate(def, attack) {
-  return def === "Arcane" || attack === "Arcane"
-    ? 1
-    : def === attack
-      ? 2
-      : cycle[attack] === def
-        ? 0.5
-        : 1;
+  return elementalRate(def, attack);
 }
 export function blockHit(block, element, damage, attack) {
   const rate = defenseRate(element, attack),
@@ -387,6 +381,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.34",
           "1.3.33",
           "1.3.32",
           "1.3.31",
@@ -688,7 +683,10 @@ export class Game {
               ...x,
               slot,
               definition: items[x.id],
-              element: items[this.getItem(x.gem)?.id]?.element || "Arcane",
+              element:
+                items[this.getItem(x.gem)?.id]?.element ||
+                items[x.id].element ||
+                "Arcane",
             },
           ]
         : [];
@@ -1652,9 +1650,16 @@ export class Game {
         }
         damage = 0;
       }
-      if (armor?.definition.effect.resist === h.element)
-        damage = Math.ceil(damage / 2);
-      if (!h.statusHit) damage = Math.max(0, damage - this.bonuses().armor);
+      if (!h.statusHit) {
+        const printed = armor?.definition.effect.armor || 0;
+        const protection = Math.ceil(
+          printed * defenseRate(armor?.element || "Arcane", h.element),
+        );
+        damage = Math.max(
+          0,
+          damage - (this.bonuses().armor - printed + protection),
+        );
+      }
       const loss = Math.min(s.hp, damage);
       s.hp = Math.max(0, s.hp - damage);
       this.presentIncomingNode(

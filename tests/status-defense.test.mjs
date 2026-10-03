@@ -84,7 +84,7 @@ test("Elemental armor and reflection apply only to attacks, not ongoing statuses
   hit(g, 6, true, "Fire");
   assert.equal(g.s.hp, hp - 6);
   hit(g, 6, false, "Fire");
-  assert.equal(g.s.hp, hp - 9);
+  assert.equal(g.s.hp, hp - 10);
   const h = base("mirrorArmor"),
     b = h.s.battle,
     enemyHp = b.enemies[0].hp;

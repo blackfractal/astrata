@@ -40,7 +40,7 @@ test("offense follows forward/backward cycles, Chaos/Light, rounding", () => {
   assert.equal(offense(5, "Arcane", "Earth"), 5);
 });
 test("elemental block converts leftovers back per portion", () => {
-  assert.deepEqual(blockHit(5, "Fire", 4, "Fire"), { remaining: 0, block: 3 });
+  assert.deepEqual(blockHit(5, "Fire", 4, "Earth"), { remaining: 0, block: 2 });
   assert.deepEqual(blockHit(5, "Fire", 8, "Water"), { remaining: 5, block: 0 });
 });
 test("Wards are selectable and exhausted activations do not prevent absorption", () => {
@@ -86,7 +86,7 @@ test("Shield portions and Allies are optional choices sharing one defensive posi
   assert.equal(g.s.battle.reaction.damage, 5);
   act(g, "block");
   assert.equal(g.s.battle.reaction, null);
-  assert.equal(g.s.battle.shields[1].block, 2);
+  assert.equal(g.s.battle.shields[1].block, 0);
 });
 test("Ally interception spills excess; Guardian swallows it", () => {
   const g = battle();
