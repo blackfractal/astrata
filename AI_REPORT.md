@@ -1,3 +1,24 @@
+# Equipment evaluation — package1.3.71
+
+Policy weighted-druid-v1.14 replaces1.13; rules1.3.39/content1.1.41 unchanged. Reflection, Shield activation bonuses, Recall discounts, once-per-turn versus repeat attack triggers, negative movement and damaging status drawbacks are scored. Owned-item comparisons include socket effects and Dew/Sapphire synergy, with a curse penalty; existing elemental attunements have no unconditional score advantage without a matchup. Socketed Weeping Garnet is evaluated according to its suppressed inventory Poison. Shield-only helmets have no bonus value in a deck with no Shields. Useful empty-slot equipment is favored without shuffling already-equipped items. Shared valuation covers pickups, purchases, trades and sacrifice costs; this is not a shopping planner or learned policy.
+
+All289 tests pass, including six new tests covering every current non-cursed wearable in an empty slot, Tavern Mirror Armor/helmet equipping, cursed gear rejection, occupied socketed replacements, Recall/Dew synergy, conditional helmet effects, Garnet socketing and unknown-action fallback. Six paired full runs (five standard seeds plus the watched demo) complete without stalls or invalid actions. Before/after use identical game rules/content and default weights; only the policy changes.
+
+| Seed | Before: round / decisions | After: round / decisions | Outcome |
+| --- | --- | --- | --- |
+| 825183 | 11 / 204 | 11 / 205 | Both loss |
+| 825184 | 19 / 337 | 19 / 337 | Both loss |
+| 825185 | 20 / 245 | 20 / 247 | Both loss |
+| 825186 | 13 / 220 | 16 / 200 | Both loss |
+| 825187 | 11 / 125 | 11 / 125 | Both loss |
+| 4290696662 | 17 / 271 | 18 / 303 | Both loss |
+
+On demo seed4290696662, the old policy never equips or uses Armor. The new policy equips Mirror Armor in round11, uses reflection starting round12, and equips Sturdy Metal Helmet in round14. It enters Glass Choir at59HP versus2HP, survives11 boss turns versus4, but still loses. Changed decisions alter later encounter/RNG trajectories; these differences are not isolated causal estimates of each equipment piece. The five standard seeds remain losses, with some higher encounter-exit HP and one later loss (round16 versus13). This fixes observed equipment omissions; it does not establish strong play or balanced difficulty. No training, optimization, MCTS or win-rate significance claim.
+
+Evidence: reports/equipment-policy-comparison.json; full before/after archives and source snapshots in equipment-policy-before, equipment-policy-after, equipment-policy-demo-before and equipment-policy-demo-after. Existing running demo and normal saves are untouched; restart loads the new policy. Prior reports below remain historical.
+
+---
+
 # Attunement relays and Bracelet balance — package1.3.69
 
 Rules1.3.39/content1.1.40; policy weighted-druid-v1.13 unchanged. All283 unit tests and packaged relay/Bracelet checks pass; headless authored tutorial completes122decisions at70HP. Five unattended runs825183–825187 complete without errors, all losses: rounds11/19/20/13/11, decisions204/336/245/220/125. Full traces/build metadata: reports/attunement-relay-evaluation. No training or statistical balance conclusion. The policy can use the legal attunement choices but has no newly trained chain-planning strategy; focused tests verify relay behavior directly. Graphical evidence: reports/attunement-relay-verification.json and screenshots/attunement-relay/chain.png. Earlier reports below remain historical.

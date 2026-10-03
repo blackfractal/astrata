@@ -18,7 +18,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.13";
+    this.id = "weighted-druid-v1.14";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -61,7 +61,7 @@ export class WeightedPolicy {
       (d.type === "Hex" ? 40 : 0)
     );
   }
-  gearValue(e = {}) {
+  gearValue(e = {}, o) {
     return (
       (e.channel || 0) * 20 +
       (e.focus || 0) * 14 +
@@ -69,9 +69,36 @@ export class WeightedPolicy {
       (e.block || 0) * 2 +
       (e.heal || 0) * 6 +
       (e.armor || 0) * 6 +
-      (e.damage || 0) * 3 +
+      (e.damage || 0) * (e.firstAttackOnly ? 3 : 4.5) +
       (e.movement || 0) * 3 +
-      (e.resist ? 4 : 0)
+      (e.resist ? 4 : 0) +
+      (e.reflect ? 12 : 0) +
+      (e.shield || 0) *
+        (!o || o.deck.some((c) => cards[c.id]?.name.includes("Shield"))
+          ? 4
+          : 0) +
+      (e.recall || 0) * 3 -
+      (e.burn || 0) * 3 -
+      (e.poison || 0) * 6 -
+      (e.corrode || 0) * 12
+    );
+  }
+  // Compare the actual owned instance, including benefits lost with its socket.
+  // Elemental attunement is matchup-dependent, not an unconditional upgrade.
+  itemValue(inst, o) {
+    const d = items[inst?.id];
+    if (!d) return 0;
+    const gem = items[o.inventory.find((x) => x.uid === inst.gem)?.id];
+    return (
+      this.gearValue(d.effect, o) -
+      (d.cursed ? 40 : 0) +
+      (gem
+        ? this.gearValue(
+            gem.id === "curseGem" ? { ...gem.effect, poison: 0 } : gem.effect,
+            o,
+          )
+        : 0) +
+      (gem && d.synergy === gem.id ? this.gearValue({ heal: 1 }, o) : 0)
     );
   }
   score(o, a) {
@@ -100,14 +127,14 @@ export class WeightedPolicy {
         const inst = o.inventory.find((x) => x.uid === a.item),
           old = o.inventory.find((x) => x.uid === o.equipment[a.slot]);
         n =
-          this.gearValue(items[inst.id].effect) -
-          this.gearValue(items[old?.id]?.effect) -
+          this.itemValue(inst, o) -
+          this.itemValue(old, o) -
           (Object.values(o.equipment).includes(inst.uid)
-            ? this.gearValue(items[inst.id].effect)
+            ? this.itemValue(inst, o)
             : 0);
         return [
           n > 0 ? 30 + n : -20,
-          "Equip gear only when its evaluated benefit improves this slot.",
+          `Equip only for a net benefit (${n.toFixed(1)}), counting effects, sockets and curses.`,
         ];
       }
       case "move": {
@@ -338,7 +365,7 @@ export class WeightedPolicy {
       case "rewardGem":
       case "rewardSetting":
         return [
-          this.gearValue(f.gear),
+          this.gearValue(f.gear, o),
           "Prefer permanent economy and passive protection.",
         ];
       case "takeItem":
@@ -346,9 +373,7 @@ export class WeightedPolicy {
         const id = f.item,
           d = id?.startsWith("card:") ? null : items[id];
         n = d
-          ? this.gearValue(d.effect) +
-            (d.slot === "gem" ? 3 : 0) -
-            (d.cursed ? 40 : 0)
+          ? this.itemValue({ id }, o) + (d.slot === "gem" ? 3 : 0)
           : this.cardValue(id?.slice(5), o);
         if (a.type === "buy") n -= a.price * 0.13;
         return [n, "Value the offered item against its price and risk."];
@@ -362,18 +387,15 @@ export class WeightedPolicy {
             (f.hp || 0) * 1.5 +
             (f.card ? this.cardValue(f.card, o) : 0) +
             (f.hex ? -30 : 0) +
-            (f.item
-              ? this.gearValue(items[f.item].effect) -
-                (items[f.item].cursed ? 25 : 0)
-              : 0) +
+            (f.item ? this.itemValue({ id: f.item }, o) : 0) +
             (f.clean || f.cleanHex
               ? o.deck.filter((x) => cards[x.id].type === "Hex").length * 20
               : 0) -
             (a.costs.gold || 0) * 0.2 -
             (a.tradeItem != null
-              ? this.gearValue(
-                  items[o.inventory.find((x) => x.uid === a.tradeItem).id]
-                    .effect,
+              ? this.itemValue(
+                  o.inventory.find((x) => x.uid === a.tradeItem),
+                  o,
                 )
               : 0) -
             (a.tradeCard != null
@@ -386,8 +408,10 @@ export class WeightedPolicy {
           old = o.inventory.find((x) => x.uid === inst.gem),
           g = o.inventory.find((x) => x.uid === a.gem);
         return [
-          this.gearValue(items[g.id].effect) -
-            this.gearValue(items[old?.id]?.effect) +
+          this.itemValue({ ...inst, gem: g.uid }, o) -
+            this.itemValue(inst, o) +
+            (g.id === "curseGem" ? 6 : 0) -
+            (old?.id === "curseGem" ? 6 : 0) +
             (old ? -10 : 10),
           "Socket unused Gems to activate their powers.",
         ];
@@ -406,7 +430,7 @@ export class WeightedPolicy {
             hpCost * (o.hp < 25 ? 2 : 0.8) -
             (a.costs.gold || 0) * 0.06 -
             (lostCard ? this.cardValue(lostCard.id, o) : 0) -
-            (lostItem ? this.gearValue(items[lostItem.id].effect) : 0),
+            (lostItem ? this.itemValue(lostItem, o) : 0),
           "Weigh Hex relief against the displayed HP, Gold, or sacrifice cost.",
         ];
       }
@@ -424,9 +448,10 @@ export class WeightedPolicy {
         return [0, "Continue when useful services are exhausted."];
       case "replaceArmor":
         return [
-          this.gearValue(f.gear) -
-            this.gearValue(
-              items[o.inventory.find((x) => x.uid === a.old).id].effect,
+          this.gearValue(f.gear, o) -
+            this.itemValue(
+              o.inventory.find((x) => x.uid === a.old),
+              o,
             ),
           "Replace Armor only for a better evaluated effect.",
         ];
