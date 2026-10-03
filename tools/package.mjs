@@ -53,6 +53,8 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "evaluation",
+  "conduit-evaluation",
+  "conduit-verification.json",
   "sapling-growth-evaluation",
   "sapling-verification.json",
   "equipment-policy-before",

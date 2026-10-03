@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.40",
-  content: "1.1.42",
+  rules: "1.3.41",
+  content: "1.1.43",
   observation: 1,
   actions: 2,
 };
@@ -98,10 +98,10 @@ card(
   "Arcane",
   "Ally",
   1,
-  0,
-  {},
-  "6 HP. May intercept attacks.",
-  { hp: 6 },
+  2,
+  { conduit: true },
+  "6 HP. Conduit: optionally Attune. Until your next turn, defend in that element and count as an adjacent Blast and Shield, giving each +1 damage or block. Relay the chosen element to adjacent Attune cards. May intercept attacks.",
+  { hp: 6, attune: true },
 );
 card(
   "clear",
@@ -1531,6 +1531,8 @@ export const locations = [
   },
 ];
 export const glossary = {
+  Conduit:
+    "Familiar activation: choose an adjacent element or remain Arcane. Until the next player turn, defend in that element, relay it to adjacent Attune cards, and provide +1 damage to each adjacent Blast and +1 block to each adjacent Shield when they activate. Costs 1 Channel; two uses, once per turn. No attack or Shield block is created by Conduit itself. Spent Familiar still supplies the committed effect; Sever or covering stops neighbor connections. Existing Shield block is not changed retroactively.",
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:

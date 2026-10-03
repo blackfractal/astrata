@@ -80,9 +80,24 @@ export function attunementElements(b, c, i) {
       : [c.element];
   return elements.length ? elements : ["Arcane"];
 }
+export function conduitActive(b, c) {
+  return !!(c && cards[c.id].effects.conduit && c.lastActivatedTurn === b.turn);
+}
+export function defensiveElement(b, c) {
+  return conduitActive(b, c) ? attunementSourceElement(b, c) : c.element;
+}
+export function matchingNeighborSlots(b, c, i) {
+  if (c.sever || top(b.grid[i])?.uid !== c.uid) return [];
+  return gridNeighbors(b, i).filter((j) => {
+    const other = top(b.grid[j]);
+    return (
+      other.id === c.id ||
+      (["blast", "shield"].includes(c.id) && conduitActive(b, other))
+    );
+  });
+}
 export function matchingNeighbors(b, c, i) {
-  if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
-  return gridNeighbors(b, i).filter((j) => top(b.grid[j]).id === c.id).length;
+  return matchingNeighborSlots(b, c, i).length;
 }
 // Shared by resolution, UI and policy; added HP never enters the current attack.
 export function activationGrowth(b, c, i) {
@@ -414,6 +429,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.40",
           "1.3.39",
           "1.3.38",
           "1.3.37",
@@ -1757,7 +1773,12 @@ export class Game {
     const b = this.s.battle,
       h = b.reaction,
       c = top(b.grid[i]);
-    const result = allyHit(h, c.element, c.hp, cards[c.id].swallow);
+    const result = allyHit(
+      h,
+      defensiveElement(b, c),
+      c.hp,
+      cards[c.id].swallow,
+    );
     const damage = result.damage;
     c.hp = Math.max(0, c.hp - damage);
     h.damage = result.remaining;
@@ -2646,7 +2667,7 @@ export class Game {
             { slot: x.i },
             {
               allyHp: x.c.hp,
-              element: x.c.element,
+              element: defensiveElement(b, x.c),
               swallow: !!cards[x.c.id].swallow,
               column: x.i % MIND_COLUMNS,
             },
@@ -2764,7 +2785,7 @@ export class Game {
               for (const ex of extras)
                 add(
                   "activate",
-                  `${d.name}${charging ? " · Charge" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  `${d.name}${charging ? " · Charge" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
                     ...(charging

@@ -1,3 +1,19 @@
+# Familiar Conduit — package1.3.73
+
+Rules1.3.41/content1.1.43/policy weighted-druid-v1.16. Policy recognizes Conduit's adjacent Blast/Shield support and chosen defensive element. No training. All300 tests pass. Packaged graphical test verifies canceled previews, click/drag chains, matching bonuses, actual elemental interception and next-turn expiry without renderer errors. Tutorial completes122 decisions at70HP.
+
+| Seed | Outcome | Round | Decisions |
+| --- | --- | --- | --- |
+| 825183 | loss | 20 | 329 |
+| 825184 | loss | 8 | 167 |
+| 825185 | loss | 16 | 211 |
+| 825186 | loss | 8 | 124 |
+| 825187 | win | 20 | 439 |
+
+Five complete unattended regression runs: one win, four losses, with no invalid decisions or stalls. Both rules and policy changed; this small sample is not evidence of balance or improved general skill. Full versioned traces and source snapshots are retained in reports/conduit-evaluation; graphical evidence in reports/conduit-verification.json and screenshots/conduit. Historical evaluations follow.
+
+---
+
 # Sapling attack-then-growth — package1.3.72
 
 Rules1.3.40/content1.1.42/policy weighted-druid-v1.15. Sapling now attacks for current HP, then gains1 per adjacent card up to10; no passive growth. Policy evaluates the bounded activation benefit separately from immediate damage and stops treating exhausted Sapling as an indefinitely growing attacker. No training. All295 unit tests pass; three packaged UI cases verify damage-before-growth, health cap, neighbor links and legacy cap migration with no renderer errors. The authored tutorial completes122decisions at70HP.

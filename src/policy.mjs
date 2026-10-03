@@ -1,6 +1,7 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
 import {
   activationGrowth,
+  defensiveElement,
   offense,
   defenseRate,
   adjacent,
@@ -19,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.15";
+    this.id = "weighted-druid-v1.16";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -57,7 +58,8 @@ export class WeightedPolicy {
       (e.burn || 0) * 2 +
       (e.corrode || 0) * 6 +
       (e.hpDamage ? 8 : 0) +
-      (d.growth ? 8 : e.growAfterAttack ? 4 : 0) -
+      (d.growth ? 8 : e.growAfterAttack ? 4 : 0) +
+      (e.conduit ? 4 : 0) -
       (d.focus - 1) * 3 -
       (d.type === "Hex" ? 40 : 0)
     );
@@ -205,6 +207,10 @@ export class WeightedPolicy {
         n = this.cardValue(c.id, o) * 0.5 + 2;
         if (e.focusPermanent) n += b.turn < 5 ? 12 : 2;
         if (c.growth) n += 8 + ns.length * 3;
+        if (e.conduit)
+          n +=
+            ns.filter((i) => ["blast", "shield"].includes(b.grid[i].at(-1).id))
+              .length * 2;
         if (e.growAfterAttack) n += 4 + ns.length * 1.5;
         if (e.damage && !hasOffense) n += 8;
         if (e.shield && existing) n -= 12;
@@ -311,6 +317,32 @@ export class WeightedPolicy {
             b.grid.flat().filter((x) => x.lock || x.sever || x.freeze).length *
             4;
         if (f.allyHeal) n += 4;
+        if (f.conduit) {
+          const c = b.grid[a.slot].at(-1);
+          const supported =
+            b.channel > a.costs.channel
+              ? adjacent(a.slot).filter((i) => {
+                  const x = b.grid[i].at(-1);
+                  return (
+                    x &&
+                    !c.sever &&
+                    !x.sever &&
+                    ["blast", "shield"].includes(x.id) &&
+                    x.used < cards[x.id].limit &&
+                    x.lastActivatedTurn !== b.turn
+                  );
+                }).length
+              : 0;
+          const protection = b.enemies.reduce((sum, e) => {
+            const hit = { damage: e.tell.damage || 0, element: e.tell.element };
+            return (
+              sum +
+              allyHit(hit, c.element, c.hp).remaining -
+              allyHit(hit, a.element, c.hp).remaining
+            );
+          }, 0);
+          n += (supported ? 4 + supported : -2) + protection * w.survival;
+        }
         if (f.growAfterAttack && target && !target.flicker)
           n += activationGrowth(b, b.grid[a.slot].at(-1), a.slot) * 0.6;
         if (f.magnify) n += 3;
@@ -345,7 +377,7 @@ export class WeightedPolicy {
       case "intercept": {
         const c = b.grid[a.slot].at(-1),
           d = cards[c.id],
-          result = allyHit(b.reaction, c.element, c.hp, f.swallow);
+          result = allyHit(b.reaction, defensiveElement(b, c), c.hp, f.swallow);
         return [
           (b.reaction.damage - result.remaining) * w.survival -
             (d.growth || (d.effects.growAfterAttack && c.used < d.limit)

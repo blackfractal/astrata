@@ -17,6 +17,9 @@ import {
 import { cards, items, enemies } from "./content.mjs";
 import {
   activationGrowth,
+  conduitActive,
+  defensiveElement,
+  matchingNeighbors,
   blockHit,
   allyHit,
   incomingDamageText,
@@ -77,12 +80,7 @@ function effect(c, slot, ctx) {
     f = d.effects || {};
   if (d.charge && c.charge + 1 < d.charge)
     return `Charge · ${d.charge - c.charge} to fire`;
-  const matching = c.sever
-    ? 0
-    : adjacent(slot).filter((i) => {
-        const other = ctx.o.battle.grid[i].at(-1);
-        return other?.id === c.id && !other.sever;
-      }).length;
+  const matching = matchingNeighbors(ctx.o.battle, c, slot);
   return (
     [
       f.damage || f.hpDamage
@@ -100,6 +98,7 @@ function effect(c, slot, ctx) {
       f.heal ? `Heal ${f.heal}` : null,
       f.selfGrowth ? `+${f.selfGrowth} HP` : null,
       f.taunt ? "Taunt" : null,
+      f.conduit ? "Conduit" : null,
       f.poison ? `Poison ${f.poison}` : null,
       f.burn ? `Burn ${f.burn}` : null,
       f.burnAll ? `Burn ${f.burnAll} to all` : null,
@@ -619,7 +618,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? "Ward " + c.ward : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${Math.max(1, d.charge - c.charge)} activation(s) to fire` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? "Ward " + c.ward : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${Math.max(1, d.charge - c.charge)} activation(s) to fire` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
   );
   const context = ctx.modal.querySelector(".card-context");
   if (slot != null) {
