@@ -14,7 +14,7 @@ import {
   statusBadges,
   upgradeHelp,
 } from "./battle-feedback.mjs";
-import { cards, items, enemies } from "./content.mjs";
+import { cards, items, enemies, CARD_BUY_PRICES } from "./content.mjs";
 import {
   activationGrowth,
   chargeGain,
@@ -891,7 +891,7 @@ function tavern(ctx) {
     const stock = o.shop.stock.map((id, index) => {
       const isCard = id.startsWith("card:"),
         d = isCard ? cards[id.slice(5)] : items[id],
-        price = d.worth || { common: 30, rare: 65, legendary: 120 }[d.rarity],
+        price = d.worth || CARD_BUY_PRICES[d.rarity],
         a = actions.find((a) => a.type === "buy" && a.index === index);
       return { id, index, isCard, d, price, a };
     });

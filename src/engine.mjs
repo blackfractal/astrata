@@ -12,6 +12,7 @@ import {
 import { describeDeath } from "./death.mjs";
 import {
   cards,
+  CARD_BUY_PRICES,
   items,
   enemies,
   events,
@@ -2579,7 +2580,7 @@ export class Game {
       for (let index = 0; index < shop.stock.length; index++) {
         const id = shop.stock[index],
           d = id.startsWith("card:") ? cards[id.slice(5)] : items[id],
-          price = d.worth || { common: 30, rare: 65, legendary: 120 }[d.rarity];
+          price = d.worth || CARD_BUY_PRICES[d.rarity];
         if (s.gold >= price && !d.cursed && d.type !== "Hex")
           add(
             "buy",

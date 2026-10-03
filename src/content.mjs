@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.44",
-  content: "1.1.48",
+  content: "1.1.49",
   observation: 1,
   actions: 2,
 };
@@ -29,6 +29,11 @@ export const cycle = {
   Chaos: "Light",
   Light: "Chaos",
 };
+export const CARD_BUY_PRICES = Object.freeze({
+  common: 100,
+  rare: 150,
+  legendary: 250,
+});
 export const cards = {};
 function card(
   id,
@@ -684,7 +689,11 @@ for (const id of [
   "solitude",
 ]) {
   cards[id].upgrade = {
-    gold: 35 + cards[id].focus * 15,
+    gold: ["blast", "shield"].includes(id)
+      ? 50
+      : ["cinder", "solitude", "thorn", "root"].includes(id)
+        ? 120
+        : 100,
     bonus: 3,
     text: "The graftkeeper renews its living ink: +3 damage, block, healing, or initial Ally HP.",
   };
