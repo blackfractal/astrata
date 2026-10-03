@@ -24216,5 +24216,32 @@
     "sha256": "32a9db7a6652255969cbf7cfb19d1fea67eafe70d0b73467a871569079e04b2a",
     "generatedAt": "2026-10-01",
     "sourceNote": "New forest map illustration. First Clearing retains location-field-topdown.png."
+  },
+  {
+    "id": "enemy-leech",
+    "name": "Ink Leech",
+    "revision": 4,
+    "provider": "built-in image_gen",
+    "machine": "OpenAI image generation tool",
+    "model": "Not exposed by tool",
+    "seed": null,
+    "prompt": "Use case: style-transfer. Create replacement square enemy-card artwork for the Ink Leech in Astrata. Input image 1 is the current Ink Leech, for creature identity only; discard its cartoon face, glossy toy rendering and gold oval frame. Input images 2 (forest beetle) and 3 (forest imp) are the authoritative style references: closely match their hand-painted dark fantasy illustration, confident visible brushwork, simplified readable forms, muted jade/olive forest palette, atmospheric yellow-green light, and integrated forest setting. Subject: one sinister ink-black aquatic leech, thick curved segmented body emerging from a shallow forest pool, raised head with a small circular sucker maw and subtle pale teeth, inky tendrils dissolving in the water. Creature should feel like a minor forest monster, not a giant boss; unsettling rather than comical, no gore. Composition: centered readable silhouette fills most of the square, face and curled body clearly visible at small card size, mossy roots and reeds frame a subdued misty woodland background. Cool blue-green watery highlights and restrained amber glints harmonize with the two style references. Full-bleed scene, no ornamental frame, no border, no text, no logo, no watermark. No photorealism, no glossy 3D render, no cute googly eyes. Produce a single finished square image.",
+    "references": [
+      "assets/enemy-leech-v2.png",
+      "assets/enemy-beetle.png",
+      "assets/enemy-imp.png"
+    ],
+    "workflow": {
+      "tool": "image_gen.imagegen",
+      "transparent_background": false
+    },
+    "file": "assets/enemy-leech-v4.png",
+    "sha256": "99b9c4e26a875fef3161157b12814c3d608e9c9c82ac57578e216956c49f0345",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "generatedAt": "2026-10-03",
+    "sourceNote": "Style matched to existing Beetle and Imp art; replaces framed cartoon leech. Original revisions retained."
   }
 ]

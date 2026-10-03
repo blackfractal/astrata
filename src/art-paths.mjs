@@ -92,7 +92,7 @@ export const artPaths = {
   "enemy-firewolf": "assets/enemy-firewolf.png",
   "enemy-wisp": "assets/enemy-wisp-v3.png",
   "enemy-beetle": "assets/enemy-beetle.png",
-  "enemy-leech": "assets/enemy-leech-v2.png",
+  "enemy-leech": "assets/enemy-leech-v4.png",
   "enemy-moth": "assets/enemy-moth.png",
   "enemy-imp": "assets/enemy-imp.png",
   "enemy-lichen": "assets/enemy-lichen.png",
