@@ -679,7 +679,7 @@ function gearMarkup(ctx, editable = false) {
       const canDefend = legal.some(
         (a) => ["bracelet", "armor"].includes(a.type) && a.uid === uid,
       );
-      return `<div class="gear-slot ${canDefend ? "defense-ready" : ""}" data-equip-slot="${slot}"><span class="gear-label">${slotNames[slot]}</span><button class="gear-item" ${x ? `data-item-detail="${uid}" data-item-uid="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(d ? d.name + ": " + d.text : "Empty " + slotNames[slot])}">${x ? ctx.img("item-" + x.id) : '<span class="empty-gear">+</span>'}<span>${d?.name || "Empty"}</span>${block ? `<b class="block-left">${block.block} block</b>` : ""}${o.mode === "battle" && d?.effect.firstAttackOnly ? `<b class="block-left ring-trigger">${o.battle.firstAttackTurn === o.battle.turn ? "Spent" : "+2 ready"}</b>` : ""}</button>${d?.socket ? `<button class="gem-socket" data-socket="${uid}" ${g ? `data-gem-drag="${g.uid}" data-setting-drag="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(g ? items[g.id].name + ": " + items[g.id].text : "Empty Gem socket")}">${g ? ctx.img("item-" + g.id) : "◇"}<span>${g ? items[g.id].name : "Socket"}</span></button>` : ""}</div>`;
+      return `<div class="gear-slot ${canDefend ? "defense-ready" : ""}" data-equip-slot="${slot}"><span class="gear-label">${slotNames[slot]}</span><button class="gear-item" ${x ? `data-item-detail="${uid}" data-item-uid="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(d ? d.name + ": " + d.text : "Empty " + slotNames[slot])}">${x ? ctx.img("item-" + x.id) : '<span class="empty-gear">+</span>'}<span>${d?.name || "Empty"}</span>${block ? `<b class="block-left">${block.block} Guard</b>` : ""}${o.mode === "battle" && d?.effect.firstAttackOnly ? `<b class="block-left ring-trigger">${o.battle.firstAttackTurn === o.battle.turn ? "Spent" : "+2 ready"}</b>` : ""}</button>${d?.socket ? `<button class="gem-socket" data-socket="${uid}" ${g ? `data-gem-drag="${g.uid}" data-setting-drag="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(g ? items[g.id].name + ": " + items[g.id].text : "Empty Gem socket")}">${g ? ctx.img("item-" + g.id) : "◇"}<span>${g ? items[g.id].name : "Socket"}</span></button>` : ""}</div>`;
     })
     .join("")}</div>`;
 }
@@ -1153,7 +1153,7 @@ function incomingDetails(ctx) {
     })
     .join("");
   ctx.dialog(
-    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Choose a highlighted card or equipment. After a card blocks, only its column and columns closer to you remain eligible. Armor and Bracelets share the equipment stop; Take hit skips all unused defenses, including Armor.</p><div class="choices">${choices}</div>`,
+    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Choose a highlighted card or equipment. After a card absorbs damage, only its column and columns closer to you remain eligible. Armor and Bracelets share the equipment stop; Take hit skips all unused defenses, including Armor.</p><div class="choices">${choices}</div>`,
   );
   bindActions(ctx, ctx.modal);
 }

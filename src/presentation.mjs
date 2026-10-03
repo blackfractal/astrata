@@ -489,7 +489,7 @@ export async function playFrames(before, frames, after, render, isFast) {
         try {
           await flash(
             card(frame.slot),
-            "+" + frame.amount + " block",
+            "+" + frame.amount + " Guard",
             false,
             from,
             frame.element === "Arcane" ? "Light" : frame.element,
@@ -563,7 +563,7 @@ export async function playFrames(before, frames, after, render, isFast) {
             frame.loss != null
               ? "−" + frame.loss
               : frame.amount != null
-                ? (frame.kind === "defend" ? "Blocked " : "−") + frame.amount
+                ? (frame.kind === "defend" ? "Absorbed " : "−") + frame.amount
                 : frame.name || "Hit",
             frame.dead,
             frame.collapseOrigins?.length ? null : from,

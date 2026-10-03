@@ -72,7 +72,7 @@ export function arrangeBattle(ctx) {
       "Druid: take the hit and save remaining defenses",
     );
     portrait.title =
-      "Click the Druid to take this hit without using remaining cards, Bracelet block or Armor.";
+      "Click the Druid to take this hit without using remaining cards, Bracelet Guard or Armor.";
     portrait.onclick = (e) => {
       e.stopPropagation();
       if (!ctx.busy()) {
@@ -112,7 +112,9 @@ export function arrangeBattle(ctx) {
       button.classList.add("block-available");
       button.setAttribute("aria-label", `${label}: ${block.label}`);
       button.title =
-        block.label + " · Click to block this attack. " + (def?.text || "");
+        block.label +
+        " · Click to defend against this attack. " +
+        (def?.text || "");
       button.onclick = (e) => {
         e.stopPropagation();
         if (!ctx.busy()) {

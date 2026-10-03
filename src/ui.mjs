@@ -157,7 +157,7 @@ function tellText(t) {
     ...["insight", "focus", "channel"]
       .filter((k) => t[k])
       .map((k) => `${t[k]} ${k[0].toUpperCase() + k.slice(1)} next turn only`),
-    t.guard ? "Gain " + t.guard + " guard" : "",
+    t.guard ? "Gain " + t.guard + " Guard" : "",
     t.flicker ? "Negate next offensive activation" : "",
     t.howl ? "Wolves gain " + t.howl + " attack" : "",
   ]

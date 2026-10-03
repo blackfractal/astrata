@@ -55,6 +55,7 @@ for (const name of [
   "evaluation",
   "enemy-first-evaluation",
   "setting-drop-verification.json",
+  "guard-verification.json",
   "charge-release-verification.json",
   "charge-release-evaluation",
   "area-impact-verification.json",

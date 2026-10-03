@@ -39,7 +39,7 @@ export function tutorialHint(game) {
     case "ward":
     case "block":
     case "intercept":
-      text = `You could click ${name} to block this attack. Choose carefully: the attack cannot move back toward cards on the right.`;
+      text = `You could click ${name} to defend against this attack. Choose carefully: the attack cannot move back toward cards on the right.`;
       break;
     case "armor":
       text =
@@ -47,7 +47,7 @@ export function tutorialHint(game) {
       break;
     case "bracelet":
       text =
-        "You could click the highlighted Bracelet to absorb some of this attack with its remaining block.";
+        "You could click the highlighted Bracelet to absorb some of this attack with its remaining Guard.";
       break;
     case "skipEquipment":
       text =

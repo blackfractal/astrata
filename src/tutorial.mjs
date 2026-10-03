@@ -153,13 +153,13 @@ phase("first-phase");
 note(
   "tell3",
   "Read the Tell",
-  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 block for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the card’s activation limit is its total uses across rounds before Recall or the next battle restores it.",
+  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 Guard for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the card’s activation limit is its total uses across rounds before Recall or the next battle restores it.",
   ".enemy .tell, .resources > span:nth-child(3)",
 );
 activate(
   "shield-activate",
   18,
-  "Click Activate on your Shield to prepare 4 block.",
+  "Click Activate on your Shield to prepare 4 Guard.",
 );
 end("first-enemy");
 defend(
@@ -170,8 +170,8 @@ defend(
 );
 note(
   "shield-expiry",
-  "The card stays; its block expires",
-  "The attack was blocked. Unused Shield block disappears at round end, but the card remains. Activate it again to make fresh block. This Shield has one use left; keep an eye on Channel and each card’s allowance.",
+  "The card stays; its Guard expires",
+  "The attack was absorbed. Unused Shield Guard disappears at round end, but the card remains. Activate it again to make fresh Guard. This Shield has one use left; keep an eye on Channel and each card’s allowance.",
   '[data-slot="18"], .resources',
 );
 place(
@@ -184,7 +184,7 @@ phase("second-phase");
 activate(
   "second-shield",
   18,
-  "Prepare the Shield again. The next enemy attack deals 5, so its 4 block will need help from your Bracelet.",
+  "Prepare the Shield again. The next enemy attack deals 5, so its 4 Guard will need help from your Bracelet.",
 );
 activate(
   "first-blast",
@@ -202,7 +202,7 @@ defend(
   "bracelet-block1",
   "bracelet",
   null,
-  "Click your right Bracelet. It blocks the last 1 damage without spending Channel. Its 2 block refills each enemy round.",
+  "Click your right Bracelet. It absorbs the last 1 damage without spending Channel. Its 2 Guard refills each enemy round.",
 );
 place(
   "synergy-place",
@@ -269,20 +269,20 @@ place(
   "ward-place",
   "ward",
   18,
-  "Place Ward in the marked space nearer to you. It starts with 0 block and cannot defend until activated. Isolated means it needs empty neighboring spaces to activate.",
+  "Place Ward in the marked space nearer to you. It starts with 0 Guard and cannot defend until activated. Isolated means it needs empty neighboring spaces to activate.",
 );
 phase("ward-phase");
 activate(
   "ward-activate",
   18,
-  "Activate Ward to gain 10 block: it now stores 10. Unlike Shield, that stock will persist across rounds.",
+  "Activate Ward to gain 10 Guard: it now stores 10. Unlike Shield, that stock will persist across rounds.",
 );
 end("ward-enemy");
 defend("ward-block", "ward", 18, "Choose Ward to absorb the 3-damage attack.");
 note(
   "ward-persists",
-  "7 block remains",
-  "Ward kept its remaining 7 block into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
+  "7 Guard remains",
+  "Ward kept its remaining 7 Guard into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
   '[data-slot="18"]',
 );
 place(
@@ -311,7 +311,7 @@ phase("route-phase");
 activate(
   "route-shield-activate",
   20,
-  "Double-click Shield’s activation to use it without attunement. This creates 4 block on the right, before the attack reaches Sapling and Ward.",
+  "Double-click Shield’s activation to use it without attunement. This creates 4 Guard on the right, before the attack reaches Sapling and Ward.",
 );
 activate(
   "route-sapling-attack",
@@ -320,7 +320,7 @@ activate(
 );
 note(
   "route",
-  "Block from right to left",
+  "Defend from right to left",
   "Rootling is winding up a 30-damage attack. Choose Shield, then Sapling, then Ward, then Bracelet. Once the attack passes a column, cards farther right cannot defend it. In normal play you may skip a defense or click your Druid to take the hit.",
   '.enemy .tell, [data-slot="19"], [data-slot="20"], [data-slot="18"]',
 );
@@ -329,7 +329,7 @@ defend(
   "route-block",
   "block",
   20,
-  "Click Shield first. Its 4 block stop 4 of the 30 damage; 26 continue toward Sapling.",
+  "Click Shield first. Its 4 Guard absorbs 4 of the 30 damage; 26 continue toward Sapling.",
 );
 defend(
   "route-ally",
@@ -341,7 +341,7 @@ defend(
   "route-ward",
   "ward",
   18,
-  "Click Ward. Its stored 7 block absorb 7, leaving 12 damage.",
+  "Click Ward. Its stored 7 Guard absorbs 7, leaving 12 damage.",
 );
 defend(
   "route-bracelet",
@@ -352,7 +352,7 @@ defend(
 note(
   "route-done",
   "Every layer matters",
-  "You took only 10 of the original 30 damage. Each hit showed the actual HP or block lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your blocking cards wisely!",
+  "You took only 10 of the original 30 damage. Each hit showed the actual HP or Guard lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your defending cards wisely!",
   ".battle-player, header .hp",
 );
 place(
@@ -435,7 +435,7 @@ defend(
   "ember-bracelet",
   "bracelet",
   null,
-  "Your unsocketed Bracelet blocks 2 of the 3 Fire damage; the last 1 reaches you. Water-attuned defense protects best against Fire, just as Water attacks beat Fire. Same-element matchups are neutral.",
+  "Your unsocketed Bracelet absorbs 2 of the 3 Fire damage; the last 1 reaches you. Water-attuned defense protects best against Fire, just as Water attacks beat Fire. Same-element matchups are neutral.",
 );
 place(
   "attune-place",
@@ -459,7 +459,7 @@ action(
 note(
   "cycle",
   "Remember the cycle",
-  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Use this same cycle for attacks, defensive attunements and equipment: +50% damage, block or Armor protection against the element you beat; -50% against your weakness, rounded up. Earth Armor protects best against Wind and worst against Fire. Other element matchups are non-interacting, including same-element and Arcane (non-elemental) matchups. Chaos and Light are mutually strong against each other.",
+  "Fire burns Earth. Earth blocks Wind. Wind dries Water. Water douses Fire. Use this same cycle for attacks, defensive attunements and equipment: +50% damage, Guard or Armor protection against the element you beat; -50% against your weakness, rounded up. Earth Armor protects best against Wind and worst against Fire. Other element matchups are non-interacting, including same-element and Arcane (non-elemental) matchups. Chaos and Light are mutually strong against each other.",
   ".field",
   "tavern",
 );
@@ -499,7 +499,7 @@ ui(
 action(
   "helmet-buy",
   "Buy the helmet",
-  "Buy the Sturdy Metal Helmet for 75 Gold. Shield activations show (+2); on activation the helmet sends a power sphere to add that block. It does not supply attunement.",
+  "Buy the Sturdy Metal Helmet for 75 Gold. Shield activations show (+2); on activation the helmet sends a power sphere to add that Guard. It does not supply attunement.",
   { type: "buy", itemId: "crown" },
 );
 ui(
@@ -519,7 +519,7 @@ action(
 action(
   "socket",
   "Imbue the Bracelet",
-  "Drag the Sapphire onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet blocks 3 against Fire, 1 against Wind, and 2 otherwise.",
+  "Drag the Sapphire onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet absorbs 3 against Fire, 1 against Wind, and 2 otherwise.",
   { type: "socket", itemId: "bronze", gemId: "sapphire" },
   '.satchel, [data-equip-slot="wrist2"]',
 );

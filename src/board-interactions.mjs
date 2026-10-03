@@ -268,7 +268,7 @@ export function boardInteractions(ctx) {
         : m.cast && m.cast !== "Arcane"
           ? `${m.cast} relay`
           : m.portions.length
-            ? "Shield block"
+            ? "Shield Guard"
             : m.cast
               ? `Cast ${m.cast}`
               : m.attunes && m.choices.some((e) => e !== "Arcane")
@@ -276,13 +276,13 @@ export function boardInteractions(ctx) {
                 : c.element;
     slot.dataset.baseElementLabel = label.textContent;
     label.dataset.tooltip = m.conduit
-      ? `Conduit until your next turn: ${defensiveElement(b, c)} defense and attunement relay; adjacent Blasts gain +1 damage and Shields gain +1 block when activated. Sever and covering stop connections.`
+      ? `Conduit until your next turn: ${defensiveElement(b, c)} defense and attunement relay; adjacent Blasts gain +1 damage and Shields gain +1 Guard when activated. Sever and covering stop connections.`
       : m.transmuted
         ? `Transmuted to ${c.element} for this placement. Existing Shield portions keep their original elements.`
         : m.cast
-          ? `Last activation: ${m.cast}. Offers this element to adjacent Attune cards until your next turn, even if spent or its block is depleted. Sever and covering stop connections. Shield portions keep their own elements; next activation chooses anew.`
+          ? `Last activation: ${m.cast}. Offers this element to adjacent Attune cards until your next turn, even if spent or its Guard is depleted. Sever and covering stop connections. Shield portions keep their own elements; next activation chooses anew.`
           : m.portions.length
-            ? "Active block retains its chosen element. A committed Attune activation also relays its latest element until the next player turn."
+            ? "Active Guard retains its chosen element. A committed Attune activation also relays its latest element until the next player turn."
             : m.attunes
               ? `Next activation choices: ${m.choices.join(", ")}. Choose on activation; neighbors supply choices, not a permanent element change.`
               : `${c.element} card.`;
@@ -319,7 +319,7 @@ export function boardInteractions(ctx) {
         chip.dataset.element = p.element;
         chip.style.setProperty("--portion", color(p.element));
         chip.textContent = `${p.block} ${p.element}`;
-        chip.dataset.tooltip = `${p.block} remaining ${p.element} block. This portion keeps its element until spent or the enemy phase ends.`;
+        chip.dataset.tooltip = `${p.block} remaining ${p.element} Guard. This portion keeps its element until spent or the enemy phase ends.`;
         row.append(chip);
       }
       if (m.portions.length > 2) {
@@ -328,7 +328,7 @@ export function boardInteractions(ctx) {
         more.textContent = `+${m.portions.length - 2}`;
         more.dataset.tooltip = m.portions
           .slice(2)
-          .map((p) => `${p.block} ${p.element} block`)
+          .map((p) => `${p.block} ${p.element} Guard`)
           .join(" · ");
         row.append(more);
       }
@@ -340,17 +340,17 @@ export function boardInteractions(ctx) {
       badge.className = "synergy-bonus pattern-bonus";
       badge.textContent = "2×2 · ×2";
       badge.dataset.tooltip =
-        "Intact 2×2 block: double damage, already included below. All four exposed cards must be present and not Severed. One qualifying block is shown; multiple blocks do not multiply the bonus again.";
+        "Intact 2×2 formation: double damage, already included below. All four exposed cards must be present and not Severed. One qualifying formation is shown; multiple formations do not multiply the bonus again.";
       slot.querySelector(".nums")?.append(badge);
     }
     if (m.bonus) {
       const bonus = document.createElement("span");
       bonus.className = "synergy-bonus";
       bonus.textContent = `↔ +${m.bonus}`;
-      bonus.dataset.tooltip = `+${m.bonus} ${m.bonusType} per activation from ${m.matching.length} adjacent ${cards[c.id].name}${m.matching.length > 1 ? "s" : ""}. Already included in the activation value; existing Shield block does not change retroactively.`;
+      bonus.dataset.tooltip = `+${m.bonus} ${m.bonusType === "block" ? "Guard" : m.bonusType} per activation from ${m.matching.length} adjacent ${cards[c.id].name}${m.matching.length > 1 ? "s" : ""}. Already included in the activation value; existing Shield Guard does not change retroactively.`;
       bonus.setAttribute(
         "aria-label",
-        `Adjacency bonus: ${m.bonus} ${m.bonusType}`,
+        `Adjacency bonus: ${m.bonus} ${m.bonusType === "block" ? "Guard" : m.bonusType}`,
       );
       slot.querySelector(".nums")?.append(bonus);
     }

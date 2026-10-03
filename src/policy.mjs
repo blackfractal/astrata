@@ -371,7 +371,7 @@ export class WeightedPolicy {
           ) *
             w.survival +
             ((f.column ?? -1) + 1) * 2,
-          "Use the portion with the strongest effective block against this element.",
+          "Use the portion with the strongest effective Guard against this element.",
         ];
       case "armor":
         return [
@@ -397,7 +397,7 @@ export class WeightedPolicy {
       case "skipEquipment":
         return [
           -b.reaction.damage * w.survival,
-          "Preserve item block by accepting the remaining hit; prefer blocking damage when possible.",
+          "Preserve item Guard by accepting the remaining hit; prefer absorbing damage when possible.",
         ];
       case "takeHit":
         return [

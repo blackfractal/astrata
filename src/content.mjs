@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.46",
-  content: "1.1.51",
+  content: "1.1.52",
   observation: 1,
   actions: 2,
 };
@@ -94,7 +94,7 @@ card(
   1,
   2,
   { shield: 4, matchingShield: 1 },
-  "Attune. Add 4 block, +1 per adjacent Shield, until the enemy turn ends. After activation, relay its element to adjacent Attune cards until your next turn.",
+  "Attune. Add 4 Guard, +1 per adjacent Shield, until the enemy turn ends. After activation, relay its element to adjacent Attune cards until your next turn.",
   { attune: true },
 );
 card(
@@ -105,7 +105,7 @@ card(
   1,
   2,
   { conduit: true },
-  "6 HP. Conduit: optionally Attune. Until your next turn, defend in that element and count as an adjacent Blast and Shield, giving each +1 damage or block. Relay the chosen element to adjacent Attune cards. May intercept attacks.",
+  "6 HP. Conduit: optionally Attune. Until your next turn, defend in that element and count as an adjacent Blast and Shield, giving each +1 damage or Guard. Relay the chosen element to adjacent Attune cards. May intercept attacks.",
   { hp: 6, attune: true },
 );
 card(
@@ -605,7 +605,7 @@ card(
   1,
   2,
   { damage: 6, square: true },
-  "Deal 6 damage. Double in an intact 2 by 2 block.",
+  "Deal 6 damage. Double in an intact 2 by 2 formation.",
   { rarity: "rare" },
 );
 card(
@@ -695,7 +695,7 @@ for (const id of [
         ? 120
         : 100,
     bonus: 3,
-    text: "The graftkeeper renews its living ink: +3 damage, block, healing, or initial Ally HP.",
+    text: "The graftkeeper renews its living ink: +3 damage, Guard, healing, or initial Ally HP.",
   };
 }
 cards.sapling.upgrade = {
@@ -738,7 +738,7 @@ item(
   "wrist",
   { block: 2 },
   40,
-  "Refill 2 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
+  "Refill 2 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
 item(
@@ -747,7 +747,7 @@ item(
   "wrist",
   { block: 4 },
   90,
-  "Refill 4 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
+  "Refill 4 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
 item(
@@ -756,7 +756,7 @@ item(
   "wrist",
   { block: 7 },
   190,
-  "Refill 7 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
+  "Refill 7 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
   { socket: true, forbid: ["channelGem"] },
 );
 item(
@@ -816,7 +816,7 @@ for (const [id, name, element] of [
     "gem",
     {},
     45,
-    `Imbues a Setting with ${element}. Attacks and block gain +50% against ${cycle[element]}, and lose 50% against ${Object.keys(cycle).find((e) => cycle[e] === element)}. Same-element and unrelated matchups are neutral. Round up.`,
+    `Imbues a Setting with ${element}. Attacks and Guard gain +50% against ${cycle[element]}, and lose 50% against ${Object.keys(cycle).find((e) => cycle[e] === element)}. Same-element and unrelated matchups are neutral. Round up.`,
     {
       element,
     },
@@ -847,7 +847,7 @@ for (const element of ["Fire", "Water", "Earth", "Wind"])
     "torso",
     { armor: 2 },
     65,
-    `Armor holds 2 block each enemy round: up to 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Block drains across hits and refills each enemy turn. Free to use or skip. Does not reduce ongoing status damage or supply card attunement.`,
+    `Armor holds 2 Guard each enemy round: up to 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Guard drains across hits and refills each enemy turn. Free to use or skip. Does not reduce ongoing status damage or supply card attunement.`,
     { element },
   );
 item(
@@ -864,7 +864,7 @@ item(
   "torso",
   { armor: 1 },
   60,
-  "Holds 1 block, draining across hits and refilling each enemy turn. Free to use or skip; ongoing status damage bypasses Armor.",
+  "Holds 1 Guard, draining across hits and refilling each enemy turn. Free to use or skip; ongoing status damage bypasses Armor.",
 );
 item(
   "quickArmor",
@@ -888,7 +888,7 @@ item(
   "head",
   { shield: 2 },
   75,
-  "When a card with Shield in its name activates, add +2 block. The helmet sends its power to that Shield. Does not supply card attunement.",
+  "When a card with Shield in its name activates, add +2 Guard. The helmet sends its power to that Shield. Does not supply card attunement.",
 );
 item(
   "thornCrown",
@@ -921,7 +921,7 @@ item(
   "torso",
   { armor: 2, corrode: 1 },
   90,
-  "Cursed: forced equip. Holds 2 block, draining across hits and refilling each enemy turn; use or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
+  "Cursed: forced equip. Holds 2 Guard, draining across hits and refilling each enemy turn; use or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
   { cursed: true },
 );
 item(
@@ -1144,7 +1144,7 @@ enemy(
   "Stalker",
   [effect("Ash breath", { burn: 2 }), attack("Coal", 5, "Fire")],
   "Opens with Burn.",
-  "Keep Bracelet block for the status.",
+  "Keep Bracelet Guard ready for incoming attacks; ongoing status damage bypasses it.",
   { speed: 1 },
 );
 enemy(
@@ -1160,7 +1160,7 @@ enemy(
     attack("Whirl", 5, "Wind", { hits: 3 }),
   ],
   "An unavoidable hunter with multi-hit Whirl.",
-  "Build block for the third turn.",
+  "Build Guard for the third turn.",
   { herald: true },
 );
 enemy(
@@ -1568,11 +1568,11 @@ export const locations = [
 ];
 export const glossary = {
   Conduit:
-    "Familiar activation: choose an adjacent element or remain Arcane. Until the next player turn, defend in that element, relay it to adjacent Attune cards, and provide +1 damage to each adjacent Blast and +1 block to each adjacent Shield when they activate. Costs 1 Channel; two uses, once per turn. No attack or Shield block is created by Conduit itself. Spent Familiar still supplies the committed effect; Sever or covering stops neighbor connections. Existing Shield block is not changed retroactively.",
+    "Familiar activation: choose an adjacent element or remain Arcane. Until the next player turn, defend in that element, relay it to adjacent Attune cards, and provide +1 damage to each adjacent Blast and +1 Guard to each adjacent Shield when they activate. Costs 1 Channel; two uses, once per turn. No attack or Shield Guard is created by Conduit itself. Spent Familiar still supplies the committed effect; Sever or covering stops neighbor connections. Existing Shield Guard is not changed retroactively.",
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or block is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
+    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
@@ -1586,7 +1586,7 @@ export const glossary = {
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
   Ward: "Starts at 0; activate to build persistent defense. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Shield:
-    "Block expires after the enemy turn. Choose which portion absorbs a hit. Attuned block uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
+    "Guard expires after the enemy turn. Choose which portion absorbs a hit. Attuned Guard uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",
   Burn: "Water enemies are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Poison:
@@ -1624,17 +1624,15 @@ export const glossary = {
   Tallest: "The stack with the most cards. Ties use grid order, from top left.",
   Weakest: "The eligible Ally with the lowest current HP.",
   Guard:
-    "An enemy defense pool that absorbs damage before its HP. The displayed amount is what remains.",
+    "Stored defense that absorbs damage before HP. Each defender keeps its own amount. Shield Guard expires after the enemy turn; Ward value persists; Bracelet and Armor Guard refill each enemy turn. Enemy Guard protects that enemy. Elemental Shield, Bracelet and Armor Guard gain +50% against the element they beat and lose 50% against their weakness, rounded up; same-element, unrelated and Arcane matchups are neutral. Wards remain neutral.",
   Shift:
     "Move a whole placed stack to an eligible empty Mind Grid slot. Locked stacks cannot Shift.",
   Flicker:
     "Negates the next offensive activation against this enemy, then ends. Other targets of that activation can still be affected.",
   Resist:
     "A printed resistance halves damage from its named element, rounded up. It is separate from the elemental cycle.",
-  Block:
-    "Temporary defense from Shields or Bracelets. Elemental block gains +50% against the element it beats, loses 50% against its weakness, rounded up; same element and Arcane are neutral. Shield block expires after the enemy turn; Bracelet block refills each enemy turn.",
   Armor:
-    "Select an Armor icon to spend its remaining block without Channel, or click the Druid to skip unused defenses. Numeric Armor block drains across hits and refills at each enemy turn, like Bracelets. Mirror reflects once per battle. Armor shares the equipment position with Bracelets; using equipment passes grid defenses. Elemental protection: 3 favorable, 1 weak, 2 neutral. Ongoing status damage bypasses it. Healing/movement effects remain passive.",
+    "Select an Armor icon to spend its remaining Guard without Channel, or click the Druid to skip unused defenses. Numeric Armor Guard drains across hits and refills at each enemy turn, like Bracelets. Mirror reflects once per battle. Armor shares the equipment position with Bracelets; using equipment passes grid defenses. Elemental protection: 3 favorable, 1 weak, 2 neutral. Ongoing status damage bypasses it. Healing/movement effects remain passive.",
   Hex: "A harmful card in your Grimoire. Its printed text explains when it applies. Tavern Hex treatment is separate from ordinary card removal.",
   Curse:
     "A harmful item effect. Cursed equipment may be forced into a slot and cannot be freely removed; its treatment has a printed cost.",
@@ -1677,7 +1675,7 @@ export const glossary = {
   Setting:
     "A Necklace, Bracelet or Ring with its own printed effect and one Gem socket.",
   Bracelet:
-    "Equipment block at the final position before the player. Choosing it passes all grid defenses for this hit. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack. Clicking the Druid also skips unused Armor.",
+    "Equipment Guard at the final position before the player. Choosing it passes all grid defenses for this hit. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the Guard for a later attack. Clicking the Druid also skips unused Armor.",
   Ring: "Equipment with a printed effect and a Gem socket. Rootbound Ring adds one separate hit on your first damaging activation each player turn.",
   Necklace: "Equipment with a printed effect and a Gem socket.",
   Crown: "Head equipment with a printed effect and no Gem socket.",
@@ -1704,17 +1702,17 @@ export const glossary = {
   "Pack Movement":
     "When a matching pack member arrives on the player, other pack members move toward the player too. Arriving enemies remain there until the battle begins.",
   Arcane:
-    "No elemental matchup: Arcane attacks, block and Armor protection receive no elemental-cycle bonus or penalty.",
-  Fire: "Fire burns Earth. Fire attacks, Shield block, Bracelet block and Armor protection gain +50% against Earth and lose 50% against Water, rounded up. Same-element matchups are neutral. Fire enemies are immune to Poison.",
+    "No elemental matchup: Arcane attacks, Guard and Armor protection receive no elemental-cycle bonus or penalty.",
+  Fire: "Fire burns Earth. Fire attacks, Shield Guard, Bracelet Guard and Armor protection gain +50% against Earth and lose 50% against Water, rounded up. Same-element matchups are neutral. Fire enemies are immune to Poison.",
   Earth:
-    "Earth blocks Wind. Earth attacks, Shield block, Bracelet block and Armor protection gain +50% against Wind and lose 50% against Fire, rounded up. Same-element matchups are neutral.",
-  Wind: "Wind dries Water. Wind attacks, Shield block, Bracelet block and Armor protection gain +50% against Water and lose 50% against Earth, rounded up. Same-element matchups are neutral.",
+    "Earth blocks Wind. Earth attacks, Shield Guard, Bracelet Guard and Armor protection gain +50% against Wind and lose 50% against Fire, rounded up. Same-element matchups are neutral.",
+  Wind: "Wind dries Water. Wind attacks, Shield Guard, Bracelet Guard and Armor protection gain +50% against Water and lose 50% against Earth, rounded up. Same-element matchups are neutral.",
   Water:
-    "Water douses Fire. Water attacks, Shield block, Bracelet block and Armor protection gain +50% against Fire and lose 50% against Wind, rounded up. Same-element matchups are neutral. Water enemies are immune to Burn.",
+    "Water douses Fire. Water attacks, Shield Guard, Bracelet Guard and Armor protection gain +50% against Fire and lose 50% against Wind, rounded up. Same-element matchups are neutral. Water enemies are immune to Burn.",
   Chaos:
-    "Chaos and Light each gain +50% attack damage and block against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral. Chaos enemies are immune to Corrode.",
+    "Chaos and Light each gain +50% attack damage and Guard against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral. Chaos enemies are immune to Corrode.",
   Light:
-    "Light and Chaos each gain +50% attack damage and block against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral.",
+    "Light and Chaos each gain +50% attack damage and Guard against the other, rounded up. Their Allies remain mutually vulnerable to incoming attacks. Same-element matchups are neutral.",
 };
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.

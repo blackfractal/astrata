@@ -216,7 +216,7 @@ try {
       if (step === "socket")
         assert.match(
           copy,
-          /blocks 3 against Fire, 1 against Wind, and 2 otherwise/,
+          /absorbs 3 against Fire, 1 against Wind, and 2 otherwise/,
         );
       if (step === "gossip-learned")
         assert.match(

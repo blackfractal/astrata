@@ -2821,7 +2821,7 @@ export class Game {
         for (const p of choices.shields)
           add(
             "block",
-            `${p.element} Shield · ${p.block} block`,
+            `${p.element} Shield · ${p.block} Guard`,
             { uid: p.uid, slot: p.slot },
             {
               block: p.block,
@@ -2844,7 +2844,7 @@ export class Game {
         for (const p of choices.bracelets)
           add(
             "bracelet",
-            `${p.name} · ${p.element} · ${p.block} block`,
+            `${p.name} · ${p.element} · ${p.block} Guard`,
             { uid: p.uid },
             { block: p.block, element: p.element, column: -1 },
           );
@@ -3296,7 +3296,7 @@ export class Game {
             item: a.type === "bracelet" ? a.uid : null,
             amount: stopped,
             loss,
-            name: "Blocked",
+            name: "Absorbed",
           },
           a.type === "block"
             ? { kind: "card", slot: p.slot }
