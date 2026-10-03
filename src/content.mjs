@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.42",
-  content: "1.1.45",
+  content: "1.1.46",
   observation: 1,
   actions: 2,
 };
@@ -195,8 +195,8 @@ card(
   "Spell",
   0,
   2,
-  hit(8),
-  "Deal 8 damage. Recall costs 3.",
+  hit(6),
+  "Deal 6 damage. Recall costs 3.",
   { recall: 3 },
 );
 card(
@@ -320,7 +320,7 @@ card(
   "Keystone",
   "Arcane",
   "Object",
-  3,
+  2,
   0,
   {},
   "Cornerstone. While exposed in a corner, cards in this row and column have +1 activation allowance.",
@@ -375,8 +375,8 @@ card(
   "Spell",
   2,
   2,
-  { damage: 4, prism: true },
-  "Deal 4. If all four elements neighbor it: deal 4 of each element instead.",
+  { damage: 5, prism: true },
+  "Deal 5. If all four elements neighbor it: deal 5 of each element instead.",
   { rarity: "rare" },
 );
 card(

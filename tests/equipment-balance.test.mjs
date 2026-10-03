@@ -75,7 +75,7 @@ test("Ring fires once across a Plasma pile, an area attack, and a multi-element 
   ])
     put(g, id, i);
   activate(g, 8);
-  assert.equal(g.s.battle.enemies[0].hp, 982);
+  assert.equal(g.s.battle.enemies[0].hp, 978);
 });
 test("Charge building and status-only activations preserve the Ring, including Fusion", () => {
   const g = setup(),
