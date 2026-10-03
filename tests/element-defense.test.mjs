@@ -45,6 +45,8 @@ function hit(g, element, damage = 10, statusHit = false) {
     { kind: "hit", damage, element, statusHit, source: 900, name: "Test" },
   ];
   g.pump();
+  const armor = g.legal().find((a) => a.type === "armor");
+  if (armor) g.act(armor);
 }
 test("actual Shield activation and Ruby bracelet both use the favorable defensive cycle", () => {
   const g = game(),

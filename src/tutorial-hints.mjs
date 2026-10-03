@@ -41,6 +41,10 @@ export function tutorialHint(game) {
     case "intercept":
       text = `You could click ${name} to block this attack. Choose carefully: the attack cannot move back toward cards on the right.`;
       break;
+    case "armor":
+      text =
+        "You could click the highlighted Armor to protect against this hit, or click the Druid to skip it.";
+      break;
     case "bracelet":
       text =
         "You could click the highlighted Bracelet to absorb some of this attack with its remaining block.";

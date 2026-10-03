@@ -130,6 +130,7 @@ export async function playFrames(before, frames, after, render, isFast) {
     from = null,
     element = null,
     attack = null,
+    boost = null,
   ) {
     // Reveal the acting/struck foe inside crowded encounters without moving the stage.
     for (const node of [from, el]) {
@@ -151,6 +152,11 @@ export async function playFrames(before, frames, after, render, isFast) {
         ? attackOrb(attack.incoming, element)
         : document.createElement("div");
       projectile.classList.add("attack-bolt");
+      if (boost) {
+        projectile.classList.add("gear-power-sphere");
+        projectile.dataset.sourceItem = boost.sourceItem;
+        projectile.dataset.targetSlot = boost.slot;
+      }
       projectile.dataset.effect = element || "Arcane";
       if (attack) {
         projectile.classList.add("attack-orb-overlay");
@@ -418,6 +424,23 @@ export async function playFrames(before, frames, after, render, isFast) {
           cell?.classList.add("collision");
           await pause(550);
         }
+      } else if (frame.kind === "shieldBoost") {
+        const from = item(frame.sourceItem);
+        from?.classList.add("gear-proc");
+        try {
+          await flash(
+            card(frame.slot),
+            "+" + frame.amount + " block",
+            false,
+            from,
+            frame.element === "Arcane" ? "Light" : frame.element,
+            null,
+            frame,
+          );
+        } finally {
+          from?.classList.remove("gear-proc");
+        }
+        render(frame.state);
       } else if (frame.kind === "activate") {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);

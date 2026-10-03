@@ -122,6 +122,7 @@ test("leftover bonus is discarded before equipment, while Bracelet and Armor sti
   assert.equal(g.s.battle.reaction.stage, "bracelet");
   assert.equal(g.s.battle.reaction.weaknessBonus, 0);
   g.act(g.legal().find((a) => a.type === "bracelet"));
+  g.act(g.legal().find((a) => a.type === "armor"));
   assert.equal(g.s.hp, 68);
 });
 test("each hit gets fresh weakness and automatic Taunt uses the same handoff calculation", () => {

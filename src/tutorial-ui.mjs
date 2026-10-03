@@ -78,7 +78,7 @@ function targets(ctx, guide, suggested = null) {
         selectors.push(`[data-activate-slot="${a.slot}"]`);
       if (["ward", "block", "intercept", "recall"].includes(a.type))
         selectors.push(`[data-slot="${a.slot}"]`);
-      if (a.type === "bracelet")
+      if (["bracelet", "armor"].includes(a.type))
         selectors.push(`.battle-player [data-item-uid="${a.uid}"]`);
       if (a.type === "skipEquipment")
         selectors.push(".battle-player .player-portrait");

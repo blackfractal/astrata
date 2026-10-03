@@ -92,6 +92,8 @@ for (const [incoming, remaining, hp, shield] of [
     });
     await choice.click();
     await p.waitForFunction(() => !document.querySelector(".presentation-bar"));
+    await p.locator(`.battle-player [data-item-uid="${armor.uid}"]`).click();
+    await p.waitForFunction(() => !document.querySelector(".presentation-bar"));
     const [id] = await fs.readdir(path.join(profile, "runs"));
     const latest = JSON.parse(
       await fs.readFile(path.join(profile, "runs", id, "latest.json"), "utf8"),

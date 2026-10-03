@@ -84,7 +84,7 @@ function effect(c, slot, ctx) {
           ? "Deal 1–" + f.randomDamage
           : null,
       f.shield
-        ? `Shield ${f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching + (d.name.includes("Shield") ? ctx.o.bonuses.shield : 0)}`
+        ? `Shield ${f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching}${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${ctx.o.bonuses.shield})</span>` : ""}`
         : null,
       f.ward ? `Ward +${f.ward}` : null,
       f.heal ? `Heal ${f.heal}` : null,
@@ -124,6 +124,232 @@ function clearTargeting() {
   targetingCleanup = null;
   targetingSlot = null;
 }
+function attunedActivationChooser(ctx, slot, choices, dragging) {
+  clearTargeting();
+  ctx.close();
+  const elements = [...new Set(choices.map((a) => a.element))];
+  // A targetless card with no attunement choice retains its one-click activation.
+  if (!dragging && choices.length === 1 && choices[0].target == null) {
+    run(ctx, choices[0]);
+    return;
+  }
+  targetingSlot = slot;
+  const source = ctx.app.querySelector(`[data-slot="${slot}"]`);
+  const bar = document.createElement("div");
+  bar.className = "targeting-bar";
+  bar.setAttribute("role", "status");
+  ctx.app.querySelector(".mind").before(bar);
+  const controller = new AbortController(),
+    signal = controller.signal;
+  let element = elements.includes("Arcane") ? "Arcane" : elements[0];
+  let options = new Map(),
+    dropped = false;
+  const filtered = () => choices.filter((a) => a.element === element);
+  const preview = targetPreview(ctx, source, slot, (el) => {
+    const option = options.get(el);
+    return option?.kind === "target"
+      ? filtered().find((a) => a.target === option.value)
+      : null;
+  });
+  const choiceAt = (target) =>
+    [...options.keys()].find((el) => el === target || el.contains(target));
+  function clean() {
+    preview.clear();
+    for (const el of options.keys()) {
+      el.classList.remove("target-option", "target-selected");
+      el.removeAttribute("data-target-choice");
+    }
+    options.clear();
+  }
+  targetingCleanup = () => {
+    controller.abort();
+    clean();
+    source?.classList.remove("target-source");
+    previewElement(ctx, slot);
+    inspectLinks(ctx, null);
+    bar.remove();
+  };
+  function commit(target = undefined) {
+    if (ctx.busy()) return;
+    let candidates = filtered();
+    if (candidates.some((a) => a.target != null)) {
+      if (target == null) {
+        const top = [
+          ...ctx.app.querySelectorAll(".enemy[data-enemy-uid]"),
+        ].find((el) =>
+          candidates.some((a) => a.target === Number(el.dataset.enemyUid)),
+        );
+        if (!top) return;
+        target = Number(top.dataset.enemyUid);
+      }
+      candidates = candidates.filter((a) => a.target === target);
+    }
+    if (candidates.length !== 1) return;
+    const action = ctx.game.legal().find((a) => a.key === candidates[0].key);
+    if (!action) {
+      clearTargeting();
+      return;
+    }
+    clearTargeting();
+    run(ctx, action);
+  }
+  function mark(el, kind, value) {
+    if (!el) return;
+    el.classList.add("target-option");
+    el.dataset.targetChoice = kind;
+    if (kind === "element" && value === element)
+      el.classList.add("target-selected");
+    options.set(el, { kind, value });
+  }
+  function rebuild() {
+    clean();
+    source?.classList.add("target-source");
+    previewElement(ctx, slot, element);
+    inspectLinks(ctx, slot);
+    const c = ctx.o.battle.grid[slot].at(-1),
+      hasTarget = filtered().some((a) => a.target != null);
+    bar.innerHTML = `<strong>${cards[c.id].name} · ${element}</strong><span>${hasTarget ? "Choose attunement or enemy · double-click to attack the top enemy" : "Choose attunement, then Activate"}</span><div class="target-elements"></div>${hasTarget ? "" : "<button data-target-activate>Activate</button>"}<button data-target-cancel>Cancel</button>`;
+    bar.querySelector("[data-target-cancel]").onclick = clearTargeting;
+    const activate = bar.querySelector("[data-target-activate]");
+    if (activate) activate.onclick = () => commit();
+    if (elements.includes("Arcane")) {
+      const neutral = document.createElement("button");
+      neutral.textContent = "Unattune";
+      neutral.dataset.targetUnattune = "";
+      neutral.title = "Use Arcane for this activation";
+      bar.querySelector(".target-elements").append(neutral);
+      mark(neutral, "element", "Arcane");
+    }
+    for (const i of ctx.game.neighbors(slot)) {
+      const neighbor = ctx.o.battle.grid[i].at(-1);
+      if (neighbor.element !== "Arcane" && elements.includes(neighbor.element))
+        mark(
+          ctx.app.querySelector(`[data-slot="${i}"]`),
+          "element",
+          neighbor.element,
+        );
+    }
+    for (const a of filtered())
+      if (a.target != null)
+        mark(
+          ctx.app.querySelector(`[data-enemy-uid="${a.target}"]`),
+          "target",
+          a.target,
+        );
+  }
+  function choose(option) {
+    if (option.kind === "element") {
+      element = option.value;
+      rebuild();
+    } else commit(option.value);
+  }
+  ctx.app.addEventListener(
+    "click",
+    (e) => {
+      if (e.target.closest(`[data-activate-slot="${slot}"]`)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+      const option = options.get(choiceAt(e.target));
+      if (option) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        choose(option);
+      } else if (!bar.contains(e.target)) clearTargeting();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "dblclick",
+    (e) => {
+      if (!e.target.closest(`[data-activate-slot="${slot}"]`)) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      commit();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "dragstart",
+    () => {
+      dropped = false;
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "dragover",
+    (e) => {
+      if (drag?.activation !== slot) return;
+      const choice = choiceAt(e.target);
+      if (choice) e.preventDefault();
+      preview.show(choice);
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener("dragleave", preview.leave, {
+    capture: true,
+    signal,
+  });
+  ctx.app.addEventListener(
+    "dragend",
+    () => {
+      preview.clear();
+      if (!dropped) clearTargeting();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "drop",
+    (e) => {
+      if (drag?.activation !== slot) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const option = options.get(choiceAt(e.target));
+      dropped = !!option;
+      drag = null;
+      preview.clear();
+      if (option) choose(option);
+      else clearTargeting();
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener(
+    "pointerover",
+    (e) => {
+      if (!drag) preview.show(choiceAt(e.target));
+    },
+    { capture: true, signal },
+  );
+  ctx.app.addEventListener("pointerout", preview.leave, {
+    capture: true,
+    signal,
+  });
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        clearTargeting();
+      } else if (["Enter", " "].includes(e.key)) {
+        const option = options.get(choiceAt(e.target));
+        if (option) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          choose(option);
+        } else if (e.target.closest(`[data-activate-slot="${slot}"]`)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          commit();
+        }
+      }
+    },
+    { capture: true, signal },
+  );
+  rebuild();
+}
+
 function activationChooser(ctx, slot, dragging = false) {
   if (ctx.busy()) return;
   if (dragging && targetingSlot === slot) return;
@@ -131,6 +357,8 @@ function activationChooser(ctx, slot, dragging = false) {
     .legal()
     .filter((a) => a.type === "activate" && a.slot === slot);
   if (!choices.length) return;
+  if (cards[ctx.o.battle.grid[slot].at(-1).id].attune)
+    return attunedActivationChooser(ctx, slot, choices, dragging);
   clearTargeting();
   targetingSlot = slot;
   ctx.close();
@@ -425,7 +653,7 @@ function gearMarkup(ctx, editable = false) {
         g = x && o.inventory.find((g) => g.uid === x.gem),
         block = o.battle?.bracelets.find((b) => b.uid === uid);
       const canDefend = legal.some(
-        (a) => a.type === "bracelet" && a.uid === uid,
+        (a) => ["bracelet", "armor"].includes(a.type) && a.uid === uid,
       );
       return `<div class="gear-slot ${canDefend ? "defense-ready" : ""}" data-equip-slot="${slot}"><span class="gear-label">${slotNames[slot]}</span><button class="gear-item" ${x ? `data-item-detail="${uid}" data-item-uid="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(d ? d.name + ": " + d.text : "Empty " + slotNames[slot])}">${x ? ctx.img("item-" + x.id) : '<span class="empty-gear">+</span>'}<span>${d?.name || "Empty"}</span>${block ? `<b class="block-left">${block.block} block</b>` : ""}${o.mode === "battle" && d?.effect.firstAttackOnly ? `<b class="block-left ring-trigger">${o.battle.firstAttackTurn === o.battle.turn ? "Spent" : "+2 ready"}</b>` : ""}</button>${d?.socket ? `<button class="gem-socket" data-socket="${uid}" ${g ? `data-gem-drag="${g.uid}" data-setting-drag="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(g ? items[g.id].name + ": " + items[g.id].text : "Empty Gem socket")}">${g ? ctx.img("item-" + g.id) : "◇"}<span>${g ? items[g.id].name : "Socket"}</span></button>` : ""}</div>`;
     })
@@ -866,6 +1094,8 @@ function incomingDetails(ctx) {
         );
         note = ` → ${result.remaining} damage continues`;
       }
+      if (a.type === "armor")
+        note = ` → ${a.effects.reflect ? 0 : Math.max(0, h.damage - a.effects.armor)} damage continues`;
       if (a.type === "ward")
         note = ` → ${Math.max(0, h.damage - a.effects.ward)} damage continues`;
       if (a.type === "intercept") {
@@ -881,7 +1111,7 @@ function incomingDetails(ctx) {
     })
     .join("");
   ctx.dialog(
-    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Choose a highlighted card or equipment. After a card blocks, only its column and columns closer to you remain eligible. Equipment is the final stop; Take hit saves all remaining defenses.</p><div class="choices">${choices}</div>`,
+    `<h2>${h.name}</h2><p>${source?.name || "Status"} → Druid</p><p class="attack-number">${incomingDamageText(h)}</p><p>Choose a highlighted card or equipment. After a card blocks, only its column and columns closer to you remain eligible. Armor and Bracelets share the equipment stop; Take hit skips all unused defenses, including Armor.</p><div class="choices">${choices}</div>`,
   );
   bindActions(ctx, ctx.modal);
 }

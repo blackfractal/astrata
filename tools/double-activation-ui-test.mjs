@@ -136,13 +136,13 @@ attuned.s.battle.grid[5] = [attuned.instance(attuned.newCard("thorn"))];
 attuned.s.battle.grid[13] = [attuned.instance(attuned.newCard("thorn"))];
 attuned.s.battle.grid[13][0].element = "Water";
 await check(
-  "Multiple attunements stay explicit; after choosing Earth, double-click attacks the top of two enemies.",
+  "Single-click prepares attunement; after choosing Earth, double-click attacks the top of two enemies.",
   attuned,
   async (p) => {
-    await activate(p).dblclick({ force: true });
+    await activate(p).click();
     assert.match(
       await p.locator(".targeting-bar").textContent(),
-      /Choose an attunement/,
+      /Choose attunement/,
     );
     assert.equal(await p.locator(".resources b").nth(2).textContent(), "10");
     await p.locator('[data-slot="5"].target-option').click();
@@ -170,7 +170,7 @@ await check(
   async (p) => {
     await activate(p).dblclick({ force: true });
     await settle(p);
-    assert.match(await activate(p).textContent(), /Charge 2\/3/);
+    assert.match(await activate(p).textContent(), /Charge.*2 to fire/);
     assert.equal(await p.locator(".resources b").nth(2).textContent(), "9");
     assert.match(await enemy(p).textContent(), /100 \/ 100 HP/);
   },

@@ -62,6 +62,7 @@ export function attunementElements(b, c, i) {
   const elements =
     d.attune && !c.transmuted && c.element === d.element
       ? [
+          "Arcane",
           ...new Set(
             gridNeighbors(b, i)
               .map((j) => top(b.grid[j]).element)
@@ -381,6 +382,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.35",
           "1.3.34",
           "1.3.33",
           "1.3.32",
@@ -1555,7 +1557,13 @@ export class Game {
   defenseChoices() {
     const b = this.s.battle,
       h = b?.reaction;
-    const empty = { wards: [], shields: [], allies: [], bracelets: [] };
+    const empty = {
+      wards: [],
+      shields: [],
+      allies: [],
+      bracelets: [],
+      armors: [],
+    };
     if (!h || h.statusHit || h.stage === "player") return empty;
     // Older saved reactions infer position from their last actual impact.
     const column =
@@ -1580,6 +1588,24 @@ export class Game {
         (x) => reachable(x.i) && !(h.intercepted || []).includes(x.c.uid),
       ),
       bracelets: b.bracelets.filter((p) => p.block > 0),
+      armors: this.equipped()
+        .filter(
+          (x) =>
+            x.slot === "torso" &&
+            !h.armorUsed &&
+            (x.definition.effect.armor > 0 ||
+              (x.definition.effect.reflect && !b.mirror)),
+        )
+        .map((x) => ({
+          uid: x.uid,
+          name: x.definition.name,
+          element: x.element,
+          protection: Math.ceil(
+            (x.definition.effect.armor || 0) *
+              defenseRate(x.element, h.element),
+          ),
+          reflect: !!x.definition.effect.reflect && !b.mirror,
+        })),
     };
   }
   presentIncomingNode(kind, detail, node) {
@@ -1638,28 +1664,6 @@ export class Game {
     }
     if (h.stage === "player") {
       let damage = h.damage;
-      const armor = h.statusHit
-        ? null
-        : this.equipped().find((x) => x.slot === "torso");
-      if (armor?.definition.effect.reflect && !b.mirror && !h.statusHit) {
-        b.mirror = true;
-        const e = b.enemies.find((x) => x.uid === h.source);
-        if (e) {
-          e.hp -= damage;
-          s.stats.damageDealt += damage;
-        }
-        damage = 0;
-      }
-      if (!h.statusHit) {
-        const printed = armor?.definition.effect.armor || 0;
-        const protection = Math.ceil(
-          printed * defenseRate(armor?.element || "Arcane", h.element),
-        );
-        damage = Math.max(
-          0,
-          damage - (this.bonuses().armor - printed + protection),
-        );
-      }
       const loss = Math.min(s.hp, damage);
       s.hp = Math.max(0, s.hp - damage);
       this.presentIncomingNode(
@@ -1670,7 +1674,6 @@ export class Game {
           loss,
           element: h.element,
           name: h.name,
-          armor: armor?.uid,
           statusTick: h.statusHit ? h.status || h.name : null,
         },
         { kind: "player" },
@@ -1924,7 +1927,7 @@ export class Game {
       c.lastActivated = b.turn;
     }
     if (f.ward) c.ward += f.ward + bonus;
-    if (f.shield)
+    if (f.shield) {
       b.shields.push({
         uid: this.uid(),
         slot: i,
@@ -1932,6 +1935,17 @@ export class Game {
         block: this.shieldPower(c, i),
         element,
       });
+      if (d.name.includes("Shield"))
+        for (const gear of this.equipped())
+          if (gear.definition.effect.shield)
+            this.present("shieldBoost", {
+              sourceItem: gear.uid,
+              slot: i,
+              amount: gear.definition.effect.shield,
+              element: gear.element,
+              name: gear.definition.name + " empowers " + d.name,
+            });
+    }
     if (f.heal)
       s.hp = Math.min(
         s.maxHp,
@@ -2571,6 +2585,18 @@ export class Game {
             { uid: p.uid },
             { block: p.block, element: p.element, column: -1 },
           );
+        for (const armor of choices.armors)
+          add(
+            "armor",
+            `${armor.name} · ${armor.reflect ? "Reflect" : armor.protection + " protection"}`,
+            { uid: armor.uid },
+            {
+              armor: armor.protection,
+              reflect: armor.reflect,
+              element: armor.element,
+              column: -1,
+            },
+          );
         if (!h.statusHit && h.stage !== "player")
           add(
             "skipEquipment",
@@ -3003,6 +3029,38 @@ export class Game {
           a.type === "block"
             ? { kind: "card", slot: p.slot }
             : { kind: "item", uid: a.uid },
+        );
+        this.advanceHit();
+        this.pump();
+        break;
+      }
+      case "armor": {
+        const h = b.reaction;
+        const armor = this.defenseChoices().armors.find((x) => x.uid === a.uid);
+        h.armorUsed = true;
+        h.weaknessBonus = 0;
+        h.weaknessElement = null;
+        const stopped = armor.reflect
+          ? h.damage
+          : Math.min(h.damage, armor.protection);
+        if (armor.reflect) {
+          b.mirror = true;
+          const enemy = b.enemies.find((e) => e.uid === h.source);
+          if (enemy) {
+            enemy.hp -= stopped;
+            s.stats.damageDealt += stopped;
+          }
+        }
+        h.damage -= stopped;
+        this.presentIncomingNode(
+          "defend",
+          {
+            item: a.uid,
+            amount: stopped,
+            loss: stopped,
+            name: armor.reflect ? "Reflected" : "Armor protects",
+          },
+          { kind: "item", uid: a.uid },
         );
         this.advanceHit();
         this.pump();

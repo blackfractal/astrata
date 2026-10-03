@@ -2,10 +2,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.35",
-  content: "1.1.36",
+  rules: "1.3.36",
+  content: "1.1.37",
   observation: 1,
-  actions: 1,
+  actions: 2,
 };
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",
@@ -827,7 +827,7 @@ for (const element of ["Fire", "Water", "Earth", "Wind"])
     "torso",
     { armor: 2 },
     65,
-    `Reduce each enemy attack reaching you by 2: 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Does not reduce Burn, Poison or Corrode damage.`,
+    `Choose this Armor once per incoming hit: prevent 3 against ${cycle[element]}, 1 against ${Object.keys(cycle).find((e) => cycle[e] === element)}, 2 otherwise. Free to use or skip. Does not reduce ongoing status damage or supply card attunement.`,
     { element },
   );
 item(
@@ -844,7 +844,7 @@ item(
   "torso",
   { armor: 1 },
   60,
-  "Reduce damage from each enemy attack by 1.",
+  "Choose once per incoming hit to prevent 1 damage. Free to use or skip; ongoing status damage bypasses Armor.",
 );
 item(
   "quickArmor",
@@ -860,7 +860,7 @@ item(
   "torso",
   { reflect: true },
   110,
-  "Reflect the first attack reaching the player each battle.",
+  "Choose to reflect an incoming attack. Once per battle; you may skip it and save reflection for a later hit.",
 );
 item(
   "crown",
@@ -868,7 +868,7 @@ item(
   "head",
   { shield: 2 },
   75,
-  "Cards with Shield in their name add +2 block.",
+  "When a card with Shield in its name activates, add +2 block. The helmet sends its power to that Shield. Does not supply card attunement.",
 );
 item(
   "thornCrown",
@@ -901,7 +901,7 @@ item(
   "torso",
   { armor: 2, corrode: 1 },
   90,
-  "Cursed: forced equip. Reduce damage from each enemy attack by 2; start each battle Corroded 1.",
+  "Cursed: forced equip. Choose once per incoming hit to prevent 2 damage, or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
   { cursed: true },
 );
 item(
@@ -1534,7 +1534,7 @@ export const glossary = {
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "On activation choose an adjacent element, or Arcane if none is available. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
+    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
@@ -1596,7 +1596,7 @@ export const glossary = {
   Block:
     "Temporary defense from Shields or Bracelets. Elemental block gains +50% against the element it beats, loses 50% against its weakness, rounded up; same element and Arcane are neutral. Shield block expires after the enemy turn; Bracelet block refills each enemy turn.",
   Armor:
-    "Passive protection after grid defenses and Bracelets, applied to each enemy attack reaching the player. Elemental Armor has 2 base reduction: 3 against the element it beats, 1 against its weakness, 2 otherwise. Ongoing status damage bypasses Armor.",
+    "Select an Armor icon to protect once per incoming hit, without Channel, or click the Druid to skip unused defenses. Armor shares the equipment position with Bracelets; using equipment passes grid defenses. Elemental protection: 3 favorable, 1 weak, 2 neutral. Ongoing status damage bypasses it. Healing/movement effects remain passive.",
   Hex: "A harmful card in your Grimoire. Its printed text explains when it applies. Tavern Hex treatment is separate from ordinary card removal.",
   Curse:
     "A harmful item effect. Cursed equipment may be forced into a slot and cannot be freely removed; its treatment has a printed cost.",
@@ -1639,7 +1639,7 @@ export const glossary = {
   Setting:
     "A Necklace, Bracelet or Ring with its own printed effect and one Gem socket.",
   Bracelet:
-    "Equipment block at the final position before the player. Choosing it passes all grid defenses for this hit. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack; passive Armor still applies.",
+    "Equipment block at the final position before the player. Choosing it passes all grid defenses for this hit. Refills each enemy turn and requires no activation. You may take a hit without using it, preserving the block for a later attack. Clicking the Druid also skips unused Armor.",
   Ring: "Equipment with a printed effect and a Gem socket. Rootbound Ring adds one separate hit on your first damaging activation each player turn.",
   Necklace: "Equipment with a printed effect and a Gem socket.",
   Crown: "Head equipment with a printed effect and no Gem socket.",

@@ -51,7 +51,7 @@ test("Transmute overrides Blast Attune and deals Water weakness damage despite a
 });
 test("Transmuted Shield creates Water block without changing an existing Fire portion", () => {
   const g = setup("shield");
-  act(g, 6);
+  act(g, 6, { element: "Fire" });
   assert.equal(g.s.battle.shields[0].element, "Fire");
   act(g, 9, { cardTarget: 6, newElement: "Water" });
   g.s.battle.turn++;
@@ -77,7 +77,11 @@ test("Transmute persists across live state reload, supports explicit Arcane, and
   );
   h.s.battle.grid[6] = [h.instance(h.s.battle.grid[6][0])];
   assert.equal(
-    h.legal().find((a) => a.type === "activate" && a.slot === 6).element,
+    h
+      .legal()
+      .find(
+        (a) => a.type === "activate" && a.slot === 6 && a.element === "Fire",
+      ).element,
     "Fire",
   );
 });

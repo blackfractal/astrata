@@ -72,7 +72,7 @@ export function arrangeBattle(ctx) {
       "Druid: take the hit and save remaining defenses",
     );
     portrait.title =
-      "Click the Druid to take this hit without using remaining cards or item block. Armor still applies.";
+      "Click the Druid to take this hit without using remaining cards, Bracelet block or Armor.";
     portrait.onclick = (e) => {
       e.stopPropagation();
       if (!ctx.busy()) {
@@ -105,7 +105,9 @@ export function arrangeBattle(ctx) {
     const owned = o.inventory.find((x) => x.uid === uid),
       def = items[owned?.id];
     button.setAttribute("aria-label", `${label}: ${def?.name || "Empty"}`);
-    const block = actions.find((a) => a.type === "bracelet" && a.uid === uid);
+    const block = actions.find(
+      (a) => ["bracelet", "armor"].includes(a.type) && a.uid === uid,
+    );
     if (block) {
       button.classList.add("block-available");
       button.setAttribute("aria-label", `${label}: ${block.label}`);

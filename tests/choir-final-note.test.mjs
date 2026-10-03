@@ -106,6 +106,7 @@ test("Cull skips intact Wards and Shields, permits Ally/equipment defense, and r
   g = new Game(0, g.s);
   act(g, "intercept");
   act(g, "bracelet");
+  act(g, "armor");
   assert.equal(g.s.mode, "reward");
   assert.equal(g.s.hp, hp - 16); // 20 - Ally2 - Bracelet1 - Armor1; Ward/Shield bypassed
   assert.equal(g.s.battle.bracelets[0].block, 0);
@@ -130,6 +131,7 @@ test("Reflection kill triggers Final Note; spent mirror cannot reflect it again"
   b.enemies[0].cycle = 1;
   const hp = g.s.hp;
   act(g, "endTurn");
+  act(g, "armor");
   assert.equal(g.s.mode, "reward");
   assert.equal(g.s.hp, hp - 20);
   assert.equal(notes(g).length, 1);

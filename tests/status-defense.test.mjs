@@ -15,6 +15,10 @@ function hit(g, damage, statusHit = false, element = "Arcane") {
     { kind: "hit", damage, statusHit, element, source: 900, name: "Test hit" },
   ];
   g.pump();
+  if (!g.s.battle.bracelets.some((x) => x.block > 0)) {
+    const armor = g.legal().find((a) => a.type === "armor");
+    if (armor) g.act(armor);
+  }
 }
 test("Husk Corrode hurts on the opening turn, then grows through leftover bracelet block", () => {
   const g = base();
@@ -67,7 +71,7 @@ test("Husk subtracts two from every enemy attack, rather than negating two attac
   hit(g, 1);
   assert.equal(g.s.hp, hp - 12);
 });
-test("Bracelet block still precedes armor for enemy attacks", () => {
+test("Bracelet block can precede selected armor for enemy attacks", () => {
   const g = base(),
     hp = g.s.hp,
     b = g.s.battle;
@@ -75,6 +79,7 @@ test("Bracelet block still precedes armor for enemy attacks", () => {
   hit(g, 6);
   assert.equal(g.s.hp, hp);
   g.act(g.legal().find((a) => a.type === "bracelet"));
+  g.act(g.legal().find((a) => a.type === "armor"));
   assert.equal(g.s.hp, hp - 2);
   assert.equal(b.bracelets[0].block, 0);
 });

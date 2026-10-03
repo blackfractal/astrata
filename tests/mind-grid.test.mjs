@@ -74,7 +74,7 @@ test("far-edge Shield matching/attunement and Ally growth/statuses use new neigh
   put(g, "shield", 40);
   put(g, "rain", 41);
   b.phase = "activate";
-  act(g, "activate", (a) => a.slot === 40);
+  act(g, "activate", (a) => a.slot === 40 && a.element === "Water");
   assert.equal(b.shields[0].block, 5);
   assert.equal(b.shields[0].element, "Water");
   const ally = put(g, "sapling", 35);

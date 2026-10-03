@@ -18,7 +18,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.12";
+    this.id = "weighted-druid-v1.13";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -295,6 +295,12 @@ export class WeightedPolicy {
             ((f.column ?? -1) + 1) * 2,
           "Use the portion with the strongest effective block against this element.",
         ];
+      case "armor":
+        return [
+          Math.min(b.reaction.damage, f.reflect ? b.reaction.damage : f.armor) *
+            w.survival,
+          "Choose armor protection for this hit, or preserve reflection by skipping it.",
+        ];
       case "intercept": {
         const c = b.grid[a.slot].at(-1),
           d = cards[c.id],
@@ -310,7 +316,7 @@ export class WeightedPolicy {
       }
       case "skipEquipment":
         return [
-          -Math.max(0, b.reaction.damage - o.bonuses.armor) * w.survival,
+          -b.reaction.damage * w.survival,
           "Preserve item block by accepting the remaining hit; prefer blocking damage when possible.",
         ];
       case "takeHit":
@@ -318,7 +324,7 @@ export class WeightedPolicy {
           b.bracelets.reduce((n, p) => n + p.block, 0) +
             o.bonuses.armor -
             (o.hp < 20 ? 10 : 0),
-          "Let passive equipment absorb a manageable hit.",
+          "Pass grid defenders and choose equipment protection.",
         ];
       case "rewardCard":
         return [

@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 5,
+  version: 6,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -429,7 +429,7 @@ defend(
   "ember-bracelet",
   "bracelet",
   null,
-  "Your unsocketed Bracelet blocks 2 of the 3 Fire damage; the last 1 reaches you. A Fire-imbued defense is strongest against Fire. Water defense is strongest against Water, even though Water attacks beat Fire.",
+  "Your unsocketed Bracelet blocks 2 of the 3 Fire damage; the last 1 reaches you. Water-attuned defense protects best against Fire, just as Water attacks beat Fire. Same-element matchups are neutral.",
 );
 place(
   "attune-place",
@@ -441,7 +441,7 @@ phase("attune-phase");
 activate(
   "attune-attack",
   23,
-  "Activate Blast as Water against the Fire enemy. Its 4 becomes 6; your Ring supplies the final 2.",
+  "Select Blast’s Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
   "Water",
 );
 action(
@@ -493,7 +493,7 @@ ui(
 action(
   "helmet-buy",
   "Buy the helmet",
-  "Buy the Sturdy Metal Helmet for 75 Gold. It adds +2 to the block produced by your Shields.",
+  "Buy the Sturdy Metal Helmet for 75 Gold. Shield activations show (+2); on activation the helmet sends a power sphere to add that block. It does not supply attunement.",
   { type: "buy", itemId: "crown" },
 );
 ui(

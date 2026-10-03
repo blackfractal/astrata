@@ -1,3 +1,21 @@
+# Optional Armor and prepared attunement — package1.3.66
+
+Rules1.3.36/content1.1.37/actions2/tutorial6; weighted-druid-v1.13 adds optional Armor scoring and makes skip-all account for unreduced incoming damage. No training performed. All276 unit tests pass; packaged interaction, elemental defense, double-click and full122-decision tutorial checks pass. Headless tutorial completes at70HP. The normal player save was not used or modified.
+
+Five unattended smoke games (not a controlled statistical balance experiment):
+
+| Seed | Outcome | Field round | Decisions |
+| --- | --- | --- | --- |
+| 825183 | Loss | 11 | 204 |
+| 825184 | Loss | 19 | 336 |
+| 825185 | Loss | 20 | 245 |
+| 825186 | Loss | 13 | 220 |
+| 825187 | Loss | 11 | 125 |
+
+All finish without errors or invalid actions. Archives, version metadata and full traces: reports/defense-controls-evaluation. The small sample and heuristic policy do not establish human difficulty or balance; neutral Attune availability and policy changes can alter trajectories. Earlier reports below describe earlier builds. New authored tutorial trace is retained separately in reports/tutorial-evaluation.
+
+---
+
 # Live boss grid telegraphs — package 1.3.27
 
 Rules 1.3.16 unchanged; content 1.1.16; weighted-druid-v1.7 unchanged. All 166 rules tests pass. Target resolution now shares a pure gridTargets function with the preview; the actual selection rules and tie-breakers are unchanged. AI observations add battle.telegraphs containing visible source/action, threatened spaces, affected occupied slots and card count. Reads consume no RNG and expose no hidden state.

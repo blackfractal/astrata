@@ -265,7 +265,10 @@ export function boardInteractions(ctx) {
         const dot = document.createElement("span");
         dot.className = "attune-swatch";
         dot.style.setProperty("--swatch", color(element));
-        dot.dataset.tooltip = `${element} available from an adjacent card`;
+        dot.dataset.tooltip =
+          element === "Arcane"
+            ? "Unattune: use Arcane for this activation, even with elemental neighbors."
+            : `${element} available from an adjacent card`;
         dot.setAttribute("role", "img");
         dot.setAttribute("aria-label", `${element} attunement available`);
         swatches.append(dot);

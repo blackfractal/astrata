@@ -97,7 +97,11 @@ async function perform(g, a) {
     return;
   }
   if (a.type === "activate") {
-    if (step === "first-blast") {
+    if (step === "attune-attack") {
+      await p.locator(`[data-activate-slot="${a.slot}"]`).click();
+      await p.locator('[data-slot="22"].target-option').click();
+      await p.locator(`[data-enemy-uid="${a.target}"]`).click();
+    } else if (step === "first-blast") {
       await p
         .locator(`[data-slot="${a.slot}"]`)
         .dragTo(p.locator(`[data-enemy-uid="${a.target}"]`));
@@ -110,7 +114,7 @@ async function perform(g, a) {
     await p.locator(`[data-slot="${a.slot}"]`).click();
     return;
   }
-  if (a.type === "bracelet") {
+  if (["bracelet", "armor"].includes(a.type)) {
     await p.locator(`.battle-player [data-item-uid="${a.uid}"]`).click();
     return;
   }

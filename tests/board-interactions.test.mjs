@@ -31,7 +31,7 @@ test("Displayed attunement options match legal choices; Transmute overrides them
     c = put(g, "shield", 8);
   put(g, "rain", 7);
   put(g, "thorn", 9, "Fire");
-  assert.deepEqual(attunementElements(b, c, 8), ["Water", "Fire"]);
+  assert.deepEqual(attunementElements(b, c, 8), ["Arcane", "Water", "Fire"]);
   assert.deepEqual(
     [
       ...new Set(
@@ -58,7 +58,13 @@ test("Shield colors follow remaining portions, preserve mixed elements and exclu
     b = g.s.battle,
     c = put(g, "shield", 8);
   put(g, "rain", 7);
-  g.act(g.legal().find((a) => a.type === "activate" && a.slot === 8));
+  g.act(
+    g
+      .legal()
+      .find(
+        (a) => a.type === "activate" && a.slot === 8 && a.element === "Water",
+      ),
+  );
   assert.equal(c.lastActivationElement, "Water");
   assert.deepEqual(cardInteraction(b, c, 8).colors, ["Water"]);
   b.shields.push({
@@ -92,7 +98,13 @@ test("Blast cast tint lasts only this turn and never offers its cast element to 
     c = put(g, "blast", 8),
     other = put(g, "shield", 15);
   put(g, "rain", 7);
-  g.act(g.legal().find((a) => a.type === "activate" && a.slot === 8));
+  g.act(
+    g
+      .legal()
+      .find(
+        (a) => a.type === "activate" && a.slot === 8 && a.element === "Water",
+      ),
+  );
   assert.equal(c.element, "Arcane");
   assert.deepEqual(cardInteraction(b, c, 8).colors, ["Water"]);
   assert.deepEqual(attunementElements(b, other, 15), ["Arcane"]);
@@ -126,7 +138,13 @@ test("Visuals don't recalculate stored block after adjacency changes, and are re
     b = g.s.battle,
     c = put(g, "shield", 8);
   put(g, "shield", 9);
-  g.act(g.legal().find((a) => a.type === "activate" && a.slot === 8));
+  g.act(
+    g
+      .legal()
+      .find(
+        (a) => a.type === "activate" && a.slot === 8 && a.element === "Arcane",
+      ),
+  );
   assert.equal(b.shields[0].block, 5);
   b.grid[9] = [];
   const saved = structuredClone(g.s);

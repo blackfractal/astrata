@@ -52,7 +52,7 @@ test("Skip item block preserves both portions, damages HP, and can block the nex
     [0, 3],
   );
 });
-test("Can block partially then skip the other item; ordinary armor still reduces damage", () => {
+test("Can block partially then skip the other item and unused armor", () => {
   const g = base("curseArmor"),
     b = g.s.battle,
     hp = g.s.hp;
@@ -60,7 +60,7 @@ test("Can block partially then skip the other item; ordinary armor still reduces
   act(g, "bracelet");
   assert.equal(b.reaction.damage, 4);
   act(g, "skipEquipment");
-  assert.equal(g.s.hp, hp - 2);
+  assert.equal(g.s.hp, hp - 4);
   assert.deepEqual(
     b.bracelets.map((x) => x.block),
     [0, 3],
