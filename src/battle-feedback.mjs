@@ -1,18 +1,21 @@
+import { statHelp, statAttribute } from "./card-upgrade-ui.mjs";
 import { cards, glossary } from "./content.mjs";
 import { attackElements, attackPreview } from "./combat-preview.mjs";
 import { cardPower } from "./engine.mjs";
 export function damageMarkup(b, c, slot) {
-  return `Deal <b class="damage-value">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×4" : ""}</b>`;
+  return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×4" : ""}</b>`;
 }
 export function targetPreview(ctx, source, slot, actionFor) {
   const number = source?.querySelector(".damage-value");
   const normal = number?.textContent;
+  const normalHelp = number?.dataset.tooltip;
   let target = null;
   function clear() {
     if (number) {
       number.textContent = normal;
       number.classList.remove("damage-up", "damage-down");
-      number.removeAttribute("data-tooltip");
+      if (normalHelp) number.dataset.tooltip = normalHelp;
+      else number.removeAttribute("data-tooltip");
     }
     ctx.app
       .querySelectorAll(".target-damage-preview")

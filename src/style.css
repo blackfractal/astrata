@@ -2966,3 +2966,11 @@ header {
 }
 
 .charge-meter { display: block; color: var(--gold); }
+
+/* Upgrades: permanent stamped gold star, independent of elemental attunement. */
+.upgrade-badge { position:absolute; top:6px; right:6px; z-index:5; display:inline-flex; align-items:center; justify-content:center; width:27px; height:27px; color:#ffdb79; background:#211d13f5; border:1px solid #e6bd62; border-radius:50%; box-shadow:0 1px 4px #000b; cursor:help; }
+.upgrade-badge svg { width:21px; height:21px; fill:currentColor; pointer-events:none; }
+.card-art-detail, .market-item { position:relative; }
+.card-art-detail .full-art { width:100%; }
+.card-stat-breakdown { font-size:14px; color:#dfd3ae; line-height:1.5; }
+.shield-value, .damage-value { cursor:help; }
