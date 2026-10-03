@@ -3,6 +3,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { recordTutorial } = require("./tutorial-profile.cjs");
 const { createArchive } = require("./run-archive.cjs");
+const { createCollectionStore } = require("./collection-store.cjs");
+let collectionStore;
+async function collections() {
+  return (collectionStore ||= import("./src/archive-profile.mjs").then((api) =>
+    createCollectionStore(base(), api),
+  ));
+}
 let win, runArchive;
 function archive() {
   return (runArchive ||= createArchive(base(), {
@@ -82,18 +89,24 @@ app.whenReady().then(() => {
     if (!url.startsWith("file:")) event.preventDefault();
   });
 });
-ipcMain.handle("load", () => {
+ipcMain.handle("load", async () => {
   archive().importHistory(read("history.json", []));
-  return {
+  const data = {
     save: read("save.json", null),
     tutorialSave: read("tutorial-save.json", null),
     tutorialStats: read("tutorial-stats.json", {}),
     settings: read("settings.json", {}),
     history: read("history.json", []),
   };
+  data.collections = (await collections()).load(data);
+  return data;
 });
-ipcMain.handle("record", (_, event) => archive().record(event));
-ipcMain.handle("save", (_, state, options = {}) => {
+ipcMain.handle("record", async (_, event) => {
+  const result = archive().record(event);
+  (await collections()).record(event);
+  return result;
+});
+ipcMain.handle("save", async (_, state, options = {}) => {
   const isTutorial = !!state?.tutorial || !!options.tutorial;
   const saveFile = isTutorial ? "tutorial-save.json" : "save.json";
   const previous = read(saveFile, null);
@@ -109,6 +122,7 @@ ipcMain.handle("save", (_, state, options = {}) => {
       state ? "Replaced by a new journey" : "Abandoned by player",
     );
   if (state) {
+    (await collections()).record({ state });
     write(saveFile, state);
     if (isTutorial)
       write(
@@ -122,7 +136,8 @@ ipcMain.handle("save", (_, state, options = {}) => {
       );
   } else fs.rmSync(path.join(base(), saveFile), { force: true });
 });
-ipcMain.handle("result", (_, result) => {
+ipcMain.handle("result", async (_, result) => {
+  (await collections()).record({ result });
   result = archive().result(result);
   const history = read("history.json", []);
   if (!history.some((r) => r.runId === result.runId)) {

@@ -1,3 +1,5 @@
+import { showArchives } from "./archives-ui.mjs";
+import { discover, emptyCollection } from "./archive-profile.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
 import {
   startTutorial,
@@ -29,9 +31,31 @@ const storage = window.desktop || {
       packageVersion: null,
     });
     localStorage.setItem(key, JSON.stringify(events));
+    const d = await storage.load();
+    discover(d.collections, event.state || event.result);
+    localStorage.setItem("astrata", JSON.stringify(d));
   },
-  load: async () =>
-    JSON.parse(localStorage.getItem("astrata") || '{"history":[]}'),
+  load: async () => {
+    const d = JSON.parse(localStorage.getItem("astrata") || '{"history":[]}');
+    d.collections ||= emptyCollection();
+    if (!d.collections.importedTraces) {
+      for (const key of Object.keys(localStorage).filter((key) =>
+        key.startsWith("astrata-run-"),
+      )) {
+        for (const event of JSON.parse(localStorage.getItem(key) || "[]"))
+          discover(
+            d.collections,
+            event.state || event.result,
+            event.recordedAt,
+          );
+      }
+      d.collections.importedTraces = true;
+    }
+    for (const state of [...(d.history || []), d.save, d.tutorialSave])
+      discover(d.collections, state);
+    localStorage.setItem("astrata", JSON.stringify(d));
+    return d;
+  },
   save: async (save, options = {}) => {
     const d = await storage.load();
     if (save?.tutorial)
@@ -46,6 +70,7 @@ const storage = window.desktop || {
   },
   result: async (r) => {
     const d = await storage.load();
+    discover(d.collections, r);
     if (r.tutorial) browserTutorialStats(d, r, "complete", r.runId);
     localStorage.setItem(
       "astrata",
@@ -257,7 +282,7 @@ function menu() {
   app.classList.remove("battle-scene");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· The First Clearing</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="history">Run History</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· The First Clearing</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
   bind();
 }
 async function persist() {
@@ -839,10 +864,23 @@ async function ui(name) {
           .join("")}`,
       );
       break;
+    case "archives":
     case "history":
       data = await storage.load();
-      dialog(
-        `<h2>Run History</h2><div class="choices">${(data.history || []).map((h, i) => `<button data-history="${i}">${h.tutorial ? "Tutorial" : "Druid"} · ${h.outcome} · Round ${h.field.round} · Seed ${h.seed}</button>`).join("") || "<p>No journeys recorded yet.</p>"}</div>`,
+      close();
+      showArchives(
+        {
+          app,
+          data,
+          esc,
+          img,
+          text,
+          dialog,
+          resultMarkup,
+          tellText,
+          home: () => ui("home"),
+        },
+        name === "history" ? "history" : "hub",
       );
       break;
     case "botStep":
@@ -984,6 +1022,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     e.preventDefault();
     if (!modal.hidden) close();
+    else if (app.querySelector(".archives"))
+      app.querySelector("[data-archive-back]").click();
     else if (game) ui("pause");
   }
   if (e.key === "Enter" && document.activeElement?.tagName !== "BUTTON") {

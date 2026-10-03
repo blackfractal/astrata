@@ -27,6 +27,7 @@ for (const name of [
   "index.html",
   "desktop.cjs",
   "run-archive.cjs",
+  "collection-store.cjs",
   "tutorial-profile.cjs",
   "preload.cjs",
 ])
@@ -56,6 +57,7 @@ for (const name of [
   "enemy-first-evaluation",
   "setting-drop-verification.json",
   "guard-verification.json",
+  "archives-verification.json",
   "charge-release-verification.json",
   "charge-release-evaluation",
   "area-impact-verification.json",
