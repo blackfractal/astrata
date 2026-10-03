@@ -3,7 +3,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.42",
-  content: "1.1.44",
+  content: "1.1.45",
   observation: 1,
   actions: 2,
 };
@@ -207,7 +207,7 @@ card(
   1,
   2,
   { damage: 8 },
-  "Pile: fire every live ball, each successive ball deals +2 damage to a random enemy.",
+  "Deal 8 Chaos damage to a random enemy. Pile: fire every live ball; each successive ball deals +2 damage.",
   { stack: "pile" },
 );
 card(
