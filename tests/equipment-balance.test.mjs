@@ -149,7 +149,8 @@ test("Bronze Bracelet refills two block per enemy turn and starting gem previews
   assert.equal(options.find((a) => a.slot === "wrist2").effects.defense, 2);
   assert.equal(options.find((a) => a.slot === "finger2").effects.damage, 2);
   assert.equal(items.bronze.effect.block, 2);
-  assert.equal(items.silver.effect.block, 5);
+  assert.equal(items.silver.effect.block, 4);
+  assert.equal(items.gold.effect.block, 7);
   g.beginBattle([{ uid: 900, enemy: "beetle", restless: 0 }]);
   g.s.battle.enemies[0].frozen = true;
   for (let i = 0; i < 2; i++) {

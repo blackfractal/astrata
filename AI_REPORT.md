@@ -1,3 +1,9 @@
+# Attunement relays and Bracelet balance — package1.3.69
+
+Rules1.3.39/content1.1.40; policy weighted-druid-v1.13 unchanged. All283 unit tests and packaged relay/Bracelet checks pass; headless authored tutorial completes122decisions at70HP. Five unattended runs825183–825187 complete without errors, all losses: rounds11/19/20/13/11, decisions204/336/245/220/125. Full traces/build metadata: reports/attunement-relay-evaluation. No training or statistical balance conclusion. The policy can use the legal attunement choices but has no newly trained chain-planning strategy; focused tests verify relay behavior directly. Graphical evidence: reports/attunement-relay-verification.json and screenshots/attunement-relay/chain.png. Earlier reports below remain historical.
+
+---
+
 # Draining Armor — package1.3.67
 
 Rules1.3.37/content1.1.38; policy weighted-druid-v1.13 unchanged. All279 tests and ten packaged defense-controls scenarios pass, including a multi-hit volley and visible loss-over-orb check. Five unattended runs825183–825187 finish without errors: all losses, rounds11/19/20/13/11, decisions204/336/245/220/125. These match the preceding smoke outcomes; they do not establish balance significance or guarantee Armor coverage in each trajectory. Targeted tests cover the changed rule directly. No training. Full versioned traces in reports/armor-pool-evaluation. Earlier tutorial evidence belongs to1.3.66; tutorial content did not change.

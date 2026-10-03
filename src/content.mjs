@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.38",
-  content: "1.1.39",
+  rules: "1.3.39",
+  content: "1.1.40",
   observation: 1,
   actions: 2,
 };
@@ -78,7 +78,7 @@ card(
   1,
   2,
   { damage: 4, matchingDamage: 1 },
-  "Attune. Deal 4 damage, +1 per adjacent Blast.",
+  "Attune. Deal 4 damage, +1 per adjacent Blast. After activation, relay its element to adjacent Attune cards until your next turn.",
   { attune: true },
 );
 card(
@@ -89,7 +89,7 @@ card(
   1,
   2,
   { shield: 4, matchingShield: 1 },
-  "Attune. Add 4 block, +1 per adjacent Shield, until the enemy turn ends.",
+  "Attune. Add 4 block, +1 per adjacent Shield, until the enemy turn ends. After activation, relay its element to adjacent Attune cards until your next turn.",
   { attune: true },
 );
 card(
@@ -725,18 +725,18 @@ item(
   "silver",
   "Silver Bracelet",
   "wrist",
-  { block: 5 },
+  { block: 4 },
   90,
-  "Refill 5 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
+  "Refill 4 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
 item(
   "gold",
   "Gold Bracelet",
   "wrist",
-  { block: 10 },
+  { block: 7 },
   190,
-  "Refill 10 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
+  "Refill 7 block each enemy turn. Socketed elements use the attack cycle for block: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
   { socket: true, forbid: ["channelGem"] },
 );
 item(
@@ -1534,7 +1534,7 @@ export const glossary = {
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
+    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or block is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% block against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",

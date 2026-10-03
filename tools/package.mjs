@@ -56,6 +56,8 @@ for (const name of [
   "element-defense-evaluation",
   "defense-controls-evaluation",
   "armor-pool-evaluation",
+  "attunement-relay-evaluation",
+  "attunement-relay-verification.json",
   "defense-controls-verification.json",
   "element-defense-verification.json",
   "polish-evaluation",

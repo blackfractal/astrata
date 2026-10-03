@@ -57,6 +57,14 @@ export function gridNeighbors(b, i) {
   if (top(b.grid[i])?.sever) return [];
   return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
 }
+// A relay changes only the element offered for Attune, never printed-element conditions.
+export function attunementSourceElement(b, c) {
+  const d = cards[c.id];
+  if (c.transmuted || c.element !== d.element) return c.element;
+  return d.attune && c.lastActivatedTurn === b.turn
+    ? c.lastActivationElement || c.element
+    : c.element;
+}
 export function attunementElements(b, c, i) {
   const d = cards[c.id];
   const elements =
@@ -65,7 +73,7 @@ export function attunementElements(b, c, i) {
           "Arcane",
           ...new Set(
             gridNeighbors(b, i)
-              .map((j) => top(b.grid[j]).element)
+              .map((j) => attunementSourceElement(b, top(b.grid[j])))
               .filter((element) => element !== "Arcane"),
           ),
         ]
@@ -382,6 +390,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.38",
           "1.3.37",
           "1.3.36",
           "1.3.35",

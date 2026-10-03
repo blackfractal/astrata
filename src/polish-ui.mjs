@@ -15,7 +15,13 @@ import {
   upgradeHelp,
 } from "./battle-feedback.mjs";
 import { cards, items, enemies } from "./content.mjs";
-import { blockHit, allyHit, incomingDamageText, adjacent } from "./engine.mjs";
+import {
+  blockHit,
+  allyHit,
+  incomingDamageText,
+  adjacent,
+  attunementSourceElement,
+} from "./engine.mjs";
 const slotNames = {
   head: "Head",
   neck: "Neck",
@@ -222,12 +228,9 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
     }
     for (const i of ctx.game.neighbors(slot)) {
       const neighbor = ctx.o.battle.grid[i].at(-1);
-      if (neighbor.element !== "Arcane" && elements.includes(neighbor.element))
-        mark(
-          ctx.app.querySelector(`[data-slot="${i}"]`),
-          "element",
-          neighbor.element,
-        );
+      const offered = attunementSourceElement(ctx.o.battle, neighbor);
+      if (offered !== "Arcane" && elements.includes(offered))
+        mark(ctx.app.querySelector(`[data-slot="${i}"]`), "element", offered);
     }
     for (const a of filtered())
       if (a.target != null)
@@ -462,8 +465,9 @@ function activationChooser(ctx, slot, dragging = false) {
     if (stage === "element") {
       for (const i of ctx.game.neighbors(slot)) {
         const neighbor = ctx.o.battle.grid[i].at(-1);
-        if (values.includes(neighbor.element))
-          mark(ctx.app.querySelector(`[data-slot="${i}"]`), neighbor.element);
+        const offered = attunementSourceElement(ctx.o.battle, neighbor);
+        if (values.includes(offered))
+          mark(ctx.app.querySelector(`[data-slot="${i}"]`), offered);
       }
     } else if (stage === "target") {
       for (const value of values)
@@ -611,7 +615,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.type === "Ally" ? "HP " + c.hp : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? "Ward " + c.ward : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${Math.max(1, d.charge - c.charge)} activation(s) to fire` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail">${ctx.img("card-" + c.id, "full-art")}<div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? "Ward " + c.ward : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${Math.max(1, d.charge - c.charge)} activation(s) to fire` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${upgrade}</div></div><div class="card-context"></div>`,
   );
   const context = ctx.modal.querySelector(".card-context");
   if (slot != null) {

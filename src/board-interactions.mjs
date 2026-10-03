@@ -1,6 +1,7 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
 import {
   attunementElements,
+  attunementSourceElement,
   gridNeighbors,
   squarePattern,
   cardAllowance,
@@ -18,7 +19,9 @@ export function cardInteraction(b, c, i) {
   const neighbors = gridNeighbors(b, i);
   const attunes = !!(d.attune && !c.transmuted && c.element === d.element);
   const providers = attunes
-    ? neighbors.filter((j) => b.grid[j].at(-1).element !== "Arcane")
+    ? neighbors.filter(
+        (j) => attunementSourceElement(b, b.grid[j].at(-1)) !== "Arcane",
+      )
     : [];
   const matching =
     d.effects.matchingDamage || d.effects.matchingShield
@@ -68,7 +71,13 @@ export function boardConnections(b) {
       active = live(c, i);
     if (active)
       for (const j of m.providers)
-        add(j, i, "attune", b.grid[j].at(-1).element, "Attunement choice");
+        add(
+          j,
+          i,
+          "attune",
+          attunementSourceElement(b, b.grid[j].at(-1)),
+          "Attunement source or activated relay",
+        );
     for (const j of m.matching)
       if (i < j) {
         const other = live(b.grid[j].at(-1), j);
@@ -235,20 +244,22 @@ export function boardInteractions(ctx) {
     label.className = "element-label";
     label.textContent = m.transmuted
       ? `${c.element} ↺`
-      : m.portions.length
-        ? "Shield block"
-        : m.cast
-          ? `Cast ${m.cast}`
-          : m.attunes && m.choices.some((e) => e !== "Arcane")
-            ? "Attune"
-            : c.element;
+      : m.cast && m.cast !== "Arcane"
+        ? `${m.cast} relay`
+        : m.portions.length
+          ? "Shield block"
+          : m.cast
+            ? `Cast ${m.cast}`
+            : m.attunes && m.choices.some((e) => e !== "Arcane")
+              ? "Attune"
+              : c.element;
     slot.dataset.baseElementLabel = label.textContent;
     label.dataset.tooltip = m.transmuted
       ? `Transmuted to ${c.element} for this placement. Existing Shield portions keep their original elements.`
-      : m.portions.length
-        ? "Active block retains its chosen element. It does not change the card's element for neighboring Attune."
-        : m.cast
-          ? `Last activation this turn: ${m.cast}. The card itself remains ${c.element}; next activation chooses anew.`
+      : m.cast
+        ? `Last activation: ${m.cast}. Offers this element to adjacent Attune cards until your next turn, even if spent or its block is depleted. Sever and covering stop connections. Shield portions keep their own elements; next activation chooses anew.`
+        : m.portions.length
+          ? "Active block retains its chosen element. A committed Attune activation also relays its latest element until the next player turn."
           : m.attunes
             ? `Next activation choices: ${m.choices.join(", ")}. Choose on activation; neighbors supply choices, not a permanent element change.`
             : `${c.element} card.`;

@@ -92,7 +92,7 @@ test("Shield colors follow remaining portions, preserve mixed elements and exclu
   assert.equal(cardInteraction(b, c, 8), null);
   assert.deepEqual(cardInteraction(b, b.grid[8][0], 8).portions, []);
 });
-test("Blast cast tint lasts only this turn and never offers its cast element to neighbors", () => {
+test("Blast cast tint and offered relay last only this turn", () => {
   const g = base(),
     b = g.s.battle,
     c = put(g, "blast", 8),
@@ -107,8 +107,9 @@ test("Blast cast tint lasts only this turn and never offers its cast element to 
   );
   assert.equal(c.element, "Arcane");
   assert.deepEqual(cardInteraction(b, c, 8).colors, ["Water"]);
-  assert.deepEqual(attunementElements(b, other, 15), ["Arcane"]);
+  assert.deepEqual(attunementElements(b, other, 15), ["Arcane", "Water"]);
   b.turn++;
+  assert.deepEqual(attunementElements(b, other, 15), ["Arcane"]);
   assert.deepEqual(cardInteraction(b, c, 8).colors, ["Arcane"]);
   const fresh = g.instance(c);
   assert.equal(fresh.lastActivationElement, null);
