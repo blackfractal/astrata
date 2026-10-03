@@ -1,3 +1,19 @@
+# Random Opening Rite placement — package1.3.74
+
+Rules1.3.42/content1.1.44, policy weighted-druid-v1.16 unchanged. Opening Rite samples empty spaces with the run RNG. All304 tests pass, including same-seed state equality, every grid space eligible across256 fixed seeds, multiple-copy distinct placement/additive Focus, previous-version save preservation, and grid capacity. No training.
+
+| Seed | Outcome | Round | Decisions |
+| --- | --- | --- | --- |
+| 825183 | loss | 20 | 329 |
+| 825184 | loss | 8 | 167 |
+| 825185 | loss | 16 | 211 |
+| 825186 | loss | 8 | 124 |
+| 825187 | win | 20 | 439 |
+
+All five regression runs finish. These runs check compatibility, not a controlled balance estimate or guaranteed coverage of a particular reward. Full versioned traces/source snapshots: reports/random-rite-evaluation. Targeted rule tests establish the actual placement behavior. Earlier reports follow.
+
+---
+
 # Familiar Conduit — package1.3.73
 
 Rules1.3.41/content1.1.43/policy weighted-druid-v1.16. Policy recognizes Conduit's adjacent Blast/Shield support and chosen defensive element. No training. All300 tests pass. Packaged graphical test verifies canceled previews, click/drag chains, matching bonuses, actual elemental interception and next-turn expiry without renderer errors. Tutorial completes122 decisions at70HP.

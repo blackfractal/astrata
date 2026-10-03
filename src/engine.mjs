@@ -430,6 +430,7 @@ export class Game {
         ![
           VERSION.rules,
           "1.3.40",
+          "1.3.41",
           "1.3.39",
           "1.3.38",
           "1.3.37",
@@ -1195,8 +1196,11 @@ export class Game {
       );
     for (const c of [...b.deck])
       if (cards[c.id].opening) {
+        const empty = b.grid.flatMap((stack, i) => (stack.length ? [] : [i]));
+        if (!empty.length) break;
+        const slot = this.pick(empty);
         b.deck = b.deck.filter((x) => x.uid !== c.uid);
-        b.grid[b.grid.findIndex((x) => !x.length)].push(this.instance(c));
+        b.grid[slot].push(this.instance(c));
         b.next.focus++;
       }
     this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));

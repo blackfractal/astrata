@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.41",
-  content: "1.1.43",
+  rules: "1.3.42",
+  content: "1.1.44",
   observation: 1,
   actions: 2,
 };
@@ -334,7 +334,7 @@ card(
   1,
   0,
   {},
-  "Begins battle placed. Gain +1 Focus on your first turn. Cannot be recalled.",
+  "Begins battle in a random empty space. Gain +1 Focus on your first turn. Cannot be recalled.",
   { opening: true, recall: null, unrecallable: true },
 );
 card(
