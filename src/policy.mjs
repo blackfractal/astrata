@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.18";
+    this.id = "weighted-druid-v1.19";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -52,6 +52,7 @@ export class WeightedPolicy {
       (e.ward || 0) * 0.55 +
       (e.shield || 0) * 0.4 +
       (e.channel || 0) * 6 +
+      ((e.insight || 0) + 2 * (e.adjInsight || 0)) * 1.5 +
       (e.focusPermanent || 0) * 10 +
       (e.heal || 0) * 1.5 +
       (e.poison || 0) * 3 +
@@ -223,6 +224,8 @@ export class WeightedPolicy {
         )
           n -= 20;
         if (e.adj) n += ns.length * 2;
+        if (e.adjInsight)
+          n += ns.filter((i) => !b.grid[i].at(-1).sever).length * 2;
         if (e.matchingDamage || e.matchingShield)
           n +=
             ns.filter(

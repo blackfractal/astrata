@@ -118,6 +118,8 @@ export function upgradeHelp(d) {
   const f = d.effects,
     n = u.bonus || 0,
     gains = [];
+  if (u.effects?.damage)
+    gains.push(`Add ${u.effects.damage} direct ${d.element} damage`);
   if (f.damage) gains.push(`Damage ${f.damage} → ${f.damage + n}`);
   if (d.hp) gains.push(`Initial HP ${d.hp} → ${d.hp + n}`);
   if (f.shield) gains.push(`Shield ${f.shield} → ${f.shield + n}`);

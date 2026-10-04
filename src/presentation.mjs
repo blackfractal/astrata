@@ -568,7 +568,8 @@ export async function playFrames(before, frames, after, render, isFast) {
             frame.dead,
             frame.collapseOrigins?.length ? null : from,
             frame.amount != null
-              ? statusVisual[frame.statusTick] ||
+              ? statusVisual[frame.attackStatus] ||
+                  statusVisual[frame.statusTick] ||
                   frame.element ||
                   source?.element ||
                   "Arcane"

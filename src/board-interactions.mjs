@@ -99,7 +99,10 @@ export function boardConnections(b) {
             active && other,
           );
       }
-    if (d.growth || (active && (d.effects.adj || d.effects.adjHeal)))
+    if (
+      d.growth ||
+      (active && (d.effects.adj || d.effects.adjHeal || d.effects.adjInsight))
+    )
       for (const j of m.neighbors)
         add(
           j,

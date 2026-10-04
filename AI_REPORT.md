@@ -719,3 +719,10 @@ Rules1.3.45/content1.1.50, weighted-druid-v1.17 unchanged, no learned training. 
 ## Enemy-first movement encounters — 1.3.85
 
 Rules1.3.46/content1.1.51; unchanged weighted-druid-v1.17, no learned training. Five archived integration runs825383–825387 completed without invalid actions, stalls or crashes. All five lost; Field rounds16/16/11/15/6, decisions208/203/160/188/129; causes Burn/Lance/Claw/Lance/Bite. Full decisions, states and source/version snapshots: reports/enemy-first-evaluation. These smoke runs verify execution, not human difficulty or an optimized policy for the new incentive to enter encounters yourself. Deterministic tutorial and packaged UI walkthrough separately complete the revised tutorial, including the12-damage Patient Warden.
+
+
+## Bounded healing and resource balance — 1.3.89
+
+Rules1.3.48/content1.1.54; weighted-druid-v1.19. Tide placement values connected adjacency and scores its live Insight amount. Upgrade actions expose actual status values and Slow Rot's direct damage; Plasma actions report only ready balls' combined damage. No learned training.
+
+Five archived integration runs825483–825487 completed without invalid actions, stalls or crashes. All lost: Field rounds11/19/14/9/15; decisions202/265/234/153/187; causes Fire Bite/Collapse/Current/Burn/Burn. One reached Void-Colossus; four ended before an Archon. Complete actions, states and source/version snapshots retained in reports/resource-balance-evaluation. These runs do not establish card balance, human difficulty or optimal play. Full344-test suite and separate packaged UI checks cover the changed mechanics directly.

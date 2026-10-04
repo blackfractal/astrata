@@ -185,9 +185,45 @@ export function squarePattern(b, c, i) {
   }
   return [];
 }
+export function cardEffects(c) {
+  return {
+    ...cards[c.id].effects,
+    ...(c.upgrade ? cards[c.id].upgrade?.effects : {}),
+  };
+}
+export function insightGain(b, c, i) {
+  const f = cardEffects(c);
+  return (f.insight || 0) + (f.adjInsight || 0) * gridNeighbors(b, i).length;
+}
+export function equipmentHealAmount(item, inventory) {
+  const d = items[item.id];
+  return (
+    (d.effect.heal || 0) +
+    (d.effect.heal &&
+    d.synergy &&
+    d.synergy === inventory.find((x) => x.uid === item.gem)?.id
+      ? 1
+      : 0)
+  );
+}
+function normalizeEquipmentHealing(state) {
+  if (state.battle && !state.battle.healUses) {
+    // Older saves did not track triggers. Do not grant more healing by reloading.
+    state.battle.healUses = {};
+    for (const uid of Object.values(state.equipment || {})) {
+      const item = state.inventory.find((x) => x.uid === uid);
+      if (items[item?.id]?.effect.heal)
+        state.battle.healUses[uid] = Math.min(
+          state.battle.turn || 0,
+          items[item.id].healLimit || 2,
+        );
+    }
+  }
+  if (state.checkpoint) normalizeEquipmentHealing(state.checkpoint);
+}
 export function cardPower(b, c, i) {
   const d = cards[c.id],
-    f = d.effects;
+    f = cardEffects(c);
   let n = f.hpDamage
     ? c.hp
     : f.damage
@@ -294,7 +330,6 @@ export function cardAllowance(b, c, i) {
 // Charged damage is one eventual release, never multiplied by lifetime activations.
 export function stackValue(b, i) {
   const slot = b.grid[i];
-  let pileOrder = 0;
   const power = [...slot].reverse().reduce((sum, c) => {
     const d = cards[c.id],
       f = d.effects,
@@ -306,7 +341,6 @@ export function stackValue(b, i) {
         ? (1 + f.randomDamage) / 2
         : cardPower(b, c, i)
       : 0;
-    if (usable && d.stack === "pile") damage += 2 * pileOrder++;
     if (
       f.prism &&
       ["Fire", "Earth", "Wind", "Water"].every((el) =>
@@ -463,6 +497,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.47",
           "1.3.46",
           "1.3.45",
           "1.3.44",
@@ -523,6 +558,7 @@ export class Game {
       normalizeEnemyImmunities(this.s);
       normalizeCardCaps(this.s);
       normalizeCharges(this.s);
+      normalizeEquipmentHealing(this.s);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1251,6 +1287,8 @@ export class Game {
       reaction: null,
       relief: 0,
       mirror: false,
+      healUses: {},
+      huskConverted: false,
     };
     s.status = blankStatus();
     const b = s.battle,
@@ -1386,7 +1424,50 @@ export class Game {
     b.turn++;
     b.phase = "start";
     this.refillResources();
-    s.hp = Math.min(s.maxHp, s.hp + this.bonuses().heal);
+    b.healUses ||= {};
+    for (const gear of this.equipped()) {
+      const d = gear.definition;
+      const item = this.getItem(gear.uid);
+      const limit = d.healLimit || 2;
+      if (
+        d.effect.heal &&
+        s.hp < s.maxHp &&
+        (b.healUses[gear.uid] || 0) < limit
+      ) {
+        const gain = Math.min(
+          s.maxHp - s.hp,
+          equipmentHealAmount(item, s.inventory),
+        );
+        s.hp += gain;
+        b.healUses[gear.uid] = (b.healUses[gear.uid] || 0) + 1;
+        this.log(
+          d.name +
+            " heals " +
+            gain +
+            " HP (" +
+            (limit - b.healUses[gear.uid]) +
+            " triggers left).",
+        );
+        this.present("status", {
+          target: "player",
+          sourceItem: gear.uid,
+          name: "+" + gain + " HP",
+          healing: true,
+        });
+      }
+      if (
+        d.corrodeToBurnTurn &&
+        b.turn >= d.corrodeToBurnTurn &&
+        !b.huskConverted
+      ) {
+        b.huskConverted = true;
+        const value = s.status.corrode;
+        s.status.corrode = 0;
+        if (value)
+          this.applyFriendlyStatus("burn", value, { sourceItem: gear.uid });
+        this.log(d.name + " converts " + value + " Corrode to Burn.");
+      }
+    }
     for (const detail of openingStatuses) this.present("status", detail);
     for (const slot of b.grid)
       for (const c of slot) {
@@ -2057,7 +2138,14 @@ export class Game {
     });
     return true;
   }
-  damageEnemy(e, n, element, activation, sourceItem = null) {
+  damageEnemy(
+    e,
+    n,
+    element,
+    activation,
+    sourceItem = null,
+    attackStatus = null,
+  ) {
     if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
     const s = this.s,
       b = s.battle;
@@ -2072,6 +2160,7 @@ export class Game {
       amount: d,
       element,
       ...(sourceItem != null ? { sourceItem } : {}),
+      ...(attackStatus ? { attackStatus } : {}),
       dead: e.hp <= 0 && !enemies[e.id].onDeath,
     });
     s.stats.damageDealt += Math.min(d, Math.max(0, e.hp + d));
@@ -2113,7 +2202,7 @@ export class Game {
     const s = this.s,
       b = s.battle,
       d = cards[c.id],
-      f = d.effects,
+      f = cardEffects(c),
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
     if (!this.activationAvailable(c, i)) return;
     c.lastActivatedTurn = b.turn;
@@ -2204,7 +2293,7 @@ export class Game {
     if (f.cleanse) s.status = blankStatus();
     if (f.relief) b.relief = b.turn + f.relief;
     if (f.reliefRust) s.status.corrode = 0;
-    if (f.insight) b.next.insight += f.insight;
+    if (f.insight || f.adjInsight) b.next.insight += insightGain(b, c, i);
     if (f.focus) b.next.focus += f.focus;
     if (f.focusPermanent) b.permanent.focus += f.focusPermanent;
     if (f.channel) b.channel += f.channel;
@@ -2247,7 +2336,6 @@ export class Game {
         let n = f.randomDamage
           ? 1 + Math.floor(this.rand() * f.randomDamage)
           : this.cardPower(c, i);
-        if (d.stack === "pile") n += a.pileBonus || 0;
         if (n) {
           const prism =
             f.prism &&
@@ -2257,7 +2345,14 @@ export class Game {
           for (const el of prism
             ? ["Fire", "Earth", "Wind", "Water"]
             : [element])
-            this.damageEnemy(e, n, el, context);
+            this.damageEnemy(
+              e,
+              n,
+              el,
+              context,
+              null,
+              c.id === "rot" ? "corrode" : null,
+            );
           for (const gear of this.equipped())
             if (
               gear.definition.effect.damage &&
@@ -2333,18 +2428,9 @@ export class Game {
     b.channel -= d.channel;
     const ctx = {};
     if (d.stack === "pile") {
-      let order = 0;
       for (const ball of [...slot].reverse())
         if (ball.id === c.id && this.activationAvailable(ball, a.slot)) {
-          this.applyCard(
-            ball,
-            a.slot,
-            a.target,
-            a.element,
-            { ...a, pileBonus: order * 2 },
-            ctx,
-          );
-          order++;
+          this.applyCard(ball, a.slot, a.target, a.element, a, ctx);
         }
     } else {
       this.applyCard(c, a.slot, a.target, a.element, a, ctx);
@@ -2919,7 +3005,7 @@ export class Game {
           const c = top(b.grid[i]);
           if (!c) continue;
           const d = cards[c.id],
-            f = d.effects;
+            f = cardEffects(c);
           if (
             d.channel > b.channel ||
             !this.activationAvailable(c, i) ||
@@ -2975,7 +3061,31 @@ export class Game {
                           chargedBurnAll: f.burnAll || 0,
                         }
                       : f),
-                    damage: charging ? 0 : this.cardPower(c, i),
+                    damage: charging
+                      ? 0
+                      : d.stack === "pile"
+                        ? b.grid[i]
+                            .filter(
+                              (ball) =>
+                                ball.id === c.id &&
+                                this.activationAvailable(ball, i),
+                            )
+                            .reduce(
+                              (sum, ball) => sum + this.cardPower(ball, i),
+                              0,
+                            )
+                        : this.cardPower(c, i),
+                    ...Object.fromEntries(
+                      ["burn", "poison", "corrode"]
+                        .filter((k) => f[k])
+                        .map((k) => [
+                          k,
+                          f[k] + (c.upgrade ? d.upgrade?.bonus || 0 : 0),
+                        ]),
+                    ),
+                    ...(f.insight || f.adjInsight
+                      ? { insight: insightGain(b, c, i) }
+                      : {}),
                     ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
                     card: c.id,
                     charge: d.charge ? chargeActivations(b, c, i) : 0,

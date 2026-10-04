@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.47",
-  content: "1.1.53",
+  rules: "1.3.48",
+  content: "1.1.54",
   observation: 1,
   actions: 2,
 };
@@ -212,7 +212,7 @@ card(
   1,
   2,
   { damage: 8 },
-  "Deal 8 Chaos damage to a random enemy. Pile: fire every live ball; each successive ball deals +2 damage.",
+  "Deal 8 Chaos damage to a random enemy. Pile: one Channel fires each ball with an available activation for 8 damage. Each firing ball spends one of its own uses; adding a ball never refreshes other balls. Recall the whole pile for 1 Focus per ball before discounts.",
   { stack: "pile" },
 );
 card(
@@ -496,8 +496,8 @@ card(
   "Spell",
   1,
   2,
-  { poison: 3 },
-  "Apply Poison 3.",
+  { poison: 2 },
+  "Apply Poison 2.",
 );
 card(
   "solitude",
@@ -506,8 +506,8 @@ card(
   "Spell",
   1,
   2,
-  { damage: 11 },
-  "Isolated. Deal 11 damage.",
+  { damage: 10 },
+  "Isolated. Deal 10 damage.",
   { condition: "isolated" },
 );
 card(
@@ -550,8 +550,8 @@ card(
   "Object",
   0,
   2,
-  { insight: 3 },
-  "+3 Insight next turn.",
+  { adjInsight: 1 },
+  "On activation: +1 Insight next turn per orthogonally adjacent card. Counts connected occupied spaces, not covered cards; 0 to 4.",
 );
 card(
   "sun",
@@ -706,8 +706,19 @@ cards.sapling.upgrade = {
 cards.heat.upgrade = {
   gold: 60,
   element: "Fire",
-  bonus: 3,
-  text: "Wear a Fire-imbued Setting and pay 60 Gold: +3 Burn.",
+  bonus: 1,
+  text: "Wear a Fire-imbued Setting and pay 60 Gold: Burn 2 becomes Burn 3. Fusion still adds Burn 6.",
+};
+cards.spore.upgrade = {
+  gold: 100,
+  bonus: 1,
+  text: "Poison 2 becomes Poison 3.",
+};
+cards.rot.upgrade = {
+  gold: 100,
+  bonus: 0,
+  effects: { damage: 3 },
+  text: "Add an immediate 3-damage Water hit. Corrode remains 1.",
 };
 cards.storm.upgrade = {
   sacrifice: true,
@@ -773,7 +784,7 @@ item(
   "Ring of Patience",
   "finger",
   { focus: 1 },
-  100,
+  200,
   "+1 starting Focus.",
   { socket: true },
 );
@@ -782,7 +793,7 @@ item(
   "Ring of Embers",
   "finger",
   { channel: 1 },
-  120,
+  240,
   "+1 starting Channel.",
   { socket: true },
 );
@@ -801,8 +812,8 @@ item(
   "neck",
   { heal: 1 },
   90,
-  "Heal 1 at player-turn start. Sapphire: heal 2.",
-  { socket: true, synergy: "sapphire" },
+  "At the start of your turn, heal 1 if injured. Sapphire: heal 2. Two healing triggers per battle; full HP does not spend a trigger.",
+  { socket: true, synergy: "sapphire", healLimit: 2 },
 );
 for (const [id, name, element] of [
   ["ruby", "Ruby", "Fire"],
@@ -856,14 +867,15 @@ item(
   "torso",
   { heal: 2 },
   110,
-  "Heal 2 at each player-turn start.",
+  "At the start of your turn, heal 2 if injured. Two healing triggers per battle; full HP does not spend a trigger.",
+  { healLimit: 2 },
 );
 item(
   "stoneArmor",
   "Stone Armor",
   "torso",
   { armor: 1 },
-  60,
+  30,
   "Holds 1 Guard, draining across hits and refilling each enemy turn. Free to use or skip; ongoing status damage bypasses Armor.",
 );
 item(
@@ -921,8 +933,8 @@ item(
   "torso",
   { armor: 2, corrode: 1 },
   90,
-  "Cursed: forced equip. Holds 2 Guard, draining across hits and refilling each enemy turn; use or skip. Start each battle Corroded 1; Armor does not reduce ongoing status damage.",
-  { cursed: true },
+  "Cursed: forced equip. Holds 2 Guard, draining across hits and refilling each enemy turn; use or skip. Start each battle Corroded 1. At the start of your fifth turn, convert all your Corrode to the same amount of Burn, once per battle, before status damage. Armor does not reduce ongoing status damage.",
+  { cursed: true, corrodeToBurnTurn: 5 },
 );
 item(
   "curseGem",
@@ -1282,7 +1294,7 @@ enemy(
     }),
   ],
   "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane, then deals 5 damage in that new element with Pierce (equipment can defend). Collapse destroys the fullest column, then deals 5 Arcane damage per space empty in that column before destruction. These two attacks do not gain cycle or half-HP damage bonuses; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
-  "Start with Light attacks, then adapt to its new element. Disperse cards across columns.",
+  "Start with Light attacks, then adapt. Collapse trades card loss against damage: spreading protects more cards from destruction, but each empty space in the targeted column adds 5 damage. Filling that column reduces damage at the cost of losing more cards; destroyed defenses cannot absorb the hit.",
   {
     schedule: "Wait 3 rounds, then pursue 3, 4, then Hunt.",
     bossMode: "sentinel",

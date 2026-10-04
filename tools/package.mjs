@@ -59,6 +59,8 @@ for (const name of [
   "guard-verification.json",
   "archives-verification.json",
   "hart-immunity-verification.json",
+  "resource-balance-verification.json",
+  "resource-balance-evaluation",
   "charge-release-verification.json",
   "charge-release-evaluation",
   "area-impact-verification.json",

@@ -82,6 +82,6 @@ test("pure next-turn economy Objects place for zero Focus and still cost Channel
   assert.equal(b.focus, 0);
   g.endTurn();
   assert.equal(b.focus, 3);
-  assert.equal(b.revealInsight, 9);
+  assert.equal(b.revealInsight, 7); // Clear +2; Tide has one adjacent occupied space (+1).
   assert.equal(b.insight, 0);
 });

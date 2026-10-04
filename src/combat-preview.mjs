@@ -1,5 +1,10 @@
 import { cards } from "./content.mjs";
-import { cardPower, gridNeighbors, enemyDamage } from "./engine.mjs";
+import {
+  cardPower,
+  cardEffects,
+  gridNeighbors,
+  enemyDamage,
+} from "./engine.mjs";
 export function attackElements(b, c, i, element = c.element) {
   const cycle = ["Fire", "Earth", "Wind", "Water"];
   return cards[c.id].effects.prism &&
@@ -12,7 +17,7 @@ export function attackElements(b, c, i, element = c.element) {
 // A read-only preview of this card's direct hits; gear and secondary effects are separate.
 export function attackPreview(b, c, i, enemy, element = c.element) {
   const d = cards[c.id],
-    f = d.effects;
+    f = cardEffects(c);
   if (
     !(f.damage || f.hpDamage) ||
     f.randomDamage ||

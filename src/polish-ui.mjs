@@ -18,6 +18,8 @@ import {
 import { cards, items, enemies, CARD_BUY_PRICES } from "./content.mjs";
 import {
   activationGrowth,
+  cardEffects,
+  insightGain,
   chargeGain,
   chargeActivations,
   conduitActive,
@@ -80,7 +82,7 @@ function cardName(c) {
 }
 function effect(c, slot, ctx) {
   const d = cards[c.id],
-    f = d.effects || {};
+    f = cardEffects(c);
   if (d.charge && c.charge < d.charge)
     return `Charge ${c.charge}/${d.charge} · +${chargeGain(ctx.o.battle, c, slot)}`;
   const matching = matchingNeighbors(ctx.o.battle, c, slot);
@@ -88,7 +90,9 @@ function effect(c, slot, ctx) {
     (d.charge ? "Release · " : "") +
     ([
       f.damage || f.hpDamage
-        ? damageMarkup(ctx.o.battle, c, slot) +
+        ? (d.stack === "pile"
+            ? "8 base damage per ready ball"
+            : damageMarkup(ctx.o.battle, c, slot)) +
           (f.growAfterAttack
             ? ` → +${activationGrowth(ctx.o.battle, c, slot)} HP`
             : "")
@@ -103,10 +107,19 @@ function effect(c, slot, ctx) {
       f.selfGrowth ? `+${f.selfGrowth} HP` : null,
       f.taunt ? "Taunt" : null,
       f.conduit ? "Conduit" : null,
-      f.poison ? `Poison ${f.poison}` : null,
-      f.burn ? `Burn ${f.burn}` : null,
+      f.poison
+        ? `Poison ${f.poison + (c.upgrade ? d.upgrade?.bonus || 0 : 0)}`
+        : null,
+      f.burn
+        ? `Burn ${f.burn + (c.upgrade ? d.upgrade?.bonus || 0 : 0)}`
+        : null,
       f.burnAll ? `Burn ${f.burnAll} to all` : null,
-      f.corrode ? `Corrode ${f.corrode}` : null,
+      f.corrode
+        ? `Corrode ${f.corrode + (c.upgrade ? d.upgrade?.bonus || 0 : 0)}`
+        : null,
+      f.insight || f.adjInsight
+        ? `Insight +${insightGain(ctx.o.battle, c, slot)} next turn`
+        : null,
       f.channel ? `Channel +${f.channel}` : null,
     ]
       .filter(Boolean)
@@ -679,7 +692,7 @@ function gearMarkup(ctx, editable = false) {
       const canDefend = legal.some(
         (a) => ["bracelet", "armor"].includes(a.type) && a.uid === uid,
       );
-      return `<div class="gear-slot ${canDefend ? "defense-ready" : ""}" data-equip-slot="${slot}"><span class="gear-label">${slotNames[slot]}</span><button class="gear-item" ${x ? `data-item-detail="${uid}" data-item-uid="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(d ? d.name + ": " + d.text : "Empty " + slotNames[slot])}">${x ? ctx.img("item-" + x.id) : '<span class="empty-gear">+</span>'}<span>${d?.name || "Empty"}</span>${block ? `<b class="block-left">${block.block} Guard</b>` : ""}${o.mode === "battle" && d?.effect.firstAttackOnly ? `<b class="block-left ring-trigger">${o.battle.firstAttackTurn === o.battle.turn ? "Spent" : "+2 ready"}</b>` : ""}</button>${d?.socket ? `<button class="gem-socket" data-socket="${uid}" ${g ? `data-gem-drag="${g.uid}" data-setting-drag="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(g ? items[g.id].name + ": " + items[g.id].text : "Empty Gem socket")}">${g ? ctx.img("item-" + g.id) : "◇"}<span>${g ? items[g.id].name : "Socket"}</span></button>` : ""}</div>`;
+      return `<div class="gear-slot ${canDefend ? "defense-ready" : ""}" data-equip-slot="${slot}"><span class="gear-label">${slotNames[slot]}</span><button class="gear-item" ${x ? `data-item-detail="${uid}" data-item-uid="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(d ? d.name + ": " + d.text : "Empty " + slotNames[slot])}">${x ? ctx.img("item-" + x.id) : '<span class="empty-gear">+</span>'}<span>${d?.name || "Empty"}</span>${block ? `<b class="block-left">${block.block} Guard</b>` : ""}${o.mode === "battle" && d?.effect.heal ? `<b class="block-left heal-uses" data-tooltip="Healing triggers remaining this battle">♥ ${Math.max(0, (d.healLimit || 2) - (o.battle.healUses?.[uid] || 0))}</b>` : ""}${o.mode === "battle" && d?.effect.firstAttackOnly ? `<b class="block-left ring-trigger">${o.battle.firstAttackTurn === o.battle.turn ? "Spent" : "+2 ready"}</b>` : ""}</button>${d?.socket ? `<button class="gem-socket" data-socket="${uid}" ${g ? `data-gem-drag="${g.uid}" data-setting-drag="${uid}" draggable="${editable}"` : ""} title="${ctx.esc(g ? items[g.id].name + ": " + items[g.id].text : "Empty Gem socket")}">${g ? ctx.img("item-" + g.id) : "◇"}<span>${g ? items[g.id].name : "Socket"}</span></button>` : ""}</div>`;
     })
     .join("")}</div>`;
 }

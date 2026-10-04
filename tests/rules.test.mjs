@@ -289,7 +289,7 @@ test("seed plus choices replay identically through a full run", () => {
   assert.equal(a.s.mode, "result");
   assert.deepEqual(a.s, b.s);
 });
-test("Plasma pile produces the documented 8+10+12+14 before gear", () => {
+test("Plasma pile produces 8+8+8+8 before gear", () => {
   const g = battle();
   g.s.equipment = {};
   const b = g.s.battle;
@@ -300,7 +300,7 @@ test("Plasma pile produces the documented 8+10+12+14 before gear", () => {
   for (let i = 0; i < 4; i++) put(g, "plasma", 0);
   b.phase = "activate";
   act(g, "activate");
-  assert.equal(b.enemies[0].hp, 956);
+  assert.equal(b.enemies[0].hp, 968);
   assert.ok(b.grid[0].every((c) => c.used === 1));
 });
 test("Fusion spends the covered Spell allowance; top spent never exposes it", () => {
