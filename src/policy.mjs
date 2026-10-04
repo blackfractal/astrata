@@ -7,7 +7,7 @@ import {
   adjacent,
   allyHit,
   corner,
-  enemyStatusImmunity,
+  enemyImmuneTo,
 } from "./engine.mjs";
 export const defaultWeights = {
   damage: 1,
@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.17";
+    this.id = "weighted-druid-v1.18";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -292,16 +292,14 @@ export class WeightedPolicy {
         if (f.all) damage *= b.enemies.length;
         n +=
           damage * w.damage +
-          (target && enemyStatusImmunity(target) === "burn"
-            ? 0
-            : (f.burn || 0) * 2) +
+          (target && enemyImmuneTo(target, "burn") ? 0 : (f.burn || 0) * 2) +
           (f.burnAll || (f.chargedBurnAll || 0) / (f.charge || 1)) *
-            b.enemies.filter((e) => enemyStatusImmunity(e) !== "burn").length *
+            b.enemies.filter((e) => !enemyImmuneTo(e, "burn")).length *
             2 +
-          (target && enemyStatusImmunity(target) === "poison"
+          (target && enemyImmuneTo(target, "poison")
             ? 0
             : (f.poison || 0) * 3) +
-          (target && enemyStatusImmunity(target) === "corrode"
+          (target && enemyImmuneTo(target, "corrode")
             ? 0
             : (f.corrode || 0) * 5);
         n += (f.channel || 0) > a.costs.channel ? 12 : 0;

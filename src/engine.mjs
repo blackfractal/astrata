@@ -29,13 +29,20 @@ import {
 export const clone = (x) => structuredClone(x);
 export const enemyStatusImmunity = (e) =>
   ENEMY_STATUS_IMMUNITY[e.element] || null;
+export const enemyStatusImmunities = (e) => [
+  ...new Set([
+    ...(enemies[e.id]?.statusImmunities || []),
+    ...[enemyStatusImmunity(e)].filter(Boolean),
+  ]),
+];
+export const enemyImmuneTo = (e, status) =>
+  enemyStatusImmunities(e).includes(status);
 function clearImmuneStatus(e) {
-  const status = enemyStatusImmunity(e);
-  if (status && e.status?.[status]) {
-    e.status[status] = 0;
-    return status;
-  }
-  return null;
+  const cleared = enemyStatusImmunities(e).filter(
+    (status) => e.status?.[status],
+  );
+  for (const status of cleared) e.status[status] = 0;
+  return cleared.length ? cleared.map(statusName).join(" and ") : null;
 }
 function normalizeEnemyImmunities(state) {
   for (const e of state.battle?.enemies || []) clearImmuneStatus(e);
@@ -456,6 +463,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.46",
           "1.3.45",
           "1.3.44",
           "1.3.43",
@@ -1579,7 +1587,7 @@ export class Game {
       }
       if (j.kind === "enemyStatus") {
         const e = b.enemies.find((x) => x.uid === j.uid);
-        if (e && j.status && enemyStatusImmunity(e) === j.status) {
+        if (e && j.status && enemyImmuneTo(e, j.status)) {
           clearImmuneStatus(e);
           continue;
         }
@@ -2025,7 +2033,7 @@ export class Game {
       });
   }
   applyEnemyStatus(e, status, value, sourceSlot = null) {
-    if (enemyStatusImmunity(e) === status) {
+    if (enemyImmuneTo(e, status)) {
       clearImmuneStatus(e);
       this.log(`${e.name} is immune to ${statusName(status)} (${e.element}).`);
       this.present("status", {
@@ -3414,6 +3422,7 @@ export class Game {
           ...e,
           hp: Math.max(0, e.hp),
           statusImmunity: enemyStatusImmunity(e),
+          statusImmunities: enemyStatusImmunities(e),
           signature:
             enemies[e.id].signature +
             (enemyStatusImmunity(e)

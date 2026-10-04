@@ -48,7 +48,7 @@ for (const id of ["hart", "colossus", "choir"])
     h.legal();
     assert.deepEqual(g.s, before);
     assert.equal(h.tell(h.s.battle.enemies[0]).name, "Purify");
-    e.status.poison += 2; // Includes statuses added during the telegraphed player turn.
+    g.applyEnemyStatus(e, id === "hart" ? "corrode" : "poison", 2); // Includes susceptible statuses added during the telegraphed player turn.
     const hp = e.hp,
       playerHp = g.s.hp,
       tick = e.status.burn + e.status.poison + e.status.corrode;

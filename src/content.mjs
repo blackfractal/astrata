@@ -2,8 +2,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.46",
-  content: "1.1.52",
+  rules: "1.3.47",
+  content: "1.1.53",
   observation: 1,
   actions: 2,
 };
@@ -1301,9 +1301,13 @@ enemy(
     effect("Wildfire", { grid: "row", target: "row", burn: 2 }),
     attack("Stampede", 7, "Earth", { hits: 2 }),
   ],
-  "Antler, Brand and Wildfire each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
+  "Immune to Burn and Poison; Corrode remains effective until Purify. Antler, Brand and Wildfire each inflict Burn 2 on the player. At half HP or lower, adds Burn 1 each enemy turn.",
   "Water attacks and Water defenses counter Antler; Fire defenses counter Stampede.",
-  { schedule: "Wait 4 rounds, then Hunt.", bossMode: "hunter" },
+  {
+    schedule: "Wait 4 rounds, then Hunt.",
+    bossMode: "hunter",
+    statusImmunities: ["burn", "poison"],
+  },
 );
 enemy(
   "choir",
@@ -1588,7 +1592,7 @@ export const glossary = {
   Shield:
     "Guard expires after the enemy turn. Choose which portion absorbs a hit. Attuned Guard uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",
-  Burn: "Water enemies are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
+  Burn: "Water enemies and Cinder Hart are immune. Damage at turn start; value decreases by one. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Poison:
     "Fire enemies are immune. Constant damage at turn start. On the player, bypasses all attack defenses, including Bracelets and Armor.",
   Corrode:

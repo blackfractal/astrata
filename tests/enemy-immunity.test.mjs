@@ -146,3 +146,79 @@ test("AI prefers a susceptible status target over an immune one", () => {
     actions = g.legal().filter((a) => a.type === "activate");
   assert.equal(p.choose(g.observe(), actions).action.target, 901);
 });
+
+test("Cinder Hart rejects Burn and Poison from cards and area effects; Corrode remains effective", () => {
+  const g = base("Fire", "hart"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  put(g, "heat", 0);
+  activate(g, 0);
+  put(g, "spore", 1);
+  activate(g, 1);
+  assert.deepEqual(e.status, { burn: 0, poison: 0, corrode: 0 });
+  const kiln = put(g, "kiln", 2);
+  kiln.charge = 2;
+  const hp = e.hp;
+  activate(g, 2);
+  assert.equal(e.hp, hp - 20);
+  assert.equal(e.status.burn, 0);
+  assert.equal(b.enemies[1].status.burn, 2); // Ordinary Fire enemies still burn.
+  put(g, "rot", 3);
+  activate(g, 3);
+  assert.ok(e.status.corrode > 0);
+  assert.deepEqual(g.observe().battle.enemies[0].statusImmunities, [
+    "burn",
+    "poison",
+  ]);
+  assert.match(
+    g.observe().battle.enemies[0].signature,
+    /Immune to Burn and Poison/,
+  );
+  assert.ok(
+    g.presentation.some((f) => f.immune && f.statusEffect === "burn") ||
+      g.s.log.some((s) => s.includes("immune to Burn")),
+  );
+});
+
+test("Cinder Hart legacy statuses and queued ticks clear without mutating the save; Corrode still ticks", () => {
+  const g = base("Fire", "hart"),
+    e = g.s.battle.enemies[0];
+  e.status = { burn: 8, poison: 9, corrode: 2 };
+  g.s.battle.jobs = [
+    { kind: "enemyStatus", uid: e.uid, status: "burn", damage: 8 },
+    { kind: "enemyStatus", uid: e.uid, status: "poison", damage: 9 },
+    { kind: "enemyStatus", uid: e.uid, status: "corrode", damage: 2 },
+  ];
+  g.s.checkpoint = structuredClone({ ...g.s, checkpoint: undefined });
+  g.s.version.rules = "1.3.46";
+  const before = structuredClone(g.s),
+    h = new Game(0, g.s);
+  assert.deepEqual(g.s, before);
+  assert.deepEqual(h.s.battle.enemies[0].status, {
+    burn: 0,
+    poison: 0,
+    corrode: 2,
+  });
+  assert.deepEqual(h.s.checkpoint.battle.enemies[0].status, {
+    burn: 0,
+    poison: 0,
+    corrode: 2,
+  });
+  h.pump();
+  assert.equal(h.s.battle.enemies[0].hp, 198);
+  const ordinary = base("Fire");
+  assert.equal(
+    ordinary.applyEnemyStatus(ordinary.s.battle.enemies[0], "burn", 2),
+    true,
+  );
+});
+
+test("AI directs Burn at an ordinary Fire enemy instead of immune Cinder Hart", () => {
+  const g = base("Fire", "hart");
+  put(g, "heat");
+  const actions = g.legal().filter((a) => a.type === "activate");
+  assert.equal(
+    new WeightedPolicy().choose(g.observe(), actions).action.target,
+    901,
+  );
+});
