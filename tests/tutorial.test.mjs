@@ -32,15 +32,15 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
   assert.equal(checkpoints["focus-empty"].battle.focus, 0);
   assert.equal(checkpoints["shield-expiry"].battle.shields.length, 0);
   assert.equal(checkpoints["bracelet-block1"].battle.reaction.damage, 1);
-  assert.equal(checkpoints["ward-persists"].battle.grid[18][0].ward, 7);
+  assert.equal(checkpoints["ward-persists"].battle.grid[18][0].ward, 8);
   assert.deepEqual(
     ["route-block", "route-ally", "route-ward", "route-bracelet"].map(
       (k) => checkpoints[k].battle.reaction.damage,
     ),
-    [30, 26, 19, 12],
+    [30, 26, 19, 11],
   );
-  assert.equal(checkpoints["route-done"].hp, 59);
-  assert.equal(checkpoints["cycle"].hp, 63);
+  assert.equal(checkpoints["route-done"].hp, 60);
+  assert.equal(checkpoints["cycle"].hp, 64);
   assert.equal(checkpoints["water-shield-block"].battle.reaction.damage, 5);
   assert.equal(
     checkpoints["water-shield-result"].hp,

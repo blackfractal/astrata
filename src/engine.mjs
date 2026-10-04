@@ -543,12 +543,25 @@ function normalizeLoomRotations(s) {
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
 }
 
+function normalizeInitialWards(s) {
+  for (const c of s.battle?.grid.flat() || [])
+    if (
+      cards[c.id]?.type === "Ward" &&
+      c.ward === 0 &&
+      !c.zeroWard &&
+      c.used === 0
+    )
+      c.ward = 1;
+  if (s.checkpoint) normalizeInitialWards(s.checkpoint);
+}
+
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
       if (
         ![
           VERSION.rules,
+          "2.0.6",
           "2.0.5",
           "2.0.4",
           "2.0.3",
@@ -621,6 +634,7 @@ export class Game {
       normalizeCharges(this.s);
       normalizeEquipmentHealing(this.s);
       normalizeLoomRotations(this.s);
+      normalizeInitialWards(this.s);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1944,9 +1958,6 @@ export class Game {
           );
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.applyCorruption) applyCorruptions(this, e);
-        if (t.releaseCorruption)
-          for (const [i, q] of Object.entries(b.corruptions))
-            if (q.source === e.uid) delete b.corruptions[i];
         if (t.grid) this.gridAttack(t, e);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;

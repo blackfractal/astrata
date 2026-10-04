@@ -271,20 +271,20 @@ place(
   "ward-place",
   "ward",
   18,
-  "Place Ward in the marked space nearer to you. It starts with 0 Guard and cannot defend until activated. Isolated means it needs empty neighboring spaces to activate.",
+  "Place Ward in the marked space nearer to you. It starts with 1 ward value. If you spend that last point defending, it becomes Depleted and cannot activate. Isolated means it needs empty neighboring spaces to activate.",
 );
 phase("ward-phase");
 activate(
   "ward-activate",
   18,
-  "Activate Ward to gain 10 Guard: it now stores 10. Unlike Shield, that stock will persist across rounds.",
+  "Activate Ward to add 10 to its starting 1: it now stores 11. Unlike Shield, that stock will persist across rounds.",
 );
 end("ward-enemy");
 defend("ward-block", "ward", 18, "Choose Ward to absorb the 3-damage attack.");
 note(
   "ward-persists",
-  "7 Guard remains",
-  "Ward kept its remaining 7 Guard into this round. You do not have to activate it every turn. When depleted, it cannot protect you further.",
+  "8 Ward remains",
+  "Ward kept its remaining 8 ward value into this round. You do not have to activate it every turn. Depleted: fully depleted wards cannot activate.",
   '[data-slot="18"]',
 );
 place(
@@ -343,18 +343,18 @@ defend(
   "route-ward",
   "ward",
   18,
-  "Click Ward. Its stored 7 Guard absorbs 7, leaving 12 damage.",
+  "Click Ward. Its stored 8 ward value absorbs 8, leaving 11 damage.",
 );
 defend(
   "route-bracelet",
   "bracelet",
   null,
-  "Click your Bracelet. It stops 2, then the final 10 automatically reach the Druid because no defenses remain.",
+  "Click your Bracelet. It stops 2, then the final 9 automatically reach the Druid because no defenses remain.",
 );
 note(
   "route-done",
   "Every layer matters",
-  "You took only 10 of the original 30 damage. Each hit showed the actual HP or Guard lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your defending cards wisely!",
+  "You took only 9 of the original 30 damage. Each hit showed the actual HP or Guard lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your defending cards wisely!",
   ".battle-player, header .hp",
 );
 place(

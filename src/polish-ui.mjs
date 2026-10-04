@@ -17,7 +17,13 @@ import {
   statusBadges,
   upgradeHelp,
 } from "./battle-feedback.mjs";
-import { cards, items, enemies, CARD_BUY_PRICES } from "./content.mjs";
+import {
+  cards,
+  items,
+  enemies,
+  CARD_BUY_PRICES,
+  DEPLETED_WARD_TEXT,
+} from "./content.mjs";
 import {
   activationGrowth,
   cardEffects,
@@ -145,7 +151,7 @@ function remaining(ctx, c, i) {
 function whyDisabled(ctx, c, i) {
   const b = ctx.o.battle,
     d = cards[c.id];
-  if (c.zeroWard) return "Ward depleted";
+  if (c.zeroWard) return DEPLETED_WARD_TEXT;
   if (!remaining(ctx, c, i)) return "Activation allowance exhausted";
   if (c.freeze >= b.turn) return "Frozen";
   if (!d.blink && c.lastActivatedTurn === b.turn)
@@ -653,7 +659,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? "Ward " + c.ward : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? (c.zeroWard ? DEPLETED_WARD_TEXT : "Ward " + c.ward) : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
       b,
       c,
       slot,
@@ -670,7 +676,7 @@ export function showCard(ctx, c, slot = null) {
     const a = ctx.game
       .legal()
       .filter((a) => a.slot === slot && actTypes.includes(a.type));
-    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">${d.charge ? "" : "Activate · "}${effect(c, slot, ctx)}</button>${a
+    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">${c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, slot, ctx)}</button>${a
       .filter((a) => a.type === "recall")
       .map((a) => button(ctx, a))
       .join("")}`;
@@ -1406,6 +1412,7 @@ export function enhance(ctx) {
         const d = cards[c.id],
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
+        el.classList.toggle("ward-depleted", !!c.zeroWard);
         el.querySelector(".name").textContent =
           cardName(c) + (c.upgrade ? " +" : "");
         el.dataset.element = c.element;
@@ -1447,7 +1454,7 @@ export function enhance(ctx) {
         };
         el.insertAdjacentHTML(
           "beforeend",
-          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">${d.charge ? "" : "Activate · "}${effect(c, i, ctx)}</button>`,
+          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">${c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, i, ctx)}</button>`,
         );
         const activationChoices = actions.filter(
           (a) => a.type === "activate" && a.slot === i,

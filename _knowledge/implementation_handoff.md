@@ -1,5 +1,16 @@
 # Astrata implementation handoff
 
+## Latest: Ward clarity, persistent Hypnosis and difficulty/economy pass (2026-10-04)
+
+Package 2.0.9/rules 2.0.7/content 2.0.8/design 4.148, BUILD_LOG107. All Wards start with 1 value; spending that last point before activation also depletes them. Activation adds the printed value. Exact disabled-action message: "Depleted: fully depleted wards cannot activate." Full text wraps on the battlefield; details/status badge explain it. Recall/replay resets to 1. Legacy fresh unused zero-value Wards become 1; genuinely depleted or already charged cards remain unchanged. Tutorial now teaches 1+10=11, retains8 after its first hit, and routes30 down to9 player damage.
+
+Choir of Borrowed Hands never releases its Hypnosis: remove Release the strings from its rotation, retain spaces until repaired or battle ends. Upgraded Elves still repair it. All normal Stratum2 damaging moves +1 per hit, including Eidolons/bosses, leaving HP/status magnitudes/caps/tutorial opponents unchanged. Existing rotation migration updates live saved encounters without rerolling targets. Gold Bracelet price190→300 at Jonathan's subsequent request, Guard stays7; normal resale150. Shared item price applies to existing shop stock too.
+
+Last human run seed134224828 won62/70 using older package2.0.2 throughout. All12 S2 encounters lost noHP. Gold absorbed60 S2; zero Shield activations. Choir attacked only3of9actions,30total; Gold absorbed11ofthat, while unused20Ward remained. See balance-run-134224828.md and JSON for evidence and caveats. Live profile read only.
+
+All399tests pass. Packaged Ward UI verifies full sentence/no clipping, fresh1→11, all3 Ward types and details; complete S1 tutorial wins with normal save preserved byte-for-byte. Five carry-in AI runs104060–64:1win/4losses, no stalls/errors; pre-price-increase source snapshots preserved. Not a controlled balance comparison. Final executable/ZIP refreshed. User profile and frozen puzzle untouched. Restart app for this build.
+
+
 ## Latest: Starter market exclusions (2026-10-04)
 
 Package2.0.8/rules2.0.6/content2.0.7/design4.147, BUILD_LOG106. Markets now use the reward-eligible card pool: no Blast, Shield, Familiar, Clear Mind or Sapling; Focus Energy is the single starter exception. Shared excludedStarterOffers set derives from starter minus focus. normalizeShop on load replaces only forbidden card offers with distinct same-rarity eligible cards, retains indices/other stock/RNG; purchased copies/decks untouched. Rules2.0.5 accepted. All396tests pass, including100seeds across bothStrata, actual Focus offers, deterministic/idempotent saved-stock repair and purchasing replacement. Release/ZIP refreshed. User profile untouched.

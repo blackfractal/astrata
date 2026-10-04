@@ -78,7 +78,7 @@ test("ordinary Mote and Eidolon rewards still allow skipping and retain their ra
     assert.ok(g.s.reward.cards.every((id) => cards[id].rarity !== "legendary"));
   }
 });
-test("Heartwood Bastion begins empty and can activate beside cards, stores Earth Ward and exhausts after three uses", () => {
+test("Heartwood Bastion begins at one and can activate beside cards, stores Earth Ward and exhausts after three uses", () => {
   const g = new Game(92);
   g.s.equipment = {};
   g.beginBattle([{ uid: 900, enemy: "beetle", restless: 0 }]);
@@ -89,18 +89,18 @@ test("Heartwood Bastion begins empty and can activate beside cards, stores Earth
   b.grid[9] = [g.instance(g.newCard("clear"))];
   g.act(g.legal().find((a) => a.type === "place" && a.slot === 10));
   const c = b.grid[10][0];
-  assert.equal(c.ward, 0);
+  assert.equal(c.ward, 1);
   assert.equal(c.element, "Earth");
   assert.equal(b.focus, 0);
   b.phase = "activate";
   b.channel = 3;
   for (let n = 1; n <= 3; n++) {
     g.act(g.legal().find((a) => a.type === "activate" && a.slot === 10));
-    assert.equal(c.ward, n * 18);
+    assert.equal(c.ward, 1 + n * 18);
     assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 10));
     b.turn++;
   }
   assert.equal(g.allowance(c, 10), 0);
-  assert.equal(c.ward, 54);
+  assert.equal(c.ward, 55);
   assert.equal(cards.bastion.tower, true);
 });

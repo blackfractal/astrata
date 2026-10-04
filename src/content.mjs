@@ -5,11 +5,13 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.0.6",
-  content: "2.0.7",
+  rules: "2.0.7",
+  content: "2.0.8",
   observation: 2,
   actions: 5,
 };
+export const DEPLETED_WARD_TEXT =
+  "Depleted: fully depleted wards cannot activate.";
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",
   Fire: "poison",
@@ -61,6 +63,7 @@ function card(
     effects,
     text,
     rarity: "common",
+    ...(type === "Ward" ? { ward: 1 } : {}),
     ...extra,
   };
   if (effects.heal || effects.allyHeal) {
@@ -292,8 +295,8 @@ card(
   1,
   2,
   { ward: 10 },
-  "Isolated. Starts with 0 ward value. Activate: +10. Absorbs incoming damage when chosen.",
-  { ward: 0, condition: "isolated", tower: true },
+  "Isolated. Starts with 1 ward value. Activate: +10. Fully depleted wards cannot activate. Absorbs incoming damage when chosen.",
+  { condition: "isolated", tower: true },
 );
 card(
   "magnify",
@@ -532,8 +535,8 @@ card(
   1,
   2,
   { ward: 8 },
-  "Starts with 0 ward value. Activate: +8. Stack on a Tower; covered Wards still absorb.",
-  { ward: 0, tower: true, stack: "tower", coveredWards: true },
+  "Starts with 1 ward value. Activate: +8. Fully depleted wards cannot activate. Stack on a Tower; covered Wards still absorb.",
+  { tower: true, stack: "tower", coveredWards: true },
 );
 card(
   "conduit",
@@ -586,8 +589,8 @@ card(
   2,
   3,
   { ward: 18 },
-  "Starts with 0 ward value. Activate: +18 ward value. No isolation required. Tower.",
-  { ward: 0, tower: true, rarity: "legendary" },
+  "Starts with 1 ward value. Activate: +18 ward value. Fully depleted wards cannot activate. No isolation required. Tower.",
+  { tower: true, rarity: "legendary" },
 );
 card(
   "eclipse",
@@ -816,7 +819,7 @@ item(
   "Gold Bracelet",
   "wrist",
   { block: 7 },
-  190,
+  300,
   "Refill 7 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral.",
   { socket: true },
 );
@@ -1654,7 +1657,9 @@ export const glossary = {
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
-  Ward: "Starts at 0; activate to build persistent defense. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
+  Ward: "Starts at 1; activate to add persistent defense. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
+  Depleted:
+    "Fully depleted wards cannot activate. Recall and replay to restore their starting 1 ward value and activation allowance.",
   Shield:
     "Guard expires after the enemy turn. Choose which portion absorbs a hit. Attuned Guard uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",

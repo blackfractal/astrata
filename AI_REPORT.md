@@ -1,3 +1,19 @@
+# Ward clarity and Stratum 2 tuning — package 2.0.9
+
+Rules 2.0.7/content 2.0.8; weighted-druid-v2.0 unchanged. All normal Stratum 2 enemy attacks gain +1 per hit; Choir no longer releases Hypnosis; Wards start with 1 value. Tutorial opponents unchanged. All 399 rules tests and the complete packaged Stratum 1 mouse tutorial pass.
+
+| Seed | Outcome | Round | Decisions | HP |
+| --- | --- | --- | --- | --- |
+| 104060 | loss | 14 | 328 | 0 |
+| 104061 | win | 19 | 520 | 47 |
+| 104062 | loss | 13 | 290 | 0 |
+| 104063 | loss | 15 | 253 | 0 |
+| 104064 | loss | 16 | 413 | 0 |
+
+Five strong Stratum 2 carry-in fixtures completed without invalid actions, crashes or stalls: one win, four losses. The win defeated Seamstress of Absence in nine turns, ending at 47 HP. Gold Bracelet, Stone Armor and Crown are provided by the fixture, along with selected cards, 55 HP and 180 Gold. This is playability evidence, not a human difficulty estimate. These runs preceded Jonathan's subsequent Gold Bracelet price increase from 190 to 300; archived source snapshots retain the exact evaluated content. They do not test earning that bracelet. Intervening market-pool changes also affect RNG paths, so comparison to the earlier same-seed batch is not an isolated test of +1 damage. Full traces and source snapshots: reports/ward-choir-evaluation. No learned training or automatic balancing.
+
+---
+
 # Loom pressure and Corruption presentation — package2.0.6
 
 Rules2.0.4/content2.0.5. Policy weighted-druid-v2.0 unchanged. Early Corruptions, multi-space casts and attacks on warning/application turns replace most passive setup moves. Hollow Scribe threatens fourteen Memory Holes. All394 rules tests and isolated packaged visual/tutorial checks pass.

@@ -411,7 +411,10 @@ test("Storm Opal sockets into Gold Bracelet; cursed equipment remains mandatory"
   assert.equal(gold.gem, gem.uid);
   g.s.equipment.wrist1 = gold.uid;
   const restored = new Game(0, g.save());
-  assert.equal(restored.s.inventory.find((x) => x.uid === gold.uid).gem, gem.uid);
+  assert.equal(
+    restored.s.inventory.find((x) => x.uid === gold.uid).gem,
+    gem.uid,
+  );
   restored.beginBattle([{ uid: restored.uid(), enemy: "bat", restless: 0 }]);
   assert.equal(restored.s.battle.channel, 3);
   const curse = g.addItem("curseRing");
@@ -463,35 +466,76 @@ test("Wanderer stops on the player instead of completing its rolled path", () =>
   assert.equal(g.s.field.entities[0].y, 5);
 });
 
-test("Ward cards start empty, require activation, persist earned value and Recall resets to zero", () => {
+test("All Wards start at one, activation adds value, and Recall resets to one", () => {
   for (const [id, gain] of [
     ["ward", 10],
     ["lattice", 8],
+    ["bastion", 18],
   ]) {
     const g = battle(),
       b = g.s.battle;
     b.hand = [g.newCard(id)];
-    b.focus = 1;
+    b.focus = 10;
     act(g, "place", (a) => a.slot === 0);
     const c = b.grid[0][0];
-    assert.equal(c.ward, 0);
+    assert.equal(c.ward, 1);
     assert.equal(c.zeroWard, false);
-    assert.equal(g.activeWards().length, 0);
+    assert.equal(g.activeWards().length, 1);
     act(g, "activatePhase");
     const channel = b.channel;
     act(g, "activate", (a) => a.slot === 0);
-    assert.equal(c.ward, gain);
+    assert.equal(c.ward, gain + 1);
     assert.equal(b.channel, channel - 1);
     hit(g, 3);
     act(g, "ward");
-    assert.equal(c.ward, gain - 3);
+    assert.equal(c.ward, gain - 2);
     g.beginTurn();
-    assert.equal(c.ward, gain - 3);
+    assert.equal(c.ward, gain - 2);
     b.focus = 1;
     act(g, "recall", (a) => a.slot === 0);
     const reset = g.instance(b.discard.find((x) => x.uid === c.uid));
-    assert.equal(reset.ward, 0);
+    assert.equal(reset.ward, 1);
     assert.equal(reset.used, 0);
     assert.equal(reset.zeroWard, false);
   }
+});
+
+test("Spending a Ward's initial point before activation depletes it until recalled", () => {
+  for (const id of ["ward", "lattice", "bastion"]) {
+    const g = battle(),
+      b = g.s.battle;
+    const c = put(g, id, 0);
+    hit(g, 1);
+    act(g, "ward");
+    assert.equal(c.ward, 0);
+    assert.equal(c.used, 0);
+    assert.equal(c.zeroWard, true);
+    assert.equal(g.activationAvailable(c, 0), false);
+    const loaded = new Game(0, g.s);
+    assert.equal(loaded.s.battle.grid[0][0].ward, 0);
+    assert.equal(loaded.s.battle.grid[0][0].zeroWard, true);
+    g.beginTurn();
+    b.focus = 1;
+    act(g, "recall", (a) => a.slot === 0);
+    const replay = g.instance(b.discard.find((x) => x.uid === c.uid));
+    assert.equal(replay.ward, 1);
+    assert.equal(replay.zeroWard, false);
+    assert.equal(replay.used, 0);
+  }
+});
+
+test("Old untouched zero-value Wards gain their initial point without refilling used or depleted Wards", () => {
+  const g = battle();
+  put(g, "ward", 0, { ward: 0 });
+  put(g, "lattice", 1, { ward: 0, zeroWard: true });
+  put(g, "bastion", 2, { ward: 9, used: 1 });
+  g.s.version = { ...g.s.version, rules: "2.0.6" };
+  const loaded = new Game(0, g.s);
+  assert.deepEqual(
+    loaded.s.battle.grid.slice(0, 3).map((s) => s[0].ward),
+    [1, 0, 9],
+  );
+  assert.equal(loaded.s.battle.grid[1][0].zeroWard, true);
+  assert.equal(loaded.s.rng, g.s.rng);
+  assert.deepEqual(new Game(0, loaded.s).s.battle, loaded.s.battle);
 });

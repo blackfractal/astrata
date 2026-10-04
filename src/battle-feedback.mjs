@@ -92,8 +92,8 @@ export function statusBadges(ctx, c, i) {
   if (c.zeroWard)
     states.push([
       "Depleted",
-      "Ward depleted",
-      "This Ward has no defense remaining and cannot activate.",
+      "Depleted",
+      "fully depleted wards cannot activate.",
     ]);
   else if (d.limit > 0 && !ctx.game.allowance(c, i))
     states.push(["Spent", "Spent", glossary.Spent]);

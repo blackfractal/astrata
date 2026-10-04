@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.147
+# Astrata: Game Design Document v4.148
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -364,10 +364,10 @@ The player has **no defensive stat of their own**. Damage is avoided in five way
 
 **Ward rules**
 * A Ward is an advanced defensive spell.
-* A Ward card starts with **0 ward value** on placement and cannot absorb damage until activated. Activations build ward value, which persists through the battle. This applies to Ward-type cards, including Living Lattice; placement grants no free absorption. Recall and subsequent placement reset the value to 0.
+* Every Ward card starts with **1 ward value** on placement, including Ward, Living Lattice and Heartwood Bastion. It may immediately absorb that point. Activations add their printed amount to the current value (ordinary Ward: 1 + 10 = 11), which persists through the battle. Recall and subsequent placement reset the value to 1 and restore activation allowance.
 * Wards absorb only when the player chooses an eligible Ward. There is no FIFO priority. The chosen Ward loses up to the remaining base damage, and overflow can pass to any eligible defender in the same column or closer to the player. Unchosen Ward value remains for later hits.
 * A Ward with no activations remaining still absorbs damage until its ward value is depleted; track activation allowance and ward value separately.
-* A Ward whose earned ward value is depleted to 0 by damage becomes **Spent**. A newly placed Ward at 0 is not Spent and can still activate. It stays on the grid clogging its slot until Recalled or covered, unlike an Ally, which leaves the grid when destroyed.
+* A Ward whose ward value is depleted to 0 by damage becomes **Depleted** and cannot activate, regardless of remaining activation allowance. This includes spending its initial 1 before any activation: there is no special zero-value exception. Replace its activation text with **"Depleted: fully depleted wards cannot activate."** and show the same reason in inspection/tooltips. It stays on the grid until Recalled or covered, unlike an Ally, which leaves the grid when destroyed. On loading an older save, only untouched zero-value Wards gain the initial point; already-depleted Wards remain depleted and existing positive values remain unchanged.
 * Wards are Arcane and take no element math. Pierce attacks ignore Wards, Shields, and Allies. Cull attacks ignore Wards and Shields. Bracelets and Armor still apply to both unless the attack says it ignores equipment.
 
 **Shield rules**
@@ -592,6 +592,7 @@ Equipment is deliberately shallow so the Mind Grid stays the source of complexit
 * **An elemental Gem imbues the Setting** with its element. The Setting's numbers then follow the elemental defense rule (3.3.2) for defensive effects and the cycle for offensive ones. Imbued pieces also count as that element for upgrade conditions.
 * **A non-elemental Gem adds its power** to the Setting's own.
 * **Some Gem and Setting pairs are printed as synergistic or antagonistic**, or simply forbidden.
+* **Gold Bracelet economy:** 300 Gold to buy (previously 190); normal half-price resale is 150 Gold. Keep 7 Guard per enemy turn. Two cost 600 Gold and provide 14 neutral Guard, so acquiring both should compete with other Tavern investments.
 * **Gold Bracelet accepts Storm Opal.** It retains its 7 Guard per enemy turn and gains the Gem's normal +1 Channel while equipped. There is no special restriction on this pairing; socketing remains Tavern-only.
 
 **First Glimmer presentation.** Show the starting Gem and both owned Settings (Bracelet and Ring) as three illustrated item cards with names, effects and full-art inspection. Drag the Gem onto any part of either Setting to socket it, using the Jeweler's targeting/highlight behavior. Offer a clear Socket here button for click/keyboard use. Dropping elsewhere cancels without committing. Only the chosen Setting receives the existing Gem; then continue to the companion introduction.
@@ -1025,26 +1026,28 @@ Keep enough Gold and an HP deficit for Tavern lessons. Newly drawn cards and con
 
 The v2 extension carries the run through The Unfinished Loom after the end-of-Stratum-1 Tavern and Machine Elves encounter (§1.4). It uses a new Field illustration and candlelit meditation-grid backdrop. Eight new Motes, three Eidolons and three Archons form its enemy pool; not every enemy uses Corruptions. The Mending Ground tutorial introduces space-bound effects, covering, repair, advanced repair, Mines and Hypnosis, ending in an independent Patient Spoolkeeper fight. Strata 3–5 remain future work.
 
-**Space Corruptions:** One per space, independent of the stack. Memory Hole prevents placement except upgraded Machine Elves. Uncovered Nausea halves adjacent cards' damage and generated Guard, rounded down, without multiplying for overlapping Nauseas; covering suppresses it. Uncovered Insanity costs 1, 2, 3… HP on successive player-turn starts, bypassing defenses; covering suppresses it and resets the counter to 1. Mind Mine explodes after three full player turns: uncovered, 18 Arcane damage through normal defenses; covered, destroys the top card instead. Covering does not pause its fuse. Hypnosis compels an eligible top card on enemy turns, spending its normal allowance and obeying once-per-turn: direct damage hits the player; Guard protects the source enemy; a charge action charges instead. Utility-only cards and Machine Elves cannot be compelled. Basic Elves repair Nausea/Insanity; their 100-Gold upgrade also repairs Hole/Mine/Hypnosis. Mend completes at the next player-turn start if the Elves survive (Freeze delays it), then returns them to discard.
+**Space Corruptions:** One per space, independent of the stack. Memory Hole prevents placement except upgraded Machine Elves. Uncovered Nausea halves adjacent cards' damage and generated Guard, rounded down, without multiplying for overlapping Nauseas; covering suppresses it. Uncovered Insanity costs 1, 2, 3… HP on successive player-turn starts, bypassing defenses; covering suppresses it and resets the counter to 1. Mind Mine explodes after three full player turns: uncovered, 18 Arcane damage through normal defenses; covered, destroys the top card instead. Covering does not pause its fuse. Hypnosis compels an eligible top card on enemy turns, spending its normal allowance and obeying once-per-turn: direct damage hits the player; Guard protects the source enemy; a charge action charges instead. Utility-only cards and Machine Elves cannot be compelled. Hypnosis remains on its space until repaired or battle ends; recalling or exhausting its card does not remove it. Choir of Borrowed Hands never clears its own Hypnosis or spends a turn releasing it. Basic Elves repair Nausea/Insanity; their 100-Gold upgrade also repairs Hole/Mine/Hypnosis. Mend completes at the next player-turn start if the Elves survive (Freeze delays it), then returns them to discard.
+
+**Stratum 2 difficulty pass (2.0.9):** Increase every normal Stratum 2 enemy's damaging move by 1 per hit, including Eidolons and Archons; the table below includes this increase. Keep HP, status magnitudes, Corruption caps, and tutorial enemies unchanged. Apply existing Restlessness/cycle/below-half-HP modifiers afterward. Gold Bracelet remains 7 Guard for this pass.
 
 **Pressure and warnings:** Avoid turns spent solely announcing the next move for normal Corruption enemies. Combine their warnings and applications with attacks. Some enemies mark at battle start and apply on turn one. If an enemy lands on the player and attacks before the first Reveal, it still deals its opening attack, but its opening Corruption waits until after one player response turn. Delayed Corruptions threaten multiple spaces. Prefer empty spaces adjacent to the most cards; Hypnosis selects occupied, useful attack/defense cards. Ties are seeded. Multiple warnings reserve distinct spaces, persist in saves, and follow the immediate coverage-retarget rule in §1.4.
 
 | Enemy | Repeating cycle (base damage; all attacks use the enemy's element unless shown) | Corruption cap |
 | --- | --- | --- |
-| Sourcap Tender | Opening Nausea warning → 5 + apply Nausea; 7; 5 + mark one Nausea | 2 |
-| Loop Moth | Opening Insanity warning → 4 + apply Insanity; 7; 5 + mark one Insanity | 2 |
-| Dew Thief | 6; 5 + gain 6 Guard | — |
-| Thread Mite | 4; 3 + reduce next-turn Channel by 1 | — |
-| Frayed Hound | 5 × 2; reduce next-turn Focus by 1; 9 | — |
-| Hollow Scribe | 4 + mark up to 14 Memory Holes; 8 + apply; 8 | 14 |
-| Bellows Grub | 5 + gain 5 Guard; 12; recovery | — |
-| Loose Echo | 8 Chaos; 8 Light; 5 Chaos + gain 6 Guard | — |
-| Spoolkeeper | 8 + mark two Nauseas; 7 + apply; 6 × 2; 6 + gain 6 Guard | 2 |
-| Borrowed Face | Opening Insanity warning → 8 + apply; 9 + gain 8 Guard; 9 + mark two Insanities | 3 |
-| Quiet Surveyor | 8 + mark two Holes; 7 × 2 + apply; 8 + gain 8 Guard | 4 |
-| Seamstress of Absence | 8 × 2 + mark two Holes and one Nausea; 12 + apply; 8 + gain 10 Guard; 14 | 5 |
-| Censer Engine | Opening Mine warning → 9 + apply; 7 × 2; 10 + mark two Mines | 3 |
-| Choir of Borrowed Hands | 8 + mark up to two Hypnoses; 8 + apply; 10; 7 + release its Corruptions | 2 |
+| Sourcap Tender | Opening Nausea warning → 6 + apply Nausea; 8; 6 + mark one Nausea | 2 |
+| Loop Moth | Opening Insanity warning → 5 + apply Insanity; 8; 6 + mark one Insanity | 2 |
+| Dew Thief | 7; 6 + gain 6 Guard | — |
+| Thread Mite | 5; 4 + reduce next-turn Channel by 1 | — |
+| Frayed Hound | 6 × 2; reduce next-turn Focus by 1; 10 | — |
+| Hollow Scribe | 5 + mark up to 14 Memory Holes; 9 + apply; 9 | 14 |
+| Bellows Grub | 6 + gain 5 Guard; 13; recovery | — |
+| Loose Echo | 9 Chaos; 9 Light; 6 Chaos + gain 6 Guard | — |
+| Spoolkeeper | 9 + mark two Nauseas; 8 + apply; 7 × 2; 7 + gain 6 Guard | 2 |
+| Borrowed Face | Opening Insanity warning → 9 + apply; 10 + gain 8 Guard; 10 + mark two Insanities | 3 |
+| Quiet Surveyor | 9 + mark two Holes; 8 × 2 + apply; 9 + gain 8 Guard | 4 |
+| Seamstress of Absence | 9 × 2 + mark two Holes and one Nausea; 13 + apply; 9 + gain 10 Guard; 15 | 5 |
+| Censer Engine | Opening Mine warning → 10 + apply; 8 × 2; 11 + mark two Mines | 3 |
+| Choir of Borrowed Hands | 9 + mark up to two Hypnoses; 9 + apply; 11; repeat. Hypnosis persists until repaired or battle ends. | 2 |
 
 Caps count active Corruptions from that enemy. Later casts fill remaining capacity, never overwrite existing Corruptions. **Hollow Scribe should make holes all over the field: fourteen of forty-two spaces.** Spread its targets across rows and columns rather than clustering fourteen beside one formation. If fewer eligible spaces remain, use those available. Placing on a warning redirects the hole, not cancels it, unless no eligible replacement exists. Repairing holes frees capacity for later casts. Boss escalation and cycle-end Purify remain in force; tutorial enemies keep their gentler authored cycles.
 

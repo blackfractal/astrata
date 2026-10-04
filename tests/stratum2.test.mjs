@@ -195,7 +195,7 @@ test("Nausea halves live damage and newly generated Guard; cover/recall switches
   assert.equal(g.shieldPower(shield, 2), 4);
   b.grid[7] = [];
   g.applyCard(ward, 14, null, "Arcane");
-  assert.equal(ward.ward, 5);
+  assert.equal(ward.ward, 6);
 });
 test("Mend waits, survives reload, repairs and discards; dead Elves do not repair", () => {
   const g = arena(),
@@ -437,6 +437,29 @@ test("All new boss rotations resolve legally, including Purify and corruption jo
       assert.ok(g.legal().length);
     }
   }
+});
+
+test("Borrowed Choir keeps Hypnosis across cycles; upgraded Elves repair it", () => {
+  const g = arena("borrowedChoir"),
+    b = g.s.battle;
+  g.s.hp = g.s.maxHp = 1000;
+  place(g, "blast", 8);
+  place(g, "shield", 10);
+  round(g);
+  round(g);
+  assert.equal(Object.keys(b.corruptions).length, 2);
+  const persistent = structuredClone(b.corruptions);
+  for (let n = 0; n < 7; n++) round(g);
+  assert.deepEqual(b.corruptions, persistent);
+  assert.ok(!enemies.borrowedChoir.rotation.some((t) => t.releaseCorruption));
+  const slot = Number(Object.keys(persistent)[0]);
+  place(g, "elves", slot, true);
+  b.phase = "activate";
+  action(g, "activate", { slot });
+  assert.ok(b.corruptions[slot]);
+  round(g);
+  assert.equal(b.corruptions[slot], undefined);
+  assert.equal(Object.keys(b.corruptions).length, 1);
 });
 test("Entire deterministic Loom tutorial survives reload at every step and completes", () => {
   let g = startLoomTutorial(new Game(22002));
