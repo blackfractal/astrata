@@ -177,7 +177,7 @@ export const LOOM_STEPS = [
   note(
     "tells",
     "Read the marked spaces",
-    "Corruption Tell markers stay on the chosen spaces. They do not follow recalled cards. Filling a marked Memory Hole space before it resolves prevents that Hole; Nausea and Mines can appear beneath cards.",
+    "Cover a marked empty space and the enemy immediately chooses another eligible space: watch the warning move before ending your turn. With no eligible replacement, that mark is canceled. Hypnosis targets an occupied card space. Existing Corruptions stay on their spaces when covered or uncovered.",
   ),
   note(
     "complete",

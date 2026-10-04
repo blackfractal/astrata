@@ -6,6 +6,7 @@ import {
   corruptionPower,
   resetCoveredInsanity,
   prepareCorruption,
+  retargetCoveredCorruptions,
   applyCorruptions,
   startRepairs,
   corruptionRound,
@@ -515,6 +516,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.0.2",
           "2.0.1",
           "2.0.0",
           "1.3.50",
@@ -628,6 +630,23 @@ export class Game {
         );
       }
       this.s.stratum ??= 1;
+      // Older builds granted the companion before the inter-Stratum Tavern.
+      // Hold that exact copy until its introduction, preserving bought upgrades.
+      if (
+        this.s.loomIntro &&
+        !this.s.tutorial &&
+        !this.s.pendingLoomCompanion
+      ) {
+        const challenge = this.s.stats.withoutMenders;
+        const elves = this.s.deck.find(
+          (c) => c.id === "elves" && c.uid === challenge?.uid,
+        );
+        if (elves) {
+          this.s.pendingLoomCompanion = { card: elves, challenge };
+          this.s.deck = this.s.deck.filter((c) => c.uid !== elves.uid);
+          delete this.s.stats.withoutMenders;
+        }
+      }
       if (this.s.battle) this.s.battle.corruptions ||= {};
       this.normalizeRewards();
       this.normalizeSpawns();
@@ -2722,12 +2741,6 @@ export class Game {
       ...this.pool("rare").map((c) => "card:" + c.id),
     ]);
     s.status = blankStatus();
-    const elves = this.addCard("elves");
-    s.stats.withoutMenders = {
-      uid: elves.uid,
-      receivedAtStep: s.steps,
-      disqualified: null,
-    };
     s.loomIntro = true;
     this.openTavern();
     s.shop.healer = true;
@@ -3455,6 +3468,10 @@ export class Game {
     if (!a) throw Error("Illegal action");
     const s = this.s,
       b = s.battle;
+    const openBefore =
+      b && ["place", "activate"].includes(a.type)
+        ? b.grid.map((stack) => !stack.length)
+        : null;
     this.presentation = [];
     this.decisionLog = [];
     s.steps++;
@@ -3693,6 +3710,22 @@ export class Game {
         break;
       }
       case "enterLoom":
+        if (s.pendingLoomCompanion) {
+          s.deck.push(s.pendingLoomCompanion.card);
+          s.stats.withoutMenders = {
+            ...s.pendingLoomCompanion.challenge,
+            receivedAtStep: s.steps,
+          };
+          delete s.pendingLoomCompanion;
+          this.log("Machine Elves join your Grimoire.");
+        } else if (!s.stats.withoutMenders) {
+          const elves = this.addCard("elves");
+          s.stats.withoutMenders = {
+            uid: elves.uid,
+            receivedAtStep: s.steps,
+            disqualified: null,
+          };
+        }
         delete s.loomIntro;
         this.beginRound();
         break;
@@ -3865,6 +3898,13 @@ export class Game {
       this.resolveTile();
     }
     if (b) resetCoveredInsanity(b);
+    if (openBefore && s.battle === b && s.mode === "battle")
+      retargetCoveredCorruptions(
+        this,
+        b.grid.flatMap((stack, i) =>
+          openBefore[i] && stack.length ? [i] : [],
+        ),
+      );
     const challenge = s.stats.withoutMenders;
     if (challenge && !challenge.disqualified) {
       if (!s.deck.some((c) => c.uid === challenge.uid))

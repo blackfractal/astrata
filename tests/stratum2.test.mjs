@@ -67,8 +67,8 @@ test("Stratum 1 excludes all Loom enemies, cards, companions and drops", () => {
     }
   }
 });
-test("Stratum transition retains HP/deck/equipment, grants one companion, full Tavern then new field", () => {
-  const g = new Game(3);
+test("Stratum transition grants the companion only on Enter the Unfinished Loom", () => {
+  let g = new Game(3);
   g.s.hp = 31;
   g.addCard("grove");
   const eq = structuredClone(g.s.equipment);
@@ -76,12 +76,26 @@ test("Stratum transition retains HP/deck/equipment, grants one companion, full T
   assert.equal(g.s.hp, 31);
   assert.deepEqual(g.s.equipment, eq);
   assert.ok(g.s.deck.some((c) => c.id === "grove"));
-  assert.equal(g.s.deck.filter((c) => c.id === "elves").length, 1);
+  assert.equal(g.s.deck.filter((c) => c.id === "elves").length, 0);
+  assert.equal(g.s.stats.withoutMenders, undefined);
   assert.equal(g.s.field.spawned, 0);
   assert.equal(g.s.shop.healer, true);
+  g = new Game(0, g.save());
   action(g, "leave");
   assert.equal(g.s.mode, "loomIntro");
+  g = new Game(0, g.save());
+  assert.equal(g.s.deck.filter((c) => c.id === "elves").length, 0);
   action(g, "enterLoom");
+  const elves = g.s.deck.filter((c) => c.id === "elves");
+  assert.equal(elves.length, 1);
+  assert.equal(g.s.stats.withoutMenders.uid, elves[0].uid);
+  assert.equal(g.s.stats.withoutMenders.receivedAtStep, g.s.steps);
+  g = new Game(0, g.save());
+  assert.deepEqual(
+    g.s.deck.filter((c) => c.id === "elves"),
+    elves,
+  );
+  assert.ok(!g.legal().some((a) => a.type === "enterLoom"));
   assert.equal(g.s.field.spawned, 2);
   assert.ok(
     g.s.field.entities.every((e) => !e.enemy || enemies[e.enemy].stratum === 2),
@@ -91,6 +105,59 @@ test("Stratum transition retains HP/deck/equipment, grants one companion, full T
     true,
   );
 });
+test("Legacy transition saves defer the exact Elves copy through reload without duplicating acquisition", () => {
+  for (const mode of ["tavern", "loomIntro"]) {
+    let g = new Game(3);
+    g.enterStratum2();
+    const elves = g.addCard("elves");
+    elves.upgrade = true;
+    g.s.stats.withoutMenders = {
+      uid: elves.uid,
+      receivedAtStep: 0,
+      disqualified: null,
+    };
+    g.s.mode = mode;
+    g.s.version = { ...g.s.version, rules: "2.0.2" };
+    const rng = g.s.rng;
+    const gained = [...g.s.stats.cardsGained];
+    g = new Game(0, g.save());
+    assert.equal(
+      g.s.deck.some((c) => c.id === "elves"),
+      false,
+    );
+    assert.equal(g.s.stats.withoutMenders, undefined);
+    assert.equal(g.s.rng, rng);
+    g = new Game(0, g.save());
+    if (mode === "tavern") action(g, "leave");
+    action(g, "enterLoom");
+    assert.deepEqual(
+      g.s.deck.filter((c) => c.id === "elves"),
+      [elves],
+    );
+    assert.deepEqual(g.s.stats.cardsGained, gained);
+    assert.equal(g.s.stats.withoutMenders.disqualified, null);
+    assert.equal(g.s.pendingLoomCompanion, undefined);
+  }
+});
+
+test("Legacy Elves already removed at the Tavern are not resurrected", () => {
+  let g = new Game(3);
+  g.enterStratum2();
+  g.s.stats.withoutMenders = {
+    uid: "removed",
+    receivedAtStep: 0,
+    disqualified: "companion removed",
+  };
+  g = new Game(0, g.save());
+  action(g, "leave");
+  action(g, "enterLoom");
+  assert.equal(
+    g.s.deck.some((c) => c.id === "elves"),
+    false,
+  );
+  assert.equal(g.s.stats.withoutMenders.disqualified, "companion removed");
+});
+
 test("Memory Hole blocks ordinary placement and Shift; only upgraded Elves can enter", () => {
   const g = arena(),
     b = g.s.battle;
@@ -246,7 +313,7 @@ test("Hypnosis spends normal allowance, obeys once per turn, charges without rel
   corruptionRound(g);
   assert.equal(b.enemies[0].guard, 4);
 });
-test("Telegraphs persist fixed spaces across reload and occupied Hole marks fizzle without retargeting", () => {
+test("Unchanged telegraphs persist across reload; resolution never silently retargets", () => {
   const g = arena("seamstress"),
     b = g.s.battle,
     e = b.enemies[0];
@@ -257,6 +324,74 @@ test("Telegraphs persist fixed spaces across reload and occupied Hole marks fizz
   place(g, "shield", mark[0].slot);
   applyCorruptions(g, e);
   assert.equal(Object.keys(b.corruptions).length, 0);
+});
+
+test("Covering a Corruption tell immediately relocates only that tell, visibly and deterministically", () => {
+  for (const kind of ["hole", "nausea", "insanity", "mine"]) {
+    const g = arena("seamstress"),
+      b = g.s.battle,
+      e = b.enemies[0];
+    e.corruptionPlan = [
+      { slot: 8, kind },
+      { slot: 20, kind: "nausea" },
+    ];
+    b.hand = [g.newCard("shield"), g.newCard("shield")];
+    b.focus = 2;
+    g.capturePresentation = true;
+    const replay = new Game(0, g.s);
+    action(g, "place", { slot: 8 });
+    action(replay, "place", { slot: 8 });
+    assert.notEqual(e.corruptionPlan[0].slot, 8);
+    assert.notEqual(e.corruptionPlan[0].slot, 20);
+    assert.equal(b.grid[e.corruptionPlan[0].slot].length, 0);
+    assert.equal(e.corruptionPlan[1].slot, 20);
+    assert.deepEqual(
+      replay.s.battle.enemies[0].corruptionPlan,
+      e.corruptionPlan,
+    );
+    assert.ok(
+      g.presentation.some(
+        (f) =>
+          f.slot === e.corruptionPlan[0].slot &&
+          f.name ===
+            "Redirected: " +
+              {
+                hole: "Memory Hole",
+                nausea: "Nausea",
+                insanity: "Insanity",
+                mine: "Mind Mine",
+              }[kind],
+      ),
+    );
+    const second = e.corruptionPlan[0].slot;
+    action(g, "place", { slot: second });
+    assert.notEqual(e.corruptionPlan[0].slot, second);
+    const loaded = new Game(0, g.s);
+    assert.deepEqual(
+      loaded.s.battle.enemies[0].corruptionPlan,
+      e.corruptionPlan,
+    );
+    const final = e.corruptionPlan[0].slot;
+    applyCorruptions(g, e);
+    assert.equal(b.corruptions[8], undefined);
+    assert.equal(b.corruptions[second], undefined);
+    assert.equal(b.corruptions[final].kind, kind);
+  }
+});
+
+test("Full-grid coverage cancels a tell; unrelated placement leaves Hypnosis on its occupied target", () => {
+  const g = arena("seamstress"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  for (let i = 0; i < b.grid.length; i++) if (i !== 8) place(g, "blast", i);
+  e.corruptionPlan = [
+    { slot: 8, kind: "hole" },
+    { slot: 9, kind: "hypnosis" },
+  ];
+  b.hand = [g.newCard("shield")];
+  b.focus = 1;
+  action(g, "place", { slot: 8 });
+  assert.deepEqual(e.corruptionPlan, [{ slot: 9, kind: "hypnosis" }]);
 });
 test("Enemy corruption caps prevent filling the entire grid; removal frees capacity", () => {
   const g = arena("sourcap"),
@@ -331,6 +466,8 @@ test("Version 1.3.50 saves load as Stratum 1 without Corruptions or Elves", () =
 test("Companion challenge disqualification persists after use and replacement", () => {
   const g = new Game(1);
   g.enterStratum2();
+  action(g, "leave");
+  action(g, "enterLoom");
   g.beginBattle([{ uid: g.uid(), enemy: "mendingTutor" }]);
   const b = g.s.battle;
   q(g, 8, "nausea");

@@ -1,5 +1,9 @@
 # Astrata implementation handoff
 
+## Companion timing and reactive Corruption tells — 2026-10-04
+
+Package2.0.5/rules2.0.3/content2.0.4/design4.144, BUILD_LOG103. Elves grant moved from enterStratum2 (before Tavern) to enterLoom (after companion intro). Legacy pregranted copy held in pendingLoomCompanion with challenge metadata, restored exactly at click; no resurrection of removed copy. Tutorial first-entry UI call moved after busy=false so it actually launches after normal save persists. Coverage of a previously empty pending Corruption slot via place/activate (Shift) calls retargetCoveredCorruptions; seeded eligible replacement, immediate mark/presentation, other tells unchanged, no candidate cancels. Hypnosis retains occupied target semantics; existing corruptions remain spatial. Tutorial copy updated. All387 tests and packaged companion/retarget GUI checks pass; screenshot verified. User profile untouched. Restart for new build.
+
 ## Twelve-slot Satchel — 2026-10-04
 
 Package2.0.4/rules2.0.2/content2.0.3/design4.143, BUILD_LOG102. SATCHEL_CAPACITY12. Inventory is four columns/three rows with empty cells showing unused space; used/12 label and overflow copy use observed capacity. Tutorial text says12. Equipped gear/socketed Gems excluded as before, three-Armor restriction unchanged. Saves under prior2.0.1rules supported without inventory changes. Existing tests revised to exercise full12 and overflow13 rather than obsolete10/11. All383pass. Packaged consumable controls/overflow suite passes, checking actual4column/3row layout,12items,13→12 explicit discard, use12→11 and one empty slot; no renderer errors, screenshot reviewed. No AI batch for capacity-only adjustment. User profile/frozen puzzle untouched. Restart app for new limit.

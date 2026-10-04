@@ -314,6 +314,7 @@ async function persist() {
 async function act(a, controller = { kind: "human" }) {
   if (busy) return;
   busy = true;
+  let startLoom = false;
   try {
     const before = game.observe();
     game.capturePresentation = true;
@@ -355,13 +356,14 @@ async function act(a, controller = { kind: "human" }) {
       action.type === "enterLoom" &&
       !data.tutorialStats?.stratum2?.firstCompletedAt
     )
-      await ui("loomTutorial");
+      startLoom = true;
   } catch (e) {
     toast(e.message);
     console.error(e);
   } finally {
     busy = false;
   }
+  if (startLoom) await ui("loomTutorial");
   if (auto) schedule();
 }
 function schedule() {

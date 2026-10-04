@@ -6,13 +6,13 @@ Companion to [the main design](astrata_design.md), especially §§1.4 and11.5. J
 
 ## Implementation decisions
 
-The Unfinished Loom, eight Motes, three Eidolons and three signature-Corruption Archons are implemented in astrata 2.0.0. Basic Machine Elves repair Nausea/Insanity; the 100-Gold upgrade repairs all five types and enters Memory Holes. One Corruption per space; marked targets are committed. Mines use 18 Arcane with three full response turns; Nausea halves once, rounded down. Hypnosis borrows only direct damage/Guard components and obeys card allowance and once-per-turn. Full rules and selected boss numbers are in main design §10.12; future Shear/Wildfire proposals remain future. The independent tutorial finale is the Patient Spoolkeeper.
+The Unfinished Loom, eight Motes, three Eidolons and three signature-Corruption Archons are implemented in astrata 2.0.0. Basic Machine Elves repair Nausea/Insanity; the 100-Gold upgrade repairs all five types and enters Memory Holes. One Corruption per space; covering a marked empty space immediately relocates its warning to another eligible space; no eligible replacement cancels the mark. Other marks remain committed, and Hypnosis requires an occupied eligible card. Mines use 18 Arcane with three full response turns; Nausea halves once, rounded down. Hypnosis borrows only direct damage/Guard components and obeys card allowance and once-per-turn. Full rules and selected boss numbers are in main design §10.12; future Shear/Wildfire proposals remain future. The independent tutorial finale is the Patient Spoolkeeper.
 
 ## What is confirmed
 
 - Each Stratum introduces a specific Ally through a brief illustrated story.
 - Stratum1's Ally depends on the chosen character. Druid meets Sapling; this is the existing starting card, not an extra copy. Other characters' companions are not chosen yet.
-- Every character meets the **Machine Elves** in Stratum2.
+- Every character meets the **Machine Elves** after the end-of-Stratum-1 Lantern Rest. Grant the card only on **Enter the Unfinished Loom**, after the introduction and just before the first Stratum2 map; it is not in the Tavern Grimoire.
 - Stratum2 introduces new Motes, Eidolons and Archons and centers on understanding and managing **Corruptions**.
 - Machine Elves repair Corruptions. Upgrades allow them to repair more difficult kinds.
 - The player spends Focus to place them on the actual corrupted space, then activates them; repair takes an extra turn.

@@ -4,7 +4,7 @@ A spatial deckbuilding roguelike by Jonathan. **Version 2.0.4** contains two pla
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
-Defeat Stratum 1's Archon, choose a legendary reward, then visit the automatic Tavern before entering Stratum 2. Your deck, equipment, Gold and remaining HP travel with you. Machine Elves join at the transition. The first Loom entry starts its separate tutorial; Continue preserves your normal journey. Defeat the second Archon to complete this build.
+Defeat Stratum 1's Archon, choose a legendary reward, then visit the automatic Tavern before entering Stratum 2. Your deck, equipment, Gold and remaining HP travel with you. Machine Elves join your Grimoire when you click **Enter the Unfinished Loom** after leaving the transition Tavern and reading their introduction. The first Loom entry starts its separate tutorial; Continue preserves your normal journey. Defeat the second Archon to complete this build.
 
 Corruptions belong to **spaces**, not cards. Cover Nausea or Insanity, sacrifice a card over a Mind Mine, deny Hypnosis its activation, or send Machine Elves to Mend. Basic Elves cannot enter Memory Holes; upgraded Elves can. Hover the persistent space seals and marked targets for the rules. Repairs take an enemy round and require the Elves to survive.
 

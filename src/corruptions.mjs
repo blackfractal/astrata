@@ -113,6 +113,65 @@ export function applyCorruptions(g, e) {
   e.corruptionPlan = [];
   resetCoveredInsanity(b);
 }
+export function retargetCoveredCorruptions(g, covered) {
+  const b = g.s.battle;
+  if (!b || !covered.length) return;
+  for (const e of b.enemies.filter((e) => e.hp > 0)) {
+    for (const mark of [...(e.corruptionPlan || [])]) {
+      if (!covered.includes(mark.slot)) continue;
+      const previous = mark.slot;
+      const reserved = b.enemies.flatMap((enemy) =>
+        (enemy.corruptionPlan || []).map((p) => p.slot),
+      );
+      let candidates = b.grid.flatMap((stack, i) => {
+        if (b.corruptions[i] || reserved.includes(i)) return [];
+        if (mark.kind !== "hypnosis") return stack.length ? [] : [i];
+        const c = top(stack),
+          f = cards[c?.id]?.effects;
+        return c &&
+          g.allowance(c, i) > 0 &&
+          (f.damage || f.hpDamage || f.shield || f.ward || f.randomDamage)
+          ? [i]
+          : [];
+      });
+      if (["hole", "nausea"].includes(mark.kind) && candidates.length) {
+        const score = (i) =>
+          neighbors(i).filter((j) => b.grid[j].length).length;
+        const best = Math.max(...candidates.map(score));
+        candidates = candidates.filter((i) => score(i) === best);
+      }
+      if (!candidates.length) {
+        e.corruptionPlan = e.corruptionPlan.filter((p) => p !== mark);
+        g.log(
+          e.name +
+            " cannot relocate " +
+            CORRUPTIONS[mark.kind].name +
+            ": no open space remains.",
+        );
+        continue;
+      }
+      mark.slot = g.pick(candidates);
+      g.log(
+        e.name +
+          " redirects " +
+          CORRUPTIONS[mark.kind].name +
+          " from row " +
+          (Math.floor(previous / 7) + 1) +
+          ", column " +
+          ((previous % 7) + 1) +
+          " to row " +
+          (Math.floor(mark.slot / 7) + 1) +
+          ", column " +
+          ((mark.slot % 7) + 1) +
+          ".",
+      );
+      g.present("corruption", {
+        slot: mark.slot,
+        name: "Redirected: " + CORRUPTIONS[mark.kind].name,
+      });
+    }
+  }
+}
 export function startRepairs(g) {
   const b = g.s.battle;
   for (const [i, stack] of b.grid.entries()) {
