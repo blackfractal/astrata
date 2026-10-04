@@ -1,6 +1,6 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 2.0.2** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**.
+A spatial deckbuilding roguelike by Jonathan. **Version 2.0.3** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**.
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 

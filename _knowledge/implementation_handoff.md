@@ -1,5 +1,9 @@
 # Astrata implementation handoff
 
+## Starting-card reward exclusions — 2026-10-04
+
+Package2.0.3/rules2.0.1/content2.0.2/design4.142, BUILD_LOG101. Normal reward pools in both Strata exclude every Druid starter except Focus Energy: Blast, Shield, Familiar, Clear Mind, Sapling. Shared exclusion derived from starter array minus focus, applied in pool(reward=true) and normalizeRewards. Shops/events/owned copies unchanged. Older pending rewards replace only forbidden entries deterministically, without consuming RNG; preserved2.0.0 save compatibility. All383tests pass, including100seed common/rare offers across both Strata, Focus eligibility, shop/deck preservation and pending-reward migration. Restart loads new rules; actual user save untouched.
+
 ## First Clearing route and First Glimmer — 2026-10-04
 
 Package2.0.2/content2.0.1/rules2.0.0/tutorial10/design4.141, BUILD_LOG100. Sapphire comes immediately after Rootling. Only then spawn Healing(10,0), Insight(9,0), Focus(8,0), reached via(10,1). No starting tutorial bottles. Ember at(7,1), Tavern(6,1), Warden(5,1). Normal supply rules unchanged. Tutorial Ember29HP,3Fire/5Fire/rest: Water attack, next-turn Water Blast and Water Shield activations, actual Shield interception, following-turn Blast finish. Guided Shield bypasses the one-legal-action auto-commit shortcut so the attunement selector appears. Warden starts independent in Placement on an empty board; Channel and Star retained for optional use, including retry. Removed forced warden-shield/consume-channel steps migrate to independent without undoing committed moves. Old moved-potion lessons resume at Sapphire approach with teaching supplies relocated; all124 actual v9 checkpoints walked successfully to independent.

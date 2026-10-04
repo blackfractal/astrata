@@ -44,6 +44,7 @@ import {
   MIND_SIZE,
 } from "./content.mjs";
 export const clone = (x) => structuredClone(x);
+const excludedStarterRewards = new Set(starter.filter((id) => id !== "focus"));
 export const enemyStatusImmunity = (e) =>
   ENEMY_STATUS_IMMUNITY[e.element] || null;
 export const enemyStatusImmunities = (e) => [
@@ -514,6 +515,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.0.0",
           "1.3.50",
           "1.3.49",
           "1.3.48",
@@ -744,7 +746,7 @@ export class Game {
       s.reward.cards = [...s.reward.cards];
       for (let i = 0; i < s.reward.cards.length; i++) {
         const id = s.reward.cards[i];
-        if (["blast", "shield"].includes(id))
+        if (excludedStarterRewards.has(id))
           s.reward.cards[i] = this.pool(cards[id].rarity, true).find(
             (c) => !s.reward.cards.includes(c.id),
           ).id;
@@ -914,7 +916,7 @@ export class Game {
         (c.stratum || 1) <= (this.s.stratum || 1) &&
         c.rarity === rarity &&
         !["surge"].includes(c.id) &&
-        (!reward || !["blast", "shield"].includes(c.id)),
+        (!reward || !excludedStarterRewards.has(c.id)),
     );
   }
   legendaryOffer() {

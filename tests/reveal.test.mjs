@@ -1,43 +1,56 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
-test("card rewards exclude Blast and Shield while starting decks and shop pools retain them", () => {
+const excludedRewards = ["blast", "shield", "familiar", "clear", "sapling"];
+test("card rewards exclude starting cards except Focus Energy; decks and shops retain them", () => {
   for (let seed = 1; seed <= 100; seed++) {
     const g = new Game(seed);
-    for (const rare of [false, true]) {
-      const offer = g.offer(rare);
-      assert.equal(offer.length, 3);
-      assert.equal(new Set(offer).size, 3);
-      assert.ok(offer.every((id) => !["blast", "shield"].includes(id)));
-    }
-    for (const id of ["blast", "shield"]) {
+    for (const stratum of [1, 2])
+      for (const rare of [false, true]) {
+        g.s.stratum = stratum;
+        const offer = g.offer(rare);
+        assert.equal(offer.length, 3);
+        assert.equal(new Set(offer).size, 3);
+        assert.ok(offer.every((id) => !excludedRewards.includes(id)));
+      }
+    assert.ok(g.pool("common", true).some((c) => c.id === "focus"));
+    for (const id of excludedRewards) {
       assert.ok(g.s.deck.some((c) => c.id === id));
       assert.ok(g.pool().some((c) => c.id === id));
     }
   }
 });
 test("old pending rewards replace only the banned entries, deterministically and without rerolling", () => {
-  const old = new Game(4).save();
-  old.version = { ...old.version, rules: "1.3.0" };
-  old.mode = "reward";
-  old.reward = {
-    cards: ["blast", "shield", "cinder"],
-    gem: null,
-    setting: null,
-  };
-  const a = new Game(0, old),
-    b = new Game(0, old);
-  assert.deepEqual(a.s, b.s);
-  assert.equal(a.s.rng, old.rng);
-  assert.equal(a.s.reward.cards[2], "cinder");
-  assert.equal(new Set(a.s.reward.cards).size, 3);
-  assert.ok(
-    a
-      .legal()
-      .filter((x) => x.type === "rewardCard")
-      .every((x) => !["blast", "shield"].includes(x.id)),
-  );
-  assert.deepEqual(new Game(0, a.save()).s, a.s);
+  for (const offer of [
+    ["blast", "shield", "cinder"],
+    ["sapling", "familiar", "focus"],
+    ["clear", "focus", "water"],
+  ]) {
+    const old = new Game(4).save();
+    old.version = { ...old.version, rules: "1.3.0" };
+    old.mode = "reward";
+    old.reward = {
+      cards: offer,
+      gem: null,
+      setting: null,
+    };
+    const a = new Game(0, old),
+      b = new Game(0, old);
+    assert.deepEqual(a.s, b.s);
+    assert.equal(a.s.rng, old.rng);
+    for (let i = 0; i < offer.length; i++)
+      if (!excludedRewards.includes(offer[i]))
+        assert.equal(a.s.reward.cards[i], offer[i]);
+    assert.equal(new Set(a.s.reward.cards).size, 3);
+    assert.ok(
+      a
+        .legal()
+        .filter((x) => x.type === "rewardCard")
+        .every((x) => !excludedRewards.includes(x.id)),
+    );
+    assert.deepEqual(new Game(0, a.save()).s, a.s);
+    assert.deepEqual(a.s.deck, old.deck);
+  }
 });
 test("Reveal presentation captures the drawn order without changing game state or RNG", () => {
   const a = new Game(6),

@@ -1,3 +1,19 @@
+# Starting-card reward exclusions — package2.0.3
+
+Rules2.0.1/content2.0.2, policy weighted-druid-v2.0 unchanged. Card rewards exclude Druid starting cards except Focus Energy. Existing owned copies, shops and authored Events unchanged. All383tests pass, including100seeds in both Strata, common/rare offer validity and deterministic pending-offer migration without RNG changes.
+
+| Seed | Outcome | Stratum | Round | Decisions |
+| --- | --- | --- | --- | --- |
+| 104030 | loss | 1 | 20 | 349 |
+| 104031 | loss | 1 | 8 | 103 |
+| 104032 | loss | 1 | 19 | 262 |
+| 104033 | loss | 1 | 18 | 261 |
+| 104034 | loss | 1 | 20 | 169 |
+
+Five normal runs completed without invalid decisions, crashes or stalls; all lost in Stratum1. This is integration evidence, not a controlled balance comparison or evidence of Stratum2 difficulty. No learned training. Full versioned traces and sources: reports/starter-reward-evaluation.
+
+---
+
 # The Unfinished Loom — package 2.0.0
 
 Rules/content 2.0.0, observation 2, actions 5, policy weighted-druid-v2.0. The policy now scores repair, covering dangerous spaces, avoiding marked Hypnosis, and spending a compelled card before the enemy can use it. This is a heuristic update, not learned training.
