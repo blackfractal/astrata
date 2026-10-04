@@ -395,18 +395,25 @@ test("item choice pauses before enemy movement when Armor carry limit is reached
   act(g, "declineArmor");
   assert.equal(g.s.field.round, 6);
 });
-test("Gem restrictions, mandatory cursed equipment, and socket legality", () => {
+test("Storm Opal sockets into Gold Bracelet; cursed equipment remains mandatory", () => {
   const g = new Game(7);
   const gold = g.addItem("gold"),
     gem = g.addItem("channelGem");
   g.openTavern();
   assert.ok(
-    !g
+    g
       .legal()
       .some(
         (a) => a.type === "socket" && a.uid === gold.uid && a.gem === gem.uid,
       ),
   );
+  act(g, "socket", (a) => a.uid === gold.uid && a.gem === gem.uid);
+  assert.equal(gold.gem, gem.uid);
+  g.s.equipment.wrist1 = gold.uid;
+  const restored = new Game(0, g.save());
+  assert.equal(restored.s.inventory.find((x) => x.uid === gold.uid).gem, gem.uid);
+  restored.beginBattle([{ uid: restored.uid(), enemy: "bat", restless: 0 }]);
+  assert.equal(restored.s.battle.channel, 3);
   const curse = g.addItem("curseRing");
   const slot = Object.keys(g.s.equipment).find(
     (k) => g.s.equipment[k] === curse.uid,

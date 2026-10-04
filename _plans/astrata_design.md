@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.145
+# Astrata: Game Design Document v4.146
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -592,6 +592,7 @@ Equipment is deliberately shallow so the Mind Grid stays the source of complexit
 * **An elemental Gem imbues the Setting** with its element. The Setting's numbers then follow the elemental defense rule (3.3.2) for defensive effects and the cycle for offensive ones. Imbued pieces also count as that element for upgrade conditions.
 * **A non-elemental Gem adds its power** to the Setting's own.
 * **Some Gem and Setting pairs are printed as synergistic or antagonistic**, or simply forbidden.
+* **Gold Bracelet accepts Storm Opal.** It retains its 7 Guard per enemy turn and gains the Gem's normal +1 Channel while equipped. There is no special restriction on this pairing; socketing remains Tavern-only.
 
 **First Glimmer presentation.** Show the starting Gem and both owned Settings (Bracelet and Ring) as three illustrated item cards with names, effects and full-art inspection. Drag the Gem onto any part of either Setting to socket it, using the Jeweler's targeting/highlight behavior. Offer a clear Socket here button for click/keyboard use. Dropping elsewhere cancels without committing. Only the chosen Setting receives the existing Gem; then continue to the companion introduction.
 

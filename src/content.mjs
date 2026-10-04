@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.0.4",
-  content: "2.0.5",
+  rules: "2.0.5",
+  content: "2.0.6",
   observation: 2,
   actions: 5,
 };
@@ -817,8 +817,8 @@ item(
   "wrist",
   { block: 7 },
   190,
-  "Refill 7 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral. Cannot socket Storm Opal.",
-  { socket: true, forbid: ["channelGem"] },
+  "Refill 7 Guard each enemy turn. Socketed elements use the attack cycle for Guard: +50% against the element they beat, -50% against their weakness; same element is neutral.",
+  { socket: true },
 );
 item(
   "ring",
