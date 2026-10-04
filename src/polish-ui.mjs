@@ -733,7 +733,9 @@ function equipmentBody(ctx) {
       (x) =>
         `<button class="stash-item" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(items[x.id].text)}">${ctx.img("item-" + x.id)}<span>${items[x.id].name}</span></button>`,
     )
-    .join("")}</div>`;
+    .join(
+      "",
+    )}${'<span class="satchel-empty" aria-hidden="true"></span>'.repeat(Math.max(0, ctx.o.satchel.capacity - ctx.o.satchel.used))}</div>`;
 }
 function itemDetails(ctx, uid) {
   const x = ctx.o.inventory.find((x) => x.uid === uid);

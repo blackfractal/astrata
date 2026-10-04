@@ -88,16 +88,16 @@ test("supplies persist without decay or respawn across rounds and old saves are 
   migrated.beginRound();
   assert.equal(migrated.s.field.entities.length, 0);
 });
-test("direct healing works with ten loose items, records one use, caps HP, and is unavailable at full HP", () => {
+test("direct healing works with twelve loose items, records one use, caps HP, and is unavailable at full HP", () => {
   const g = field();
-  for (let i = 0; i < 10; i++) g.addItem("focusDraught");
+  for (let i = 0; i < 12; i++) g.addItem("focusDraught");
   g.s.hp = 68;
   supply(g);
   g.resolveTile();
   const h = new Game(0, g.save());
   act(h, "usePickup");
   assert.equal(h.s.hp, 70);
-  assert.equal(satchelContents(h.s).length, 10);
+  assert.equal(satchelContents(h.s).length, 12);
   assert.equal(h.s.stats.consumablesUsed.at(-1).healed, 2);
   assert.equal(h.s.stats.consumablesUsed.at(-1).source, "fieldPickup");
   assert.equal(h.s.field.entities.length, 0);
@@ -135,13 +135,13 @@ test("leave here retains exact bottle and permits a later revisit, without immed
 });
 test("collecting into a full Satchel pauses movement until space is chosen; direct use needs no such choice", () => {
   const g = field();
-  for (let i = 0; i < 10; i++) g.addItem("focusDraught");
+  for (let i = 0; i < 12; i++) g.addItem("focusDraught");
   supply(g);
   g.resolveTile();
   act(g, "takeItem");
   assert.equal(g.s.field.round, 8);
   assert.equal(g.s.pendingPickupResolution, true);
-  assert.equal(satchelContents(g.s).length, 11);
+  assert.equal(satchelContents(g.s).length, 13);
   assert.ok(
     g
       .legal()
@@ -153,7 +153,7 @@ test("collecting into a full Satchel pauses movement until space is chosen; dire
   assert.equal(g.s.hp, 55);
   assert.equal(g.s.field.round, 9);
   assert.ok(!g.s.pendingPickupResolution);
-  assert.equal(satchelContents(g.s).length, 10);
+  assert.equal(satchelContents(g.s).length, 12);
 });
 test("enemies on a supply tile fight first and inspection evidence discovers only visible supplies", () => {
   const g = field(),

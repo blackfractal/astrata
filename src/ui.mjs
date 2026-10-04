@@ -408,7 +408,7 @@ function render(frame = null) {
     o.satchel.used > o.satchel.capacity &&
     actions.some((a) => a.type === "discardItem")
   ) {
-    body = `<section class="satchel-overflow"><div class="eyebrow">Choose what travels with you</div><h2>Satchel full · ${o.satchel.used} / ${o.satchel.capacity}</h2><p>Keep ten loose items. Equipped gear and socketed Gems take no space. Nothing is discarded automatically.</p><div class="overflow-items">${actions
+    body = `<section class="satchel-overflow"><div class="eyebrow">Choose what travels with you</div><h2>Satchel full · ${o.satchel.used} / ${o.satchel.capacity}</h2><p>Keep ${o.satchel.capacity} loose items. Equipped gear and socketed Gems take no space. Nothing is discarded automatically.</p><div class="overflow-items">${actions
       .filter((a) => a.type === "discardItem")
       .map((a) => {
         const x = o.inventory.find((x) => x.uid === a.uid);

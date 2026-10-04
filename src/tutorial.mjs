@@ -409,7 +409,7 @@ note(
 note(
   "consumables",
   "Supplies along the path",
-  "Three bottles now line the northern edge in the northeast corner. Ordinary Strata scatter three supplies in seeded random places, including Healing Sap. They do not decay. Take a detour when useful, or leave them for later. Your Satchel holds 10 loose items; equipped gear and socketed Gems take no space.",
+  "Three bottles now line the northern edge in the northeast corner. Ordinary Strata scatter three supplies in seeded random places, including Healing Sap. They do not decay. Take a detour when useful, or leave them for later. Your Satchel holds 12 loose items; equipped gear and socketed Gems take no space.",
   ".field",
   "supply-route",
 );

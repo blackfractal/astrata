@@ -1,5 +1,9 @@
 # Astrata implementation handoff
 
+## Twelve-slot Satchel — 2026-10-04
+
+Package2.0.4/rules2.0.2/content2.0.3/design4.143, BUILD_LOG102. SATCHEL_CAPACITY12. Inventory is four columns/three rows with empty cells showing unused space; used/12 label and overflow copy use observed capacity. Tutorial text says12. Equipped gear/socketed Gems excluded as before, three-Armor restriction unchanged. Saves under prior2.0.1rules supported without inventory changes. Existing tests revised to exercise full12 and overflow13 rather than obsolete10/11. All383pass. Packaged consumable controls/overflow suite passes, checking actual4column/3row layout,12items,13→12 explicit discard, use12→11 and one empty slot; no renderer errors, screenshot reviewed. No AI batch for capacity-only adjustment. User profile/frozen puzzle untouched. Restart app for new limit.
+
 ## Starting-card reward exclusions — 2026-10-04
 
 Package2.0.3/rules2.0.1/content2.0.2/design4.142, BUILD_LOG101. Normal reward pools in both Strata exclude every Druid starter except Focus Energy: Blast, Shield, Familiar, Clear Mind, Sapling. Shared exclusion derived from starter array minus focus, applied in pool(reward=true) and normalizeRewards. Shops/events/owned copies unchanged. Older pending rewards replace only forbidden entries deterministically, without consuming RNG; preserved2.0.0 save compatibility. All383tests pass, including100seed common/rare offers across both Strata, Focus eligibility, shop/deck preservation and pending-reward migration. Restart loads new rules; actual user save untouched.

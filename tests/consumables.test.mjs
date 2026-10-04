@@ -150,7 +150,7 @@ test("Star Flask targets explicitly, deals six without Ring triggers and retains
   assert.equal(h.s.hp, 50);
   assert.equal(h.s.mode, "reward");
 });
-test("Ten shared Satchel slots exclude equipped gear and every socketed gem, but count separate bottles", () => {
+test("Twelve shared Satchel slots exclude equipped gear and every socketed gem, but count separate bottles", () => {
   const g = base();
   g.s.mode = "field";
   g.s.field.entities = [];
@@ -158,34 +158,34 @@ test("Ten shared Satchel slots exclude equipped gear and every socketed gem, but
     gem = g.addItem("ruby");
   setting.gem = gem.uid;
   g.s.equipment.wrist2 = setting.uid;
-  for (let n = 0; n < 10; n++) g.addItem("healingSap");
-  assert.equal(SATCHEL_CAPACITY, 10);
-  assert.equal(satchelContents(g.s).length, 10);
+  for (let n = 0; n < 12; n++) g.addItem("healingSap");
+  assert.equal(SATCHEL_CAPACITY, 12);
+  assert.equal(satchelContents(g.s).length, 12);
   const a = g.legal().find((a) => a.type === "unequip");
   g.act(a);
-  assert.equal(satchelContents(g.s).length, 11);
+  assert.equal(satchelContents(g.s).length, 13);
   assert.ok(!g.legal().some((a) => a.type === "move"));
   const equip = g
     .legal()
     .find((a) => a.type === "equip" && a.item === setting.uid);
   g.act(equip);
-  assert.equal(satchelContents(g.s).length, 10);
+  assert.equal(satchelContents(g.s).length, 12);
   assert.ok(g.legal().some((a) => a.type === "move"));
 });
 test("Full acquisition preserves every item until an explicit discard; legacy overflow survives save/load", () => {
   const g = base();
   g.s.mode = "field";
   g.s.field.entities = [];
-  for (let n = 0; n < 10; n++) g.addItem("healingSap");
+  for (let n = 0; n < 12; n++) g.addItem("healingSap");
   const valuable = g.addItem("gold");
-  assert.equal(g.s.inventory.length, 11);
+  assert.equal(g.s.inventory.length, 13);
   const h = new Game(0, g.s);
-  assert.equal(h.s.inventory.length, 11);
+  assert.equal(h.s.inventory.length, 13);
   const discard = h
     .legal()
     .find((a) => a.type === "discardItem" && a.uid !== valuable.uid);
   h.act(discard);
-  assert.equal(h.s.inventory.length, 10);
+  assert.equal(h.s.inventory.length, 12);
   assert.ok(h.getItem(valuable.uid));
   assert.ok(!h.getItem(discard.uid));
 });
@@ -241,7 +241,7 @@ test("AI values finite supplies and can finish an enemy using a legal Flask acti
 
 test("Legacy overflow cannot interrupt or deadlock a pending enemy hit", () => {
   const g = base();
-  for (let n = 0; n < 11; n++) g.addItem("healingSap");
+  for (let n = 0; n < 13; n++) g.addItem("healingSap");
   const b = g.s.battle;
   b.phase = "enemy";
   b.reaction = {
@@ -274,9 +274,9 @@ test("A full Satchel may consume legal healing to make room instead of discardin
   const g = base();
   g.s.mode = "field";
   g.s.hp = 60;
-  for (let n = 0; n < 11; n++) g.addItem("healingSap");
+  for (let n = 0; n < 13; n++) g.addItem("healingSap");
   use(g, g.s.inventory[0]);
   assert.equal(g.s.hp, 65);
-  assert.equal(g.s.inventory.length, 10);
+  assert.equal(g.s.inventory.length, 12);
   assert.ok(g.legal().some((a) => a.type === "move"));
 });

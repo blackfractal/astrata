@@ -515,6 +515,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.0.1",
           "2.0.0",
           "1.3.50",
           "1.3.49",

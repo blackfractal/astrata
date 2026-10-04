@@ -1,5 +1,5 @@
 import { items } from "./content.mjs";
-export const SATCHEL_CAPACITY = 10;
+export const SATCHEL_CAPACITY = 12;
 export function satchelContents(s) {
   return s.inventory.filter(
     (x) =>

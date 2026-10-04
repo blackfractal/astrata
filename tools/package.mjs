@@ -55,6 +55,7 @@ await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "starter-reward-evaluation",
   "starter-reward-tests.txt",
+  "satchel-twelve-tests.txt",
   "loom-normal-evaluation",
   "loom-carry-in-evaluation",
   "loom-carry-in-final",

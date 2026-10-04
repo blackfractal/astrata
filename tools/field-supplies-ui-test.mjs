@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
 const dir = "reports/screenshots/field-supplies",
-  report = { package: "1.3.92", checks: [], errors: [] };
+  report = { package: "2.0.4", checks: [], errors: [] };
 await fs.mkdir(dir, { recursive: true });
 async function open(g, label) {
   const profile = path.resolve(
@@ -76,7 +76,7 @@ h.s.mode = "field";
 h.s.hp = 50;
 h.s.inventory = [];
 for (const k in h.s.equipment) h.s.equipment[k] = null;
-for (let n = 0; n < 10; n++) h.addItem("focusDraught");
+for (let n = 0; n < 12; n++) h.addItem("focusDraught");
 Object.assign(h.s.field, {
   round: 8,
   spawned: 32,
@@ -141,13 +141,13 @@ try {
   await settle();
   s = await state();
   assert.equal(s.hp, 55);
-  assert.equal(s.inventory.length, 10);
+  assert.equal(s.inventory.length, 12);
   assert.equal(s.field.entities.length, 0);
   assert.equal(s.stats.consumablesUsed.at(-1).source, "fieldPickup");
   await p.locator('[data-ui="inventory"]').click();
-  assert.match(await p.locator("#modal").innerText(), /10\s*\/\s*10/);
+  assert.match(await p.locator("#modal").innerText(), /12\s*\/\s*12/);
   report.checks.push(
-    "Leave it here preserves the bottle; revisit offers it again; Drink now heals five with a full ten-slot Satchel, consumes it, records pickup use and leaves no overflow.",
+    "Leave it here preserves the bottle; revisit offers it again; Drink now heals five with a full twelve-slot Satchel, consumes it, records pickup use and leaves no overflow.",
   );
 } finally {
   await live.app.close();

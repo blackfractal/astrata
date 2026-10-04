@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
-const report = { package: "1.3.90", checks: [], errors: [] },
+const report = { package: "2.0.4", checks: [], errors: [] },
   dir = "reports/screenshots/consumables";
 await fs.mkdir(dir, { recursive: true });
 async function open(g, label) {
@@ -168,29 +168,43 @@ f.s.inventory = [];
 for (const k in f.s.equipment) f.s.equipment[k] = null;
 f.s.field.entities = [];
 f.s.hp = 60;
-for (let n = 0; n < 11; n++) f.addItem("healingSap");
+for (let n = 0; n < 13; n++) f.addItem("healingSap");
 const overflow = await open(f, "overflow");
 try {
   assert.match(
     await overflow.p.locator(".satchel-overflow h2").textContent(),
-    /11 \/ 10/,
+    /13 \/ 12/,
   );
   await overflow.p.screenshot({ path: dir + "/overflow.png" });
   await overflow.act("discardItem");
-  assert.equal((await overflow.state()).inventory.length, 10);
+  assert.equal((await overflow.state()).inventory.length, 12);
   await overflow.p.locator('[data-ui="inventory"]').click();
   assert.match(
     await overflow.p.locator(".stash-label").textContent(),
-    /10 \/ 10/,
+    /12 \/ 12/,
   );
+  const grid = await overflow.p
+    .locator(".satchel")
+    .evaluate((el) => ({
+      columns: getComputedStyle(el).gridTemplateColumns.split(" ").length,
+      rows: new Set(
+        [...el.children].map((x) => Math.round(x.getBoundingClientRect().top)),
+      ).size,
+      count: el.children.length,
+    }));
+  assert.deepEqual(grid, { columns: 4, rows: 3, count: 12 });
+  await overflow.p.screenshot({ path: dir + "/satchel-twelve.png" });
   await overflow.p.locator(".dialog-close").click();
   await overflow.p.locator(".consumable-use").click();
   await overflow.settle();
   assert.equal((await overflow.state()).hp, 65);
-  assert.equal((await overflow.state()).inventory.length, 9);
+  assert.equal((await overflow.state()).inventory.length, 11);
+  await overflow.p.locator('[data-ui="inventory"]').click();
+  assert.equal(await overflow.p.locator(".satchel-empty").count(), 1);
+  await overflow.p.locator(".dialog-close").click();
   await overflow.p.screenshot({ path: dir + "/field.png" });
   report.checks.push(
-    "Overflow preserves all eleven bottles until explicit discard; Inventory shows ten/ten; map Healing Sap restores five and reduces owned count by one.",
+    "Overflow preserves all thirteen bottles until explicit discard; Inventory shows twelve/twelve; map Healing Sap restores five and reduces owned count by one.",
   );
 } finally {
   await overflow.app.close();

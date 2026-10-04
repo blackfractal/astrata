@@ -1397,11 +1397,17 @@ header {
 }
 .satchel {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   border: 1px dashed #a08c62;
   padding: 10px;
   min-height: 100px;
+}
+.satchel-empty {
+  min-height: 92px;
+  border: 1px solid #a08c6233;
+  background: #0002;
+  pointer-events: none;
 }
 .stash-label {
   margin: 15px 0 8px;
