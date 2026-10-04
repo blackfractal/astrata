@@ -74,6 +74,7 @@ function targets(ctx, guide, suggested = null) {
     for (const a of suggested ? [suggested] : ctx.game.legal()) {
       if (a.type === "place")
         selectors.push(`[data-hand="${a.uid}"], [data-slot="${a.slot}"]`);
+      if (a.type === "consume") selectors.push(".consumable-tray");
       if (a.type === "activate")
         selectors.push(`[data-activate-slot="${a.slot}"]`);
       if (["ward", "block", "intercept", "recall"].includes(a.type))

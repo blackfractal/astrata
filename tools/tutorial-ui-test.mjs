@@ -127,6 +127,11 @@ async function perform(g, a) {
     await button(a).click();
     return;
   }
+  if (a.type === "consume" && a.target != null) {
+    await p.locator('[data-throw="' + a.uid + '"]').click();
+    await p.locator('[data-enemy-uid="' + a.target + '"]').click();
+    return;
+  }
   await button(a).click();
 }
 try {
@@ -178,6 +183,11 @@ try {
     }
     if (
       [
+        "consume-healing",
+        "consume-insight",
+        "consume-focus",
+        "consume-channel-use",
+        "market-consumables",
         "shield-place",
         "route-ally",
         "route-done",
@@ -268,6 +278,16 @@ try {
       const portrait = p.locator(`.enemy img[src$="enemy-${id}.png"]`).first();
       assert.ok(await portrait.count(), "dedicated tutorial portrait " + id);
       await portrait.evaluate((img) => img.decode());
+    }
+    if (step === "consume-channel-use") {
+      assert.equal(state.battle.channel, 2);
+      assert.deepEqual(
+        state.stats.consumablesUsed.map((x) => x.id),
+        ["healingSap", "insightDew", "focusDraught"],
+      );
+      report.checks.push(
+        "Consumable lessons preserve 5HP healing, immediate draw and extra Focus; Channel use follows the phase arrow, with Star Flask retained for independent play.",
+      );
     }
     const a =
       step === "independent"

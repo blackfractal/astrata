@@ -21,6 +21,7 @@ function archive() {
         "policy.mjs",
         "death.mjs",
         "tutorial.mjs",
+        "consumables.mjs",
       ].map((name) => [
         name,
         fs.readFileSync(path.join(__dirname, "src", name), "utf8"),

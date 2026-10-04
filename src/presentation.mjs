@@ -279,7 +279,7 @@ export async function playFrames(before, frames, after, render, isFast) {
         continue;
       } else if (frame.kind === "reveal") {
         const masked = structuredClone(frame.state);
-        masked.battle.phase = "start";
+        if (!frame.incremental) masked.battle.phase = "start";
         masked.battle.insight =
           frame.insight ??
           masked.battle.revealInsight ??
@@ -287,7 +287,10 @@ export async function playFrames(before, frames, after, render, isFast) {
         render(masked);
         const hand = [
           ...document.querySelectorAll(".revealed-hand [data-hand]"),
-        ];
+        ].filter(
+          (el) =>
+            !frame.incremental || frame.cards.includes(Number(el.dataset.hand)),
+        );
         for (const el of hand) {
           el.classList.remove("unavailable");
           el.classList.add("deal-card", "face-down");
@@ -500,6 +503,31 @@ export async function playFrames(before, frames, after, render, isFast) {
           from?.classList.remove("gear-proc");
         }
         render(frame.state);
+      } else if (frame.kind === "consume") {
+        source = { item: frame.uid };
+        await flash(
+          find('[data-consumable-uid="' + frame.uid + '"]') || player(),
+          frame.name,
+          false,
+          null,
+          "Light",
+        );
+        if (frame.healed)
+          await flash(
+            player(),
+            "+" + frame.healed + " HP",
+            false,
+            null,
+            "Earth",
+          );
+        else if (frame.focus || frame.channel)
+          await flash(
+            find(".resources"),
+            "+" +
+              (frame.focus || frame.channel) +
+              (frame.focus ? " Focus" : " Channel"),
+          );
+        render(frame.state);
       } else if (frame.kind === "activate") {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);
@@ -537,7 +565,7 @@ export async function playFrames(before, frames, after, render, isFast) {
             ? pathNode(frame.pathFrom)
             : frame.sourceItem != null
               ? find(
-                  `.battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
+                  `[data-consumable-uid="${frame.sourceItem}"], .battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
                 ) || player()
               : source?.slot != null
                 ? card(source.slot)

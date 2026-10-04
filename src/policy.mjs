@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.19";
+    this.id = "weighted-druid-v1.20";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -92,6 +92,14 @@ export class WeightedPolicy {
   itemValue(inst, o) {
     const d = items[inst?.id];
     if (!d) return 0;
+    if (d.consumable)
+      return (
+        (d.consumable.heal || 0) * 0.8 +
+        (d.consumable.focus || 0) * 6 +
+        (d.consumable.channel || 0) * 8 +
+        (d.consumable.draw || 0) * 4 +
+        (d.consumable.damage || 0) * 0.8
+      );
     const gem = items[o.inventory.find((x) => x.uid === inst.gem)?.id];
     return (
       this.gearValue(d.effect, o) -
@@ -113,6 +121,65 @@ export class WeightedPolicy {
     let n = 0,
       reason = a.label;
     switch (a.type) {
+      case "discardItem":
+        return [
+          -30 -
+            this.itemValue(
+              o.inventory.find((x) => x.uid === a.uid),
+              o,
+            ),
+          "Make Satchel space by discarding the least valuable loose item.",
+        ];
+      case "consume": {
+        const reserve = 5;
+        if (f.heal)
+          return [
+            Math.min(injured, f.heal) * w.survival - reserve,
+            "Use finite healing when enough HP is missing.",
+          ];
+        if (f.focus) {
+          const useful = b.hand.some(
+            (c) =>
+              cards[c.id].focus > b.focus &&
+              cards[c.id].focus <= b.focus + f.focus,
+          );
+          return [
+            useful ? 8 : -20,
+            "Spend a Focus Draught only when it unlocks a placement.",
+          ];
+        }
+        if (f.channel)
+          return [
+            b.channel === 0 &&
+            b.grid.some((slot, i) => {
+              const c = slot.at(-1);
+              return (
+                c &&
+                c.used < cards[c.id].limit &&
+                c.lastActivatedTurn !== b.turn
+              );
+            })
+              ? 8
+              : -20,
+            "Restore Channel when an unused card can benefit.",
+          ];
+        if (f.draw)
+          return [
+            b.focus > 0 && b.hand.length === 0 ? 7 : -10,
+            "Draw a card when placement resources would otherwise go unused.",
+          ];
+        if (f.damage) {
+          const enemy = b.enemies.find((e) => e.uid === a.target);
+          const damage = offense(f.damage, f.element, enemy.element);
+          return [
+            Math.min(damage, enemy.hp) * w.damage +
+              (damage >= enemy.hp ? 14 : 0) -
+              reserve,
+            "Use the flask to finish an enemy or prevent a costly extra turn.",
+          ];
+        }
+        return [-10, "Save the consumable."];
+      }
       case "chooseClass":
       case "begin":
       case "continueReward":
@@ -430,7 +497,20 @@ export class WeightedPolicy {
           ? this.itemValue({ id }, o) + (d.slot === "gem" ? 3 : 0)
           : this.cardValue(id?.slice(5), o);
         if (a.type === "buy") n -= a.price * 0.13;
-        return [n, "Value the offered item against its price and risk."];
+        if (o.satchel?.used >= o.satchel?.capacity && d) {
+          const loose = o.inventory.filter(
+            (x) =>
+              !Object.values(o.equipment).includes(x.uid) &&
+              !o.inventory.some((g) => g.gem === x.uid) &&
+              !items[x.id].cursed,
+          );
+          if (loose.length)
+            n -= Math.min(...loose.map((x) => this.itemValue(x, o)));
+        }
+        return [
+          n,
+          "Value the offered item against its price, Satchel space and risk.",
+        ];
       }
       case "heal":
         return [injured * 0.9, "Recover HP before the next encounter."];

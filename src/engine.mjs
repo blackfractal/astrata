@@ -1,4 +1,9 @@
 import {
+  SATCHEL_CAPACITY,
+  satchelContents,
+  consumableReason,
+} from "./consumables.mjs";
+import {
   tutorialActions,
   normalizeTutorial,
   tutorialAfter,
@@ -497,6 +502,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.48",
           "1.3.47",
           "1.3.46",
           "1.3.45",
@@ -2549,8 +2555,13 @@ export class Game {
       stock: [
         ...this.offer(true, false).map((id) => "card:" + id),
         ...this.shuffle(
-          Object.keys(items).filter((id) => !items[id].cursed),
+          Object.keys(items).filter(
+            (id) => !items[id].cursed && !items[id].consumable,
+          ),
         ).slice(0, 6),
+        ...this.shuffle(
+          Object.keys(items).filter((id) => items[id].consumable),
+        ).slice(0, 2),
       ],
       healer: this.s.nextTavernHealer ?? this.rand() < 0.75,
       healerPrice: this.pick([35, 50, 80]),
@@ -2571,6 +2582,82 @@ export class Game {
     delete this.s.nextTavernHealer;
     delete this.s.nextHealerHint;
     tutorialTavern(this);
+  }
+  consumableChoices(add) {
+    const s = this.s,
+      b = s.battle;
+    for (const item of s.inventory) {
+      const f = items[item.id].consumable;
+      if (!f || consumableReason(s, item)) continue;
+      const targets = f.damage ? b.enemies.filter((e) => e.hp > 0) : [null];
+      for (const target of targets)
+        add(
+          "consume",
+          (f.damage ? "Throw " : "Use ") +
+            items[item.id].name +
+            (target ? " → " + target.name : ""),
+          { uid: item.uid, ...(target ? { target: target.uid } : {}) },
+          { ...f, consumable: true },
+          { channel: 0 },
+        );
+    }
+  }
+  consume(a) {
+    const s = this.s,
+      b = s.battle,
+      item = this.getItem(a.uid),
+      d = items[item.id],
+      f = d.consumable;
+    if (s.mode === "battle") b.consumableTurn = b.turn;
+    else s.field.consumableRound = s.field.round;
+    const healed = f.heal ? Math.min(f.heal, s.maxHp - s.hp) : 0;
+    if (healed) s.hp += healed;
+    if (f.focus) b.focus += f.focus;
+    if (f.channel) b.channel += f.channel;
+    this.present("consume", {
+      uid: item.uid,
+      name: d.name,
+      healed,
+      focus: f.focus,
+      channel: f.channel,
+    });
+    this.removeItem(item.uid);
+    (s.stats.consumablesUsed ||= []).push({
+      id: item.id,
+      round: s.field.round,
+      turn: s.mode === "battle" ? b.turn : null,
+      target: a.target ?? null,
+      healed,
+    });
+    this.log(
+      "Used " + d.name + (healed ? " · restored " + healed + " HP" : "") + ".",
+    );
+    if (f.draw) {
+      if (!b.deck.length) {
+        b.deck = b.discard;
+        b.discard = [];
+      }
+      const card = b.deck.splice(Math.floor(this.rand() * b.deck.length), 1)[0];
+      b.hand.push(card);
+      b.milky = b.hand.some((c) => c.id === "milky");
+      this.present("reveal", {
+        name: d.name + " · 1 Insight",
+        insight: 1,
+        cards: [card.uid],
+        incremental: true,
+      });
+    }
+    if (f.damage) {
+      this.damageEnemy(
+        b.enemies.find((e) => e.uid === a.target),
+        f.damage,
+        f.element,
+        {},
+        item.uid,
+      );
+      this.checkBattle();
+      if (s.mode === "battle") this.pump();
+    }
   }
   equipChoices(add) {
     const s = this.s;
@@ -2615,6 +2702,36 @@ export class Game {
       actions.push(a);
     };
     if (s.mode === "result") return [];
+    const loose = satchelContents(s),
+      overflow = loose.length > SATCHEL_CAPACITY;
+    const removable = loose.filter(
+      (x) =>
+        !items[x.id].cursed &&
+        !s.inventory.some((g) => g.uid === x.gem && items[g.id].cursed),
+    );
+    if (
+      (overflow || ["field", "tavern"].includes(s.mode)) &&
+      (!b?.reaction || s.mode !== "battle")
+    )
+      for (const item of removable)
+        add(
+          "discardItem",
+          "Discard " + items[item.id].name,
+          { uid: item.uid },
+          { discardItem: true, worth: items[item.id].worth },
+        );
+    if (
+      overflow &&
+      removable.length &&
+      !s.tutorial &&
+      (s.mode !== "battle" ||
+        (!b.reaction && ["place", "activate"].includes(b.phase)))
+    ) {
+      this.consumableChoices(add);
+      if (["field", "tavern"].includes(s.mode)) this.equipChoices(add);
+      return actions;
+    }
+    this.consumableChoices(add);
     if (s.pendingArmor) {
       for (const old of s.inventory.filter(
         (x) => items[x.id].slot === "torso" && !items[x.id].cursed,
@@ -3141,6 +3258,15 @@ export class Game {
       case "wait":
         this.endMovement();
         break;
+      case "consume":
+        this.consume(a);
+        break;
+      case "discardItem":
+        this.log(
+          "Discarded " + items[this.getItem(a.uid).id].name + " permanently.",
+        );
+        this.removeItem(a.uid);
+        break;
       case "unequip":
         s.equipment[a.slot] = null;
         break;
@@ -3509,6 +3635,7 @@ export class Game {
       gold: s.gold,
       deck: clone(s.deck),
       inventory: clone(s.inventory),
+      satchel: { used: satchelContents(s).length, capacity: SATCHEL_CAPACITY },
       equipment: clone(s.equipment),
       bonuses: this.bonuses(),
       status: clone(s.status),

@@ -726,3 +726,17 @@ Rules1.3.46/content1.1.51; unchanged weighted-druid-v1.17, no learned training. 
 Rules1.3.48/content1.1.54; weighted-druid-v1.19. Tide placement values connected adjacency and scores its live Insight amount. Upgrade actions expose actual status values and Slow Rot's direct damage; Plasma actions report only ready balls' combined damage. No learned training.
 
 Five archived integration runs825483–825487 completed without invalid actions, stalls or crashes. All lost: Field rounds11/19/14/9/15; decisions202/265/234/153/187; causes Fire Bite/Collapse/Current/Burn/Burn. One reached Void-Colossus; four ended before an Archon. Complete actions, states and source/version snapshots retained in reports/resource-balance-evaluation. These runs do not establish card balance, human difficulty or optimal play. Full344-test suite and separate packaged UI checks cover the changed mechanics directly.
+
+## Consumables and Satchel capacity — 1.3.90
+
+Rules1.3.49/content1.1.55/actions3; weighted-druid-v1.20. Legal consumption exposes immediate effects and targets; observation includes Satchel usage/capacity. Policy values healing, useful resources/draw and finishing flask damage, prices consumables, penalizes full-Satchel purchases and discards lower-value items when forced. No learned training.
+
+| Seed | Result | Field round | Decisions | End |
+| --- | --- | ---: | ---: | --- |
+|825583|Loss|8|114|Burn|
+|825584|Loss|12|158|Burn|
+|825585|Loss|19|224|Void-Colossus Collapse|
+|825586|Loss|12|149|Ashling Coal|
+|825587|Win|19|393|20HP; Void-Colossus defeated in13turns|
+
+All five completed without errors, invalid actions or stalls. Full versioned states/actions/source snapshots are retained in reports/consumables-evaluation. None acquired or used a consumable, and none purchased an item, so this batch does not validate consumable strategy or establish balance. Focused rules tests verify the policy takes a flask finishing hit; the complete tutorial/UI walkthrough exercises all five supplies and the independent Warden fight. All357 rules tests pass, plus dedicated packaged checks for consumption, targeting/cancellation, capacity and save behavior. Future larger paired experiments should explicitly condition on item acquisition.

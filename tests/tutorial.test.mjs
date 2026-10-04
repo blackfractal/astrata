@@ -10,7 +10,7 @@ const { recordTutorial } = createRequire(import.meta.url)(
 );
 const begin = () => startTutorial(new Game(TUTORIAL.seed));
 function walk(g, until = "independent", capture = () => {}) {
-  for (let n = 0; n < 140 && g.s.tutorial.lesson !== until; n++) {
+  for (let n = 0; n < 220 && g.s.tutorial.lesson !== until; n++) {
     capture(g);
     const a = g.legal()[0];
     assert.ok(a, `stuck at ${g.s.tutorial.lesson}`);
@@ -40,7 +40,7 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
     [30, 26, 19, 12],
   );
   assert.equal(checkpoints["route-done"].hp, 59);
-  assert.equal(checkpoints["cycle"].hp, 58);
+  assert.equal(checkpoints["cycle"].hp, 63);
   assert.equal(g.s.hp, 70);
   assert.equal(
     g.s.inventory.find((x) => x.id === "bronze").gem,

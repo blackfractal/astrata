@@ -2,10 +2,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.48",
-  content: "1.1.54",
+  rules: "1.3.49",
+  content: "1.1.55",
   observation: 1,
-  actions: 2,
+  actions: 3,
 };
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",
@@ -743,6 +743,53 @@ export const items = {};
 function item(id, name, slot, effect, worth, text, extra = {}) {
   items[id] = { id, name, slot, effect, worth, text, ...extra };
 }
+for (const [id, name, effect, worth, short] of [
+  [
+    "healingSap",
+    "Healing Sap",
+    { heal: 5 },
+    25,
+    "Restore 5 HP. Use during your turn in battle or during map movement.",
+  ],
+  [
+    "focusDraught",
+    "Focus Draught",
+    { focus: 1 },
+    35,
+    "Gain 1 Focus immediately during Placement. Unspent Focus expires this turn.",
+  ],
+  [
+    "channelDraught",
+    "Channel Draught",
+    { channel: 1 },
+    40,
+    "Gain 1 Channel immediately during Activation. Unspent Channel expires this turn.",
+  ],
+  [
+    "insightDew",
+    "Insight Dew",
+    { draw: 1 },
+    25,
+    "During Placement, spend 1 immediate Insight to draw 1 card now. Does not return to Reveal or discard your hand.",
+  ],
+  [
+    "starFlask",
+    "Star Flask",
+    { damage: 6, element: "Arcane" },
+    30,
+    "During Activation, throw at one enemy for 6 Arcane damage. Does not trigger equipment attacks.",
+  ],
+])
+  item(
+    id,
+    name,
+    "consumable",
+    {},
+    worth,
+    short +
+      " Consumed permanently on use. No Channel cost; one consumable per player turn (one per movement round outside battle).",
+    { consumable: effect },
+  );
 item(
   "bronze",
   "Bronze Bracelet",
@@ -1672,6 +1719,10 @@ export const glossary = {
     "The four orthogonal neighbors: above, below, left and right. Diagonals do not count; Sever disables adjacency.",
   "Mind Grid":
     "The 7-by-6 battlefield where you arrange and activate cards. Covered cards function only as their top card allows.",
+  Consumable:
+    "A single-use item, removed permanently when used. Costs no Channel. One per player turn; one per movement round on the map. Phase restrictions still apply.",
+  Satchel:
+    "Ten shared spaces for loose items, Gems and consumables. Equipped gear and socketed Gems take no spaces. Each item uses one space; copies do not stack.",
   Pile: "A stacking rule that can activate eligible matching cards beneath the top card. Each card still respects its own activation limits.",
   Fusion:
     "A stacking rule that can also activate an eligible covered card. The top card's text states which cards and extra effects qualify.",

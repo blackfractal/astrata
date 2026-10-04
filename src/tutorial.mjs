@@ -1,7 +1,7 @@
 import { cards, items, enemies } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 7,
+  version: 8,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -374,6 +374,20 @@ reward(
 );
 back("rootling-back");
 note(
+  "consumables",
+  "A small traveling kit",
+  "The Rootling left four single-use supplies. Your Satchel holds 10 loose items total: spare equipment, loose Gems and each consumable compete for space. Equipped gear and socketed Gems take no space. Inspect the bottles in the tray to read their effects.",
+  ".consumable-tray",
+  "consumable-kit",
+);
+action(
+  "consume-healing",
+  "Drink Healing Sap",
+  "Use Healing Sap in the tray to restore 5 HP. It costs no Channel, but the bottle is gone permanently, including in later battles. On the map you may use one healing consumable per movement round.",
+  { type: "consume", itemId: "healingSap" },
+  ".consumable-tray",
+);
+note(
   "gem-road",
   "Return to the item",
   "The next movement turn has begun. You have 2 movement points again, and the item is only 1 space north. Landing on an encounter or pickup ends your movement, even if a point remains.",
@@ -423,6 +437,19 @@ note(
   "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemy’s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
   ".enemy",
 );
+note(
+  "consumable-phases",
+  "One timely advantage",
+  "During battle you may use one consumable per player turn, without spending Channel. Focus Draught adds 1 Focus during Placement; Insight Dew draws 1 card immediately during Placement. Channel Draught adds 1 Channel during Activation. Healing Sap restores 5 HP in either player phase. Star Flask throws 6 Arcane damage during Activation. Phase restrictions are one-way.",
+  ".consumable-tray",
+);
+action(
+  "consume-insight",
+  "A glimpse now",
+  "Use Insight Dew. It draws one extra card now without discarding this hand or restarting Reveal. Other consumables will be unavailable until your next player turn.",
+  { type: "consume", itemId: "insightDew" },
+  ".consumable-tray",
+);
 place("water-place", "water", 22, "Place Water Blast on the marked space.");
 phase("water-phase");
 activate(
@@ -437,11 +464,24 @@ defend(
   null,
   "Your unsocketed Bracelet absorbs 2 of the 3 Fire damage; the last 1 reaches you. Water-attuned defense protects best against Fire, just as Water attacks beat Fire. Same-element matchups are neutral.",
 );
+action(
+  "consume-focus",
+  "An extra placement",
+  "A new player turn makes consumables available again. Use Focus Draught now: Focus rises from 1 to 2, enough to place both Blast and a Shield this turn. The bonus is immediate, not a permanent increase.",
+  { type: "consume", itemId: "focusDraught" },
+  ".consumable-tray",
+);
 place(
   "attune-place",
   "blast",
   23,
   "Place Blast beside Water Blast. An adjacent elemental card gives Blast an Attunement choice.",
+);
+place(
+  "potion-shield",
+  "shield",
+  21,
+  "Spend the extra Focus on this Shield beside Water Blast. You still need Channel to activate it; placement alone provides no Guard.",
 );
 phase("attune-phase");
 activate(
@@ -501,6 +541,19 @@ action(
   "Buy the helmet",
   "Buy the Sturdy Metal Helmet for 75 Gold. Shield activations show (+2); on activation the helmet sends a power sphere to add that Guard. It does not supply attunement.",
   { type: "buy", itemId: "crown" },
+);
+ui(
+  "market-consumables",
+  "Supplies at the Market",
+  "Open the Consumables tab. You can Buy, View or later Sell these finite supplies. Each bottle needs its own Satchel slot.",
+  "market:Consumables",
+  '[data-market-category="Consumables"]',
+);
+action(
+  "flask-buy",
+  "A flask for the road",
+  "Buy Star Flask for 30 Gold. In battle, choose its throw control then click a highlighted enemy, or drag the bottle onto one. Target selection can be cancelled without consuming it.",
+  { type: "buy", itemId: "starFlask" },
 );
 ui(
   "jeweler",
@@ -574,7 +627,7 @@ action(
 note(
   "final-intro",
   "The Patient Warden",
-  "You are on your own for this fight. Inspect its Tell, place your cards, watch your resources, and choose how to defend. It alternates pauses with modest attacks. Optional tooltips remain available.",
+  "Inspect its Tell, place your cards, watch your resources, and choose how to defend. It alternates pauses with modest attacks. One final guided consumable lesson comes first; then your decisions are your own.",
   ".field",
   "final",
 );
@@ -583,6 +636,26 @@ move(
   7,
   2,
   "Move west to challenge the Patient Warden. Defeating it completes The First Clearing.",
+);
+place(
+  "warden-shield",
+  "shield",
+  20,
+  "Place a Shield before the final consumable lesson. You will choose how to use your Channel next.",
+);
+action(
+  "consume-channel",
+  "One more activation",
+  "Use Channel Draught during Activation after placing your opening cards. For this lesson, first advance with the phase arrow; the extra Channel will be available for this turn only.",
+  { type: "activatePhase" },
+  "",
+);
+action(
+  "consume-channel-use",
+  "Channel when you need it",
+  "Use Channel Draught now: Channel rises from 2 to 3. This is your one consumable for the turn. Keep Star Flask for a later turn; throw it at an enemy when the six damage matters.",
+  { type: "consume", itemId: "channelDraught" },
+  ".consumable-tray",
 );
 steps.push({
   id: "independent",
@@ -677,7 +750,27 @@ function enter(g) {
     f = g.s.field;
   if (!step) throw Error("Unknown tutorial step");
   t.lesson = step.id;
+  if (
+    step.match?.type === "consume" &&
+    !g.s.inventory.some((x) => x.id === step.match.itemId)
+  )
+    g.addItem(step.match.itemId);
+  if (step.id === "independent")
+    t.finalStart = {
+      battle: structuredClone(g.s.battle),
+      hp: g.s.hp,
+      inventory: structuredClone(g.s.inventory),
+    };
   switch (step.setup) {
+    case "consumable-kit":
+      for (const id of [
+        "healingSap",
+        "focusDraught",
+        "channelDraught",
+        "insightDew",
+      ])
+        g.addItem(id);
+      break;
     case "gold":
       spawn(g, "Gold", 6, 5, { value: 200 });
       break;
@@ -749,6 +842,7 @@ export function tutorialAfter(g, a) {
     const saved = t.finalStart;
     g.s.battle = structuredClone(saved.battle);
     g.s.hp = saved.hp;
+    if (saved.inventory) g.s.inventory = structuredClone(saved.inventory);
     g.s.status = { burn: 0, poison: 0, corrode: 0 };
     g.s.mode = "battle";
     delete g.s.outcome;
@@ -801,6 +895,7 @@ export function tutorialDrawIndex(g, n) {
       4: ["blast"],
     },
     3: { 1: ["water", "shield", "shield", "shield"], 2: ["blast"] },
+    4: { 1: ["shield"] },
   };
   const id = plans[t.fight]?.[b.turn]?.[n];
   const i = b.deck.findIndex((c) => c.id === id);
@@ -825,7 +920,7 @@ export function tutorialReward(g) {
 export function tutorialTavern(g) {
   if (!g.s.tutorial) return;
   g.s.shop = {
-    stock: ["crown"],
+    stock: ["crown", "starFlask"],
     healer: true,
     healerPrice: 35,
     hexPrice: { kind: "gold", gold: 35, hp: 0 },

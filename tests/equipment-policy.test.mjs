@@ -23,7 +23,7 @@ function choose(g) {
 
 test("every current beneficial wearable is equipped into an empty slot before moving", () => {
   for (const d of Object.values(items).filter(
-    (d) => d.slot !== "gem" && !d.cursed,
+    (d) => d.slot !== "gem" && !d.cursed && !d.consumable,
   )) {
     const g = field();
     g.s.inventory = [];

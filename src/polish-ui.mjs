@@ -1,3 +1,4 @@
+import { enhanceConsumables } from "./consumables-ui.mjs";
 import { upgradeBadge, statBreakdowns, statHelp } from "./card-upgrade-ui.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
 import { attackOrb } from "./impact-effects.mjs";
@@ -705,7 +706,7 @@ function playerMarkup(ctx, battle = false) {
     .join("")}</div></section>`;
 }
 function equipmentBody(ctx) {
-  return `${gearMarkup(ctx, true)}<h3 class="stash-label">Satchel</h3><div class="satchel" data-unsocket-drop>${ctx.o.inventory
+  return `${gearMarkup(ctx, true)}<h3 class="stash-label">Satchel · ${ctx.o.satchel.used} / ${ctx.o.satchel.capacity}</h3><div class="satchel" data-unsocket-drop>${ctx.o.inventory
     .filter(
       (x) =>
         !Object.values(ctx.o.equipment).includes(x.uid) &&
@@ -726,18 +727,29 @@ function itemDetails(ctx, uid) {
     .filter(
       (a) =>
         a.item === uid ||
-        (["socket", "unsocket", "sell"].includes(a.type) && a.uid === uid) ||
+        (["socket", "unsocket", "sell", "consume", "discardItem"].includes(
+          a.type,
+        ) &&
+          a.uid === uid) ||
         (a.type === "socket" && a.gem === uid),
     );
   ctx.dialog(
     `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
-      ["equip", "unequip", "socket", "unsocket", "sell"]
+      [
+        "equip",
+        "unequip",
+        "socket",
+        "unsocket",
+        "sell",
+        "consume",
+        "discardItem",
+      ]
         .map((type) => {
           const list = choices.filter(
             (a) => a.type === type && !(type === "sell" && d.cursed),
           );
           return list.length
-            ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
+            ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove", consume: "Use once", discardItem: "Discard permanently" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
             : "";
         })
         .join("") || "<p>No changes available here.</p>"
@@ -943,11 +955,13 @@ function tavern(ctx) {
         ? x.isCard
         : cat === "Gems"
           ? !x.isCard && x.d.slot === "gem"
-          : !x.isCard && x.d.slot !== "gem",
+          : cat === "Consumables"
+            ? !x.isCard && !!x.d.consumable
+            : !x.isCard && x.d.slot !== "gem" && !x.d.consumable,
     );
     content.innerHTML = marketCategories(
       "buy",
-      ["Cards", "Gems", "Equipment"],
+      ["Cards", "Gems", "Equipment", "Consumables"],
       entries
         .map((x) => {
           const restricted = x.d.cursed || x.d.type === "Hex";
@@ -1087,8 +1101,13 @@ function scribeCatalog(ctx) {
 function sellCatalog(ctx) {
   const { o, actions } = ctx;
   const body =
-    marketCategory.sell === "Equipment"
+    marketCategory.sell !== "Grimoire"
       ? o.inventory
+          .filter((x) =>
+            marketCategory.sell === "Consumables"
+              ? !!items[x.id].consumable
+              : !items[x.id].consumable,
+          )
           .map((x) => {
             const d = items[x.id],
               a =
@@ -1113,7 +1132,7 @@ function sellCatalog(ctx) {
           .join("");
   return marketCategories(
     "sell",
-    ["Grimoire", "Equipment"],
+    ["Grimoire", "Equipment", "Consumables"],
     body || "<p>No belongings in this category.</p>",
   );
 }
@@ -1171,6 +1190,7 @@ function incomingDetails(ctx) {
   bindActions(ctx, ctx.modal);
 }
 export function enhance(ctx) {
+  if (ctx.app.querySelector(".satchel-overflow")) return;
   clearTargeting();
   const { o, actions, app, game } = ctx;
   const sidebar = app.querySelector(".sidebar");
@@ -1615,6 +1635,7 @@ export function enhance(ctx) {
       }
     }
   }
+  enhanceConsumables(ctx);
   if (ctx.frame) {
     app
       .querySelectorAll("button,select,input")

@@ -22,6 +22,7 @@ const sources = Object.fromEntries(
       "policy.mjs",
       "death.mjs",
       "tutorial.mjs",
+      "consumables.mjs",
     ].map(async (name) => [
       name,
       await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),

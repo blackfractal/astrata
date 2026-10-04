@@ -1,4 +1,9 @@
 export const artPaths = {
+  "item-starFlask": "assets/item-starFlask.png",
+  "item-insightDew": "assets/item-insightDew.png",
+  "item-channelDraught": "assets/item-channelDraught.png",
+  "item-focusDraught": "assets/item-focusDraught.png",
+  "item-healingSap": "assets/item-healingSap.png",
   "card-blast": "assets/card-blast-v3.png",
   "card-shield": "assets/card-shield-v3.png",
   "card-familiar": "assets/card-familiar.png",
