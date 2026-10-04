@@ -1,5 +1,17 @@
 # Astrata implementation handoff
 
+## Latest: Corruption feedback, one-turn Fire mines and late-cycle pressure — 2026-10-04
+
+Package/rules/content2.1.1, design4.150, planning0.8, BUILD_LOG109. Every newly created Mind Mine, including Censer, has one full player response turn and20Fire uncovered damage. Placement phase does not decrement it; next enemy phase detonates. Covered destroys top only. Existing saved mines retain their fuse/damage/element (legacy missing element=Arcane). Mine explosion precedes card disappearance; uncovered attack travels from space through normal defense choices.
+
+Black Bile from fifth cycle (cycle>=16) throws two fresh globs if none can move; still one existing move/player-edge escape by prior deterministic priorities. Resolve with pre-increment actionCycle so fourth-cycle last move stays single. Bombadier cycle15 warning marks three for fifth opening; separate10Hole/4mine caps prevent capacity suppressing escalation. All targets remain deterministic and saved.
+
+Nausea green swirls cover affected cards and immediately track coverage/repair; previews already halve before elemental adjustment. Bile ink moves over space/card; removed tiny Bile/half-power labels. Corruption warnings keep symbol/glowing border without trailing arrow. Noninteractive overlays, readable text and static reduced-motion hazards. Shift ghosts leave hazard overlays behind with their spaces.
+
+423rules tests pass (reports/corruption-feedback-tests.txt); packaged corruption-feedback GUI verifies damage/cover/reduced motion/explosion/Fire flight; boss GUI includes late Bile and all prior checks; full Mending Ground tutorial passes with isolated normal save byte-identical. No new AI batch or difficulty claim. Portable app/ZIP rebuilt. Restart normal app to load; live user profile untouched.
+
+Requested visible Codex sample fights completed on2.1.0 BEFORE these rules: Bile11turns/65HP, Bombadier11/70, Trickster8/67, strong same18card fixture. See stratum2-boss-demo-2026-10-04.md for source/profile/results. Demo controller _research/run-boss-demo.mjs and isolated profile intentionally left at final reward screen; do not automatically resume or close Jonathan's game. No policy/future RNG access. Frozen skill puzzle preserved.
+
 ## Latest: Spatial Stratum 2 bosses and three-use Elves — 2026-10-04
 
 Package2.1.0/rules2.1.0/content2.1.0/actions6/design4.149, BUILD_LOG108. Three new Archons: blackBile (230HP/Earth/stalker), bombadier (240HP/Fire/stalker), trickster (220HP/Chaos/hunter). Former seamstress/censer/borrowedChoir are Eidolons110/120/100HP, each damaging move reduced2perhit. Full cycles and builder choices in main design10.12.1. New generated art assets and source prompts/hashes in reports/loom-boss-art-provenance.json; built-in image_gen, exact backend not exposed. Originals retained.

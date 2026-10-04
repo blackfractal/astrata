@@ -586,6 +586,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.0",
           "2.0.7",
           "2.0.6",
           "2.0.5",
@@ -1812,6 +1813,9 @@ export class Game {
       return { name: "Purify", purify: true, damage: 0 };
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    // This warning is for the following cycle's opening bombardment.
+    if (e.id === "bombadier" && t.markCorruption === "mine" && e.cycle >= 15)
+      t.count = 3;
     // Even an ambush must leave a first player turn to respond to opening marks.
     if (bypassOpeningCorruption(this.s.battle, e, d, t)) {
       t.applyCorruption = false;
@@ -1942,7 +1946,8 @@ export class Game {
       if (j.kind === "enemyAction") {
         const e = b.enemies.find((x) => x.uid === j.uid && x.hp > 0);
         if (!e) continue;
-        const t = this.tell(e);
+        const t = this.tell(e),
+          actionCycle = e.cycle;
         if (!t.purify && !t.openingWarning) e.cycle++;
         this.log(
           e.name +
@@ -2000,7 +2005,7 @@ export class Game {
           e.purifyPending = ["burn", "poison", "corrode"].some(
             (k) => e.status[k] > 0,
           );
-        if (enemies[e.id].bile) resolveBile(this, e);
+        if (enemies[e.id].bile) resolveBile(this, { ...e, cycle: actionCycle });
         if (t.disrupt) disrupt(this, e, t.phasePlan);
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.applyCorruption) applyCorruptions(this, e);

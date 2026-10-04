@@ -3251,7 +3251,8 @@ header {
     transform: rotate(calc(var(--angle) + 45deg)) translateY(2px) scale(0);
   }
 }
-.corruption-nausea .corruption-motion i {
+.corruption-nausea .corruption-motion i,
+.nausea-aura i {
   inset: 17% 10%;
   border: 2px solid transparent;
   border-top-color: #c2ec66b8;
@@ -3260,11 +3261,13 @@ header {
   box-shadow: -3px -2px 8px #8aae3d55;
   animation: nausea-swirl 4s var(--delay) ease-in-out infinite;
 }
-.corruption-nausea .corruption-motion i:nth-child(2) {
+.corruption-nausea .corruption-motion i:nth-child(2),
+.nausea-aura i:nth-child(2) {
   inset: 28% 20%;
   animation-direction: reverse;
 }
-.corruption-nausea .corruption-motion i:nth-child(3) {
+.corruption-nausea .corruption-motion i:nth-child(3),
+.nausea-aura i:nth-child(3) {
   inset: 35% 30%;
 }
 @keyframes nausea-swirl {
@@ -3334,7 +3337,7 @@ header {
     opacity: 0;
   }
 }
-.corruption-covered .corruption-motion {
+.corruption-covered .corruption-card .corruption-motion {
   display: none;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3375,17 +3378,75 @@ header {
   text-align: center;
   font-size: 11px;
 }
-.nausea-warning {
+.nausea-aura,
+.bile-motion,
+.bile-forecast {
   position: absolute;
-  z-index: 11;
-  top: 28px;
-  right: 4px;
-  color: #d6e38d;
-  background: #242916ef;
-  border: 1px solid #b1c06b;
-  padding: 1px 4px;
-  border-radius: 50%;
-  font-size: 17px;
+  inset: 3px;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 5px;
+  contain: paint;
+}
+.nausea-aura {
+  background: radial-gradient(ellipse at center, #879e2914, transparent 75%);
+}
+.bile-motion i {
+  position: absolute;
+  width: 37%;
+  height: 54%;
+  left: calc(3% + var(--particle) * 14%);
+  top: calc(5% + var(--particle) * 7%);
+  border-radius: 39% 61% 70% 30% / 58% 33% 67% 42%;
+  background: radial-gradient(
+    ellipse at 35% 25%,
+    #a0a34699,
+    #384119ac 33%,
+    #080e0bc2 68%,
+    #05070600 73%
+  );
+  box-shadow: inset 1px 2px 2px #b9c1665c;
+  animation: bile-seep 5s var(--delay) ease-in-out infinite;
+}
+.bile-motion i:nth-child(even) {
+  animation-direction: reverse;
+}
+@keyframes bile-seep {
+  0%,
+  100% {
+    transform: translate(-7%, -15%) rotate(-20deg) scale(0.8, 1.05);
+  }
+  45% {
+    transform: translate(12%, 17%) rotate(35deg) scale(1.15, 0.8);
+  }
+  75% {
+    transform: translate(-16%, 7%) rotate(65deg) scale(0.9, 1.1);
+  }
+}
+.bile-forecast {
+  border: 2px dashed #d6e25e;
+  box-shadow: inset 0 0 12px #d6e25e55;
+  animation: bile-foretell 1.5s ease-in-out infinite;
+}
+.bile-escape {
+  color: #e8f491;
+  font-size: 28px;
+  text-align: left;
+  text-shadow: 0 0 5px #111;
+}
+@keyframes bile-foretell {
+  50% {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nausea-aura i,
+  .bile-motion i,
+  .bile-forecast {
+    animation: none !important;
+    opacity: 0.7;
+  }
 }
 .corruption-flare {
   animation: corruption-flare 0.65s ease-out !important;
@@ -3589,4 +3650,21 @@ header {
 }
 .mind .bile-warning {
   top: 2px;
+}
+.mine-explosion {
+  width: 170px;
+  height: 170px;
+}
+.mine-detonating {
+  box-shadow:
+    inset 0 0 34px #ff9933b0,
+    0 0 20px #ff7a2860;
+}
+.mind .slot.has-bile .name,
+.mind .slot.has-bile .nums,
+.mind .slot.has-bile .slot-activate {
+  z-index: 6;
+}
+.bile-motion {
+  opacity: 0.72;
 }

@@ -34,7 +34,15 @@ export function bilePlan(g, e) {
     .map((_, i) => i)
     .filter(eligible)
     .sort((a, z) => (z % 7) - (a % 7) || a - z);
-  return fresh.length ? { from: null, to: fresh[0] } : null;
+  return fresh.length
+    ? {
+        from: null,
+        to: fresh[0],
+        ...(e.cycle >= 16 && fresh.length > 1
+          ? { additional: [fresh[1]] }
+          : {}),
+      }
+    : null;
 }
 
 export function phasePlan(b, e, axis) {
@@ -80,9 +88,13 @@ export function refreshBossPlans(g) {
 }
 
 export function resolveBile(g, e) {
-  const b = g.s.battle,
-    p = bilePlan(g, e);
+  const p = bilePlan(g, e);
   if (!p) return;
+  for (const to of [p.to, ...(p.additional || [])])
+    resolveGlob(g, e, { from: p.from, to });
+}
+function resolveGlob(g, e, p) {
+  const b = g.s.battle;
   b.biles ||= {};
   const old = p.from == null ? null : b.biles[p.from];
   if (p.from != null) delete b.biles[p.from];

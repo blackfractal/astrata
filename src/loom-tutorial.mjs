@@ -135,7 +135,7 @@ export const LOOM_STEPS = [
   note(
     "mine",
     "A Mind Mine",
-    "This mine has one response turn left in this demonstration. Ordinary mines give three full player turns and deal 18 Arcane; Bombadier bombs give two and deal 20. Machine Elves defuse either immediately with Mend. Cover it with the spare Shield: the explosion sacrifices only the top card, rather than dealing 18 Arcane damage.",
+    "After a mine is placed, you get one player turn to respond. It explodes on the next enemy turn: every mine deals 20 Fire. Machine Elves defuse immediately with Mend. Cover this mine with the spare Shield: the explosion sacrifices only the top card instead of damaging you.",
     "mine",
   ),
   action(
@@ -351,6 +351,8 @@ export function loomAfter(g, a) {
       uid: g.uid(),
       source: b.enemies[0].uid,
       remaining: 1,
+      element: "Fire",
+      damage: 20,
       createdTurn: b.turn - 1,
     };
     draw(g, "shield");

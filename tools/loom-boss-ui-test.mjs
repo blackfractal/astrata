@@ -7,10 +7,11 @@ import { refreshBossPlans } from "../src/loom-bosses.mjs";
 const dir = "reports/screenshots/loom-bosses";
 await fs.mkdir(dir, { recursive: true });
 const report = { checks: [], errors: [] };
-for (const id of ["blackBile", "bombadier", "trickster", "anti"]) {
+for (const id of ["blackBile", "lateBile", "bombadier", "trickster", "anti"]) {
   const profile = path.resolve(".tmp/loom-boss-ui-" + id + "-" + Date.now());
   await fs.mkdir(profile, { recursive: true });
-  const bossId = id === "anti" ? "trickster" : id;
+  const bossId =
+    id === "anti" ? "trickster" : id === "lateBile" ? "blackBile" : id;
   const g = new Game(700);
   g.s.stratum = 2;
   g.s.archon = bossId;
@@ -41,6 +42,11 @@ for (const id of ["blackBile", "bombadier", "trickster", "anti"]) {
     put("elves", 5);
     q(13, "nausea");
     b.biles = { 13: { kind: "bile", uid: g.uid(), source: e.uid } };
+  }
+  if (id === "lateBile") {
+    e.cycle = 16;
+    put("blast", 6);
+    put("blast", 20);
   }
   if (id === "bombadier") {
     e.cycle = 2;
@@ -87,8 +93,10 @@ for (const id of ["blackBile", "bombadier", "trickster", "anti"]) {
     assert.ok(
       await p.locator('[src="assets/enemy-' + bossId + '.png"]').count(),
     );
+    if (id === "lateBile")
+      assert.equal(await p.locator(".bile-forecast").count(), 2);
     if (id === "blackBile") {
-      assert.equal(await p.locator('[data-slot="13"] .bile-seal').count(), 1);
+      assert.equal(await p.locator('[data-slot="13"] .bile-motion').count(), 1);
       assert.equal(
         await p.locator('[data-slot="5"].bile-destination').count(),
         1,
@@ -166,10 +174,12 @@ for (const id of ["blackBile", "bombadier", "trickster", "anti"]) {
     }
     if (id === "blackBile")
       assert.equal(
-        await p.locator(".bile-seal").count(),
+        await p.locator(".bile-motion").count(),
         0,
         "Elves intercept the moving glob",
       );
+    if (id === "lateBile")
+      assert.equal(await p.locator(".bile-motion").count(), 2);
     if (id === "trickster") {
       assert.equal(await p.locator('[data-slot="0"] .name').count(), 0);
       assert.match(

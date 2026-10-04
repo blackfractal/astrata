@@ -32,7 +32,7 @@ export function prepareCorruption(g, e, t) {
   const b = g.s.battle;
   b.corruptions ||= {};
   const existing = Object.values(b.corruptions).filter(
-    (q) => q.source === e.uid,
+    (q) => q.source === e.uid && !(e.id === "bombadier" && q.kind === "mine"),
   ).length;
   let room = (e.corruptionCap || 1) - existing;
   e.corruptionPlan = [];
@@ -41,7 +41,9 @@ export function prepareCorruption(g, e, t) {
     ...(t.alsoCorruption ? [t.alsoCorruption] : []),
   ];
   for (const kind of kinds) {
-    if (room-- <= 0) break;
+    // Bombadier reserves a separate mine pool so accumulated Holes cannot
+    // silently cancel the promised late-cycle three-bomb cast.
+    if (!(e.id === "bombadier" && kind === "mine") && room-- <= 0) break;
     if (
       kind === "mine" &&
       e.mineCap &&
@@ -130,8 +132,9 @@ export function applyCorruptions(g, e) {
       uid: g.uid(),
       source: e.uid,
       value: 1,
-      remaining: e.mineTurns || 3,
-      damage: e.mineDamage || 18,
+      remaining: 1,
+      damage: e.mineDamage || 20,
+      element: "Fire",
       createdTurn: b.turn,
     };
     g.log(CORRUPTIONS[kind].name + " corrupts a space.");
@@ -289,16 +292,21 @@ export function corruptionRound(g) {
       c = top(b.grid[i]);
     if (q.kind === "mine" && q.createdTurn < b.turn && --q.remaining <= 0) {
       delete b.corruptions[i];
-      g.present("corruption", { slot: i, name: "Mind Mine detonates" });
       if (c) {
         g.destroyCard(i, c.uid);
         g.log("Mind Mine destroys its cover.");
-      } else
+      }
+      g.present("mineExplosion", {
+        slot: i,
+        covered: !!c,
+        name: "Mind Mine detonates",
+      });
+      if (!c)
         b.jobs.unshift({
           kind: "hit",
           name: "Mind Mine",
           damage: q.damage || 18,
-          element: "Arcane",
+          element: q.element || "Arcane",
           gridSourceSlot: i,
           source: q.source,
         });

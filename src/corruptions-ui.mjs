@@ -7,6 +7,21 @@ const esc = (s) =>
     .replaceAll("&", "&amp;")
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;");
+const particles = (count) =>
+  Array.from(
+    { length: count },
+    (_, n) => `<i style="--particle:${n};--delay:${-n * 0.73}s"></i>`,
+  ).join("");
+function hazardHelp(el, help) {
+  el.dataset.tooltip = [el.getAttribute("title") || el.dataset.tooltip, help]
+    .filter(Boolean)
+    .join(" ");
+  el.removeAttribute("title");
+  el.setAttribute(
+    "aria-label",
+    [el.getAttribute("aria-label"), help].filter(Boolean).join(" · "),
+  );
+}
 export function paintCorruptions(o, app) {
   app.classList.toggle("in-loom", o.stratum === 2);
   if (!o.battle) return;
@@ -28,7 +43,9 @@ export function paintCorruptions(o, app) {
           ? q.remaining +
             " turns left; " +
             (q.damage || 18) +
-            " Arcane if uncovered. "
+            " " +
+            (q.element || "Arcane") +
+            " if uncovered. "
           : suppressed
             ? "Covered. "
             : "") +
@@ -43,19 +60,26 @@ export function paintCorruptions(o, app) {
       el.classList.add("has-bile");
       el.insertAdjacentHTML(
         "beforeend",
-        `<span class="bile-seal" data-tooltip="${esc(CORRUPTIONS.bile.text)}"><img src="${artPaths["corruption-bile"]}" alt="">Bile</span>`,
+        `<span class="bile-motion" aria-hidden="true">${particles(5)}</span>`,
       );
+      hazardHelp(el, "Bile: " + CORRUPTIONS.bile.text);
     }
     if (c?.mending)
       el.insertAdjacentHTML(
         "beforeend",
         '<span class="mending-ribbon" data-tooltip="Repair completes after its remaining turns if these Elves survive and remain adjacent.">Mending…</span>',
       );
-    if (c && corruptionPower(b, i, 4) < 4)
+    if (c && corruptionPower(b, i, 4) < 4) {
+      el.classList.add("nausea-affected");
       el.insertAdjacentHTML(
         "beforeend",
-        '<span class="nausea-warning" data-tooltip="Nausea: damage and newly generated Guard halved.">½</span>',
+        `<span class="corruption-motion nausea-aura" aria-hidden="true">${particles(3)}</span>`,
       );
+      hazardHelp(
+        el,
+        "Nausea: damage and newly generated Guard halved. The displayed values already include this reduction.",
+      );
+    }
     const marks = b.enemies.flatMap((e) =>
       (e.corruptionPlan || [])
         .filter((p) => p.slot === i)
@@ -65,7 +89,7 @@ export function paintCorruptions(o, app) {
       el.classList.add("corruption-mark");
       el.insertAdjacentHTML(
         "beforeend",
-        `<span class="corruption-foretell" data-tooltip="${esc(marks.map((p) => p.enemy + " will apply " + CORRUPTIONS[p.kind].name + " here on its next action.").join(" "))}">${marks.map((p) => CORRUPTIONS[p.kind].symbol).join(" ")} →</span>`,
+        `<span class="corruption-foretell" data-tooltip="${esc(marks.map((p) => p.enemy + " will apply " + CORRUPTIONS[p.kind].name + " here on its next action.").join(" "))}">${marks.map((p) => CORRUPTIONS[p.kind].symbol).join(" ")}</span>`,
       );
     }
   }
@@ -80,14 +104,19 @@ export function paintCorruptions(o, app) {
   };
   for (const e of b.enemies) {
     const p = e.bilePlan;
-    if (p) {
-      const slot = p.to === "player" ? p.from : p.to;
+    for (const to of p ? [p.to, ...(p.additional || [])] : []) {
+      const slot = to === "player" ? p.from : to;
       const el = app.querySelector('[data-slot="' + slot + '"]');
       el?.classList.add("bile-destination");
+      const warning =
+        p.to === "player"
+          ? "This Bile will reach you next enemy round: Poison +2."
+          : "Bile arrives next enemy round and consumes one activation. Warning updates if the route changes.";
       el?.insertAdjacentHTML(
         "beforeend",
-        `<span class="bile-warning" data-tooltip="${p.to === "player" ? "This Bile will reach you next enemy round: Poison +2." : "Bile arrives next enemy round and consumes one activation. Warning updates if the route changes."}">${p.to === "player" ? "← Poison 2" : "Bile → −1"}</span>`,
+        `<span class="bile-forecast${p.to === "player" ? " bile-escape" : ""}" aria-hidden="true">${p.to === "player" ? "←" : ""}</span>`,
       );
+      if (el) hazardHelp(el, warning);
       if (p.from != null && p.to !== "player")
         arrows.push({ from: p.from, to: p.to, color: "#cad63c" });
     }

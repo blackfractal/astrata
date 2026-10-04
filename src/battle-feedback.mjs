@@ -2,6 +2,7 @@ import { statHelp, statAttribute } from "./card-upgrade-ui.mjs";
 import { cards, glossary } from "./content.mjs";
 import { attackElements, attackPreview } from "./combat-preview.mjs";
 import { cardPower } from "./engine.mjs";
+import { corruptionPower } from "./corruptions.mjs";
 export function damageMarkup(b, c, slot) {
   return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×4" : ""}</b>`;
 }
@@ -39,7 +40,7 @@ export function targetPreview(ctx, source, slot, actionFor) {
     target = choice;
     const tone = v.delta > 0 ? "damage-up" : v.delta < 0 ? "damage-down" : "";
     const label = `${v.damage}${v.delta ? ` (${v.delta > 0 ? "+" : ""}${v.delta})` : ""}`;
-    const help = `${v.base} base → ${v.damage} ${v.elements.join("/")} card damage against ${enemy.name}. ${v.blocked} absorbed by Guard; ${v.hpLoss} HP lost.${v.negated ? " Flicker negates this activation." : ""} Equipment hits, covered-card effects and status damage resolve separately.`;
+    const help = `${v.base} base → ${v.damage} ${v.elements.join("/")} card damage against ${enemy.name}.${corruptionPower(b, slot, 4) < 4 ? " Nausea has already halved the base damage before the elemental matchup." : ""} ${v.blocked} absorbed by Guard; ${v.hpLoss} HP lost.${v.negated ? " Flicker negates this activation." : ""} Equipment hits, covered-card effects and status damage resolve separately.`;
     number.textContent = label;
     if (tone) number.classList.add(tone);
     number.dataset.tooltip = help;

@@ -258,14 +258,14 @@ test("Strong adjacent Mend takes two turns, upgraded one; reload preserves commi
     assert.ok(r.s.battle.grid[15].length);
   }
 });
-test("Bombadier mines give two full turns,20 damage, and basic Elves defuse immediately", () => {
+test("Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse immediately", () => {
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
   assert.equal(e.corruptionPlan.length, 2);
   applyCorruptions(g, e);
   const i = Number(Object.keys(b.corruptions)[0]);
-  assert.equal(b.corruptions[i].remaining, 2);
+  assert.equal(b.corruptions[i].remaining, 1);
   assert.equal(b.corruptions[i].damage, 20);
   const elf = put(g, "elves", i);
   b.phase = "activate";
@@ -274,14 +274,12 @@ test("Bombadier mines give two full turns,20 damage, and basic Elves defuse imme
   assert.equal(elf.used, 1);
   const j = Number(Object.keys(b.corruptions)[0]);
   corruptionRound(g);
-  assert.equal(b.corruptions[j].remaining, 2);
-  b.turn++;
-  corruptionRound(g);
   assert.equal(b.corruptions[j].remaining, 1);
   b.turn++;
   corruptionRound(g);
   assert.equal(b.corruptions[j], undefined);
   assert.equal(b.jobs.find((x) => x.name === "Mind Mine").damage, 20);
+  assert.equal(b.jobs.find((x) => x.name === "Mind Mine").element, "Fire");
 });
 test("Steam preserves ordered independent elements and exact8/10/12 damage", () => {
   const g = arena("bombadier"),
@@ -423,4 +421,124 @@ test("New boss full cycles and Purify stay legal with seeded reloads", () => {
       );
     }
   }
+});
+
+test("Black Bile escalates only after four completed cycles, forecasts distinct fresh targets, and still spreads once", () => {
+  const g = arena(),
+    b = g.s.battle,
+    e = b.enemies[0];
+  b.grid = Array.from({ length: 42 }, () => []);
+  const a = put(g, "blast", 6),
+    c = put(g, "blast", 20),
+    d = put(g, "blast", 34);
+  e.cycle = 15;
+  assert.deepEqual(bilePlan(g, e), { from: null, to: 6 });
+  e.cycle = 16;
+  assert.deepEqual(bilePlan(g, e), { from: null, to: 6, additional: [20] });
+  resolveBile(g, e);
+  assert.equal(a.used, 1);
+  assert.equal(c.used, 1);
+  assert.equal(d.used, 0);
+  put(g, "blast", 12);
+  assert.deepEqual(bilePlan(g, e), { from: 6, to: 12 });
+  resolveBile(g, e);
+  assert.equal(b.biles[6], undefined);
+  assert.ok(b.biles[12]);
+  assert.ok(b.biles[20]);
+  assert.equal(d.used, 0);
+});
+
+test("fourth-cycle final Bile action still uses the single-glob forecast", () => {
+  const g = arena(),
+    b = g.s.battle,
+    e = b.enemies[0];
+  b.grid = Array.from({ length: 42 }, () => []);
+  put(g, "blast", 6);
+  put(g, "blast", 20);
+  e.cycle = 15;
+  b.phase = "activate";
+  g.endTurn();
+  assert.equal(Object.keys(b.biles).length, 1);
+});
+
+test("Bombadier telegraphs three mines for its fifth bombardment, with ordinary caps retained", () => {
+  const g = arena("bombadier"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  e.corruptionPlan = [];
+  b.corruptions = {};
+  e.cycle = 11;
+  assert.equal(g.tell(e).count, 2);
+  e.cycle = 15;
+  assert.equal(g.tell(e).count, 3);
+  prepareCorruption(g, e, g.tell(e));
+  assert.equal(e.corruptionPlan.length, 3);
+  const r = new Game(g.s.seed, structuredClone(g.s));
+  assert.equal(r.s.battle.enemies[0].corruptionPlan.length, 3);
+});
+
+test("ordinary mines also grant exactly one response turn, preserve covered lower stacks, and emit explosion frames", () => {
+  const g = arena("censer"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  g.capturePresentation = true;
+  g.presentation = [];
+  applyCorruptions(g, e);
+  const i = Number(Object.keys(b.corruptions)[0]);
+  assert.equal(b.corruptions[i].remaining, 1);
+  assert.equal(b.corruptions[i].damage, 20);
+  assert.equal(b.corruptions[i].element, "Fire");
+  const lower = put(g, "plasma", i);
+  const upper = g.instance(g.newCard("plasma"));
+  b.grid[i].push(upper);
+  corruptionRound(g);
+  assert.equal(b.grid[i].length, 2);
+  b.turn++;
+  corruptionRound(g);
+  assert.deepEqual(
+    b.grid[i].map((c) => c.uid),
+    [lower.uid],
+  );
+  assert.equal(b.corruptions[i], undefined);
+  const fx = g.presentation.find((x) => x.kind === "mineExplosion");
+  assert.equal(fx.covered, true);
+  assert.equal(fx.slot, i);
+  assert.equal(
+    b.jobs.some((j) => j.name === "Mind Mine"),
+    false,
+  );
+});
+
+test("existing saved mines retain their explicit fuse and damage element while new casts use current rules", () => {
+  const g = arena("bombadier"),
+    b = g.s.battle;
+  hazard(g, 5, "mine", { remaining: 2, damage: 20, createdTurn: 0 });
+  b.turn = 1;
+  const r = new Game(g.s.seed, structuredClone(g.s));
+  corruptionRound(r);
+  assert.equal(r.s.battle.corruptions[5].remaining, 1);
+  r.s.battle.turn++;
+  corruptionRound(r);
+  assert.equal(
+    r.s.battle.jobs.find((j) => j.name === "Mind Mine").element,
+    "Arcane",
+  );
+});
+
+test("Bombadier retains room for three late mines even with its full Memory Hole allowance", () => {
+  const g = arena("bombadier"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  e.corruptionPlan = [];
+  b.corruptions = {};
+  b.grid = Array.from({ length: 42 }, () => []);
+  for (let i = 0; i < 10; i++) hazard(g, i, "hole");
+  e.cycle = 15;
+  prepareCorruption(g, e, g.tell(e));
+  assert.equal(e.corruptionPlan.length, 3);
+  applyCorruptions(g, e);
+  assert.equal(
+    Object.values(b.corruptions).filter((q) => q.kind === "mine").length,
+    3,
+  );
 });

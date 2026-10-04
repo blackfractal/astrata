@@ -422,7 +422,7 @@ export async function playFrames(before, frames, after, render, isFast) {
           ghost.className += " phase-moving-card";
           ghost
             .querySelectorAll(
-              ".corruption-card,.corruption-seal,.corruption-foretell,.bile-seal,.bile-warning,.phase-label,.mending-ribbon,.nausea-warning",
+              ".corruption-card,.corruption-seal,.corruption-foretell,.bile-motion,.bile-forecast,.phase-label,.mending-ribbon,.nausea-aura",
             )
             .forEach((el) => el.remove());
           for (const cls of [...ghost.classList])
@@ -431,6 +431,7 @@ export async function playFrames(before, frames, after, render, isFast) {
               [
                 "corrupted",
                 "has-bile",
+                "nausea-affected",
                 "bile-destination",
                 "phase-warning",
               ].includes(cls)
@@ -488,6 +489,22 @@ export async function playFrames(before, frames, after, render, isFast) {
           anim.cancel();
           ghost.remove();
         }
+        render(frame.state);
+      } else if (frame.kind === "mineExplosion") {
+        const target = card(frame.slot);
+        const burst = spellImpact(target, "Fire", {
+          duration: ms(750),
+          reduced,
+        });
+        burst?.classList.add("mine-explosion");
+        if (burst) burst.dataset.slot = String(frame.slot);
+        target?.classList.add("mine-detonating");
+        await pause(500);
+        if (frame.covered) {
+          target?.classList.add("disintegrating");
+          await pause(350);
+        }
+        burst?.remove();
         render(frame.state);
       } else if (frame.kind === "corruption") {
         render(frame.state);

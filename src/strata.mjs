@@ -33,7 +33,7 @@ export const CORRUPTIONS = {
     name: "Mind Mine",
     symbol: "✹",
     advanced: true,
-    text: "Explodes after three full player turns. Uncovered: 18 Arcane damage through the normal defense chain. Covered: destroys only the top card instead. Covering does not pause the fuse. Bombadier mines instead deal 20 after two full player turns. Machine Elves defuse immediately.",
+    text: "After placement, you get one full player turn to respond; explodes on the following enemy turn. Uncovered: 20 Fire damage through the normal defense chain. Covered: destroys only the top card instead. Covering does not pause the fuse. Machine Elves defuse immediately.",
   },
   hypnosis: {
     repairTurns: 2,
@@ -320,7 +320,7 @@ export function registerStratum2(card, enemy, glossary) {
       hit("Bellows", 6, "Fire", { hits: 2 }),
       { ...mark("mine", 2), ...hit("Stoke the fuse", 9, "Fire") },
     ],
-    "Plants one Mind Mine with its first attack, then marks two while attacking. Three full response turns per fuse; maximum three Mines. Uncovered explosion: 18 Arcane; covered: sacrifice the top card.",
+    "Plants one Mind Mine with its first attack, then marks two while attacking. One full player response turn per fuse; maximum three Mines. Uncovered explosion: 20 Fire; covered: sacrifice the top card.",
     "Use spent cards as covers, or repair early with upgraded Elves.",
     { corruptionCap: 3, openingCorruption: mark("mine") },
   );
@@ -353,7 +353,7 @@ export function registerStratum2(card, enemy, glossary) {
       hit("Churn", 15, "Earth"),
       hit("Acrid breath", 10, "Fire", { burn: 1 }),
     ],
-    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. Nausea spreads four spaces per cast, maximum twelve.",
+    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. After four complete cycles, fresh casts throw two globs instead of one; spreading still moves one glob. Nausea spreads four spaces per cast, maximum twelve.",
     "Read Bile's moving warning. Break the route, spend a threatened activation, or intercept with Machine Elves. Bile may share a Nausea space.",
     { corruptionCap: 12, bile: true, bossMode: "stalker" },
   );
@@ -380,12 +380,12 @@ export function registerStratum2(card, enemy, glossary) {
       },
       { ...mark("mine", 2), ...hit("Light the fuses", 12, "Fire") },
     ],
-    "Telegraphs two bombs at battle start. Bombs explode for 20 Arcane after two full player turns; covering sacrifices the top card instead. Machine Elves defuse immediately. Also creates Memory Holes. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
+    "Telegraphs two bombs at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. From the fifth bombardment, casts three bombs instead of two. Machine Elves defuse immediately. Also creates Memory Holes. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
     "Defuse or cover the bombs; prepare different elements for each Steam hit. Memory Holes take two turns to Mend, one when upgraded.",
     {
       corruptionCap: 10,
       mineCap: 4,
-      mineTurns: 2,
+      mineTurns: 1,
       mineDamage: 20,
       openingCorruption: mark("mine", 2),
       bossMode: "stalker",

@@ -1,11 +1,11 @@
 # Stratum 2 planning — The Unfinished Loom
 
-Implementation baseline 0.7 · 2026-10-04 · Jonathan / Codex
+Implementation baseline 0.8 · 2026-10-04 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md), especially §§1.4 and11.5. Jonathan authorized implementation and repository consolidation on 2026-10-04. Main design §10.12 now records the selected playable v2 rules; the earlier proposals below remain useful rationale, not competing requirements. Main-design rules take precedence. No hidden lore is exposed by the current Sapling introduction.
 
 
-**Current 2.1.0 implementation supersedes the earlier proposals below.** See main design §10.12.1 for exact cycles/timing. The Black Bile (230HP/Earth), King Bombadier (240HP/Fire), and The Trickster (220HP/Chaos) are now Archons. Seamstress/Censer/Borrowed Choir are Eidolons at110/120/100HP, two less damage per hit. Bile moves without a trail and spends one activation on arrival; Bombadier uses two-turn20-damage bombs plus Holes and an8Fire/10Water/12Wind sequence; Trickster shifts complete rows/columns two spaces with lethal Hole and immediate Hypnosis collisions, and chooses Anti-elemental against the largest elemental Guard total. Machine Elves place anywhere, have three uses and Mend self/NESW-adjacent spaces. Ordinary repairs are immediate; Hole/Hypnosis take two turns, one upgraded. Return to discard after the final successful repair. These rules replace the old one-use/placement-only/upgrade-access proposals, including the earlier stated Hole restriction. Art, tutorial, tooltips, replay sources and focused regressions are part of this delivery.
+**Current 2.1.1 implementation supersedes the earlier proposals below.** See main design §10.12.1 for exact cycles/timing. The Black Bile (230HP/Earth), King Bombadier (240HP/Fire), and The Trickster (220HP/Chaos) are now Archons. Seamstress/Censer/Borrowed Choir are Eidolons at110/120/100HP, two less damage per hit. Bile moves without a trail and spends one activation on arrival; all Mind Mines use one-response-turn20Fire bombs; Bombadier adds Holes and an8Fire/10Water/12Wind sequence; Trickster shifts complete rows/columns two spaces with lethal Hole and immediate Hypnosis collisions, and chooses Anti-elemental against the largest elemental Guard total. Machine Elves place anywhere, have three uses and Mend self/NESW-adjacent spaces. Ordinary repairs are immediate; Hole/Hypnosis take two turns, one upgraded. Return to discard after the final successful repair. These rules replace the old one-use/placement-only/upgrade-access proposals, including the earlier stated Hole restriction. Art, tutorial, tooltips, replay sources and focused regressions are part of this delivery.
 
 ## Implementation decisions
 
@@ -211,3 +211,8 @@ Before implementation, settle HP/Focus/Channel values; eligible Corruptions per 
 Record Corruption creation/marks by space and owner, covering/uncovering, actual losses caused, repair start/completion/interruption, Elf upgrade/deaths/redraws, decision times, and build versions. Compare at least: early/late/no Elf draw, upgraded/unupgraded Elves, death mid-repair, default1Focus versus developed Focus, large versus small decks, and each Archon.
 
 The useful balance question is not only win rate. Measure how often players had multiple reasonable responses, how often a repair was wasted, and whether loss resulted from a visible choice or an unavoidable draw/timing trap.
+
+
+### 2.1.1 follow-up — one-turn bombs and clearer Corruptions
+
+Main design4.150 supersedes older timing notes: every newly placed Mind Mine gives one player turn before detonation; all uncovered mines deal20 Fire. From the fifth bombardment, three bombs; after four Black Bile cycles, two fresh globs when none can spread (one spreading move remains). Telegraph both glob targets and all bomb targets. Nausea swirls extend over affected cards; Bile flows over its space/card; remove tiny Bile/half-power labels and trailing Corruption-warning arrows. Covered/uncovered mine explosions visibly precede card destruction or the Fire defense-chain attack. Existing saved mine fuses/types remain intact.
