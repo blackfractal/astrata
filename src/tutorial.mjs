@@ -1,4 +1,4 @@
-import { cards, items, enemies } from "./content.mjs";
+import { cards, items, enemies, DRUID_COMPANION_STORY } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
   version: 8,
@@ -65,7 +65,8 @@ const back = (id) =>
 note(
   "welcome",
   "The First Clearing",
-  "A quiet grove to learn the journey. Each lesson waits for you. Read the glowing callout, then click Continue. You can pause or return to Start at any time.",
+  DRUID_COMPANION_STORY +
+    "\n\nYour journey begins in the First Clearing. Read each glowing callout, then click Continue. You can pause or return to Start at any time.",
   ".field",
   "gold",
 );

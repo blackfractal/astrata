@@ -1,3 +1,4 @@
+import { artPaths } from "./art-paths.mjs";
 import { tutorialGuide } from "./tutorial.mjs";
 import { tutorialHint } from "./tutorial-hints.mjs";
 let context = null,
@@ -202,7 +203,7 @@ export function paintTutorial(ctx, frame = false) {
     return;
   }
   clearTimeout(idleTimer);
-  layer.innerHTML = `<section class="tutorial-guide" aria-label="Tutorial guidance" data-tutorial-step="${escape(guide.id)}"><div class="tutorial-eyebrow">THE FIRST CLEARING <span>${guide.index + 1} / ${guide.total}</span></div><div class="tutorial-progress"><i style="width:${(100 * (guide.index + 1)) / guide.total}%"></i></div><h2>${escape(guide.title)}</h2><p>${escape(guide.text)}</p>${guide.kind === "free" ? '<button class="tutorial-next" data-tutorial-independent>Let me try <span aria-hidden="true">→</span></button>' : guide.kind === "note" ? '<button class="tutorial-next" data-tutorial-next>Continue <span aria-hidden="true">→</span></button>' : `<small>${guide.kind === "free" ? "No forced choices · read any keyword for help." : "Follow the highlighted control."}</small>`}</section>`;
+  layer.innerHTML = `<section class="tutorial-guide" aria-label="Tutorial guidance" data-tutorial-step="${escape(guide.id)}"><div class="tutorial-eyebrow">THE FIRST CLEARING <span>${guide.index + 1} / ${guide.total}</span></div><div class="tutorial-progress"><i style="width:${(100 * (guide.index + 1)) / guide.total}%"></i></div><h2>${escape(guide.title)}</h2>${guide.id === "welcome" ? `<figure class="tutorial-companion"><img src="${artPaths["card-sapling"]}" alt="Sapling, your first companion"><figcaption>Sapling · Your first companion</figcaption></figure>` : ""}<p>${escape(guide.text)}</p>${guide.kind === "free" ? '<button class="tutorial-next" data-tutorial-independent>Let me try <span aria-hidden="true">→</span></button>' : guide.kind === "note" ? '<button class="tutorial-next" data-tutorial-next>Continue <span aria-hidden="true">→</span></button>' : `<small>${guide.kind === "free" ? "No forced choices · read any keyword for help." : "Follow the highlighted control."}</small>`}</section>`;
   layer
     .querySelector("[data-tutorial-independent]")
     ?.addEventListener("click", async () => {

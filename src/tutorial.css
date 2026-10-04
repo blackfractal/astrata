@@ -152,3 +152,30 @@
 .in-tutorial .battle-scene .battle-dock .revealed-hand {
   padding-left: 245px;
 }
+
+.tutorial-field .tutorial-guide[data-tutorial-step="welcome"] {
+  top: 90px;
+  width: 340px;
+}
+.tutorial-companion {
+  margin: 0 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tutorial-companion img {
+  width: 110px;
+  height: 150px;
+  object-fit: contain;
+  border: 1px solid #ac9f72;
+  background: #111e17;
+}
+.tutorial-companion figcaption {
+  max-width: 135px;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #efdbaf;
+}
+.tutorial-guide[data-tutorial-step="welcome"] p {
+  white-space: pre-line;
+}

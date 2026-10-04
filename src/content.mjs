@@ -1,9 +1,11 @@
+export const DRUID_COMPANION_STORY =
+  "At the forest’s edge, a sapling lifts its roots from the earth and falls into step beside you. It pauses when you pause. When you turn toward the darker trees, it shakes the dew from its leaves and follows. You make room in your grimoire. Neither of you has to enter the Weald alone.";
 export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "1.3.49",
-  content: "1.1.55",
+  content: "1.1.56",
   observation: 1,
   actions: 3,
 };

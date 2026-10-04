@@ -61,6 +61,7 @@ for (const name of [
   "hart-immunity-verification.json",
   "resource-balance-verification.json",
   "consumables-verification.json",
+  "companion-intro-verification.json",
   "consumables-evaluation",
   "consumable-art-prompts.json",
   "resource-balance-evaluation",

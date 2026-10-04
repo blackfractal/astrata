@@ -265,7 +265,10 @@ body {
   height: 40px;
   object-fit: contain;
 }
-.battle-scene .battle-player .gear-item > span:not(.empty-gear):not(.held-attack) {
+.battle-scene
+  .battle-player
+  .gear-item
+  > span:not(.empty-gear):not(.held-attack) {
   display: none;
 }
 .battle-scene .battle-player .block-left {
@@ -1021,6 +1024,61 @@ body {
   }
 }
 
-.battle-scene .mind .upgrade-badge { width:20px; height:20px; top:3px; right:3px; }
-.battle-scene .mind .upgrade-badge svg { width:16px; height:16px; }
-.battle-scene .mind .slot:has(.upgrade-badge) .card-statuses { right:27px; max-width:52px; }
+.battle-scene .mind .upgrade-badge {
+  width: 20px;
+  height: 20px;
+  top: 3px;
+  right: 3px;
+}
+.battle-scene .mind .upgrade-badge svg {
+  width: 16px;
+  height: 16px;
+}
+.battle-scene .mind .slot:has(.upgrade-badge) .card-statuses {
+  right: 27px;
+  max-width: 52px;
+}
+
+/* The opening companion is framed as a character, using the complete card art. */
+.companion-intro .scene-art {
+  display: grid;
+  place-items: center;
+}
+.companion-portrait {
+  margin: 40px;
+  padding: 15px;
+  width: 390px;
+  background: #101f18e8;
+  border: 1px solid #b9a96e;
+  box-shadow: 0 22px 65px #0009;
+}
+.companion-portrait img {
+  display: block;
+  width: 100%;
+  height: 490px;
+  object-fit: contain;
+}
+.companion-portrait figcaption {
+  padding: 15px 5px 4px;
+  font-size: 29px;
+  color: #efdbaf;
+}
+.companion-portrait figcaption span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #b8c6a9;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#app .companion-intro .scene-copy {
+  padding: 40px 80px;
+}
+#app .companion-intro .companion-story {
+  color: #eee4ce;
+  font-size: 22px;
+  line-height: 1.55;
+}
+#app .companion-intro .companion-world {
+  font-size: 16px;
+}

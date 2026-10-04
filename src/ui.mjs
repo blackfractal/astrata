@@ -14,7 +14,14 @@ import { installStage } from "./stage.mjs";
 import { enhance, showCard, showEquipment } from "./polish-ui.mjs";
 import { playFrames, installTooltips } from "./presentation.mjs";
 import { Game, incomingDamageText } from "./engine.mjs";
-import { cards, items, enemies, glossary, VERSION } from "./content.mjs";
+import {
+  cards,
+  items,
+  enemies,
+  glossary,
+  VERSION,
+  DRUID_COMPANION_STORY,
+} from "./content.mjs";
 import { upgradeBadge } from "./card-upgrade-ui.mjs";
 import { artPaths } from "./art-paths.mjs";
 import { WeightedPolicy } from "./policy.mjs";
@@ -408,14 +415,14 @@ function render(frame = null) {
         ? "The Druid"
         : o.mode === "gem"
           ? "A first glimmer"
-          : "The Whispering Weald";
+          : "A companion in the Weald";
     const copy =
       o.mode === "class"
         ? "Coax life from the space between spells. Grow Allies, weave elemental patterns, and turn a crowded mind into a living grove."
         : o.mode === "gem"
           ? `${items[o.startGem].name} carries ${items[o.startGem].element}. Imbue your Bracelet to protect, or your Ring to strike. Gems can be moved at Taverns.`
           : "The Apex Predator terrorizes Astrata. Your journey begins among pale roots and dark pools. Beyond the Weald, an Archon guards the way to the deeper Strata. Gather what you can before it wakes.";
-    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')"></div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div><p>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
+    body = `<section class="scene ${o.mode === "intro" ? "companion-intro" : ""}"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')">${o.mode === "intro" ? `<figure class="companion-portrait">${img("card-sapling")}<figcaption>Sapling <span>Your first companion</span></figcaption></figure>` : ""}</div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div>${o.mode === "intro" ? `<p class="companion-story">${DRUID_COMPANION_STORY}</p>` : ""}<p${o.mode === "intro" ? ' class="companion-world"' : ""}>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
     body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum 1 tutorial" : "Stratum one"}</div><h2>${o.tutorial ? TUTORIAL.name : "The Whispering Weald"}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field ${o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
