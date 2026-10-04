@@ -527,7 +527,7 @@ function render(frame = null) {
   } else if (o.mode === "event") {
     body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/event-${o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in the Weald</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
   } else if (o.mode === "tavern") {
-    body = `<div class="layout"><section></section>${sidebar(o)}</div>`;
+    body = `<div class="layout tavern-layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {
     const pausedPickup =
       o.mode === "item" && tutorialGuide(game)?.kind === "note";

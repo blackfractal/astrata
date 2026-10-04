@@ -1,5 +1,11 @@
 # Astrata implementation handoff
 
+## Latest: Tavern fits the fixed window — 2026-10-04
+
+Package2.1.2, rules/content2.1.1 unchanged, design4.151, BUILD_LOG110. Main shop overflow reproduced972px in900px stage. ui.mjs gives Tavern its own layout class; battle-layout.css budgets62px header+838px main,220px illustration, bounded service panel; Market title and Buy/Sell share a row. All ordinary stock and purchase controls fit without scroll at four presets1280–1920. Long owned-card/Scribe/Jeweler lists scroll locally, navigation/Leave fixed; readable text retained. No other screen/rules changes.
+
+Isolated GUI verifies all four buy categories (including six longest equipment descriptions), View/Buy, long Sell/Grimoire scroll and every service; reports/shop-fit-verification.json and screenshots/shop-fit. Existing setting-drop checks pass, no renderer errors. No new rules/AI batch for CSS-only geometry. App/ZIP rebuilt; restart normal game. Live save unchanged. Prior2.1.0 boss-demo controller remains independent; do not automatically resume it.
+
 ## Latest: Corruption feedback, one-turn Fire mines and late-cycle pressure — 2026-10-04
 
 Package/rules/content2.1.1, design4.150, planning0.8, BUILD_LOG109. Every newly created Mind Mine, including Censer, has one full player response turn and20Fire uncovered damage. Placement phase does not decrement it; next enemy phase detonates. Covered destroys top only. Existing saved mines retain their fuse/damage/element (legacy missing element=Arcane). Mine explosion precedes card disappearance; uncovered attack travels from space through normal defense choices.
