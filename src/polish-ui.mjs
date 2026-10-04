@@ -120,7 +120,11 @@ function effect(c, slot, ctx) {
       f.ward
         ? `Ward +${corruptionPower(ctx.o.battle, slot, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0))}`
         : null,
-      f.mend ? (c.mending ? "Mending · next turn" : "Mend this space") : null,
+      f.mend
+        ? c.mending
+          ? `Mending · ${Math.max(1, c.mending.due - ctx.o.battle.turn)} turns`
+          : "Mend this/adjacent space"
+        : null,
       f.stitch ? "Cleanse this space" : null,
       f.heal ? `Heal ${f.heal}` : null,
       f.selfGrowth ? `+${f.selfGrowth} HP` : null,
@@ -152,6 +156,10 @@ function whyDisabled(ctx, c, i) {
   const b = ctx.o.battle,
     d = cards[c.id];
   if (c.zeroWard) return DEPLETED_WARD_TEXT;
+  if (c.mending)
+    return (
+      "Mending · " + Math.max(1, c.mending.due - b.turn) + " turns remaining"
+    );
   if (!remaining(ctx, c, i)) return "Activation allowance exhausted";
   if (c.freeze >= b.turn) return "Frozen";
   if (!d.blink && c.lastActivatedTurn === b.turn)
@@ -459,6 +467,7 @@ function activationChooser(ctx, slot, dragging = false) {
     for (const field of [
       "element",
       "cardTarget",
+      "repairKind",
       "newElement",
       "destination",
       "target",
@@ -467,7 +476,10 @@ function activationChooser(ctx, slot, dragging = false) {
       const values = [...new Set(filtered.map((a) => a[field]))].filter(
         (v) => v != null,
       );
-      if (!values.length || (field === "element" && values.length === 1)) {
+      if (
+        !values.length ||
+        (["element", "repairKind"].includes(field) && values.length === 1)
+      ) {
         selected.add(field);
         continue;
       }
@@ -492,7 +504,10 @@ function activationChooser(ctx, slot, dragging = false) {
     const label = {
       element: "Choose an attunement card",
       target: "Choose an enemy",
-      cardTarget: "Choose a card",
+      cardTarget: cards[ctx.o.battle.grid[slot].at(-1).id].effects.mend
+        ? "Choose a Corruption on this or an adjacent space"
+        : "Choose a card",
+      repairKind: "Choose which Corruption to repair",
       destination: "Choose an empty slot",
       newElement: "Choose an element",
     }[stage];
@@ -516,7 +531,7 @@ function activationChooser(ctx, slot, dragging = false) {
     } else if (stage === "target") {
       for (const value of values)
         mark(ctx.app.querySelector(`[data-enemy-uid="${value}"]`), value);
-    } else if (stage === "newElement") {
+    } else if (stage === "newElement" || stage === "repairKind") {
       for (const value of values) {
         const el = document.createElement("button");
         el.textContent = value;

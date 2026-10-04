@@ -84,7 +84,7 @@ try {
       if (step === "covered")
         assert.ok(await p.locator(".corruption-covered").count());
       if (step === "delay")
-        assert.equal(await p.locator(".mending-ribbon").count(), 1);
+        assert.equal(await p.locator(".mending-ribbon").count(), 0);
     }
     if (
       step === "independent" &&
@@ -100,7 +100,11 @@ try {
     else if (a.type === "activate") {
       const el = p.locator('[data-activate-slot="' + a.slot + '"]');
       if (a.target != null) await el.dblclick();
-      else await el.click();
+      else {
+        await el.click();
+        if (a.cardTarget != null)
+          await p.locator('[data-slot="' + a.cardTarget + '"]').click();
+      }
     } else if (["block", "ward", "intercept"].includes(a.type))
       await p.locator('[data-slot="' + a.slot + '"]').click();
     else if (["bracelet", "armor"].includes(a.type))

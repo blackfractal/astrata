@@ -64,7 +64,7 @@ test("Delayed normal Corruptors threaten multiple spaces and attack while markin
   )) {
     for (const t of d.rotation) {
       if (t.markCorruption || t.applyCorruption)
-        assert.ok(t.damage > 0, d.name);
+        assert.ok(t.damage > 0 || t.sequence?.length || t.disrupt, d.name);
       if (t.markCorruption && !d.openingCorruption)
         assert.ok(t.count >= 2, d.name);
     }

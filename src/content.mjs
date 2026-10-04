@@ -5,10 +5,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.0.7",
-  content: "2.0.8",
+  rules: "2.1.0",
+  content: "2.1.0",
   observation: 2,
-  actions: 5,
+  actions: 6,
 };
 export const DEPLETED_WARD_TEXT =
   "Depleted: fully depleted wards cannot activate.";
@@ -1796,6 +1796,9 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  blackBile: "The forest swallowed its sickness. You could not.",
+  bombadier: "His Majesty announced the finale. The fuses applauded.",
+  trickster: "The last place you expected was where you stood.",
   mendingWarden: "The thread slipped. The lesson can begin again.",
   seamstress: "She found a loose thread. It was yours.",
   censer: "The incense rose. The traveler did not.",

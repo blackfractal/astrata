@@ -1,6 +1,9 @@
 import { cards, enemies, items, events } from "./content.mjs";
 
 export const achievements = [
+  { id: "defeat-blackBile", name: "Defeat The Black Bile", enemy: "blackBile" },
+  { id: "defeat-bombadier", name: "Defeat King Bombadier", enemy: "bombadier" },
+  { id: "defeat-trickster", name: "Defeat The Trickster", enemy: "trickster" },
   {
     id: "defeat-seamstress",
     name: "Defeat the Seamstress of Absence",

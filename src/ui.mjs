@@ -166,6 +166,17 @@ function tellText(t) {
       ? `${t.damage || 0} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
       : "",
     t.randomElement ? "Change element randomly" : "",
+    t.sequence
+      ? t.sequence.map((x) => x.damage + " " + x.element).join(" → ")
+      : "",
+    t.antiElemental
+      ? "Counters your largest elemental Guard total; ties → Arcane"
+      : "",
+    t.disrupt
+      ? "Wrap whole " +
+        (t.disrupt === "H" ? "row right" : "column down") +
+        " 2 spaces; Holes destroy, Hypnosis compels"
+      : "",
     t.markCorruption
       ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + 1 " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
       : "",

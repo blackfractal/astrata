@@ -1,7 +1,16 @@
+import { startLoomTutorial, LOOM_TUTORIAL } from "./loom-tutorial.mjs";
+import {
+  refreshBossPlans,
+  resolveBile,
+  phasePlan,
+  disrupt,
+  antiElement,
+} from "./loom-bosses.mjs";
 import { STRATA } from "./strata.mjs";
 import {
   canEnter,
-  canMend,
+  repairTargets,
+  mend,
   corruptionAt,
   corruptionPower,
   resetCoveredInsanity,
@@ -543,12 +552,28 @@ function normalizeLoomRotations(s) {
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
 }
 
+function normalizeLoomRoster(s) {
+  const map = {
+    seamstress: "blackBile",
+    censer: "bombadier",
+    borrowedChoir: "trickster",
+  };
+  if ((s.stratum || 1) === 2 && map[s.archon]) {
+    s.archon = map[s.archon];
+    if (map[s.revealedArchon]) s.revealedArchon = map[s.revealedArchon];
+    for (const e of s.field?.entities || [])
+      if (e.type === "Archon" && map[e.enemy]) e.enemy = map[e.enemy];
+    // Already-started legacy boss battles retain their identity and boss reward.
+  }
+  if (s.checkpoint) normalizeLoomRoster(s.checkpoint);
+}
 function normalizeInitialWards(s) {
   for (const c of s.battle?.grid.flat() || [])
     if (
       cards[c.id]?.type === "Ward" &&
       c.ward === 0 &&
       !c.zeroWard &&
+      !c.mending &&
       c.used === 0
     )
       c.ward = 1;
@@ -561,6 +586,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.0.7",
           "2.0.6",
           "2.0.5",
           "2.0.4",
@@ -633,8 +659,10 @@ export class Game {
       normalizeCardCaps(this.s);
       normalizeCharges(this.s);
       normalizeEquipmentHealing(this.s);
+      normalizeLoomRoster(this.s);
       normalizeLoomRotations(this.s);
       normalizeInitialWards(this.s);
+      refreshBossPlans(this);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -702,6 +730,18 @@ export class Game {
       this.normalizeRewards();
       this.normalizeShop();
       this.normalizeSpawns();
+      if (
+        this.s.tutorial?.id === "stratum2" &&
+        this.s.tutorial.version < LOOM_TUTORIAL.version &&
+        !this.s.tutorial.completed
+      ) {
+        if (this.s.tutorial.lesson !== "independent") {
+          startLoomTutorial(this);
+          this.log(
+            "The Mending Ground restarts to teach the new three-use, adjacent Mend rules.",
+          );
+        } else this.s.tutorial.version = LOOM_TUTORIAL.version;
+      }
       if (this.s.mode === "battle" && !this.s.tutorial)
         this.s.checkpoint = clone(this.s);
       return;
@@ -1741,6 +1781,7 @@ export class Game {
     const b = this.s.battle;
     this.refillResources();
     b.phase = "place";
+    refreshBossPlans(this);
     b.revealInsight = b.insight;
     b.next = { focus: 0, insight: 0 };
     b.hand = [];
@@ -1778,6 +1819,9 @@ export class Game {
       t.name += " · Corruption follows your first turn";
     }
     if (t.currentElement) t.element = e.element;
+    if (t.antiElemental && this.s.battle) Object.assign(t, antiElement(this));
+    if (t.disrupt && this.s.battle)
+      t.phasePlan = phasePlan(this.s.battle, e, t.disrupt);
     // Forecast from the current board; enemyAction snapshots this before grid effects.
     if (t.damagePerEmpty) {
       const targets = this.s.battle ? gridTargets(this.s.battle, t) : [];
@@ -1956,6 +2000,8 @@ export class Game {
           e.purifyPending = ["burn", "poison", "corrode"].some(
             (k) => e.status[k] > 0,
           );
+        if (enemies[e.id].bile) resolveBile(this, e);
+        if (t.disrupt) disrupt(this, e, t.phasePlan);
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.applyCorruption) applyCorruptions(this, e);
         if (t.grid) this.gridAttack(t, e);
@@ -1989,6 +2035,15 @@ export class Game {
                 t.allyStatus && allies.length ? allies[0].i : null,
               );
             }
+        if (t.sequence)
+          b.jobs.unshift(
+            ...t.sequence.map((hit) => ({
+              kind: "hit",
+              ...hit,
+              name: t.name,
+              source: e.uid,
+            })),
+          );
         if (t.damage)
           b.jobs.unshift(
             ...Array.from({ length: t.hits || 1 }, () => ({
@@ -2478,17 +2533,8 @@ export class Game {
       if (c.lastActivated === b.turn - 1) c.magnified = true;
       c.lastActivated = b.turn;
     }
-    if (f.mend) {
-      const q = corruptionAt(b, i);
-      if (canMend(c, q))
-        c.mending = {
-          slot: i,
-          corruptionUid: q.uid,
-          kind: q.kind,
-          due: b.turn + 1,
-        };
-    }
-    if (f.stitch && canMend({ upgrade: false }, corruptionAt(b, i)))
+    if (f.mend) mend(this, c, i, a.cardTarget ?? i, a.repairKind);
+    if (f.stitch && ["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
       delete b.corruptions[i];
     if (f.ward) c.ward += corruptionPower(b, i, f.ward + bonus);
     if (f.shield) {
@@ -3426,8 +3472,9 @@ export class Game {
             d.channel > b.channel ||
             !this.activationAvailable(c, i) ||
             !this.condition(c, i) ||
-            (f.mend && !canMend(c, corruptionAt(b, i))) ||
-            (f.stitch && !canMend({ upgrade: false }, corruptionAt(b, i)))
+            (f.mend && !repairTargets(this, c, i).length) ||
+            (f.stitch &&
+              !["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
           )
             continue;
           const els = attunementElements(b, c, i);
@@ -3440,7 +3487,7 @@ export class Game {
             !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode)
               ? [null]
               : b.enemies.filter((e) => e.hp > 0).map((e) => e.uid);
-          let extras = [{}];
+          let extras = f.mend ? repairTargets(this, c, i) : [{}];
           if (f.transmute)
             extras = b.grid.flatMap((slot, j) =>
               top(slot)
@@ -3992,6 +4039,7 @@ export class Game {
     }
     if (s.checkpoint && challenge)
       s.checkpoint.stats.withoutMenders = clone(challenge);
+    refreshBossPlans(this);
     tutorialAfter(this, a);
     return this.observe();
   }

@@ -8,11 +8,16 @@ export const STRATA = {
 export const ELVES_STORY =
   "The path ends at a tear in the ground. Three small figures kneel beside it, passing a silver thread through places your eyes cannot follow. One pulls; the far bank draws close. They pack their needles when they see you. The smallest points at your grimoire, then at the damaged path ahead. You open the book. They climb inside.";
 export const CORRUPTIONS = {
+  bile: {
+    name: "Bile",
+    symbol: "◒",
+    text: "Moves between spaces without a trail. Arrival spends one remaining activation of the top card. One Bile acts each enemy round: left-edge Poison 2 first, otherwise the leftmost movable Bile moves up/down or diagonally left; otherwise a new glob hits the rightmost eligible card. Machine Elves intercept and remove it, spending one use. Can coexist with another Corruption.",
+  },
   hole: {
+    repairTurns: 2,
     name: "Memory Hole",
     symbol: "◉",
-    advanced: true,
-    text: "This space cannot accept cards. Upgraded Machine Elves are the exception: place them here and Mend to repair it.",
+    text: "This space cannot accept cards. Machine Elves can enter. Mend takes two turns, or one when upgraded.",
   },
   nausea: {
     name: "Nausea",
@@ -28,13 +33,14 @@ export const CORRUPTIONS = {
     name: "Mind Mine",
     symbol: "✹",
     advanced: true,
-    text: "Explodes after three full player turns. Uncovered: 18 Arcane damage through the normal defense chain. Covered: destroys only the top card instead. Covering does not pause the fuse.",
+    text: "Explodes after three full player turns. Uncovered: 18 Arcane damage through the normal defense chain. Covered: destroys only the top card instead. Covering does not pause the fuse. Bombadier mines instead deal 20 after two full player turns. Machine Elves defuse immediately.",
   },
   hypnosis: {
+    repairTurns: 2,
     name: "Hypnosis",
     symbol: "◎",
     advanced: true,
-    text: "At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Charging cards gain a charge instead. Once-per-turn activation still applies. Machine Elves and utility-only cards cannot be compelled.",
+    text: "At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Charging cards gain a charge instead. Once-per-turn activation still applies. Machine Elves and utility-only cards cannot be compelled. Displacement onto Hypnosis compels immediately, even after a normal activation, but never twice that enemy round. Mend takes two turns, or one when upgraded.",
   },
 };
 
@@ -45,16 +51,16 @@ export function registerStratum2(card, enemy, glossary) {
     "Arcane",
     "Ally",
     1,
-    1,
+    3,
     { mend: true },
-    "Mend: repair the Corruption beneath this card at the start of your next turn, then return to discard. Must survive. Repairs Nausea and Insanity; upgraded, also Memory Hole, Mind Mine and Hypnosis. Place only on a repairable Corruption.",
+    "Mend: choose this space or an orthogonally adjacent Corruption. Three uses; one per turn. Most repairs are immediate; Memory Hole and Hypnosis take two turns (upgraded: one). May be placed anywhere, including Holes. Remains between repairs; returns to discard after the final successful repair. Intercepts Bile, spending one use to remove it.",
     {
       stratum: 2,
       companion: true,
       hp: 4,
       upgrade: {
         gold: 100,
-        text: "Also repairs Memory Hole, Mind Mine and Hypnosis. Can enter Memory Holes.",
+        text: "Strong repairs take one turn instead of two.",
       },
     },
   );
@@ -284,55 +290,141 @@ export function registerStratum2(card, enemy, glossary) {
   add(
     "seamstress",
     "Seamstress of Absence",
-    "Archon",
+    "Eidolon",
     "Light",
-    190,
-    "Archon",
+    110,
+    "Stalker",
     [
       {
         ...mark("hole", 2),
         alsoCorruption: "nausea",
-        ...hit("Silver needles", 9, "Light", { hits: 2 }),
+        ...hit("Silver needles", 7, "Light", { hits: 2 }),
       },
-      { ...apply("hole"), ...hit("Cut the seam", 13, "Light") },
-      { ...hit("Fold inward", 9, "Light"), guard: 10 },
-      hit("Unravel", 15, "Light"),
+      { ...apply("hole"), ...hit("Cut the seam", 11, "Light") },
+      { ...hit("Fold inward", 7, "Light"), guard: 10 },
+      hit("Unravel", 13, "Light"),
     ],
     "Marks two Memory Holes and one Nausea while attacking. Maximum five active Corruptions.",
     "Redirect Hole marks. Cover Nausea; preserve a flexible formation.",
-    { corruptionCap: 5, bossMode: "stalker" },
+    { corruptionCap: 5 },
   );
   add(
     "censer",
     "Censer Engine",
-    "Archon",
+    "Eidolon",
     "Fire",
-    210,
-    "Archon",
+    120,
+    "Stalker",
     [
-      { ...apply("mine"), ...hit("Furnace breath", 10, "Fire") },
-      hit("Bellows", 8, "Fire", { hits: 2 }),
-      { ...mark("mine", 2), ...hit("Stoke the fuse", 11, "Fire") },
+      { ...apply("mine"), ...hit("Furnace breath", 8, "Fire") },
+      hit("Bellows", 6, "Fire", { hits: 2 }),
+      { ...mark("mine", 2), ...hit("Stoke the fuse", 9, "Fire") },
     ],
     "Plants one Mind Mine with its first attack, then marks two while attacking. Three full response turns per fuse; maximum three Mines. Uncovered explosion: 18 Arcane; covered: sacrifice the top card.",
     "Use spent cards as covers, or repair early with upgraded Elves.",
-    { corruptionCap: 3, bossMode: "stalker", openingCorruption: mark("mine") },
+    { corruptionCap: 3, openingCorruption: mark("mine") },
   );
   add(
     "borrowedChoir",
     "Choir of Borrowed Hands",
-    "Archon",
+    "Eidolon",
     "Chaos",
-    180,
-    "Archon",
+    100,
+    "Hunter",
     [
-      { ...mark("hypnosis", 2), ...hit("Invitation", 9, "Chaos") },
-      { ...apply("hypnosis"), ...hit("Borrowed chorus", 9, "Chaos") },
-      hit("Marionette hymn", 11, "Chaos"),
+      { ...mark("hypnosis", 2), ...hit("Invitation", 7, "Chaos") },
+      { ...apply("hypnosis"), ...hit("Borrowed chorus", 7, "Chaos") },
+      hit("Marionette hymn", 9, "Chaos"),
     ],
     "Marks up to two useful attack or defense cards while attacking. Hypnosis spends their normal uses on enemy turns and remains until repaired or battle ends. Maximum two active spaces.",
     "Activate the marked card first, Recall it, or let its allowance run out. Clear the space and repair with upgraded Machine Elves; recalling a card does not remove Hypnosis.",
-    { corruptionCap: 2, bossMode: "hunter" },
+    { corruptionCap: 2 },
+  );
+  add(
+    "blackBile",
+    "The Black Bile",
+    "Archon",
+    "Earth",
+    230,
+    "Archon",
+    [
+      { ...mark("nausea", 4), ...hit("Sickening flood", 10, "Earth") },
+      { ...apply("nausea"), ...hit("Burning bile", 12, "Fire", { burn: 2 }) },
+      hit("Churn", 15, "Earth"),
+      hit("Acrid breath", 10, "Fire", { burn: 1 }),
+    ],
+    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. Nausea spreads four spaces per cast, maximum twelve.",
+    "Read Bile's moving warning. Break the route, spend a threatened activation, or intercept with Machine Elves. Bile may share a Nausea space.",
+    { corruptionCap: 12, bile: true, bossMode: "stalker" },
+  );
+  add(
+    "bombadier",
+    "King Bombadier",
+    "Archon",
+    "Fire",
+    240,
+    "Archon",
+    [
+      { ...apply("mine"), ...hit("Royal bombardment", 10, "Fire") },
+      { ...mark("hole", 2), ...hit("Excavation", 12, "Arcane") },
+      {
+        ...apply("hole"),
+        name: "Deconstructed Steam",
+        element: "Fire",
+        sequence: [
+          { damage: 8, element: "Fire" },
+          { damage: 10, element: "Water" },
+          { damage: 12, element: "Wind" },
+        ],
+        fixedDamage: true,
+      },
+      { ...mark("mine", 2), ...hit("Light the fuses", 12, "Fire") },
+    ],
+    "Telegraphs two bombs at battle start. Bombs explode for 20 Arcane after two full player turns; covering sacrifices the top card instead. Machine Elves defuse immediately. Also creates Memory Holes. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
+    "Defuse or cover the bombs; prepare different elements for each Steam hit. Memory Holes take two turns to Mend, one when upgraded.",
+    {
+      corruptionCap: 10,
+      mineCap: 4,
+      mineTurns: 2,
+      mineDamage: 20,
+      openingCorruption: mark("mine", 2),
+      bossMode: "stalker",
+    },
+  );
+  add(
+    "trickster",
+    "The Trickster",
+    "Archon",
+    "Chaos",
+    220,
+    "Archon",
+    [
+      {
+        ...mark("hypnosis", 2),
+        ...hit("False face", 15, "Chaos", { fixedDamage: true }),
+      },
+      {
+        ...apply("hypnosis"),
+        ...hit("Dazzle", 15, "Light", { fixedDamage: true }),
+      },
+      {
+        ...mark("hole", 2),
+        name: "Phase disruption H",
+        disrupt: "H",
+        element: "Chaos",
+      },
+      {
+        ...apply("hole"),
+        ...hit("Anti-elemental", 15, "Arcane", {
+          antiElemental: true,
+          fixedDamage: true,
+        }),
+      },
+      { name: "Phase disruption V", disrupt: "V", element: "Chaos" },
+    ],
+    "Creates Hypnosis and Memory Holes (eight active spaces maximum). Phase disruption moves the committed fullest row right two or column down two, wrapping whole stacks. Holes destroy arriving stacks; Hypnosis compels immediately. Anti-elemental counters the unique largest elemental Guard total, including equipment; ties use Arcane.",
+    "Read the committed line and landing spaces. Balance elemental Guard before Anti-elemental; its live Tell updates. Ordinary once-per-turn activation does not protect a card forcibly moved onto Hypnosis.",
+    { corruptionCap: 8, bossMode: "hunter" },
   );
   add(
     "mendingTutor",
@@ -365,6 +457,10 @@ export function registerStratum2(card, enemy, glossary) {
     { tutorialOnly: true, corruptionCap: 1 },
   );
   for (const def of Object.values(CORRUPTIONS)) glossary[def.name] = def.text;
+  glossary["Anti-elemental"] =
+    "Trickster attacks the counter to your unique largest elemental Guard total, including Wards and socketed equipment. Tied leaders or only Arcane Guard produce Arcane. The Tell updates as your defenses change.";
+  glossary["Phase disruption"] =
+    "Trickster moves a committed row right two or column down two, wrapping whole stacks. Holes destroy arriving stacks; Hypnosis compels the top card immediately, even after its normal activation.";
   glossary.Mend =
-    "Machine Elves spend one activation, survive through the enemy round, then repair their space and return to discard at the next player turn. Freeze delays completion.";
+    "Machine Elves have three uses, one per player turn. Mend this space or one orthogonally adjacent space. Ordinary repairs are immediate; Memory Hole/Hypnosis take two player-turn starts, or one upgraded. Freeze delays completion. After the final successful repair, return to discard.";
 }

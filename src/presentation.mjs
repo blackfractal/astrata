@@ -401,6 +401,94 @@ export async function playFrames(before, frames, after, render, isFast) {
           skip: () => skip,
         });
         render(frame.state);
+      } else if (frame.kind === "bileMove") {
+        await flash(
+          frame.to === "player" ? player() : card(frame.to),
+          "Bile",
+          false,
+          frame.from == null ? enemy(frame.source) : card(frame.from),
+          "Poison",
+        );
+        render(frame.state);
+      } else if (frame.kind === "phaseShift") {
+        const ghosts = [];
+        for (const m of frame.moves) {
+          const a = card(m.from),
+            z = card(m.to);
+          if (!a || !z) continue;
+          const ar = a.getBoundingClientRect(),
+            zr = z.getBoundingClientRect();
+          const ghost = a.cloneNode(true);
+          ghost.className += " phase-moving-card";
+          ghost
+            .querySelectorAll(
+              ".corruption-card,.corruption-seal,.corruption-foretell,.bile-seal,.bile-warning,.phase-label,.mending-ribbon,.nausea-warning",
+            )
+            .forEach((el) => el.remove());
+          for (const cls of [...ghost.classList])
+            if (
+              cls.startsWith("corruption") ||
+              [
+                "corrupted",
+                "has-bile",
+                "bile-destination",
+                "phase-warning",
+              ].includes(cls)
+            )
+              ghost.classList.remove(cls);
+          Object.assign(ghost.style, {
+            position: "fixed",
+            left: ar.left + "px",
+            top: ar.top + "px",
+            width: ar.width + "px",
+            height: ar.height + "px",
+            margin: "0",
+            zIndex: "9999",
+            pointerEvents: "none",
+          });
+          document.body.append(ghost);
+          const end = {
+            transform: reduced
+              ? "none"
+              : `translate(${zr.left - ar.left}px,${zr.top - ar.top}px)`,
+            opacity: 1,
+          };
+          let keys = [{ transform: "translate(0,0)", opacity: 1 }, end];
+          if (!reduced && m.to < m.from) {
+            const rect = find(".mind").getBoundingClientRect();
+            const horizontal = frame.axis === "H";
+            keys = [
+              keys[0],
+              {
+                transform: horizontal
+                  ? `translate(${rect.right - ar.left}px,0)`
+                  : `translate(0,${rect.bottom - ar.top}px)`,
+                opacity: 0,
+                offset: 0.49,
+              },
+              {
+                transform: horizontal
+                  ? `translate(${rect.left - ar.left - ar.width}px,0)`
+                  : `translate(0,${rect.top - ar.top - ar.height}px)`,
+                opacity: 0,
+                offset: 0.5,
+              },
+              end,
+            ];
+          }
+          const anim = ghost.animate(keys, {
+            duration: ms(650),
+            fill: "forwards",
+            easing: "ease-in-out",
+          });
+          ghosts.push({ ghost, anim });
+        }
+        await pause(700);
+        for (const { ghost, anim } of ghosts) {
+          anim.cancel();
+          ghost.remove();
+        }
+        render(frame.state);
       } else if (frame.kind === "corruption") {
         render(frame.state);
         const targets = (frame.slots || [frame.slot]).map(card).filter(Boolean);

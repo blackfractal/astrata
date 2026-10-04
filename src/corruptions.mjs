@@ -9,12 +9,12 @@ export function corruptionAt(b, i) {
   return b.corruptions?.[i] || null;
 }
 export function canMend(c, corruption) {
-  return !!corruption && (c.upgrade || !CORRUPTIONS[corruption.kind].advanced);
+  return !!corruption && !!CORRUPTIONS[corruption.kind];
 }
 export function canEnter(b, c, i) {
   const q = corruptionAt(b, i);
   if (top(b.grid[i])?.mending) return false;
-  if (c.id === "elves") return !b.grid[i].length && canMend(c, q);
+  if (c.id === "elves") return !b.grid[i].length;
   return q?.kind !== "hole";
 }
 export function corruptionPower(b, i, power) {
@@ -42,6 +42,16 @@ export function prepareCorruption(g, e, t) {
   ];
   for (const kind of kinds) {
     if (room-- <= 0) break;
+    if (
+      kind === "mine" &&
+      e.mineCap &&
+      Object.values(b.corruptions).filter(
+        (q) => q.source === e.uid && q.kind === "mine",
+      ).length +
+        e.corruptionPlan.filter((p) => p.kind === "mine").length >=
+        e.mineCap
+    )
+      continue;
     let candidates = b.grid.flatMap((stack, i) => {
       if (
         b.corruptions[i] ||
@@ -120,7 +130,8 @@ export function applyCorruptions(g, e) {
       uid: g.uid(),
       source: e.uid,
       value: 1,
-      remaining: 3,
+      remaining: e.mineTurns || 3,
+      damage: e.mineDamage || 18,
       createdTurn: b.turn,
     };
     g.log(CORRUPTIONS[kind].name + " corrupts a space.");
@@ -190,36 +201,66 @@ export function retargetCoveredCorruptions(g, covered) {
     }
   }
 }
+export function repairTargets(g, c, i) {
+  if (c.mending) return [];
+  const b = g.s.battle;
+  return [i, ...neighbors(i)].flatMap((slot) => [
+    ...(b.biles?.[slot] ? [{ cardTarget: slot, repairKind: "bile" }] : []),
+    ...(canMend(c, b.corruptions?.[slot])
+      ? [{ cardTarget: slot, repairKind: b.corruptions[slot].kind }]
+      : []),
+  ]);
+}
+function completeRepair(g, c, i, m) {
+  const b = g.s.battle,
+    layer = m.kind === "bile" ? b.biles : b.corruptions;
+  if (layer?.[m.slot]?.uid !== m.corruptionUid) return false;
+  delete layer[m.slot];
+  (g.s.stats.repairs ||= []).push({
+    stratum: g.s.stratum,
+    turn: b.turn,
+    slot: m.slot,
+    kind: m.kind,
+    card: c.uid,
+  });
+  g.present("corruption", {
+    slot: m.slot,
+    name: "Mended · " + CORRUPTIONS[m.kind].name,
+  });
+  g.log("Machine Elves repair " + CORRUPTIONS[m.kind].name + ".");
+  if (g.allowance(c, i) <= 0) {
+    b.grid[i] = b.grid[i].filter((x) => x.uid !== c.uid);
+    b.discard.push({ id: c.id, uid: c.uid, upgrade: c.upgrade });
+    g.log("Their final repair complete, Machine Elves return to discard.");
+  }
+  return true;
+}
+export function mend(g, c, i, target = i, kind = null) {
+  const b = g.s.battle;
+  const q = kind === "bile" ? b.biles?.[target] : b.corruptions?.[target];
+  if (!canMend(c, q) || ![i, ...neighbors(i)].includes(target)) return;
+  const delay = Math.max(
+    0,
+    (CORRUPTIONS[q.kind].repairTurns || 0) - (c.upgrade ? 1 : 0),
+  );
+  const job = {
+    slot: target,
+    corruptionUid: q.uid,
+    kind: q.kind,
+    due: b.turn + delay,
+  };
+  if (delay) c.mending = job;
+  else completeRepair(g, c, i, job);
+}
 export function startRepairs(g) {
   const b = g.s.battle;
   for (const [i, stack] of b.grid.entries()) {
     const c = top(stack),
       m = c?.mending;
     if (!m || m.due > b.turn || c.freeze >= b.turn) continue;
-    const q = corruptionAt(b, i);
-    if (m.slot !== i || (q && q.uid !== m.corruptionUid)) {
-      delete c.mending;
-      continue;
-    }
-    delete b.corruptions[i];
-    stack.pop();
-    b.discard.push({ id: c.id, uid: c.uid, upgrade: c.upgrade });
-    (g.s.stats.repairs ||= []).push({
-      stratum: g.s.stratum,
-      turn: b.turn,
-      slot: i,
-      kind: m.kind,
-      card: c.uid,
-    });
-    g.present("corruption", {
-      slot: i,
-      name: "Mended · Elves return to discard",
-    });
-    g.log(
-      "Machine Elves mend " +
-        CORRUPTIONS[m.kind].name +
-        " and return to discard.",
-    );
+    delete c.mending;
+    // The repair is committed to a space, but must remain within reach.
+    if ([i, ...neighbors(i)].includes(m.slot)) completeRepair(g, c, i, m);
   }
   resetCoveredInsanity(b);
   for (const [i, q] of Object.entries(b.corruptions || {})) {
@@ -256,55 +297,60 @@ export function corruptionRound(g) {
         b.jobs.unshift({
           kind: "hit",
           name: "Mind Mine",
-          damage: 18,
+          damage: q.damage || 18,
           element: "Arcane",
           gridSourceSlot: i,
           source: q.source,
         });
     }
-    if (
-      q.kind !== "hypnosis" ||
-      !c ||
-      !g.activationAvailable(c, i) ||
-      !g.condition(c, i)
-    )
-      continue;
-    const d = cards[c.id],
-      f = d.effects,
-      source = b.enemies.find((e) => e.uid === q.source && e.hp > 0);
-    if (
-      !source ||
-      !(f.damage || f.hpDamage || f.randomDamage || f.shield || f.ward)
-    )
-      continue;
-    c.used++;
-    c.lastActivatedTurn = b.turn;
-    g.present("corruption", { slot: i, name: "Hypnosis · " + d.name });
-    if (d.charge && c.charge < d.charge) {
-      c.charge = Math.min(d.charge, c.charge + 1);
-      continue;
-    }
-    if (d.charge) c.charge = 0;
-    const damage = f.randomDamage
-      ? corruptionPower(b, i, 1 + Math.floor(g.rand() * f.randomDamage))
-      : g.cardPower(c, i);
-    if (damage)
-      b.jobs.unshift({
-        kind: "hit",
-        name: "Hypnosis · " + d.name,
-        damage,
-        element: c.lastActivationElement || c.element,
-        source: q.source,
-        gridSourceSlot: i,
-      });
-    if (f.shield || f.ward)
-      source.guard += f.shield
-        ? g.shieldPower(c, i)
-        : corruptionPower(
-            b,
-            i,
-            f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0),
-          );
-    if (d.destroyAfterActivation) g.destroyCard(i, c.uid);
+    if (q.kind === "hypnosis") compelCard(g, i, q);
   }
+}
+
+export function compelCard(g, i, q, forced = false) {
+  const b = g.s.battle,
+    c = top(b.grid[i]);
+  if (
+    !c ||
+    c.hypnosisTurn === b.turn ||
+    !g.condition(c, i) ||
+    !(forced
+      ? g.allowance(c, i) > 0 && !c.zeroWard && c.freeze < b.turn
+      : g.activationAvailable(c, i))
+  )
+    return;
+  const d = cards[c.id],
+    f = d.effects,
+    source = b.enemies.find((e) => e.uid === q.source && e.hp > 0);
+  if (
+    !source ||
+    !(f.damage || f.hpDamage || f.randomDamage || f.shield || f.ward)
+  )
+    return;
+  c.hypnosisTurn = b.turn;
+  c.used++;
+  c.lastActivatedTurn = b.turn;
+  g.present("corruption", { slot: i, name: "Hypnosis · " + d.name });
+  if (d.charge && c.charge < d.charge) {
+    c.charge = Math.min(d.charge, c.charge + 1);
+    return;
+  }
+  if (d.charge) c.charge = 0;
+  const damage = f.randomDamage
+    ? corruptionPower(b, i, 1 + Math.floor(g.rand() * f.randomDamage))
+    : g.cardPower(c, i);
+  if (damage)
+    b.jobs.unshift({
+      kind: "hit",
+      name: "Hypnosis · " + d.name,
+      damage,
+      element: c.lastActivationElement || c.element,
+      source: q.source,
+      gridSourceSlot: i,
+    });
+  if (f.shield || f.ward)
+    source.guard += f.shield
+      ? g.shieldPower(c, i)
+      : corruptionPower(b, i, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0));
+  if (d.destroyAfterActivation) g.destroyCard(i, c.uid);
 }

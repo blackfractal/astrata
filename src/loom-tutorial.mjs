@@ -1,7 +1,7 @@
 import { ELVES_STORY } from "./strata.mjs";
 export const LOOM_TUTORIAL = {
   id: "stratum2",
-  version: 1,
+  version: 2,
   name: "The Mending Ground",
   seed: 22002,
 };
@@ -59,7 +59,7 @@ export const LOOM_STEPS = [
   action(
     "menders",
     "Send the Machine Elves",
-    "Place the Elves directly on Nausea. Their 4 HP makes them vulnerable. They can only enter a Corruption they can repair.",
+    "Place the Elves on Nausea. They have 4 HP and three Mend activations. They can stand anywhere and repair their own space or a north, east, south or west neighbor.",
     { type: "place", card: "elves", slot: 14 },
   ),
   action("phase2", "Prepare to Mend", "Advance to Activation.", {
@@ -68,74 +68,74 @@ export const LOOM_STEPS = [
   action(
     "mend",
     "Mend",
-    "Activate the Elves. Their one allowance is spent, but the repair is not finished yet.",
+    "Activate the Elves, then select their Nausea space. This ordinary repair completes immediately and spends one of their three uses.",
     { type: "activate", slot: 14 },
   ),
   note(
     "delay",
-    "Protect the repair",
-    "They must survive until your next player turn. If destroyed first, the Corruption remains and the Elves are unavailable until the next battle.",
+    "Two repairs remain",
+    "Nausea is already gone. The Elves stay on the grid with two uses left. Like other cards, they normally activate only once per turn.",
   ),
   action(
     "end2",
     "Wait one enemy round",
-    "Advance to Enemy to finish the repair.",
+    "Advance to Enemy so the Elves can activate again next turn.",
     { type: "endTurn" },
   ),
   note(
     "repaired",
     "A space restored",
-    "Nausea is gone. The Elves automatically returned to discard and can be drawn again. Their one activation renews when they return to the field.",
+    "Nausea is gone and the Elves remain ready to repair a neighboring space. After their final successful repair, they return to discard to be drawn again.",
   ),
   note(
     "insanity",
     "Insanity grows while uncovered",
-    "This spiral would cost 1 HP next turn, then 2, then 3. Covering suppresses it and resets the count. The Elves have been drawn again for this lesson.",
+    "This spiral beside the Elves would cost 1 HP next turn, then 2, then 3. Covering suppresses it and resets the count. Repair it from the neighboring space instead.",
     "insanity",
   ),
-  action(
+  note(
     "insanity-place",
-    "Cover the spiral",
-    "Place Machine Elves on Insanity. Basic Elves can repair Nausea and Insanity.",
-    { type: "place", card: "elves", slot: 20 },
+    "Repair from next door",
+    "The Elves can reach the Insanity directly below them. You do not need another placement.",
   ),
   action("phase3", "Advance", "Advance to Activation.", {
     type: "activatePhase",
   }),
   action("mend3", "Repair Insanity", "Activate Mend.", {
     type: "activate",
-    slot: 20,
+    slot: 14,
+    cardTarget: 21,
   }),
   action("end3", "Protect and wait", "Advance to Enemy.", { type: "endTurn" }),
   note(
     "hole",
-    "Memory Holes need upgraded Elves",
-    "Ordinary cards cannot enter a Memory Hole. At a Tavern, upgrade the Elves to repair advanced Corruptions. For this lesson your Elves are now upgraded and drawn again.",
+    "Stronger repairs take time",
+    "Only Machine Elves can enter a Memory Hole, but they can also repair it from beside it. Hole and Hypnosis repairs take two turns normally, one when upgraded. Your remaining Elves are now upgraded for this lesson.",
     "hole",
   ),
-  action(
+  note(
     "hole-place",
-    "The exception",
-    "Place the upgraded Elves into the Memory Hole.",
-    { type: "place", card: "elves", slot: 21 },
+    "Stay beside the Hole",
+    "Your upgraded Elves have one use left. Repair the Hole from the same neighboring space.",
   ),
   action("phase4", "Advance", "Advance to Activation.", {
     type: "activatePhase",
   }),
   action("mend4", "Stitch the void", "Activate Mend.", {
     type: "activate",
-    slot: 21,
+    slot: 14,
+    cardTarget: 21,
   }),
   action("end4", "Wait for repair", "Advance to Enemy.", { type: "endTurn" }),
   note(
     "hole-done",
     "Room to think",
-    "The Hole has vanished. You can also leave Holes alone and build elsewhere. No fight requires using the Elves.",
+    "The Hole has vanished. Their third repair complete, the Elves return to discard. Protect them during delayed repairs; dying interrupts the job. You can also leave Holes alone and build elsewhere.",
   ),
   note(
     "mine",
     "A Mind Mine",
-    "This mine has one response turn left in this demonstration. Normally it gives three full player turns. Cover it with the spare Shield: the explosion sacrifices only the top card, rather than dealing 18 Arcane damage.",
+    "This mine has one response turn left in this demonstration. Ordinary mines give three full player turns and deal 18 Arcane; Bombadier bombs give two and deal 20. Machine Elves defuse either immediately with Mend. Cover it with the spare Shield: the explosion sacrifices only the top card, rather than dealing 18 Arcane damage.",
     "mine",
   ),
   action(
@@ -333,14 +333,17 @@ export function loomAfter(g, a) {
   }
   const setup = step.setup;
   if (setup === "insanity" || setup === "hole") {
-    const slot = setup === "hole" ? 21 : 20;
+    const slot = 21;
     b.corruptions[slot] = {
       kind: setup,
       uid: g.uid(),
       source: b.enemies[0].uid,
       value: 1,
     };
-    draw(g, "elves", setup === "hole");
+    if (setup === "hole") {
+      const elf = b.grid[14].at(-1);
+      if (elf?.id === "elves") elf.upgrade = true;
+    }
   }
   if (setup === "mine") {
     b.corruptions[27] = {

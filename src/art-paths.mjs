@@ -1,4 +1,8 @@
 export const artPaths = {
+  "enemy-blackBile": "assets/enemy-blackBile.png",
+  "enemy-bombadier": "assets/enemy-bombadier.png",
+  "enemy-trickster": "assets/enemy-trickster.png",
+  "corruption-bile": "assets/corruption-bile.png",
   "enemy-mendingWarden": "assets/enemy-spoolkeeper.png",
   "enemy-mendingTutor": "assets/enemy-spoolkeeper.png",
   "card-quietStitch": "assets/card-quietStitch.png",

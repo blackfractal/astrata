@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v2.0";
+    this.id = "weighted-druid-v2.1";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -39,7 +39,13 @@ export class WeightedPolicy {
             d = cards[card?.id];
           if (q?.kind === "insanity" || q?.kind === "nausea")
             score += q.kind === "insanity" ? 14 : 7;
-          if (card?.id === "elves") score += 9;
+          if (card?.id === "elves") {
+            const spaces = [a.slot, ...adjacent(a.slot)];
+            const repairs = spaces.filter(
+              (i) => b.corruptions?.[i] || b.biles?.[i],
+            ).length;
+            score += repairs ? 8 + repairs * 3 : -12;
+          }
           if (q?.kind === "mine")
             score +=
               q.remaining <= 1
@@ -62,8 +68,12 @@ export class WeightedPolicy {
             score += 10;
         }
         if (a.type === "activate" && (a.effects.mend || a.effects.stitch)) {
-          score += 18;
-          why = "Repair the corrupted space while protecting the companion.";
+          const slot = a.cardTarget ?? a.slot;
+          const hazard =
+            a.repairKind === "bile" ? b.biles?.[slot] : b.corruptions?.[slot];
+          score +=
+            hazard?.kind === "mine" ? 25 : hazard?.kind === "bile" ? 22 : 18;
+          why = "Repair an eligible nearby Corruption with the companion.";
         }
         if (
           a.type === "recall" &&
@@ -385,7 +395,10 @@ export class WeightedPolicy {
           ];
         const target = b.enemies.find((e) => e.uid === a.target);
         const threat = b.enemies.reduce(
-          (sum, e) => sum + (e.tell.damage || 0) * (e.tell.hits || 1),
+          (sum, e) =>
+            sum +
+            (e.tell.sequence?.reduce((n, h) => n + h.damage, 0) ||
+              (e.tell.damage || 0) * (e.tell.hits || 1)),
           0,
         );
         const protectedBy =

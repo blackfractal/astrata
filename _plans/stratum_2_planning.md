@@ -1,12 +1,15 @@
 # Stratum 2 planning — The Unfinished Loom
 
-Implementation baseline 0.6 · 2026-10-04 · Jonathan / Codex
+Implementation baseline 0.7 · 2026-10-04 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md), especially §§1.4 and11.5. Jonathan authorized implementation and repository consolidation on 2026-10-04. Main design §10.12 now records the selected playable v2 rules; the earlier proposals below remain useful rationale, not competing requirements. Main-design rules take precedence. No hidden lore is exposed by the current Sapling introduction.
 
+
+**Current 2.1.0 implementation supersedes the earlier proposals below.** See main design §10.12.1 for exact cycles/timing. The Black Bile (230HP/Earth), King Bombadier (240HP/Fire), and The Trickster (220HP/Chaos) are now Archons. Seamstress/Censer/Borrowed Choir are Eidolons at110/120/100HP, two less damage per hit. Bile moves without a trail and spends one activation on arrival; Bombadier uses two-turn20-damage bombs plus Holes and an8Fire/10Water/12Wind sequence; Trickster shifts complete rows/columns two spaces with lethal Hole and immediate Hypnosis collisions, and chooses Anti-elemental against the largest elemental Guard total. Machine Elves place anywhere, have three uses and Mend self/NESW-adjacent spaces. Ordinary repairs are immediate; Hole/Hypnosis take two turns, one upgraded. Return to discard after the final successful repair. These rules replace the old one-use/placement-only/upgrade-access proposals, including the earlier stated Hole restriction. Art, tutorial, tooltips, replay sources and focused regressions are part of this delivery.
+
 ## Implementation decisions
 
-The Unfinished Loom, eight Motes, three Eidolons and three signature-Corruption Archons are implemented in astrata 2.0.0. Basic Machine Elves repair Nausea/Insanity; the 100-Gold upgrade repairs all five types and enters Memory Holes. One Corruption per space; covering a marked empty space immediately relocates its warning to another eligible space; no eligible replacement cancels the mark. Other marks remain committed, and Hypnosis requires an occupied eligible card. Mines use 18 Arcane with three full response turns; Nausea halves once, rounded down. Hypnosis borrows only direct damage/Guard components and obeys card allowance and once-per-turn. Choir of Borrowed Hands leaves Hypnosis permanently on its spaces until repaired or battle ends; it has no Release the Strings move. Its three-move cycle is Invitation (9 + mark up to two), Borrowed chorus (9 + apply), Marionette hymn (11), retaining the two-space cap and Purify. Full rules and selected boss numbers are in main design §10.12; future Shear/Wildfire proposals remain future. The independent tutorial finale is the Patient Spoolkeeper.
+The Unfinished Loom now has eight normal Motes, six Eidolons and three spatial Archons, plus tutorial opponents. The current rules and move cycles are specified in main design §10.12.1 and the update above. The Mending Ground teaches immediate adjacent repairs, three-use Elves, delayed upgraded Hole repair, Mine cover and Hypnosis; its independent finale remains Patient Spoolkeeper. Earlier one-use and upgrade-access proposals below are historical design rationale, not current requirements.
 
 ## What is confirmed
 

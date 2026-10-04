@@ -1,3 +1,4 @@
+import { phaseMoves } from "./loom-bosses.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
 import { corruptionPower } from "./corruptions.mjs";
 import { artPaths } from "./art-paths.mjs";
@@ -24,7 +25,10 @@ export function paintCorruptions(o, app) {
         d.name +
         " · " +
         (q.kind === "mine"
-          ? q.remaining + " turns left. "
+          ? q.remaining +
+            " turns left; " +
+            (q.damage || 18) +
+            " Arcane if uncovered. "
           : suppressed
             ? "Covered. "
             : "") +
@@ -35,10 +39,17 @@ export function paintCorruptions(o, app) {
       );
       if (!c) el.title = title;
     }
+    if (b.biles?.[i]) {
+      el.classList.add("has-bile");
+      el.insertAdjacentHTML(
+        "beforeend",
+        `<span class="bile-seal" data-tooltip="${esc(CORRUPTIONS.bile.text)}"><img src="${artPaths["corruption-bile"]}" alt="">Bile</span>`,
+      );
+    }
     if (c?.mending)
       el.insertAdjacentHTML(
         "beforeend",
-        '<span class="mending-ribbon" data-tooltip="Repair completes next player turn if these Elves survive.">Mending…</span>',
+        '<span class="mending-ribbon" data-tooltip="Repair completes after its remaining turns if these Elves survive and remain adjacent.">Mending…</span>',
       );
     if (c && corruptionPower(b, i, 4) < 4)
       el.insertAdjacentHTML(
@@ -57,5 +68,64 @@ export function paintCorruptions(o, app) {
         `<span class="corruption-foretell" data-tooltip="${esc(marks.map((p) => p.enemy + " will apply " + CORRUPTIONS[p.kind].name + " here on its next action.").join(" "))}">${marks.map((p) => CORRUPTIONS[p.kind].symbol).join(" ")} →</span>`,
       );
     }
+  }
+  const mind = app.querySelector(".mind");
+  if (!mind) return;
+  const arrows = [];
+  const point = (i) => {
+    const el = app.querySelector('[data-slot="' + i + '"]');
+    return el
+      ? [el.offsetLeft + el.offsetWidth / 2, el.offsetTop + el.offsetHeight / 2]
+      : null;
+  };
+  for (const e of b.enemies) {
+    const p = e.bilePlan;
+    if (p) {
+      const slot = p.to === "player" ? p.from : p.to;
+      const el = app.querySelector('[data-slot="' + slot + '"]');
+      el?.classList.add("bile-destination");
+      el?.insertAdjacentHTML(
+        "beforeend",
+        `<span class="bile-warning" data-tooltip="${p.to === "player" ? "This Bile will reach you next enemy round: Poison +2." : "Bile arrives next enemy round and consumes one activation. Warning updates if the route changes."}">${p.to === "player" ? "← Poison 2" : "Bile → −1"}</span>`,
+      );
+      if (p.from != null && p.to !== "player")
+        arrows.push({ from: p.from, to: p.to, color: "#cad63c" });
+    }
+    if (e.tell?.disrupt) {
+      for (const m of phaseMoves(b, e.tell.phasePlan)) {
+        const el = app.querySelector('[data-slot="' + m.from + '"]');
+        el?.classList.add("phase-warning");
+        const danger = b.corruptions?.[m.to]?.kind;
+        el?.insertAdjacentHTML(
+          "beforeend",
+          `<span class="phase-label" data-tooltip="Whole stack moves to row ${Math.floor(m.to / 7) + 1}, column ${(m.to % 7) + 1}. ${danger === "hole" ? "Memory Hole destroys the whole arriving stack." : danger === "hypnosis" ? "Hypnosis immediately activates the arriving top card against you." : "Corruptions stay fixed."}">${e.tell.disrupt === "H" ? "→" : "↓"}2${m.occupied && danger === "hole" ? " ×" : m.occupied && danger === "hypnosis" ? " ◎" : ""}</span>`,
+        );
+        if (m.occupied)
+          arrows.push({
+            ...m,
+            axis: e.tell.disrupt,
+            color: danger === "hole" ? "#ff8067" : "#dba8ff",
+          });
+      }
+    }
+  }
+  if (arrows.length) {
+    mind.insertAdjacentHTML(
+      "beforeend",
+      `<svg class="loom-route-lines" viewBox="0 0 ${mind.clientWidth} ${mind.clientHeight}" aria-hidden="true"><defs><marker id="loom-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs>${arrows
+        .map((a) => {
+          const x = point(a.from),
+            y = point(a.to);
+          if (!x || !y) return "";
+          const wrap = a.axis && a.to < a.from;
+          const d = wrap
+            ? a.axis === "H"
+              ? `M ${x[0]} ${x[1]} L ${mind.clientWidth - 2} ${x[1]} M 2 ${y[1]} L ${y[0]} ${y[1]}`
+              : `M ${x[0]} ${x[1]} L ${x[0]} ${mind.clientHeight - 2} M ${y[0]} 2 L ${y[0]} ${y[1]}`
+            : `M ${x[0]} ${x[1]} L ${y[0]} ${y[1]}`;
+          return `<path d="${d}" stroke="${a.color}" marker-end="url(#loom-arrow)"/>`;
+        })
+        .join("")}</svg>`,
+    );
   }
 }

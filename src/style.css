@@ -3492,3 +3492,101 @@ header {
     0 0 0 2px #d6c48b80,
     0 0 24px #d6c48b30;
 }
+
+/* Spatial boss hazards remain visible without darkening the board. */
+.mind {
+  position: relative;
+}
+.bile-seal {
+  position: absolute;
+  top: 28px;
+  right: 2px;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #131907e8;
+  color: #e4eb83;
+  border: 1px solid #c5d559;
+  border-radius: 5px;
+  font-size: 10px;
+  padding: 2px;
+}
+.bile-seal img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.bile-warning,
+.phase-label {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  z-index: 8;
+  background: #1b142bef;
+  color: #eed7ff;
+  border: 1px solid #c294eb;
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.bile-warning {
+  top: 30px;
+  left: 2px;
+  background: #1c2108ef;
+  color: #e9f59c;
+  border-color: #c5d559;
+}
+.bile-destination {
+  box-shadow: inset 0 0 0 2px #d6e25e;
+}
+.phase-warning {
+  outline: 2px solid #c291e9;
+  outline-offset: -2px;
+}
+.loom-route-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+  overflow: visible;
+}
+.loom-route-lines path[stroke] {
+  fill: none;
+  stroke-width: 3;
+  stroke-dasharray: 7 5;
+  opacity: 0.85;
+  animation: loom-route-flow 1.2s linear infinite;
+}
+.phase-moving-card {
+  box-shadow: 0 0 22px #bc83ff;
+  overflow: hidden;
+}
+@keyframes loom-route-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loom-route-lines path {
+    animation: none;
+  }
+}
+
+.mind .bile-seal img {
+  position: static;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  object-fit: cover;
+}
+.mind .bile-seal {
+  top: 25px;
+  max-width: 48px;
+}
+.mind .bile-warning {
+  top: 2px;
+}

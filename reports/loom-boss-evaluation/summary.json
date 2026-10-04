@@ -1,0 +1,1235 @@
+[
+  {
+    "runId": "ddc12cf0-7bf8-4175-8188-4f7443e013e2",
+    "packageVersion": "2.1.0",
+    "fixture": "stratum2-carry-in-v1",
+    "stratum": 2,
+    "seed": 104100,
+    "version": {
+      "rules": "2.1.0",
+      "content": "2.1.0",
+      "observation": 2,
+      "actions": 6
+    },
+    "policy": "weighted-druid-v2.1",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "loss",
+    "cause": "Insanity",
+    "death": {
+      "kind": "other",
+      "cause": "Insanity",
+      "summary": "You died from Insanity.",
+      "message": "You died from Insanity. Another traveler may find a different way."
+    },
+    "hp": 0,
+    "rounds": 11,
+    "steps": 250,
+    "elapsedMs": 4876,
+    "stats": {
+      "damageDealt": 308,
+      "damageTaken": 103,
+      "goldEarned": 292,
+      "goldSpent": 390,
+      "cardsGained": [
+        "Grove Titan",
+        "Ward",
+        "Water Blast",
+        "Plasma Ball",
+        "Cinder Snap",
+        "Focus Energy",
+        "Machine Elves",
+        "Grove Titan",
+        "Plasma Ball",
+        "Corner Flame",
+        "Solitude",
+        "Slow Rot",
+        "Living Lattice"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Ruby",
+        "Gold Bracelet",
+        "Stone Armor",
+        "Sturdy Metal Helmet",
+        "Storm Opal",
+        "Healing Sap",
+        "Storm Opal",
+        "Emerald"
+      ],
+      "purchases": [
+        "channelGem"
+      ],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 2,
+          "round": 2,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 61
+        },
+        {
+          "stratum": 2,
+          "round": 3,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 61,
+          "turns": 3,
+          "hpEnd": 59
+        },
+        {
+          "stratum": 2,
+          "round": 6,
+          "enemies": [
+            "Censer Engine"
+          ],
+          "outcome": "victory",
+          "hpStart": 59,
+          "turns": 9,
+          "hpEnd": 35
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "enemies": [
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 35,
+          "turns": 7,
+          "hpEnd": 11
+        },
+        {
+          "stratum": 2,
+          "round": 9,
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 39,
+          "turns": 4,
+          "hpEnd": 13
+        },
+        {
+          "stratum": 2,
+          "round": 11,
+          "enemies": [
+            "Borrowed Face"
+          ],
+          "outcome": "loss",
+          "hpStart": 13,
+          "hpEnd": 0,
+          "turns": 2
+        }
+      ],
+      "strataCompleted": [
+        1
+      ],
+      "withoutMenders": {
+        "uid": 26,
+        "receivedAtStep": 9,
+        "disqualified": "Machine Elves used"
+      },
+      "fieldSupplies": [
+        {
+          "uid": 29,
+          "item": "healingSap",
+          "x": 7,
+          "y": 2,
+          "round": 1
+        },
+        {
+          "uid": 30,
+          "item": "insightDew",
+          "x": 4,
+          "y": 10,
+          "round": 1
+        },
+        {
+          "uid": 31,
+          "item": "channelDraught",
+          "x": 0,
+          "y": 3,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "healingSap",
+          "round": 2,
+          "turn": null,
+          "target": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        }
+      ],
+      "repairs": [
+        {
+          "stratum": 2,
+          "turn": 3,
+          "slot": 7,
+          "kind": "mine",
+          "card": 26
+        }
+      ]
+    }
+  },
+  {
+    "runId": "a5f04389-93c2-45e5-8e73-779d35bb97d2",
+    "packageVersion": "2.1.0",
+    "fixture": "stratum2-carry-in-v1",
+    "stratum": 2,
+    "seed": 104101,
+    "version": {
+      "rules": "2.1.0",
+      "content": "2.1.0",
+      "observation": 2,
+      "actions": 6
+    },
+    "policy": "weighted-druid-v2.1",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "loss",
+    "cause": "Churn",
+    "death": {
+      "kind": "enemy",
+      "enemyId": "blackBile",
+      "enemyUid": 92,
+      "enemyName": "The Black Bile",
+      "tier": "Archon",
+      "attack": "Churn",
+      "flavor": "The forest swallowed its sickness. You could not.",
+      "summary": "The Black Bile killed you with Churn.",
+      "message": "The forest swallowed its sickness. You could not. The Black Bile killed you with Churn. Another traveler may find a different way."
+    },
+    "hp": 0,
+    "rounds": 17,
+    "steps": 436,
+    "elapsedMs": 9270,
+    "stats": {
+      "damageDealt": 434,
+      "damageTaken": 103,
+      "goldEarned": 396,
+      "goldSpent": 540,
+      "cardsGained": [
+        "Grove Titan",
+        "Ward",
+        "Water Blast",
+        "Plasma Ball",
+        "Cinder Snap",
+        "Focus Energy",
+        "Machine Elves",
+        "Thorn Choir",
+        "Bitter Spore",
+        "Resonance",
+        "Corner Flame",
+        "Root Lance",
+        "Solitude",
+        "Glass Moth",
+        "Cinder Snap"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Emerald",
+        "Gold Bracelet",
+        "Stone Armor",
+        "Sturdy Metal Helmet",
+        "Channel Draught",
+        "Sapphire",
+        "Healing Sap",
+        "Amber Thought",
+        "Storm Opal",
+        "Storm Opal",
+        "Storm Opal"
+      ],
+      "purchases": [
+        "channelGem"
+      ],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 2,
+          "round": 3,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 2,
+          "hpEnd": 62
+        },
+        {
+          "stratum": 2,
+          "round": 8,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 2,
+          "round": 11,
+          "enemies": [
+            "Bellows Grub",
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 8,
+          "hpEnd": 44
+        },
+        {
+          "stratum": 2,
+          "round": 12,
+          "enemies": [
+            "Borrowed Face"
+          ],
+          "outcome": "victory",
+          "hpStart": 44,
+          "turns": 9,
+          "hpEnd": 37
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "enemies": [
+            "Censer Engine"
+          ],
+          "outcome": "victory",
+          "hpStart": 37,
+          "turns": 13,
+          "hpEnd": 6
+        },
+        {
+          "stratum": 2,
+          "round": 14,
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 26,
+          "turns": 4,
+          "hpEnd": 26
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 26,
+          "turns": 3,
+          "hpEnd": 23
+        },
+        {
+          "stratum": 2,
+          "round": 17,
+          "enemies": [
+            "Sourcap Tender",
+            "The Black Bile"
+          ],
+          "outcome": "loss",
+          "hpStart": 23,
+          "hpEnd": 0,
+          "turns": 2
+        }
+      ],
+      "strataCompleted": [
+        1
+      ],
+      "withoutMenders": {
+        "uid": 25,
+        "receivedAtStep": 9,
+        "disqualified": "Machine Elves used"
+      },
+      "fieldSupplies": [
+        {
+          "uid": 28,
+          "item": "starFlask",
+          "x": 6,
+          "y": 8,
+          "round": 1
+        },
+        {
+          "uid": 29,
+          "item": "insightDew",
+          "x": 0,
+          "y": 2,
+          "round": 1
+        },
+        {
+          "uid": 30,
+          "item": "healingSap",
+          "x": 8,
+          "y": 1,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "healingSap",
+          "round": 7,
+          "turn": null,
+          "target": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        },
+        {
+          "id": "channelDraught",
+          "round": 10,
+          "turn": 2,
+          "target": null,
+          "healed": 0
+        }
+      ],
+      "repairs": [
+        {
+          "stratum": 2,
+          "turn": 5,
+          "slot": 31,
+          "kind": "insanity",
+          "card": 25
+        },
+        {
+          "stratum": 2,
+          "turn": 4,
+          "slot": 5,
+          "kind": "mine",
+          "card": 25
+        }
+      ]
+    }
+  },
+  {
+    "runId": "a2388ad1-67b2-45fd-a31c-2d785c2913fd",
+    "packageVersion": "2.1.0",
+    "fixture": "stratum2-carry-in-v1",
+    "stratum": 2,
+    "seed": 104102,
+    "version": {
+      "rules": "2.1.0",
+      "content": "2.1.0",
+      "observation": 2,
+      "actions": 6
+    },
+    "policy": "weighted-druid-v2.1",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "loss",
+    "cause": "Excavation",
+    "death": {
+      "kind": "enemy",
+      "enemyId": "bombadier",
+      "enemyUid": 81,
+      "enemyName": "King Bombadier",
+      "tier": "Archon",
+      "attack": "Excavation",
+      "flavor": "His Majesty announced the finale. The fuses applauded.",
+      "summary": "King Bombadier killed you with Excavation.",
+      "message": "His Majesty announced the finale. The fuses applauded. King Bombadier killed you with Excavation. Another traveler may find a different way."
+    },
+    "hp": 0,
+    "rounds": 18,
+    "steps": 494,
+    "elapsedMs": 9763,
+    "stats": {
+      "damageDealt": 500,
+      "damageTaken": 83,
+      "goldEarned": 442,
+      "goldSpent": 170,
+      "cardsGained": [
+        "Grove Titan",
+        "Ward",
+        "Water Blast",
+        "Plasma Ball",
+        "Cinder Snap",
+        "Focus Energy",
+        "Machine Elves",
+        "Focus Energy",
+        "Focus Energy",
+        "Solitude",
+        "Water Blast",
+        "Cinder Snap",
+        "Grove Titan",
+        "Solitude",
+        "Wild Conduit",
+        "Focus Energy"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Emerald",
+        "Gold Bracelet",
+        "Stone Armor",
+        "Sturdy Metal Helmet",
+        "Healing Sap",
+        "Amber Thought",
+        "Storm Opal",
+        "Lantern Necklace",
+        "Topaz",
+        "Sturdy Metal Helmet"
+      ],
+      "purchases": [],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 2,
+          "round": 2,
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 3,
+          "hpEnd": 62
+        },
+        {
+          "stratum": 2,
+          "round": 6,
+          "enemies": [
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 5,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 5,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 8,
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 8,
+          "hpEnd": 56
+        },
+        {
+          "stratum": 2,
+          "round": 9,
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 56,
+          "turns": 4,
+          "hpEnd": 56
+        },
+        {
+          "stratum": 2,
+          "round": 12,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 56,
+          "turns": 3,
+          "hpEnd": 55
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 5,
+          "hpEnd": 49
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "enemies": [
+            "Spoolkeeper"
+          ],
+          "outcome": "victory",
+          "hpStart": 49,
+          "turns": 7,
+          "hpEnd": 46
+        },
+        {
+          "stratum": 2,
+          "round": 14,
+          "enemies": [
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 46,
+          "turns": 7,
+          "hpEnd": 34
+        },
+        {
+          "stratum": 2,
+          "round": 15,
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 34,
+          "turns": 3,
+          "hpEnd": 32
+        },
+        {
+          "stratum": 2,
+          "round": 18,
+          "enemies": [
+            "King Bombadier"
+          ],
+          "outcome": "loss",
+          "hpStart": 32,
+          "hpEnd": 0,
+          "turns": 6
+        }
+      ],
+      "strataCompleted": [
+        1
+      ],
+      "withoutMenders": {
+        "uid": 25,
+        "receivedAtStep": 9,
+        "disqualified": "Machine Elves used"
+      },
+      "fieldSupplies": [
+        {
+          "uid": 28,
+          "item": "starFlask",
+          "x": 2,
+          "y": 6,
+          "round": 1
+        },
+        {
+          "uid": 29,
+          "item": "healingSap",
+          "x": 8,
+          "y": 1,
+          "round": 1
+        },
+        {
+          "uid": 30,
+          "item": "focusDraught",
+          "x": 9,
+          "y": 10,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "healingSap",
+          "round": 8,
+          "turn": null,
+          "target": null,
+          "healed": 4,
+          "source": "fieldPickup"
+        }
+      ]
+    }
+  },
+  {
+    "runId": "710153ca-204a-4a41-a930-f5ba6b4ec017",
+    "packageVersion": "2.1.0",
+    "fixture": "stratum2-carry-in-v1",
+    "stratum": 2,
+    "seed": 104103,
+    "version": {
+      "rules": "2.1.0",
+      "content": "2.1.0",
+      "observation": 2,
+      "actions": 6
+    },
+    "policy": "weighted-druid-v2.1",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "loss",
+    "cause": "Burning bile",
+    "death": {
+      "kind": "enemy",
+      "enemyId": "blackBile",
+      "enemyUid": 79,
+      "enemyName": "The Black Bile",
+      "tier": "Archon",
+      "attack": "Burning bile",
+      "flavor": "The forest swallowed its sickness. You could not.",
+      "summary": "The Black Bile killed you with Burning bile.",
+      "message": "The forest swallowed its sickness. You could not. The Black Bile killed you with Burning bile. Another traveler may find a different way."
+    },
+    "hp": 0,
+    "rounds": 17,
+    "steps": 311,
+    "elapsedMs": 5709,
+    "stats": {
+      "damageDealt": 365,
+      "damageTaken": 88,
+      "goldEarned": 308,
+      "goldSpent": 290,
+      "cardsGained": [
+        "Grove Titan",
+        "Ward",
+        "Water Blast",
+        "Plasma Ball",
+        "Cinder Snap",
+        "Focus Energy",
+        "Machine Elves",
+        "Bitter Spore",
+        "Glass Moth",
+        "Fourfold Grove",
+        "Gust",
+        "Grove Titan",
+        "Plasma Ball",
+        "Blast",
+        "Bitter Spore",
+        "Corner Flame"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Topaz",
+        "Gold Bracelet",
+        "Stone Armor",
+        "Sturdy Metal Helmet",
+        "Healing Sap",
+        "Storm Opal",
+        "Sturdy Metal Helmet",
+        "Amber Thought",
+        "Ruby",
+        "Clear Quartz"
+      ],
+      "purchases": [],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 2,
+          "round": 3,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 3,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 3,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 4,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 5,
+          "hpEnd": 64
+        },
+        {
+          "stratum": 2,
+          "round": 15,
+          "enemies": [
+            "Bellows Grub",
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 9,
+          "hpEnd": 49
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "enemies": [
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 49,
+          "turns": 5,
+          "hpEnd": 37
+        },
+        {
+          "stratum": 2,
+          "round": 17,
+          "enemies": [
+            "The Black Bile"
+          ],
+          "outcome": "loss",
+          "hpStart": 32,
+          "hpEnd": 0,
+          "turns": 5
+        }
+      ],
+      "strataCompleted": [
+        1
+      ],
+      "withoutMenders": {
+        "uid": 25,
+        "receivedAtStep": 9,
+        "disqualified": "Machine Elves used"
+      },
+      "fieldSupplies": [
+        {
+          "uid": 28,
+          "item": "healingSap",
+          "x": 8,
+          "y": 3,
+          "round": 1
+        },
+        {
+          "uid": 29,
+          "item": "channelDraught",
+          "x": 5,
+          "y": 9,
+          "round": 1
+        },
+        {
+          "uid": 30,
+          "item": "focusDraught",
+          "x": 0,
+          "y": 6,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "healingSap",
+          "round": 2,
+          "turn": null,
+          "target": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        }
+      ]
+    }
+  },
+  {
+    "runId": "7be07d89-2d3a-4bd8-a76b-43e64891896a",
+    "packageVersion": "2.1.0",
+    "fixture": "stratum2-carry-in-v1",
+    "stratum": 2,
+    "seed": 104104,
+    "version": {
+      "rules": "2.1.0",
+      "content": "2.1.0",
+      "observation": 2,
+      "actions": 6
+    },
+    "policy": "weighted-druid-v2.1",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "win",
+    "cause": "",
+    "hp": 47,
+    "rounds": 20,
+    "steps": 741,
+    "elapsedMs": 13523,
+    "stats": {
+      "damageDealt": 848,
+      "damageTaken": 31,
+      "goldEarned": 516,
+      "goldSpent": 395,
+      "cardsGained": [
+        "Grove Titan",
+        "Ward",
+        "Water Blast",
+        "Plasma Ball",
+        "Cinder Snap",
+        "Focus Energy",
+        "Machine Elves",
+        "Living Lattice",
+        "Bitter Spore",
+        "Cinder Snap",
+        "Slow Rot",
+        "Tide Memory",
+        "Wild Conduit",
+        "Gust",
+        "Wild Conduit",
+        "Cinder Snap",
+        "Root Lance",
+        "Corner Flame",
+        "Cinder Snap",
+        "Ember Nest",
+        "Prismatic Core",
+        "Root Lance",
+        "Water Blast",
+        "Grove Titan"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Sapphire",
+        "Gold Bracelet",
+        "Stone Armor",
+        "Sturdy Metal Helmet",
+        "Healing Sap",
+        "Clear Quartz",
+        "Clear Quartz",
+        "Amber Thought",
+        "Ruby",
+        "Sturdy Metal Helmet",
+        "Focus Draught",
+        "Emerald",
+        "Topaz",
+        "Ring of Embers"
+      ],
+      "purchases": [],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 2,
+          "round": 1,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 5,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 2,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 4,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 5,
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 4,
+          "hpEnd": 67
+        },
+        {
+          "stratum": 2,
+          "round": 8,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 4,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 2,
+          "round": 9,
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "enemies": [
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 8,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 2,
+          "round": 11,
+          "enemies": [
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 5,
+          "hpEnd": 69
+        },
+        {
+          "stratum": 2,
+          "round": 12,
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 69,
+          "turns": 4,
+          "hpEnd": 68
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 68,
+          "turns": 4,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 15,
+          "enemies": [
+            "Hollow Scribe"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 3,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 15,
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 2,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "enemies": [
+            "Hollow Scribe"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 3,
+          "hpEnd": 66
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2",
+            "Thread Mite 3"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 7,
+          "hpEnd": 53
+        },
+        {
+          "stratum": 2,
+          "round": 18,
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 53,
+          "turns": 2,
+          "hpEnd": 53
+        },
+        {
+          "stratum": 2,
+          "round": 20,
+          "enemies": [
+            "Dew Thief",
+            "Loop Moth"
+          ],
+          "outcome": "victory",
+          "hpStart": 53,
+          "turns": 4,
+          "hpEnd": 52
+        },
+        {
+          "stratum": 2,
+          "round": 20,
+          "enemies": [
+            "The Trickster"
+          ],
+          "outcome": "victory",
+          "hpStart": 52,
+          "turns": 12,
+          "hpEnd": 47
+        }
+      ],
+      "strataCompleted": [
+        1,
+        2
+      ],
+      "withoutMenders": {
+        "uid": 25,
+        "receivedAtStep": 9,
+        "disqualified": "Machine Elves used"
+      },
+      "fieldSupplies": [
+        {
+          "uid": 28,
+          "item": "healingSap",
+          "x": 3,
+          "y": 5,
+          "round": 1
+        },
+        {
+          "uid": 29,
+          "item": "focusDraught",
+          "x": 9,
+          "y": 1,
+          "round": 1
+        },
+        {
+          "uid": 30,
+          "item": "insightDew",
+          "x": 9,
+          "y": 8,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "healingSap",
+          "round": 1,
+          "turn": null,
+          "target": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        },
+        {
+          "id": "focusDraught",
+          "round": 20,
+          "turn": 1,
+          "target": null,
+          "healed": 0
+        }
+      ],
+      "repairs": [
+        {
+          "stratum": 2,
+          "turn": 2,
+          "slot": 38,
+          "kind": "nausea",
+          "card": 25
+        },
+        {
+          "stratum": 2,
+          "turn": 2,
+          "slot": 13,
+          "kind": "nausea",
+          "card": 25
+        },
+        {
+          "stratum": 2,
+          "turn": 6,
+          "slot": 17,
+          "kind": "hole",
+          "card": 25
+        }
+      ]
+    }
+  }
+]

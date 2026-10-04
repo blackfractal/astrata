@@ -20,6 +20,7 @@ const sources = Object.fromEntries(
       "engine.mjs",
       "strata.mjs",
       "corruptions.mjs",
+      "loom-bosses.mjs",
       "content.mjs",
       "policy.mjs",
       "death.mjs",

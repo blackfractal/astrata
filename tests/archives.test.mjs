@@ -72,7 +72,16 @@ test("Boss achievements require confirmed non-tutorial victories, including earl
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
   discover(c, state, "later");
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
-  assert.equal(achievements.length, 9);
+  assert.equal(achievements.length, 12);
+  state.stats.encounters.push(
+    ...["The Black Bile", "King Bombadier", "The Trickster"].map((name) => ({
+      enemies: [name],
+      outcome: "victory",
+    })),
+  );
+  discover(c, state, "new-bosses");
+  for (const id of ["blackBile", "bombadier", "trickster"])
+    assert.equal(c.achievements["defeat-" + id].earnedAt, "new-bosses");
   assert.ok(!c.achievements["calm-astrata"] && !c.achievements["calm-apex"]);
 });
 test("Collection store imports compressed and active traces once and survives restart without changing archives", () => {

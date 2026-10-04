@@ -1,3 +1,21 @@
+# Spatial Archons and three-use Menders — package 2.1.0
+
+Rules/content2.1.0, action schema6, weighted-druid-v2.1. The policy values nearby repair opportunities and targeted Mend, and recognizes the full three-hit Steam threat. Legal actions remain shared with the player; no learned training. Exact source snapshots include the new loom-bosses.mjs module in both desktop and headless archives.
+
+| Seed | Outcome | Round | Decisions | HP | Repairs |
+| --- | --- | --- | --- | --- | --- |
+| 104100 | loss | 11 | 250 | 0 | 1 |
+| 104101 | loss | 17 | 436 | 0 | 2 |
+| 104102 | loss | 18 | 494 | 0 | 0 |
+| 104103 | loss | 17 | 311 | 0 | 0 |
+| 104104 | win | 20 | 741 | 47 | 3 |
+
+Five strong Stratum2 carry-in runs completed without invalid actions or stalls: one win, four losses. Seed104104 defeated Trickster in12turns,52→47HP; Black Bile killed seeds104101/104103 and Bombadier killed104102, after those runs arrived with23/32/32HP respectively.104100 died to Insanity before an Archon. Six repairs completed across three runs. These are authored carry-in collections, not evidence of earning the gear through Stratum1. The policy has no deep planning for Bile routes or adversarial Guard balancing; this is integration evidence, not a human difficulty calibration. Archived sources represent the evaluated build; a subsequent covered-Shield exclusion edge case in Anti-elemental, wording, achievements, and wraparound presentation were verified separately. Full trace/source artifacts: reports/loom-boss-evaluation.
+
+Final validation:417rules tests pass; packaged three-boss presentation/Mend controls/live Anti-elemental checks and full revised Mending Ground walkthrough pass with no renderer errors. All168required art assets have files and provenance. No automatic balance retuning from these five results.
+
+---
+
 # Ward clarity and Stratum 2 tuning — package 2.0.9
 
 Rules 2.0.7/content 2.0.8; weighted-druid-v2.0 unchanged. All normal Stratum 2 enemy attacks gain +1 per hit; Choir no longer releases Hypnosis; Wards start with 1 value. Tutorial opponents unchanged. All 399 rules tests and the complete packaged Stratum 1 mouse tutorial pass.

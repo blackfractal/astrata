@@ -3,7 +3,7 @@ import path from "node:path";
 import { cards, items, enemies, events, locations } from "../src/content.mjs";
 import { artPaths } from "../src/art-paths.mjs";
 const expected = [
-  ...["hole", "nausea", "insanity", "mine", "hypnosis"].map(
+  ...["hole", "nausea", "insanity", "mine", "hypnosis", "bile"].map(
     (kind) => "corruption-" + kind,
   ),
   "location-loom-field",

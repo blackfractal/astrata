@@ -158,7 +158,7 @@ test("Legacy Elves already removed at the Tavern are not resurrected", () => {
   assert.equal(g.s.stats.withoutMenders.disqualified, "companion removed");
 });
 
-test("Memory Hole blocks ordinary placement and Shift; only upgraded Elves can enter", () => {
+test("Memory Hole blocks ordinary placement and Shift; Machine Elves can enter at either upgrade level", () => {
   const g = arena(),
     b = g.s.battle;
   q(g, 8, "hole");
@@ -166,9 +166,9 @@ test("Memory Hole blocks ordinary placement and Shift; only upgraded Elves can e
     elf = g.newCard("elves"),
     up = g.newCard("elves", true);
   assert.equal(canEnter(b, normal, 8), false);
-  assert.equal(canEnter(b, elf, 8), false);
+  assert.equal(canEnter(b, elf, 8), true);
   assert.equal(canEnter(b, up, 8), true);
-  assert.equal(canEnter(b, elf, 9), false);
+  assert.equal(canEnter(b, elf, 9), true);
   b.hand = [normal, elf, up];
   b.focus = 10;
   assert.deepEqual(
@@ -176,7 +176,7 @@ test("Memory Hole blocks ordinary placement and Shift; only upgraded Elves can e
       .legal()
       .filter((a) => a.type === "place" && a.slot === 8)
       .map((a) => a.uid),
-    [up.uid],
+    [elf.uid, up.uid],
   );
 });
 test("Nausea halves live damage and newly generated Guard; cover/recall switches it immediately", () => {
@@ -200,12 +200,13 @@ test("Nausea halves live damage and newly generated Guard; cover/recall switches
 test("Mend waits, survives reload, repairs and discards; dead Elves do not repair", () => {
   const g = arena(),
     b = g.s.battle;
-  q(g, 8, "nausea");
-  const c = place(g, "elves", 8);
+  q(g, 8, "hole");
+  const c = place(g, "elves", 8, true);
+  c.used = 2;
   b.phase = "activate";
   action(g, "activate", { slot: 8 });
   assert.ok(b.corruptions[8]);
-  assert.equal(c.used, 1);
+  assert.equal(c.used, 3);
   const loaded = new Game(0, g.s);
   round(loaded);
   assert.equal(loaded.s.battle.corruptions[8], undefined);
@@ -217,7 +218,7 @@ test("Mend waits, survives reload, repairs and discards; dead Elves do not repai
     ].some((x) => x.uid === c.uid),
   );
   const d = arena();
-  q(d, 8, "nausea");
+  q(d, 8, "hole");
   const dead = place(d, "elves", 8);
   d.s.battle.phase = "activate";
   action(d, "activate", { slot: 8 });
@@ -229,7 +230,7 @@ test("Mend waits, survives reload, repairs and discards; dead Elves do not repai
 test("Freeze delays repairs; repaired Elves cannot be covered or shifted while working", () => {
   const g = arena(),
     b = g.s.battle;
-  q(g, 8, "nausea");
+  q(g, 8, "hole");
   const c = place(g, "elves", 8);
   b.phase = "activate";
   action(g, "activate", { slot: 8 });
@@ -413,7 +414,7 @@ test("Each boss has a signature Corruption, while several motes never corrupt", 
         e.rotation.map((t) => t.markCorruption).filter(Boolean),
       ),
     ).size,
-    3,
+    4,
   );
   assert.ok(
     Object.values(enemies).filter(
@@ -426,7 +427,7 @@ test("Each boss has a signature Corruption, while several motes never corrupt", 
   );
 });
 test("All new boss rotations resolve legally, including Purify and corruption jobs", () => {
-  for (const id of ["seamstress", "censer", "borrowedChoir"]) {
+  for (const id of ["blackBile", "bombadier", "trickster"]) {
     const g = arena(id);
     g.s.hp = 1000;
     g.s.maxHp = 1000;
@@ -501,7 +502,7 @@ test("Companion challenge disqualification persists after use and replacement", 
   assert.ok(loaded.s.stats.withoutMenders.disqualified);
 });
 test("Second Archon reward resolves to Stratum 2 victory after legendary, Gem and Setting", () => {
-  const g = arena("censer");
+  const g = arena("bombadier");
   g.s.battle.enemies[0].hp = 0;
   g.checkBattle();
   for (const type of [
