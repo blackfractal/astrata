@@ -57,6 +57,7 @@ for (const name of [
   "loom-carry-in-evaluation",
   "loom-carry-in-final",
   "loom-ui-verification.json",
+  "tutorial-encoding-verification.json",
   "loom-art-provenance.json",
   "stratum2-tests.txt",
   "evaluation",

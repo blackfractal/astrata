@@ -1,5 +1,9 @@
 # Astrata implementation handoff
 
+## Tutorial punctuation repair — 2026-10-04
+
+Package2.0.1, BUILD_LOG99. Fixed ten mojibake strings in src/tutorial.mjs: nine malformed apostrophes now plain ASCII apostrophes, one placement separator restored to U+00B7. UTF-8 HTML declaration was already correct; corruption was embedded in source text. Rules/content/tutorial versions unchanged. Scanned all72 source and packaged runtime MJS/CSS files with fatal UTF-8 decoding and common mojibake detection, all clean. Nine existing tutorial test groups pass; isolated packaged UI resumes shield-expiry and displays "each card's allowance" correctly, screenshot reviewed, no renderer errors. Report reports/tutorial-encoding-verification.json. Rebuilt portable release and ZIP; actual user save/frozen puzzle untouched. Restart app to load corrected module text. Use explicit UTF-8 file I/O; do not round-trip source through a legacy Windows text encoding.
+
 ## Consolidated repository and playable Stratum 2 — 2026-10-04 (latest)
 
 All work is now in astrata; astrata_01 was moved completely and its empty directory removed. Main keeps game history; original design history is local design-history, original .git/README/.gitignore preserved in _knowledge/repository-migration-2026-10-04. Original origin restored; DO NOT force-push unrelated histories. No push performed. Actual %APPDATA%/astrata profile untouched. Frozen Last Spark build retained.

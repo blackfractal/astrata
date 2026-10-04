@@ -24,7 +24,7 @@ const ui = (id, title, text, control, focus) =>
 const place = (id, card, slot, text, gesture = null) =>
   action(
     id,
-    "Placement Â· " + cards[card].name,
+    "Placement · " + cards[card].name,
     text,
     { type: "place", card, slot },
     "",
@@ -155,7 +155,7 @@ phase("first-phase");
 note(
   "tell3",
   "Read the Tell",
-  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 Guard for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the cardâ€™s activation limit is its total uses across rounds before Recall or the next battle restores it.",
+  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 Guard for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the card's activation limit is its total uses across rounds before Recall or the next battle restores it.",
   ".enemy .tell, .resources > span:nth-child(3)",
 );
 activate(
@@ -173,7 +173,7 @@ defend(
 note(
   "shield-expiry",
   "The card stays; its Guard expires",
-  "The attack was absorbed. Unused Shield Guard disappears at round end, but the card remains. Activate it again to make fresh Guard. This Shield has one use left; keep an eye on Channel and each cardâ€™s allowance.",
+  "The attack was absorbed. Unused Shield Guard disappears at round end, but the card remains. Activate it again to make fresh Guard. This Shield has one use left; keep an eye on Channel and each card's allowance.",
   '[data-slot="18"], .resources',
 );
 place(
@@ -222,7 +222,7 @@ phase("third-phase");
 activate(
   "synergy-kill",
   23,
-  "Activate the new Blast against Mosswing. Its 5 damage and the Ringâ€™s first-hit 2 will finish this fight.",
+  "Activate the new Blast against Mosswing. Its 5 damage and the Ring's first-hit 2 will finish this fight.",
 );
 reward(
   "ward-reward",
@@ -265,7 +265,7 @@ defend(
   "ambush-bracelet",
   "bracelet",
   null,
-  "Use your Bracelet against the Rootlingâ€™s opening 3-damage attack. It absorbs 2; the remaining 1 reaches you. Then your first Reveal begins.",
+  "Use your Bracelet against the Rootling's opening 3-damage attack. It absorbs 2; the remaining 1 reaches you. Then your first Reveal begins.",
 );
 place(
   "ward-place",
@@ -313,7 +313,7 @@ phase("route-phase");
 activate(
   "route-shield-activate",
   20,
-  "Double-click Shieldâ€™s activation to use it without attunement. This creates 4 Guard on the right, before the attack reaches Sapling and Ward.",
+  "Double-click Shield's activation to use it without attunement. This creates 4 Guard on the right, before the attack reaches Sapling and Ward.",
 );
 activate(
   "route-sapling-attack",
@@ -479,7 +479,7 @@ move(
 note(
   "elements",
   "Fire meets Water",
-  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemyâ€™s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
+  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemy's Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
   ".enemy",
 );
 note(
@@ -500,7 +500,7 @@ phase("water-phase");
 activate(
   "water-attack",
   22,
-  "Water Blastâ€™s 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
+  "Water Blast's 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
 );
 end("ember-enemy");
 defend(
@@ -532,7 +532,7 @@ phase("attune-phase");
 activate(
   "attune-attack",
   23,
-  "Select Blastâ€™s Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
+  "Select Blast's Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
   "Water",
 );
 action(
@@ -637,7 +637,7 @@ ui(
 action(
   "gossip",
   "Learn what lies ahead",
-  "Pay 15 Gold for gossip. It reveals Cinder Hart, the Archon of this lessonâ€™s imagined onward journey. You will not fight that boss in the tutorial.",
+  "Pay 15 Gold for gossip. It reveals Cinder Hart, the Archon of this lesson's imagined onward journey. You will not fight that boss in the tutorial.",
   { type: "gossip" },
 );
 note(
