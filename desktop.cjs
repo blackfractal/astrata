@@ -17,10 +17,13 @@ function archive() {
     sources: Object.fromEntries(
       [
         "engine.mjs",
+        "strata.mjs",
+        "corruptions.mjs",
         "content.mjs",
         "policy.mjs",
         "death.mjs",
         "tutorial.mjs",
+        "loom-tutorial.mjs",
         "consumables.mjs",
       ].map((name) => [
         name,

@@ -1,3 +1,4 @@
+import { corruptionPower } from "./corruptions.mjs";
 import { enhanceConsumables } from "./consumables-ui.mjs";
 import { upgradeBadge, statBreakdowns, statHelp } from "./card-upgrade-ui.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
@@ -87,6 +88,13 @@ function effect(c, slot, ctx) {
   if (d.charge && c.charge < d.charge)
     return `Charge ${c.charge}/${d.charge} · +${chargeGain(ctx.o.battle, c, slot)}`;
   const matching = matchingNeighbors(ctx.o.battle, c, slot);
+  const shieldBase =
+    (f.shield || 0) +
+    (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+    (f.matchingShield || 0) * matching;
+  const shieldGear =
+    corruptionPower(ctx.o.battle, slot, shieldBase + ctx.o.bonuses.shield) -
+    corruptionPower(ctx.o.battle, slot, shieldBase);
   return (
     (d.charge ? "Release · " : "") +
     ([
@@ -101,9 +109,13 @@ function effect(c, slot, ctx) {
           ? "Deal 1–" + f.randomDamage
           : null,
       f.shield
-        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${ctx.o.bonuses.shield})</span>` : ""}`
+        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${corruptionPower(ctx.o.battle, slot, f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching)}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear})</span>` : ""}`
         : null,
-      f.ward ? `Ward +${f.ward}` : null,
+      f.ward
+        ? `Ward +${corruptionPower(ctx.o.battle, slot, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0))}`
+        : null,
+      f.mend ? (c.mending ? "Mending · next turn" : "Mend this space") : null,
+      f.stitch ? "Cleanse this space" : null,
       f.heal ? `Heal ${f.heal}` : null,
       f.selfGrowth ? `+${f.selfGrowth} HP` : null,
       f.taunt ? "Taunt" : null,

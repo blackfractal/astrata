@@ -401,6 +401,12 @@ export async function playFrames(before, frames, after, render, isFast) {
           skip: () => skip,
         });
         render(frame.state);
+      } else if (frame.kind === "corruption") {
+        render(frame.state);
+        const target = card(frame.slot);
+        target?.classList.add("corruption-flare");
+        await pause(650);
+        target?.classList.remove("corruption-flare");
       } else if (frame.kind === "resources") {
         render(frame.state);
         await pause(220);
@@ -536,8 +542,16 @@ export async function playFrames(before, frames, after, render, isFast) {
         await flash(enemy(frame.uid), frame.name, true);
         render(frame.state);
       } else if (frame.kind === "incoming") {
-        source = { enemy: frame.source, element: frame.element };
-        const el = frame.collapseOrigins ? null : enemy(frame.source);
+        source =
+          frame.gridSourceSlot != null
+            ? { slot: frame.gridSourceSlot, element: frame.element }
+            : { enemy: frame.source, element: frame.element };
+        const el =
+          frame.gridSourceSlot != null
+            ? card(frame.gridSourceSlot)
+            : frame.collapseOrigins
+              ? null
+              : enemy(frame.source);
         await flash(
           el,
           `${frame.name} · ${frame.amount} ${frame.element || ""}`,
@@ -631,7 +645,9 @@ export async function playFrames(before, frames, after, render, isFast) {
             : after.mode === "result"
               ? after.outcome === "loss"
                 ? "You Died"
-                : "Stratum 1 Complete"
+                : after.tutorial
+                  ? after.tutorial.name + " Complete"
+                  : "Stratum " + (after.stratum || 1) + " Complete"
               : "Continue";
       await pause(after.mode === "reward" ? 700 : 450);
     }

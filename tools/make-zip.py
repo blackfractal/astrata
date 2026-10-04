@@ -2,8 +2,8 @@ from pathlib import Path
 import zipfile
 root=Path('release/Astrata').resolve()
 assert root.parent == Path('release').resolve()
-target=Path('release/Astrata-01-v1.zip').resolve()
-temporary=Path('release/Astrata-01-v1.new.zip').resolve()
+target=Path('release/Astrata-v2.zip').resolve()
+temporary=Path('release/Astrata-v2.new.zip').resolve()
 assert target.parent == root.parent and temporary.parent == root.parent
 with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED,compresslevel=6,strict_timestamps=False) as z:
  for p in sorted(root.rglob('*')):

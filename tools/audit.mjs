@@ -3,6 +3,8 @@ import path from "node:path";
 import { cards, items, enemies, events, locations } from "../src/content.mjs";
 import { artPaths } from "../src/art-paths.mjs";
 const expected = [
+  "location-loom-field",
+  "location-loom-mind",
   "location-field-topdown",
   "location-weald-topdown",
   "location-tavern-interior",

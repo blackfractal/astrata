@@ -1,143 +1,21 @@
 # Astrata
 
-A Windows spatial spell-grid roguelike. This build implements the Druid's journey through Stratum 1, based on Astrata design v4.132. This is v1 with 4 Insight, 1 Focus, 2 Channel, 16 paired spawning rounds (32 spawns), a rolling four-pair preview, and grouped enemy encounters (package 1.3.87; rules 1.3.46).
+A spatial deckbuilding roguelike by Jonathan. **Version 2.0.0** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**.
 
+Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
-**Archives** on the start screen opens Run History (newest20 completed runs), Cards, Enemies, Equipment and Achievements. Every run and its debugging data is still retained. Collections remember visible reward/shop/Event offers, owned content and encountered enemies across journeys, including offers not taken; undiscovered entries show only a question mark. Existing saved traces and summaries backfill known discoveries on first launch. The achievement gallery records the three Stratum1 boss victories; later Apex/Astrata objectives show their titles without revealing secret requirements. These records live in collections.json beside the existing saves and history.
+Defeat Stratum 1's Archon, choose a legendary reward, then visit the automatic Tavern before entering Stratum 2. Your deck, equipment, Gold and remaining HP travel with you. Machine Elves join at the transition. The first Loom entry starts its separate tutorial; Continue preserves your normal journey. Defeat the second Archon to complete this build.
 
-First New Game enters **The First Clearing**, the Stratum 1 tutorial. Follow the glowing callouts through movement, equipment, combat, defense routing, elements and Tavern services, then fight the Patient Warden independently. Required actions pulse; explanations wait for Continue. Tutorial saves resume at the exact lesson. The home screen's Tutorial menu offers replay, while Resume tutorial continues an unfinished lesson. Tutorial saves and statistics are separate from normal journeys, so replay preserves Continue. After first completion, New Game starts the normal Druid journey. The pursuit lesson uses both movement points before Rootling follows; the next turn demonstrates that reaching a pickup in one step forfeits the unused point. The Clearing retains the grassy field, while The Whispering Weald now has a distinct forest map. All four tutorial enemies have unique painterly portraits. During the final Warden fight, dismiss the one-time introduction with Let me try (or make your first combat choice). Guidance then stays hidden unless you are idle for15 seconds, when a gentle optional suggestion highlights a legal next action. Required lessons use bright expanding outlines; reduced motion keeps them steady.
+Corruptions belong to **spaces**, not cards. Cover Nausea or Insanity, sacrifice a card over a Mind Mine, deny Hypnosis its activation, or send Machine Elves to Mend. Basic Elves cannot enter Memory Holes; upgraded Elves can. Hover the persistent space seals and marked targets for the rules. Repairs take an enemy round and require the Elves to survive.
 
-Stratum 1 is **The Whispering Weald**, a living green forest. New Druid runs start at **70/70 HP**; existing saves retain their health.
+The original First Clearing tutorial remains available. Archives retains discoveries and achievements; the latest 20 runs are displayed while full versioned run data is retained. Normal Continue restarts a battle from its checkpoint; tutorials resume their exact lesson. Saves remain in **%APPDATA%/astrata**.
 
-Ward cards start with **0 Ward** and must be activated before they can absorb damage. Ward gains10 per activation; Living Lattice gains8. Stored value persists across turns; Recall/replacement starts again at0.
+- [Main design](_plans/astrata_design.md), especially §10.12 for implemented Stratum 2 rules.
+- [Stratum 2 planning](_plans/stratum_2_planning.md).
+- [Build log](BUILD_LOG.md) and [AI reports](AI_REPORT.md).
+- [Interesting situations and replayable puzzles](_knowledge/situations/README.md).
+- [New art and exact prompts](reports/loom-art-provenance.json).
 
-Click highlighted cards to defend. Wards, Shields and Allies are offered together: after a card absorbs damage, only its column and columns closer to the player remain eligible. Equipment is the final stop. Click the pulsing Druid portrait to take the hit and preserve unused defenses; all eligible cards and equipment pulse too. View opens card details, and mixed Shield portions are chosen beside their card. Each new hit resets the route. Taunt and explicit targeting remain exceptions; Pierce/Cull/status bypasses still apply.
+This is the consolidated repository. Game history continues from astrata_01; original design history is retained on the local **design-history** branch and in **_knowledge/repository-migration-2026-10-04**. Research, old releases, generated variants and the frozen Cinder Hart puzzle remain preserved. No changes were pushed.
 
-The Field player marker uses the Druid portrait inside its yellow ring; Gold uses a filled circle inside a circular ring. Incoming attacks travel from defender to defender, showing actual HP/Ward/Guard lost at each stop. The numbered orb appears immediately with the hit burst, stays visible through card destruction, and carries the damage number during flight. A glowing marker with remaining damage waits at the last impact (even an emptied Ally space) until your next choice, then moves onward with an elemental hit effect at each node.
-
-Poison spells send green droplets and a bubbling impact; Burn uses fire, and Corrode a yellow-green corrosive splash. Status amounts or immunity appear above the burst. Later status damage uses matching stationary feedback.
-
-Placed cards now show elemental accents, active Shield portions with their remaining Guard, and persistent matching-Blast/Shield synergy links and bonus badges. Hover a card to see its Attunement sources. Chosen attunement previews color the source card; Transmute colors persist, while last-cast colors are labeled and reset next turn.
-
-Act 1 boss destruction Tells now outline their currently threatened row, column or stack. Warning symbols and card counts update as you place or Recall; deterministic targeting and tie-breakers are unchanged. You have the current player turn to respond before the enemy acts.
-
-Void-Colossus now uses Chaotic Glare after its two Void Fists and Collapse. It randomly selects any element, including Arcane; both its attacks and defensive matchups use that element until the next Glare. Matching-element hits summon a Mini-Void of that element once per activation. Each Mini-Void retains its own birth element for attacks and defense, even after later Glares.
-
-The Glass Choir now uses Chorus (10 Water) on turn four. Its warned Final Note deals 20 Light damage with Cull on death before victory, bypassing Wards and Shields but allowing Allies and equipment already prepared; dying to it loses the run.
-
-During equipment defense, choose **Take hit — save item Guard** to preserve remaining Bracelet/item Guard for later attacks. You may also do this after one item partially absorbs a hit. Passive Armor still applies.
-
-Water enemies are immune to Burn, Fire enemies to Poison, and Chaos enemies to Corrode. Immunity follows current element: Chaotic Glare clears any newly prohibited status, without restoring it on later changes. Enemy health panels, details and tooltips show the immunity. Player and Ally status rules are unchanged.
-
-Burn, Poison and Corrode on the player now damage HP directly, bypassing Bracelet Guard and Armor. Husk Armor subtracts 2 damage from each enemy attack; it does not negate two attacks or reduce its own Corrode.
-
-Blast starts at 4 damage and Shield at 4 Guard, keeping their adjacency bonuses. HP-healing cards (player or Ally) are rare, have one-quarter the weight of other rare cards, and go to Destroyed immediately after one activation; they return next battle. They cannot Recall or gain extra uses. Enemy starting HP is now another 50% above package 1.3.9, rounded up. Bronze Bracelet refills 2 Guard each enemy turn. Rootbound Ring adds one separate 2-damage hit after the first damaging attack each player turn, using its socketed element; Ready/Spent shows its availability. Restart the app to load this update; start a new run to get the revised Item Deck distribution. Existing acquired cards and saved enemy HP are preserved.
-
-Ally spillover separates base damage from weakness bonus. Consecutive weak Allies share the remaining bonus; a changed matchup discards it. Resistant Allies convert leftover damage back to base before passing it on. Incoming-attack previews show both parts.
-
-Insight counts down during Reveal and finishes at 0. Ending the player turn refills all counters for the next turn while enemies resolve. Charge-building activations need no enemy selection; targeting appears only when an attack will fire. Kiln releases 30 damage to one enemy and Burn 2 to all enemies.
-
-Enemies stop immediately on reaching the player and remain there while the other enemies finish moving, including Pack Movement. Battle begins at the end of the enemy movement phase.
-
-Mind Grid slots have no visible indices. Inventory separates Equipped from Satchel and supports dragging equipment in both directions. Resonance costs 1 Focus to place and 0 Channel to activate for +1 Channel, requires Isolated placement, has one use with no Recall or extra uses, and goes to Destroyed at player-turn end (returning next battle).
-
-New Druid runs start with 12 cards: four Blasts, four Shields, Familiar, Clear Mind, Focus Energy, and Sapling. Existing saves retain their acquired/removed cards; the new base Insight applies at the next Reveal.
-
-Card backs show a Druid tree-and-roots emblem without the game title. Reveal uses shorter, overlapping deal/flip animations while preserving draw order, with a normal four-card Reveal taking about 1.8 seconds. Fast, Skip, and reduced-motion controls remain available.
-
-The active phase outlines Insight, Focus or Channel in soft green. Placed cards display their current conditional damage. Dragging over an enemy previews adjusted card damage and HP loss, with green/red deltas; leaving or canceling restores the normal number. Card status badges have distinct symbols and hover explanations. Tavern upgrade offers show their specific benefits on hover.
-
-Battles now use a fixed 16:9 composition: player and equipment left, Mind Grid center, enemies right, phase arrows above, and revealed cards below. Equipment surrounds the portrait; glowing wrist icons can select a legal defense. Battle tools contains logs, rules and AI controls. Large hands and encounters scroll within their panels. Settings offers 1280×720, 1440×810, 1600×900 and 1920×1080 window sizes plus fullscreen; the stage scales proportionally with black bars on other aspect ratios. Windows are not freely resizable. Restart the app to load this update.
-
-Double-click a placed card's activation button to attack the topmost eligible enemy in the current display order. Multiple attunements still require selection; single-click lets you choose any legal enemy. Other sole-choice activations retain their shortcut. Transmute now visibly names the changed card (for example, Water Blast) and fixes its activation element until it leaves the grid or is transmuted again; existing Shield portions retain their elements.
-
-Ward now has 2 total activations instead of 3; it still starts with 10 ward value and gains 10 per activation.
-
-Player HP floors at zero during lethal-hit animations before You Died appears. The death screen names the enemy and lethal attack, or burning/poison/corrosion for status deaths. Each boss and Eidolon has its own flavor sentence; the explanation ends with “Another traveler may find a different way.” Structured attribution and the exact message persist in run history and archived results. Stone Golem starts with 10 HP; its one activation costs 1 Channel and adds 6 current/maximum HP plus Taunt through the coming enemy phase. HP growth stays while placed; Taunt expires. This growth does not trigger healing-card destruction.
-
-## Play
-
-Open `release/Astrata/Astrata.exe` by double-clicking it. Keep the entire `Astrata` folder together. No installation, development server, editor, network connection, or manually installed runtime is required.
-
-- Click a revealed card to inspect its full art and details, then click a lit Mind Grid slot to place it; dragging also works. Placed cards have visible activation buttons and remaining allowances. Click their surface for full details and Recall.
-- Activate a placed card, then click highlighted attunement cards and enemies, or drag the activating card onto each highlighted choice. The last required selection commits the activation; Cancel or Escape spends nothing. Healing, Shift, and Transmute also use on-board choices. Clicking a card outside targeting still opens full details.
-- Allies show health bars with current HP and the highest HP reached during that placement; growth/healing can raise this display scale without introducing a health cap.
-- Close Grimoire, Inventory, Menu and other dialogs with ×, Escape, or a click outside the window.
-- Enter confirms the main choice. Escape cancels targeting first, or otherwise opens/closes the pause menu.
-- Hover keywords throughout card text, descriptions, status labels and dialogs for brief explanations, including variants such as Locked, Frozen and Severed. Locked prevents Recall and Shift but allows activation; Frozen prevents activation. The Rules & keywords button contains the full quick reference.
-- Read enemy Tells before ending a turn. Each defense selection absorbs as much of the hit as it can.
-- Inventory is available throughout. Equip before or between Field movement steps, or at a Tavern. Drag equipment into slots and Gems into/out of sockets; Gem changes are Tavern-only.
-- Click Tavern people/areas for services. The Market separates Buy from Sell/remove, with View controls before transactions. Ordinary paid card removal is once per Tavern; variable-cost Hex treatment is separate.
-- Spell collisions have small element-specific bursts; Arcane uses a gray star. Damage numbers remain above the effect. Rootbound Ring's bonus projectile launches from its equipped icon, which briefly glows when it fires.
-- Normal animations show each movement step, damage, and defeats before changing screens. Fast animations is available in Settings/during play; Skip resolves the current presentation immediately.
-- The only Field Tavern spawns at slot 8; the Archon at 16. Other rolls use relative weights Mote 40 / Eidolon 10 / Gold 15 / Item 10 / Event 20, with no opening Eidolons.
-- AI step chooses one action. Watch AI plays the same run with the baseline weighted policy; Stop AI returns control.
-
-One save slot autosaves decisions. A mid-battle Continue restarts that battle from its opening with the same random state. Death and completion remove the save; Run History persists. The executable stores save/settings/history in Electron's per-user `astrata` application-data directory (normally `%APPDATA%/astrata`).
-
-## Included
-
-50 non-Hex cards and 5 Hexes, 12 Motes, 7 Eidolons, 3 Archons plus a summon, 32 equipment/Gem entries, 12 events, and generated artwork with reproducible provenance. There is one class and one difficulty. Audio hooks exist; this edition is silent. No Synthesis or later Strata.
-
-See `BUILD_LOG.md` for implementation decisions, validation and limitations. `AI_REPORT.md` interprets the original and updated five-run evaluations. `reports/` contains logs, art provenance, and graphical verification screenshots.
-
-## Development
-
-Node.js 24 was used for the build. Dependencies are pinned in `package-lock.json`.
-
-```text
-npm ci
-node node_modules/electron/install.js
-npm test
-npm run batch -- 5 825183 reports/evaluation
-npm run batch -- 100 971010 reports/another-batch
-npm run package
-npm run test:gui
-```
-
-`npm run start` opens the development desktop app. `npm run package` copies the pinned Electron distribution and game files to a self-contained Windows folder. The app itself has no third-party runtime JavaScript dependencies.
-
-## Architecture
-
-- `src/content.mjs`: declarative cards, items, enemies, events, and glossary.
-- `src/engine.mjs`: deterministic rules, random generator, state machine, complete legal decisions, public observations and checkpoints.
-- `src/policy.mjs`: configurable weighted baseline; replace `choose(observation, legalActions)` for a new policy.
-- `src/ui.mjs` and `src/style.css`: graphical presentation and human controls over the same legal decisions.
-- `desktop.cjs` / `preload.cjs`: isolated Electron window, atomic file saves, settings, run history.
-- `tools/art.mjs` / `tools/revise-art.mjs`: ComfyUI generation, machine/model/workflow/prompt/seed records.
-- `tests/rules.test.mjs`: focused rules and replay regression tests.
-
-The shared source design is updated through v4.63; changes and decisions are recorded in BUILD_LOG.md. Git commits remain local; nothing has been pushed.
-
-Existing 1.0.0/1.1.0/1.2.0/1.2.1/1.3.0/1.3.1/1.3.2/1.3.3/1.3.4/1.3.5/1.3.6/1.3.7/1.3.8/1.3.9 saves remain loadable. Legacy revealed entries become the second member of each pair, with a new companion rolled once; already spawned entities retain their identities and sizes. Old spawn progress is mapped to pair progress and a pending battle gains the additional base Channel once. Fresh runs have exactly 32 scheduled spawns, including one Tavern in pair 8 and one Archon in pair 16. Old exact replays require their original rules version.
-
-Cards now activate once per turn by default, even with unused Channel or remaining total activations. The per-turn opportunity refreshes next player turn; total used allowance does not. Printed Blink supports repeated paid activation within the total limit. No existing card has been granted Blink in this update. Covered Pile/Fusion activations and Charge building also count. Card controls display Used this turn and disable until eligible again. The earlier documentation-only implementation gap is closed (content 1.1.5).
-
-
-Run data: the desktop build retains every completed result in `%APPDATA%/astrata/history.json`, with no ten-run cap. Detailed records now live in `runs/<runId>/` (`metadata.json`, append-only `events.jsonl` (losslessly compressed to `.jsonl.gz` on completion/forfeit), `latest.json`, `result.json` when completed). Archives retain unfinished/forfeited runs and every resumed attempt; the Continue save is separate. `builds/<hash>.json` preserves package identity and engine/content/policy sources. Legacy results are imported without invented timestamps/build versions; details discarded by older builds cannot be recovered. Records stay local. Headless batches keep the same unique archives inside their report directory; `run-<seed>.json` and `summary.json` remain convenience exports of the latest batch. No automatic pruning. The unsupported browser-only fallback uses localStorage and remains subject to browser storage quotas; the Windows executable is the durable archival target.
-
-The Mind Grid is now 7 columns × 6 rows (42 spaces) for playtesting future Corruption space. All existing spatial rules use the larger board; default resources/card values are unchanged. Older 5×4 saves keep stack coordinates, with new spaces added on the right and bottom. Corruptions remain planned Act 2 content.
-
-New runs start with the Bronze Bracelet and Rootbound Ring equipped on the right wrist and right finger. Existing runs retain their equipment arrangement.
-
-Severed cards have jagged purple borders on all four sides and no connection links. Neutral adjacency, elemental Attunement and gold synergy links are now brighter and thicker with visible endpoints; clearing Sever restores valid links.
-
-Fourfold Grove shows its qualifying 2×2 with four side links, one diagonal and a doubled-damage badge. Elemental outlines and translucent art tint replace the bright left stripe; activated Shields retain their chosen colors for the turn. Opening Rite begins placed, grants first-turn Focus and cannot be recalled, including through whole-stack Recall.
-
-Shield now has two activations per placement. Glass Choir destroys the two highest-value complete stacks (total printed Focus, then remaining activations, then reading order); both targets are telegraphed. Its on-death Final Note is a fixed 20 Light Cull hit: Wards/Shields are bypassed, Allies/equipment still defend.
-
-Event exchanges now open an offer chooser with Equipped and Satchel groups, inspectable items and rewards, drag-to-trade or click confirmation, and a no-cost Back option. Lantern Trader lets you choose any eligible owned Bracelet; only that copy is surrendered, and its Gem stays in your Satchel. Exact offered IDs are available to AI and saved in run records.
-
-Board connections now represent real effects only. Glowing energy strands flow toward recipients; mutual bonuses flow both ways. Plain adjacency creates no line, and long-range effects reveal on inspection. Reduced motion keeps static strands.
-
-Corrode now uses rust-brown pitted metal and flakes. Newly inflicted Burn/Poison/Corrode travels from the responsible equipped item or enemy to the Druid; ongoing status damage bursts in place. Battle-start curses animate before their first tick and Reveal.
-
-Market Buy has Cards/Gems/Equipment tabs; Sell has Grimoire/Equipment tabs. Equipped items have gold outlines and labels. Cursed objects and Hexes remain inspectable but gray and unavailable for market transactions; a visiting Tavern Healer handles removal.
-
-The first four spawn pairs use Bat, Bell Beetle, Veil Moth and Spark-Wisp; pair5 unlocks the full Mote pool and Eidolons. Bat, Beetle and Moth have non-damaging turns reducing next-turn Insight/Focus/Channel. Click map enemies to inspect age, Restless, effective movement and the first attack cycle before choosing Move here to enter a reachable fight.
-
-Both first-pair spawns appear exactly two movement steps from the player, independently choosing among the 16 spaces around the 5×5 perimeter. Later pairs keep normal Location rolls.
-
-The pause menu’s Return to Start autosaves and opens the start screen; Continue resumes the saved run. The start-screen Quit closes the application.
-
-Eight directional arrow buttons beside End Movement move directly, including onto enemy spaces. Clicking an enemy tile still opens inspection.
+Development: `npm start`, `npm test`, `node tools/audit.mjs`. Package with `node tools/package.mjs --app-only` and `python tools/make-zip.py`. Run AI batches with `node tools/batch.mjs 5 41001 reports/evaluation`. Add `--loom` only for the labeled Stratum 2 carry-in fixture; its victories are not earned full-run wins.

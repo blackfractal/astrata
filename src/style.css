@@ -2965,27 +2965,275 @@ header {
   text-align: center;
 }
 
-.charge-meter { display: block; color: var(--gold); }
+.charge-meter {
+  display: block;
+  color: var(--gold);
+}
 
 /* Upgrades: permanent stamped gold star, independent of elemental attunement. */
-.upgrade-badge { position:absolute; top:6px; right:6px; z-index:5; display:inline-flex; align-items:center; justify-content:center; width:27px; height:27px; color:#ffdb79; background:#211d13f5; border:1px solid #e6bd62; border-radius:50%; box-shadow:0 1px 4px #000b; cursor:help; }
-.upgrade-badge svg { width:21px; height:21px; fill:currentColor; pointer-events:none; }
-.card-art-detail, .market-item { position:relative; }
-.card-art-detail .full-art { width:100%; }
-.card-stat-breakdown { font-size:14px; color:#dfd3ae; line-height:1.5; }
-.shield-value, .damage-value { cursor:help; }
+.upgrade-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 27px;
+  height: 27px;
+  color: #ffdb79;
+  background: #211d13f5;
+  border: 1px solid #e6bd62;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px #000b;
+  cursor: help;
+}
+.upgrade-badge svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+  pointer-events: none;
+}
+.card-art-detail,
+.market-item {
+  position: relative;
+}
+.card-art-detail .full-art {
+  width: 100%;
+}
+.card-stat-breakdown {
+  font-size: 14px;
+  color: #dfd3ae;
+  line-height: 1.5;
+}
+.shield-value,
+.damage-value {
+  cursor: help;
+}
 
 /* Boss destruction: fire consumes a row, gravity swallows a column, song shatters stacks. */
-.boss-effect { position:fixed; z-index:65; pointer-events:none; }
-.wildfire-line { overflow:visible; filter:drop-shadow(0 0 7px #ff751bcc); }
-.wildfire-core { position:absolute; top:46%; width:100%; height:12%; background:linear-gradient(0deg,#d92e0c,#ffb22d,#fff2b0,#ff7b16); box-shadow:0 0 19px 8px #ff620a99; border-radius:50%; }
-.wildfire-flame { position:absolute; bottom:42%; width:6%; height:var(--flame-height); background:linear-gradient(0deg,#ffe995 8%,#ffae24 35%,#f45116 75%,#c21c1100); border-radius:70% 10% 65% 30%; transform:rotate(var(--flame-lean)); opacity:.9; }
-.collapse-hole { display:grid; place-items:center; border-radius:50%; background:radial-gradient(ellipse,#090810 12%,#231d3888 42%,#b4b6c744 58%,transparent 72%); filter:drop-shadow(0 0 5px #a4a1b7); }
-.collapse-hole svg { position:absolute;width:100%;height:100%;fill:none;stroke:#dddbf3;stroke-width:1.5; }
-.collapse-hole span { color:#fff; font:bold 17px Candara,sans-serif;text-shadow:0 1px 4px #000; }
-.collapse-hole[data-empty="false"] span { font-size:12px; }
-.hymn-notes { color:#f5df9e;filter:drop-shadow(0 0 4px #ffe39c); }
-.hymn-notes svg { width:100%;height:100%;overflow:visible; }
-.hymn-staff { stroke:currentColor;stroke-width:1;opacity:.6; }
-.hymn-score { fill:currentColor;stroke:currentColor;stroke-width:3;stroke-linecap:round; }
-.held-attack.collapse-bolt { position:fixed;z-index:66; }
+.boss-effect {
+  position: fixed;
+  z-index: 65;
+  pointer-events: none;
+}
+.wildfire-line {
+  overflow: visible;
+  filter: drop-shadow(0 0 7px #ff751bcc);
+}
+.wildfire-core {
+  position: absolute;
+  top: 46%;
+  width: 100%;
+  height: 12%;
+  background: linear-gradient(0deg, #d92e0c, #ffb22d, #fff2b0, #ff7b16);
+  box-shadow: 0 0 19px 8px #ff620a99;
+  border-radius: 50%;
+}
+.wildfire-flame {
+  position: absolute;
+  bottom: 42%;
+  width: 6%;
+  height: var(--flame-height);
+  background: linear-gradient(
+    0deg,
+    #ffe995 8%,
+    #ffae24 35%,
+    #f45116 75%,
+    #c21c1100
+  );
+  border-radius: 70% 10% 65% 30%;
+  transform: rotate(var(--flame-lean));
+  opacity: 0.9;
+}
+.collapse-hole {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    #090810 12%,
+    #231d3888 42%,
+    #b4b6c744 58%,
+    transparent 72%
+  );
+  filter: drop-shadow(0 0 5px #a4a1b7);
+}
+.collapse-hole svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #dddbf3;
+  stroke-width: 1.5;
+}
+.collapse-hole span {
+  color: #fff;
+  font:
+    bold 17px Candara,
+    sans-serif;
+  text-shadow: 0 1px 4px #000;
+}
+.collapse-hole[data-empty="false"] span {
+  font-size: 12px;
+}
+.hymn-notes {
+  color: #f5df9e;
+  filter: drop-shadow(0 0 4px #ffe39c);
+}
+.hymn-notes svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hymn-staff {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.hymn-score {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.held-attack.collapse-bolt {
+  position: fixed;
+  z-index: 66;
+}
+
+/* Space-bound Corruptions: the seal remains visible beneath a card. */
+.field.loom-field {
+  background-image: url("../assets/location-loom-field.png");
+}
+.in-loom .mind {
+  background-image:
+    linear-gradient(#07110e28, #07110e28),
+    url("../assets/location-loom-mind.png");
+}
+.slot.corrupted {
+  --corruption-color: #be8ad6;
+  box-shadow:
+    inset 0 0 0 2px var(--corruption-color),
+    0 0 12px #a659ca44;
+}
+.slot.corruption-hole {
+  --corruption-color: #998bb6;
+  background: radial-gradient(
+    ellipse,
+    #020204 15%,
+    #100d19 47%,
+    #78678a88 65%,
+    transparent 75%
+  );
+}
+.slot.corruption-nausea {
+  --corruption-color: #bad16a;
+}
+.slot.corruption-insanity {
+  --corruption-color: #d199dc;
+}
+.slot.corruption-mine {
+  --corruption-color: #f29e53;
+}
+.slot.corruption-hypnosis {
+  --corruption-color: #73d4d5;
+}
+.corruption-seal {
+  position: absolute;
+  z-index: 12;
+  top: 3px;
+  left: 3px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 4px;
+  border: 1px solid var(--corruption-color);
+  border-radius: 5px;
+  color: var(--corruption-color);
+  background: #11131cf2;
+  font-size: 22px;
+  line-height: 1;
+  cursor: help;
+}
+.corruption-seal small {
+  font-size: 10px;
+}
+.empty .corruption-seal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 34px;
+}
+.corruption-covered .corruption-seal {
+  opacity: 0.8;
+}
+.corruption-mark {
+  outline: 2px dashed #f2c778;
+  outline-offset: -3px;
+  animation: corruption-mark-pulse 1.5s ease-in-out infinite;
+}
+.corruption-foretell {
+  position: absolute;
+  z-index: 13;
+  top: 3px;
+  right: 3px;
+  background: #17120bf2;
+  border: 1px solid #f2c778;
+  color: #ffe09c;
+  padding: 3px 5px;
+  font-size: 17px;
+  cursor: help;
+}
+.mending-ribbon {
+  position: absolute;
+  z-index: 13;
+  top: 30px;
+  left: 3px;
+  right: 3px;
+  background: #163929ed;
+  color: #cbf1d1;
+  border: 1px solid #92cbb0;
+  text-align: center;
+  font-size: 11px;
+}
+.nausea-warning {
+  position: absolute;
+  z-index: 11;
+  top: 28px;
+  right: 4px;
+  color: #d6e38d;
+  background: #242916ef;
+  border: 1px solid #b1c06b;
+  padding: 1px 4px;
+  border-radius: 50%;
+  font-size: 17px;
+}
+.corruption-flare {
+  animation: corruption-flare 0.65s ease-out !important;
+}
+@keyframes corruption-mark-pulse {
+  50% {
+    outline-color: #fff5ce;
+    filter: drop-shadow(0 0 3px #edc36b);
+  }
+}
+@keyframes corruption-flare {
+  0% {
+    filter: brightness(2.5);
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .corruption-mark,
+  .corruption-flare {
+    animation: none;
+  }
+}

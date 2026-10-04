@@ -72,7 +72,7 @@ test("Boss achievements require confirmed non-tutorial victories, including earl
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
   discover(c, state, "later");
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
-  assert.equal(achievements.length, 6);
+  assert.equal(achievements.length, 9);
   assert.ok(!c.achievements["calm-astrata"] && !c.achievements["calm-apex"]);
 });
 test("Collection store imports compressed and active traces once and survives restart without changing archives", () => {

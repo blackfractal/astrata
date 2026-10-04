@@ -1,13 +1,14 @@
+import { registerStratum2 } from "./strata.mjs";
 export const DRUID_COMPANION_STORY =
   "At the forest’s edge, a sapling lifts its roots from the earth and falls into step beside you. It pauses when you pause. When you turn toward the darker trees, it shakes the dew from its leaves and follows. You make room in your grimoire. Neither of you has to enter the Weald alone.";
 export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.50",
-  content: "1.1.57",
-  observation: 1,
-  actions: 4,
+  rules: "2.0.0",
+  content: "2.0.0",
+  observation: 2,
+  actions: 5,
 };
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",
@@ -1786,6 +1787,13 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  mendingWarden: "The thread slipped. The lesson can begin again.",
+  seamstress: "She found a loose thread. It was yours.",
+  censer: "The incense rose. The traveler did not.",
+  borrowedChoir: "Your hands knew the song before you did.",
+  spoolkeeper: "One more stitch, and the pattern was complete.",
+  borrowedFace: "It wore your last expression well.",
+  surveyor: "There was room for everything except you.",
   tutorialWarden: "Even a patient teacher can end a lesson.",
   choir: "They sang of destruction, then delivered it.",
   hart: "The forest bowed before its antlers. You did not bow quickly enough.",
@@ -1798,3 +1806,5 @@ export const enemyDeathLines = {
   elemental: "So many colors. Such a brief rainbow.",
   mason: "It called this a renovation. You were a load-bearing traveler.",
 };
+
+registerStratum2(card, enemy, glossary);

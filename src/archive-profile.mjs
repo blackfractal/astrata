@@ -1,6 +1,17 @@
 import { cards, enemies, items, events } from "./content.mjs";
 
 export const achievements = [
+  {
+    id: "defeat-seamstress",
+    name: "Defeat the Seamstress of Absence",
+    enemy: "seamstress",
+  },
+  { id: "defeat-censer", name: "Defeat the Censer Engine", enemy: "censer" },
+  {
+    id: "defeat-borrowedChoir",
+    name: "Defeat the Choir of Borrowed Hands",
+    enemy: "borrowedChoir",
+  },
   { id: "defeat-hart", name: "Defeat the Cinder Hart", enemy: "hart" },
   {
     id: "defeat-colossus",

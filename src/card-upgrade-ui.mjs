@@ -1,3 +1,4 @@
+import { corruptionPower } from "./corruptions.mjs";
 import { cards } from "./content.mjs";
 import {
   cardPower,
@@ -34,15 +35,22 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
         `${connections} ${label === "Shield" ? "adjacent Shield / Conduit" : "placement / synergy"}`,
       );
     if (equipment) parts.push(`${equipment} equipment on activation`);
+    const sick =
+      live &&
+      ["Damage", "Shield", "Ward gain"].includes(label) &&
+      corruptionPower(b, slot, 4) < 4;
+    if (sick) total = corruptionPower(b, slot, total);
     rows.push({
       label,
-      text: `${parts.join(" + ")} = ${total} ${label.toLowerCase()}.`,
+      text: `${parts.join(" + ")}${sick ? " → Nausea ×½, rounded down" : ""} = ${total} ${label.toLowerCase()}.`,
     });
   }
   if (f.damage || f.hpDamage) {
     const base = f.hpDamage ? (c.hp ?? d.hp) : d.effects.damage || 0,
       bonus = f.damage ? up + f.damage - (d.effects.damage || 0) : 0;
-    const total = live ? cardPower(b, c, slot) : base + bonus;
+    const total = live
+      ? cardPower({ ...b, corruptions: {} }, c, slot)
+      : base + bonus;
     row("Damage", base, bonus, total - base - bonus, total);
   }
   if (f.shield) {

@@ -18,10 +18,13 @@ const sources = Object.fromEntries(
   await Promise.all(
     [
       "engine.mjs",
+      "strata.mjs",
+      "corruptions.mjs",
       "content.mjs",
       "policy.mjs",
       "death.mjs",
       "tutorial.mjs",
+      "loom-tutorial.mjs",
       "consumables.mjs",
     ].map(async (name) => [
       name,
@@ -39,6 +42,23 @@ for (let i = 0; i < count; i++) {
     g = new Game(seed),
     policy = new WeightedPolicy(),
     log = [];
+  const fixture = process.argv.includes("--loom")
+    ? "stratum2-carry-in-v1"
+    : null;
+  if (fixture) {
+    for (const id of ["grove", "ward", "water", "plasma", "cinder", "focus"])
+      g.addCard(id);
+    g.addItem("gold");
+    g.addItem("stoneArmor");
+    g.addItem("crown");
+    g.s.equipment.wrist2 = g.s.inventory.find((x) => x.id === "gold").uid;
+    g.s.equipment.torso = g.s.inventory.find((x) => x.id === "stoneArmor").uid;
+    g.s.equipment.head = g.s.inventory.find((x) => x.id === "crown").uid;
+    g.s.hp = 55;
+    g.s.gold = 180;
+    g.enterStratum2();
+    g.s.evaluationFixture = fixture;
+  }
   const start = Date.now(),
     runId = randomUUID();
   g.capturePresentation = true;
@@ -84,6 +104,8 @@ for (let i = 0; i < count; i++) {
   const result = {
     runId,
     packageVersion,
+    fixture,
+    stratum: g.s.stratum,
     seed,
     version: VERSION,
     policy: policy.id,

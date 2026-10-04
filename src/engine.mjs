@@ -1,3 +1,15 @@
+import { STRATA } from "./strata.mjs";
+import {
+  canEnter,
+  canMend,
+  corruptionAt,
+  corruptionPower,
+  resetCoveredInsanity,
+  prepareCorruption,
+  applyCorruptions,
+  startRepairs,
+  corruptionRound,
+} from "./corruptions.mjs";
 import {
   SATCHEL_CAPACITY,
   satchelContents,
@@ -256,7 +268,7 @@ export function cardPower(b, c, i) {
       const tower = top(b.grid[j]);
       if (tower?.magnified && b.grid[j].length === level) n *= 2;
     }
-  return n;
+  return corruptionPower(b, i, n);
 }
 
 // Resolve elemental damage locally; only unmodified base damage travels onward.
@@ -502,6 +514,8 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "1.3.50",
+          "1.3.49",
           "1.3.48",
           "1.3.47",
           "1.3.46",
@@ -610,6 +624,8 @@ export class Game {
           "Tutorial updated: replaying the Rootling lesson with enemy-first movement and the new formation.",
         );
       }
+      this.s.stratum ??= 1;
+      if (this.s.battle) this.s.battle.corruptions ||= {};
       this.normalizeRewards();
       this.normalizeSpawns();
       if (this.s.mode === "battle" && !this.s.tutorial)
@@ -618,6 +634,7 @@ export class Game {
     }
     this.s = {
       version: VERSION,
+      stratum: 1,
       seed: Number(seed) >>> 0,
       rng: Number(seed) >>> 0 || 1,
       uid: 0,
@@ -667,18 +684,27 @@ export class Game {
     for (let warmup = 0; warmup < 8; warmup++) this.rand();
     this.s.archon = this.pick(
       Object.values(enemies)
-        .filter((e) => e.tier === "Archon")
+        .filter((e) => e.tier === "Archon" && (e.stratum || 1) === 1)
         .map((e) => e.id),
     );
     this.s.enemyDecks = {
       Mote: this.shuffle(
         Object.values(enemies)
-          .filter((e) => e.tier === "Mote" && !e.summonOnly && !e.tutorialOnly)
+          .filter(
+            (e) =>
+              e.tier === "Mote" &&
+              (e.stratum || 1) === 1 &&
+              !e.summonOnly &&
+              !e.tutorialOnly,
+          )
           .flatMap((e) => (e.movement === "Skittish" ? [e.id] : [e.id, e.id])),
       ),
       Eidolon: this.shuffle(
         Object.values(enemies)
-          .filter((e) => e.tier === "Eidolon" && !e.tutorialOnly)
+          .filter(
+            (e) =>
+              e.tier === "Eidolon" && (e.stratum || 1) === 1 && !e.tutorialOnly,
+          )
           .map((e) => e.id),
       ),
     };
@@ -688,7 +714,12 @@ export class Game {
     this.s.itemDeck = this.shuffle([
       ...Object.keys(items),
       ...Object.keys(cards)
-        .filter((id) => !starter.includes(id))
+        .filter(
+          (id) =>
+            !starter.includes(id) &&
+            (cards[id].stratum || 1) === 1 &&
+            !cards[id].companion,
+        )
         .filter((id) => !cards[id].destroyAfterActivation || this.rand() < 0.25)
         .map((id) => "card:" + id),
     ]);
@@ -879,6 +910,8 @@ export class Game {
     return Object.values(cards).filter(
       (c) =>
         c.type !== "Hex" &&
+        !c.companion &&
+        (c.stratum || 1) <= (this.s.stratum || 1) &&
         c.rarity === rarity &&
         !["surge"].includes(c.id) &&
         (!reward || !["blast", "shield"].includes(c.id)),
@@ -1115,11 +1148,14 @@ export class Game {
             if (!d?.length)
               this.s.enemyDecks[deckKey] = d = this.shuffle(
                 opening
-                  ? EARLY_MOTES
+                  ? STRATA[this.s.stratum || 1].early
                   : Object.values(enemies)
                       .filter(
                         (x) =>
-                          x.tier === type && !x.summonOnly && !x.tutorialOnly,
+                          x.tier === type &&
+                          (x.stratum || 1) === (this.s.stratum || 1) &&
+                          !x.summonOnly &&
+                          !x.tutorialOnly,
                       )
                       .map((x) => x.id),
               );
@@ -1322,6 +1358,7 @@ export class Game {
       columns: MIND_COLUMNS,
       rows: MIND_ROWS,
       grid: Array.from({ length: MIND_SIZE }, () => []),
+      corruptions: {},
       deck: clone(s.deck),
       hand: [],
       discard: [],
@@ -1398,6 +1435,7 @@ export class Game {
       }
     this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));
     s.stats.encounters.push({
+      stratum: s.stratum || 1,
       round: s.field.round,
       enemies: b.enemies.map((e) => e.name),
       outcome: "in progress",
@@ -1490,6 +1528,8 @@ export class Game {
       b = s.battle;
     b.turn++;
     b.phase = "start";
+    startRepairs(this);
+    if (s.mode !== "battle") return;
     this.refillResources();
     b.healUses ||= {};
     for (const gear of this.equipped()) {
@@ -1716,7 +1756,7 @@ export class Game {
         }
       b.jobs.push({ kind: "enemyAction", uid: e.uid });
     }
-    b.jobs.push({ kind: "nextTurn" });
+    b.jobs.push({ kind: "corruptionRound" }, { kind: "nextTurn" });
     this.pump();
   }
   pump() {
@@ -1724,6 +1764,10 @@ export class Game {
       b = s.battle;
     while (s.mode === "battle" && !b.reaction && b.jobs.length) {
       const j = b.jobs.shift();
+      if (j.kind === "corruptionRound") {
+        corruptionRound(this);
+        continue;
+      }
       if (j.kind === "reveal") {
         this.reveal();
         continue;
@@ -1814,6 +1858,11 @@ export class Game {
           e.purifyPending = ["burn", "poison", "corrode"].some(
             (k) => e.status[k] > 0,
           );
+        if (t.markCorruption) prepareCorruption(this, e, t);
+        if (t.applyCorruption) applyCorruptions(this, e);
+        if (t.releaseCorruption)
+          for (const [i, q] of Object.entries(b.corruptions))
+            if (q.source === e.uid) delete b.corruptions[i];
         if (t.grid) this.gridAttack(t, e);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;
@@ -1859,7 +1908,14 @@ export class Game {
         b.reaction = {
           ...j,
           stage: j.statusHit ? "player" : "defend",
-          column: j.pierce ? -1 : MIND_COLUMNS - 1,
+          column: j.pierce
+            ? -1
+            : j.gridSourceSlot != null
+              ? j.gridSourceSlot % MIND_COLUMNS
+              : MIND_COLUMNS - 1,
+          ...(j.gridSourceSlot != null
+            ? { lastNode: { kind: "card", slot: j.gridSourceSlot } }
+            : {}),
           intercepted: [],
         };
         this.present("incoming", {
@@ -1868,6 +1924,7 @@ export class Game {
           element: j.element,
           name: j.name,
           collapseOrigins: j.collapseOrigins,
+          gridSourceSlot: j.gridSourceSlot,
         });
         this.advanceHit();
       }
@@ -2255,11 +2312,13 @@ export class Game {
   }
   shieldPower(c, i) {
     const d = cards[c.id];
-    return (
+    return corruptionPower(
+      this.s.battle,
+      i,
       (d.effects.shield || 0) +
-      (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
-      (d.effects.matchingShield || 0) * this.matchingNeighbors(c, i) +
-      (d.name.includes("Shield") ? this.bonuses().shield : 0)
+        (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+        (d.effects.matchingShield || 0) * this.matchingNeighbors(c, i) +
+        (d.name.includes("Shield") ? this.bonuses().shield : 0),
     );
   }
   cardPower(c, i) {
@@ -2324,7 +2383,19 @@ export class Game {
       if (c.lastActivated === b.turn - 1) c.magnified = true;
       c.lastActivated = b.turn;
     }
-    if (f.ward) c.ward += f.ward + bonus;
+    if (f.mend) {
+      const q = corruptionAt(b, i);
+      if (canMend(c, q))
+        c.mending = {
+          slot: i,
+          corruptionUid: q.uid,
+          kind: q.kind,
+          due: b.turn + 1,
+        };
+    }
+    if (f.stitch && canMend({ upgrade: false }, corruptionAt(b, i)))
+      delete b.corruptions[i];
+    if (f.ward) c.ward += corruptionPower(b, i, f.ward + bonus);
     if (f.shield) {
       b.shields.push({
         uid: this.uid(),
@@ -2592,6 +2663,10 @@ export class Game {
     if (!win) s.death = describeDeath(s, cause, hit);
     s.mode = "result";
     s.outcome = win ? "win" : "loss";
+    if (win && !s.tutorial)
+      s.stats.strataCompleted = [
+        ...new Set([...(s.stats.strataCompleted || []), s.stratum || 1]),
+      ];
     s.cause = cause;
     s.hp = Math.max(0, s.hp);
     s.status = blankStatus();
@@ -2605,9 +2680,56 @@ export class Game {
     this.log(
       win
         ? s.tutorial
-          ? "The First Clearing complete."
-          : "Stratum 1 Complete."
+          ? (s.tutorial.name || "The First Clearing") + " complete."
+          : "Stratum " + (s.stratum || 1) + " Complete."
         : "You Died: " + cause,
+    );
+  }
+  enterStratum2() {
+    const s = this.s;
+    s.stratum = 2;
+    s.stats.strataCompleted = [
+      ...new Set([...(s.stats.strataCompleted || []), 1]),
+    ];
+    s.field = {
+      round: 0,
+      spawned: 0,
+      spawnWidth: 2,
+      queue: [],
+      entities: [],
+      x: 5,
+      y: 5,
+      moves: 2,
+      stage: "player",
+    };
+    delete s.battle;
+    delete s.reward;
+    delete s.checkpoint;
+    delete s.revealedArchon;
+    delete s.itemSource;
+    s.archon = this.pick(
+      Object.values(enemies)
+        .filter((e) => e.stratum === 2 && e.tier === "Archon")
+        .map((e) => e.id),
+    );
+    s.enemyDecks = {};
+    s.itemDeck = this.shuffle([
+      ...Object.keys(items),
+      ...this.pool("common").map((c) => "card:" + c.id),
+      ...this.pool("rare").map((c) => "card:" + c.id),
+    ]);
+    s.status = blankStatus();
+    const elves = this.addCard("elves");
+    s.stats.withoutMenders = {
+      uid: elves.uid,
+      receivedAtStep: s.steps,
+      disqualified: null,
+    };
+    s.loomIntro = true;
+    this.openTavern();
+    s.shop.healer = true;
+    this.log(
+      "The Whispering Weald is behind you. A Tavern welcomes you before the Unfinished Loom.",
     );
   }
   openTavern() {
@@ -2825,6 +2947,10 @@ export class Game {
         );
       return actions;
     }
+    if (s.mode === "loomIntro") {
+      add("enterLoom", "Enter the Unfinished Loom", {}, { progress: 1 });
+      return actions;
+    }
     if (s.mode === "intro") {
       add("begin", "Enter the Whispering Weald", {}, { progress: 1 });
       return actions;
@@ -2945,7 +3071,11 @@ export class Game {
       } else
         add(
           "continueReward",
-          s.reward.boss ? "Complete Stratum 1" : "Return to the Field",
+          s.reward.boss
+            ? (s.stratum || 1) === 1 && !s.tutorial
+              ? "Continue to the Unfinished Loom"
+              : "Complete Stratum " + (s.stratum || 1)
+            : "Return to the Field",
           {},
           { progress: 1 },
         );
@@ -3166,6 +3296,7 @@ export class Game {
           if (d.unplaceable || cost > b.focus) continue;
           for (let i = 0; i < b.grid.length; i++)
             if (
+              canEnter(b, c, i) &&
               this.canStack(c, b.grid[i]) &&
               (d.type !== "Hex" ||
                 d.condition !== "isolated" ||
@@ -3205,7 +3336,9 @@ export class Game {
           if (
             d.channel > b.channel ||
             !this.activationAvailable(c, i) ||
-            !this.condition(c, i)
+            !this.condition(c, i) ||
+            (f.mend && !canMend(c, corruptionAt(b, i))) ||
+            (f.stitch && !canMend({ upgrade: false }, corruptionAt(b, i)))
           )
             continue;
           const els = attunementElements(b, c, i);
@@ -3231,7 +3364,11 @@ export class Game {
             extras = b.grid.flatMap((slot, j) =>
               slot.length && !slot.some((x) => x.lock)
                 ? b.grid.flatMap((dest, k) =>
-                    !dest.length ? [{ cardTarget: j, destination: k }] : [],
+                    !dest.length &&
+                    canEnter(b, top(slot), k) &&
+                    !top(slot).mending
+                      ? [{ cardTarget: j, destination: k }]
+                      : [],
                   )
                 : [],
             );
@@ -3283,6 +3420,15 @@ export class Game {
                       ? { insight: insightGain(b, c, i) }
                       : {}),
                     ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
+                    ...(f.ward
+                      ? {
+                          ward: corruptionPower(
+                            b,
+                            i,
+                            f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0),
+                          ),
+                        }
+                      : {}),
                     card: c.id,
                     charge: d.charge ? chargeActivations(b, c, i) : 0,
                     ...(d.charge
@@ -3464,11 +3610,15 @@ export class Game {
         s.reward.setting = false;
         break;
       case "continueReward":
-        if (s.reward.boss) this.finish(true);
+        if (s.reward.boss && !s.tutorial && (s.stratum || 1) === 1)
+          this.enterStratum2();
+        else if (s.reward.boss) this.finish(true);
         else this.resolveTile();
         break;
       case "leave":
-        this.resolveTile();
+        if (s.loomIntro) {
+          s.mode = "loomIntro";
+        } else this.resolveTile();
         break;
       case "heal":
         this.spend(20);
@@ -3539,6 +3689,10 @@ export class Game {
         c.upgrade = true;
         break;
       }
+      case "enterLoom":
+        delete s.loomIntro;
+        this.beginRound();
+        break;
       case "place": {
         const c = b.hand.find((x) => x.uid === a.uid),
           d = cards[c.id];
@@ -3707,6 +3861,21 @@ export class Game {
       delete s.pendingPickupResolution;
       this.resolveTile();
     }
+    if (b) resetCoveredInsanity(b);
+    const challenge = s.stats.withoutMenders;
+    if (challenge && !challenge.disqualified) {
+      if (!s.deck.some((c) => c.uid === challenge.uid))
+        challenge.disqualified = "companion removed";
+      if (
+        (a.type === "place" &&
+          b?.grid[a.slot]?.some((c) => c.id === "elves")) ||
+        (a.type === "activate" &&
+          b?.grid[a.slot]?.some((c) => c.id === "elves"))
+      )
+        challenge.disqualified = "Machine Elves used";
+    }
+    if (s.checkpoint && challenge)
+      s.checkpoint.stats.withoutMenders = clone(challenge);
     tutorialAfter(this, a);
     return this.observe();
   }
@@ -3721,6 +3890,9 @@ export class Game {
     const s = this.s;
     const o = {
       version: VERSION,
+      stratum: s.stratum || 1,
+      stratumName: STRATA[s.stratum || 1].name,
+      loomIntro: s.loomIntro,
       tutorial: s.tutorial
         ? {
             id: s.tutorial.id,

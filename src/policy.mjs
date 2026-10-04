@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.21";
+    this.id = "weighted-druid-v2.0";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -32,6 +32,46 @@ export class WeightedPolicy {
         why = "Fallback for a legal choice with unfamiliar effects.";
       try {
         [score, why] = this.score(o, a);
+        const b = o.battle,
+          q = b?.corruptions?.[a.slot];
+        if (a.type === "place" && b) {
+          const card = b.hand.find((c) => c.uid === a.uid),
+            d = cards[card?.id];
+          if (q?.kind === "insanity" || q?.kind === "nausea")
+            score += q.kind === "insanity" ? 14 : 7;
+          if (card?.id === "elves") score += 9;
+          if (q?.kind === "mine")
+            score +=
+              q.remaining <= 1
+                ? d?.focus === 0 || card?.id === "shield"
+                  ? 18
+                  : -8
+                : 2;
+          if (
+            q?.kind === "hypnosis" &&
+            (d?.effects.damage || d?.effects.shield || d?.effects.ward)
+          )
+            score -= 12;
+          if (
+            b.enemies.some((e) =>
+              e.corruptionPlan?.some(
+                (p) => p.slot === a.slot && p.kind === "hole",
+              ),
+            )
+          )
+            score += 10;
+        }
+        if (a.type === "activate" && (a.effects.mend || a.effects.stitch)) {
+          score += 18;
+          why = "Repair the corrupted space while protecting the companion.";
+        }
+        if (
+          a.type === "recall" &&
+          q &&
+          ["nausea", "insanity", "mine"].includes(q.kind)
+        )
+          score -= 20;
+        if (a.type === "activate" && q?.kind === "hypnosis") score += 8;
         if (!Number.isFinite(score)) score = -0.01;
       } catch {}
       if (score > best) {

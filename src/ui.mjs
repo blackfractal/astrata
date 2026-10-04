@@ -1,3 +1,6 @@
+import { ELVES_STORY, CORRUPTIONS } from "./strata.mjs";
+import { startLoomTutorial, LOOM_TUTORIAL } from "./loom-tutorial.mjs";
+import { paintCorruptions } from "./corruptions-ui.mjs";
 import { showArchives } from "./archives-ui.mjs";
 import { discover, emptyCollection } from "./archive-profile.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
@@ -163,6 +166,9 @@ function tellText(t) {
       ? `${t.damage || 0} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
       : "",
     t.randomElement ? "Change element randomly" : "",
+    t.markCorruption ? "Mark spaces · one turn to respond" : "",
+    t.applyCorruption ? "Corrupt marked spaces" : "",
+    t.releaseCorruption ? "Remove its Corruptions" : "",
     t.damagePerEmpty
       ? `${t.damagePerEmpty} per empty space before Collapse; hit after destruction${t.emptySpaces != null ? ` (${t.emptySpaces} empty)` : ""}`
       : "",
@@ -258,7 +264,7 @@ function phaseBar(b, actions) {
   </nav>`;
 }
 function header(o) {
-  return `<header><span class="brand">ASTRATA</span><div class="row stats"><span><b class="hp">${o.hp}</b> / ${o.maxHp} HP</span><span><b class="gold">${o.gold}</b> Gold</span><span>Stratum <b>1</b> · Round <b>${o.field.round || "—"}</b></span></div><div class="row"><button data-ui="grimoire">Grimoire</button><button data-ui="inventory">Inventory</button><button data-ui="pause">☰ Menu</button></div></header>`;
+  return `<header><span class="brand">ASTRATA</span><div class="row stats"><span><b class="hp">${o.hp}</b> / ${o.maxHp} HP</span><span><b class="gold">${o.gold}</b> Gold</span><span>Stratum <b>${o.stratum || 1}</b> · Round <b>${o.field.round || "—"}</b></span></div><div class="row"><button data-ui="grimoire">Grimoire</button><button data-ui="inventory">Inventory</button><button data-ui="pause">☰ Menu</button></div></header>`;
 }
 function sidebar(o) {
   const selected =
@@ -286,10 +292,10 @@ function sidebar(o) {
 }
 function menu() {
   clearTutorialUI();
-  app.classList.remove("battle-scene");
+  app.classList.remove("battle-scene", "in-loom");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· The First Clearing</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATUM 1 · v1 · Polish 1 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATA 1–2 · v2 · Mouse / Enter / Escape</div></div></section>`;
   bind();
 }
 async function persist() {
@@ -345,6 +351,11 @@ async function act(a, controller = { kind: "human" }) {
       () => settings.fast,
     );
     render();
+    if (
+      action.type === "enterLoom" &&
+      !data.tutorialStats?.stratum2?.firstCompletedAt
+    )
+      await ui("loomTutorial");
   } catch (e) {
     toast(e.message);
     console.error(e);
@@ -383,7 +394,7 @@ async function stepBot() {
 }
 function render(frame = null) {
   if (!game) return menu();
-  app.classList.remove("battle-scene");
+  app.classList.remove("battle-scene", "in-loom");
   const o = frame || game.observe(),
     actions = frame ? [] : game.legal();
   if (o.tutorial && o.mode === "tavern")
@@ -409,6 +420,8 @@ function render(frame = null) {
       .join("")}</div></section>`;
   } else if (o.pendingArmor) {
     body = `<div class="result"><h2>Three Armors, one traveler</h2><p>Choose what to keep.</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div></div>`;
+  } else if (o.mode === "loomIntro") {
+    body = `<section class="scene companion-intro"><div class="scene-art" style="background-image:url('assets/location-loom-field.png')"><figure class="companion-portrait">${img("card-elves")}<figcaption>Machine Elves <span>Your companions in the Loom</span></figcaption></figure></div><div class="scene-copy"><div class="eyebrow">Stratum two</div><h2>The Unfinished Loom</h2><div class="rule"></div><p class="companion-story">${ELVES_STORY}</p><p>Corruptions cling to spaces, even when the cards upon them are gone. Make room for what you can protect.</p><div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (["class", "gem", "intro"].includes(o.mode)) {
     const title =
       o.mode === "class"
@@ -425,7 +438,7 @@ function render(frame = null) {
     body = `<section class="scene ${o.mode === "intro" ? "companion-intro" : ""}"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')">${o.mode === "intro" ? `<figure class="companion-portrait">${img("card-sapling")}<figcaption>Sapling <span>Your first companion</span></figcaption></figure>` : ""}</div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div>${o.mode === "intro" ? `<p class="companion-story">${DRUID_COMPANION_STORY}</p>` : ""}<p${o.mode === "intro" ? ' class="companion-world"' : ""}>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum 1 tutorial" : "Stratum one"}</div><h2>${o.tutorial ? TUTORIAL.name : "The Whispering Weald"}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field ${o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum " + o.stratum + " tutorial" : "Stratum " + o.stratum}</div><h2>${o.tutorial ? o.tutorial.name : o.stratumName}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field ${o.stratum === 2 ? "loom-field" : o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
       { length: 121 },
       (_, i) => {
         const x = i % 11,
@@ -551,16 +564,18 @@ function render(frame = null) {
     auto = false;
     clearTimeout(autoTimer);
     if (o.tutorial) {
-      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">Stratum 1 tutorial</div><h1 style="font-size:48px">${o.outcome === "win" ? "The First Clearing Complete" : "The Warden awaits another try"}</h1><p>${o.outcome === "win" ? "You have learned the path. The Whispering Weald is ready when you are." : "Retry this final fight with your restored starting equipment, cards and health."}</p>${
+      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">Stratum ${o.stratum} tutorial</div><h1 style="font-size:48px">${o.outcome === "win" ? o.tutorial.name + " Complete" : "The Warden awaits another try"}</h1><p>${o.outcome === "win" ? "Your journey is ready when you are." : "Retry this final fight with your restored starting equipment, cards and health."}</p>${
         o.outcome === "win"
-          ? '<button class="primary" data-ui="new">Begin a normal journey →</button>'
+          ? o.stratum === 2 && data.save
+            ? '<button class="primary" data-ui="continue">Continue your journey →</button>'
+            : '<button class="primary" data-ui="new">Begin a normal journey →</button>'
           : actions
               .filter((a) => a.type === "tutorialRetry")
               .map((a) => actionButton(a, "primary"))
               .join("")
       }<button data-ui="home">Return to Start</button><small>Tutorial results are recorded separately from normal Stratum victories.</small></div></section>`;
     } else if (!resultsShown) {
-      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum 1 Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? "For a moment, the branches grow still. Your first journey is complete." : esc(deathMessage(o))}</p><button class="primary" data-ui="results">View results →</button></div></section>`;
+      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum " + (o.stratum || 1) + " Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? "For a moment, the branches grow still. This journey through the Loom is complete." : esc(deathMessage(o))}</p><button class="primary" data-ui="results">View results →</button></div></section>`;
     } else
       body = resultMarkup(data.history?.find((h) => h.runId === runId) || o);
   }
@@ -599,6 +614,7 @@ function render(frame = null) {
       tutorialSignal("tavern:" + value);
     },
   });
+  paintCorruptions(o, app);
   app.classList.toggle("presenting", !!frame);
   paintTutorial(
     {
@@ -620,7 +636,7 @@ function botControls() {
 }
 function resultMarkup(o) {
   const st = o.stats;
-  return `<section class="result"><div class="result-title"><div class="eyebrow">${o.tutorial ? "Tutorial" : "Druid"} · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? (o.tutorial ? "Tutorial Complete" : "Stratum 1 Complete") : esc(deathSummary(o))} · Seed ${o.seed}</p><small>Build ${esc(o.packageVersion || "not recorded")} · Rules ${esc(o.version?.rules || "unknown")} · Content ${esc(o.version?.content || "unknown")}</small></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
+  return `<section class="result"><div class="result-title"><div class="eyebrow">${o.tutorial ? "Tutorial" : "Druid"} · ${o.outcome === "win" ? "Victory" : "Defeat"}</div><h1>Your journey, remembered</h1><p>${o.outcome === "win" ? (o.tutorial ? "Tutorial Complete" : "Stratum " + (o.stratum || 1) + " Complete") : esc(deathSummary(o))} · Seed ${o.seed}</p><small>Build ${esc(o.packageVersion || "not recorded")} · Rules ${esc(o.version?.rules || "unknown")} · Content ${esc(o.version?.content || "unknown")}</small></div><div class="stat-grid"><div><b>${o.field.round}</b>Field rounds</div><div><b>${st.damageDealt}</b>Damage dealt</div><div><b>${st.damageTaken}</b>Damage taken</div><div><b>${Math.floor((o.realTimeMs || elapsed) / 60000)}:${String(Math.floor((o.realTimeMs || elapsed) / 1000) % 60).padStart(2, "0")}</b>Time played</div></div><div class="result-grid"><div class="panel"><h4>Encounters</h4>${st.encounters.map((e) => `<p>Round ${e.round} · ${e.enemies.join(", ")}<br><small>${e.outcome} · ${e.turns || 0} turns · HP ${e.hpStart} → ${e.hpEnd}</small></p>`).join("")}</div><div class="panel"><h4>The final Grimoire</h4><p>${o.deck.map((c) => cards[c.id].name + (c.upgrade ? " +" : "")).join(" · ")}</p><h4>Cards gained</h4><p>${st.cardsGained.join(" · ") || "None"}</p><h4>Belongings</h4><p>${st.itemsGained.join(" · ") || "None"}</p><small>Gold earned ${st.goldEarned} · spent ${st.goldSpent}<br>Bought: ${st.purchases.map((id) => (id.startsWith("card:") ? cards[id.slice(5)].name : items[id]?.name || id)).join(", ") || "None"}<br>Sold: ${st.sales.map((id) => items[id]?.name || id).join(", ") || "None"}</small></div></div><div class="row spread" style="margin-top:25px"><small>Saved to persistent Run History.</small><button class="primary" data-ui="home">Return to start</button></div></section>`;
 }
 let backdropPressed = false;
 modal.addEventListener("pointerdown", (event) => {
@@ -718,10 +734,23 @@ async function ui(name) {
         );
       } else await ui("newConfirmed");
       break;
+    case "loomTutorial":
+      close();
+      game = startLoomTutorial(new Game(LOOM_TUTORIAL.seed));
+      service = "shop";
+      runId = crypto.randomUUID();
+      started = Date.now();
+      elapsed = 0;
+      resultsShown = false;
+      await storage.record(runRecord(game, runId, "start", { settings }));
+      await persist();
+      data = await storage.load();
+      render();
+      break;
     case "tutorialMenu": {
       const t = data.tutorialStats?.stratum1;
       dialog(
-        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p>`,
+        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.save?.stratum >= 2 || data.history?.some((r) => r.stratum >= 2) || data.tutorialStats?.stratum2 ? '<button data-ui="loomTutorial">Stratum 2 tutorial · The Mending Ground</button>' : ""}${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p>`,
       );
       break;
     }

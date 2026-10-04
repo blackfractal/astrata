@@ -34,7 +34,9 @@ test("all three Archons offer three distinct legendaries and cannot skip before 
     g.act(g.legal().find((a) => a.type === "rewardGem"));
     g.act(g.legal().find((a) => a.type === "rewardSetting"));
     g.act(g.legal().find((a) => a.type === "continueReward"));
-    assert.equal(g.s.outcome, "win");
+    assert.equal(g.s.stratum, 2);
+    assert.equal(g.s.mode, "tavern");
+    assert.ok(g.s.shop.healer);
     assert.ok(g.s.deck.some((c) => cards[c.id].rarity === "legendary"));
   }
 });

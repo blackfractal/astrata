@@ -1,3 +1,33 @@
+# The Unfinished Loom — package 2.0.0
+
+Rules/content 2.0.0, observation 2, actions 5, policy weighted-druid-v2.0. The policy now scores repair, covering dangerous spaces, avoiding marked Hypnosis, and spending a compelled card before the enemy can use it. This is a heuristic update, not learned training.
+
+Five normal new runs completed without invalid actions, crashes or stalls. All died in Stratum 1, so they provide no end-to-end earned-build Stratum 2 victory evidence.
+
+| Seed | Outcome | Final Stratum | Round | Decisions | HP | Last encounter |
+| --- | --- | --- | --- | --- | --- | --- |
+| 104020 | loss | undefined | 12 | 172 | 0 | Ashling 1, Ashling 2, Ashling 3 |
+| 104021 | loss | undefined | 20 | 252 | 0 | The Cinder Hart |
+| 104022 | loss | undefined | 6 | 89 | 0 | Shard-Walker |
+| 104023 | loss | undefined | 14 | 175 | 0 | Ashling 1, Ashling 2 |
+| 104024 | loss | undefined | 15 | 113 | 0 | Dervish Hunter |
+
+Five additional explicitly labeled **stratum2-carry-in-v1** fixtures exercised the new continuation. These start with the normal deck plus Grove Titan, Ward, Water Blast, Plasma Ball, Cinder Snap and Focus Energy; Gold Bracelet, Stone Armor and Sturdy Metal Helmet; 55 HP and 180 Gold before the entry Tavern. They are deliberately strong test loadouts, not naturally earned runs.
+
+| Seed | Outcome | Final Stratum | Round | Decisions | HP | Last encounter |
+| --- | --- | --- | --- | --- | --- | --- |
+| 204020 | win | 2 | 19 | 397 | 70 | Censer Engine |
+| 204021 | win | 2 | 19 | 374 | 69 | Choir of Borrowed Hands |
+| 204022 | win | 2 | 17 | 554 | 36 | Censer Engine |
+| 204023 | win | 2 | 18 | 382 | 56 | Seamstress of Absence |
+| 204024 | win | 2 | 18 | 455 | 38 | Censer Engine |
+
+All three new Archons were defeated. The final batch followed the targeting refinement that puts Nausea beside occupied spaces and excludes exhausted cards from preferred Hypnosis targets. Initial pre-refinement runs remain separately archived. Strong defensive equipment makes several fights comfortable; five wins do not establish balance. Human playtesting of ordinary earned decks remains necessary, particularly Hypnosis pressure and Mine damage. Shared legacy Events can still summon their authored Stratum 1 enemies in Stratum 2.
+
+Full versioned states, actions, results and source snapshots: reports/loom-normal-evaluation and reports/loom-carry-in-final. Fixtures are marked in metadata/results. All 383 rules tests pass. The packaged mouse-driven Stratum 2 tutorial completes its guided lessons and independent finale, then returns to the unchanged normal save; no renderer errors. Rule tests cover every new boss cycle, delayed repairs, save/resume, committed targets, space persistence and the Stratum 1→2→win transition. No user profile was used.
+
+---
+
 # Random Opening Rite placement — package1.3.74
 
 Rules1.3.42/content1.1.44, policy weighted-druid-v1.16 unchanged. Opening Rite samples empty spaces with the run RNG. All304 tests pass, including same-seed state equality, every grid space eligible across256 fixed seeds, multiple-copy distinct placement/additive Focus, previous-version save preservation, and grid capacity. No training.

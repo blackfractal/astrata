@@ -1,3 +1,4 @@
+import { loomGuide, loomActions, loomAfter } from "./loom-tutorial.mjs";
 import { cards, items, enemies, DRUID_COMPANION_STORY } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
@@ -716,6 +717,7 @@ steps.push({
 });
 export const TUTORIAL_STEPS = steps;
 export function tutorialGuide(g) {
+  if (g.s.tutorial?.id === "stratum2") return loomGuide(g);
   const t = g.s.tutorial;
   return t && !t.completed
     ? {
@@ -745,6 +747,7 @@ function matches(g, a, m) {
   });
 }
 export function tutorialActions(g, raw) {
+  if (g.s.tutorial?.id === "stratum2") return loomActions(g, raw);
   const t = g.s.tutorial,
     step = steps[t?.step];
   if (!t) return raw;
@@ -893,6 +896,7 @@ export function startTutorial(g) {
   return g;
 }
 export function tutorialAfter(g, a) {
+  if (g.s.tutorial?.id === "stratum2") return loomAfter(g, a);
   const t = g.s.tutorial;
   if (!t) return;
   if (a.type === "tutorialRetry") {
@@ -926,6 +930,7 @@ export function tutorialAfter(g, a) {
   enter(g);
 }
 export function tutorialBattle(g, entities) {
+  if (g.s.tutorial?.id === "stratum2") return;
   if (!g.s.tutorial) return;
   g.s.tutorial.fight =
     {
@@ -936,11 +941,13 @@ export function tutorialBattle(g, entities) {
     }[entities[0].enemy] || 0;
 }
 export function tutorialBattleReady(g) {
+  if (g.s.tutorial?.id === "stratum2") return;
   const t = g.s.tutorial;
   if (t?.fight === 4)
     t.finalStart = { battle: structuredClone(g.s.battle), hp: g.s.hp };
 }
 export function tutorialDrawIndex(g, n) {
+  if (g.s.tutorial?.id === "stratum2") return 0;
   const b = g.s.battle,
     t = g.s.tutorial;
   const plans = {
@@ -963,6 +970,11 @@ export function tutorialDrawIndex(g, n) {
   return i < 0 ? 0 : i;
 }
 export function tutorialReward(g) {
+  if (g.s.tutorial?.id === "stratum2") {
+    g.s.tutorial.completed = true;
+    g.finish(true, "The Mending Ground complete");
+    return true;
+  }
   const t = g.s.tutorial;
   if (!t) return false;
   if (t.fight === 4) {
@@ -979,6 +991,7 @@ export function tutorialReward(g) {
   return false;
 }
 export function tutorialTavern(g) {
+  if (g.s.tutorial?.id === "stratum2") return;
   if (!g.s.tutorial) return;
   g.s.shop = {
     stock: ["crown", "starFlask", "channelDraught"],
@@ -991,6 +1004,7 @@ export function tutorialTavern(g) {
 }
 
 export function normalizeTutorial(s) {
+  if (s.tutorial?.id === "stratum2") return;
   const t = s.tutorial;
   if (!t) return;
   if (t.version < 9) {
