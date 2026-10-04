@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
 const excludedRewards = ["blast", "shield", "familiar", "clear", "sapling"];
-test("card rewards exclude starting cards except Focus Energy; decks and shops retain them", () => {
+test("card rewards exclude starting cards except Focus Energy; owned decks retain them", () => {
   for (let seed = 1; seed <= 100; seed++) {
     const g = new Game(seed);
     for (const stratum of [1, 2])
@@ -18,6 +18,64 @@ test("card rewards exclude starting cards except Focus Energy; decks and shops r
       assert.ok(g.s.deck.some((c) => c.id === id));
       assert.ok(g.pool().some((c) => c.id === id));
     }
+  }
+});
+
+test("Tavern markets in both Strata exclude starters except Focus Energy", () => {
+  let sawFocus = false;
+  for (let seed = 1; seed <= 100; seed++) {
+    for (const stratum of [1, 2]) {
+      const g = new Game(seed);
+      g.s.stratum = stratum;
+      g.openTavern();
+      const stock = g.s.shop.stock
+        .filter((id) => id.startsWith("card:"))
+        .map((id) => id.slice(5));
+      assert.equal(stock.length, 3);
+      assert.equal(new Set(stock).size, 3);
+      assert.ok(stock.every((id) => !excludedRewards.includes(id)));
+      sawFocus ||= stock.includes("focus");
+    }
+  }
+  assert.ok(sawFocus, "Focus Energy remains an actual market offer");
+});
+
+test("Saved market replaces only excluded starters without rerolling stock or RNG", () => {
+  for (const stratum of [1, 2]) {
+    const g = new Game(73);
+    g.s.stratum = stratum;
+    g.openTavern();
+    g.s.gold = 1000;
+    g.s.shop.stock = [
+      "gold",
+      "card:focus",
+      ...excludedRewards.map((id) => "card:" + id),
+      "sapphire",
+      "card:cinder",
+    ];
+    g.s.shop.removeUsed = true;
+    const old = g.save();
+    old.version = { ...old.version, rules: "2.0.5" };
+    const a = new Game(0, old),
+      b = new Game(0, old);
+    assert.deepEqual(a.s, b.s);
+    assert.equal(a.s.rng, old.rng);
+    assert.equal(a.s.gold, old.gold);
+    assert.equal(a.s.shop.removeUsed, true);
+    assert.deepEqual(a.s.deck, old.deck);
+    assert.equal(a.s.shop.stock.length, old.shop.stock.length);
+    for (const i of [0, 1, 7, 8])
+      assert.equal(a.s.shop.stock[i], old.shop.stock[i]);
+    assert.ok(
+      a.s.shop.stock.every((id) => !excludedRewards.includes(id.slice(5))),
+    );
+    assert.equal(new Set(a.s.shop.stock).size, old.shop.stock.length);
+    assert.deepEqual(new Game(0, a.save()).s, a.s);
+    const buy = a.legal().find((x) => x.type === "buy" && x.index === 2);
+    assert.ok(buy);
+    const replacement = a.s.shop.stock[2].slice(5);
+    a.act(buy);
+    assert.equal(a.s.deck.at(-1).id, replacement);
   }
 });
 test("old pending rewards replace only the banned entries, deterministically and without rerolling", () => {

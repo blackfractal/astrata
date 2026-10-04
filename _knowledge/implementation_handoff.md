@@ -1,5 +1,10 @@
 # Astrata implementation handoff
 
+## Latest: Starter market exclusions (2026-10-04)
+
+Package2.0.8/rules2.0.6/content2.0.7/design4.147, BUILD_LOG106. Markets now use the reward-eligible card pool: no Blast, Shield, Familiar, Clear Mind or Sapling; Focus Energy is the single starter exception. Shared excludedStarterOffers set derives from starter minus focus. normalizeShop on load replaces only forbidden card offers with distinct same-rarity eligible cards, retains indices/other stock/RNG; purchased copies/decks untouched. Rules2.0.5 accepted. All396tests pass, including100seeds across bothStrata, actual Focus offers, deterministic/idempotent saved-stock repair and purchasing replacement. Release/ZIP refreshed. User profile untouched.
+
+
 ## Latest: Storm Opal / Gold Bracelet (2026-10-04)
 
 Package2.0.7/rules2.0.5/content2.0.6/design4.146, BUILD_LOG105. Removed Gold Bracelet forbid channelGem flag and restriction text at Jonathan’s request. Standard Tavern socket action now allows Storm Opal; equipped pair grants7Guard and+1Channel. Prior rules2.0.4 accepted. Updated existing regression verifies legal socket, persistence and3starting Channel. All394tests pass. No art regenerated: provenance confirms old Stratum1 generation on DGX Spark/ComfyUI using dreamshaperXL_lightningDPMSDE.safetensors and dreamshaperXL_alpha2Xl10.safetensors; recent S2/Corruption art used built-in OpenAI image_gen, whose precise backend model name is not exposed. Source images/prompts retained. Release/ZIP refreshed; user saves untouched.

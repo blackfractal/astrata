@@ -45,7 +45,7 @@ import {
   MIND_SIZE,
 } from "./content.mjs";
 export const clone = (x) => structuredClone(x);
-const excludedStarterRewards = new Set(starter.filter((id) => id !== "focus"));
+const excludedStarterOffers = new Set(starter.filter((id) => id !== "focus"));
 export const enemyStatusImmunity = (e) =>
   ENEMY_STATUS_IMMUNITY[e.element] || null;
 export const enemyStatusImmunities = (e) => [
@@ -549,6 +549,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.0.5",
           "2.0.4",
           "2.0.3",
           "2.0.2",
@@ -685,6 +686,7 @@ export class Game {
       }
       if (this.s.battle) this.s.battle.corruptions ||= {};
       this.normalizeRewards();
+      this.normalizeShop();
       this.normalizeSpawns();
       if (this.s.mode === "battle" && !this.s.tutorial)
         this.s.checkpoint = clone(this.s);
@@ -802,7 +804,7 @@ export class Game {
       s.reward.cards = [...s.reward.cards];
       for (let i = 0; i < s.reward.cards.length; i++) {
         const id = s.reward.cards[i];
-        if (excludedStarterRewards.has(id))
+        if (excludedStarterOffers.has(id))
           s.reward.cards[i] = this.pool(cards[id].rarity, true).find(
             (c) => !s.reward.cards.includes(c.id),
           ).id;
@@ -827,6 +829,20 @@ export class Game {
         "focusRing",
         "necklace",
       ]);
+  }
+  normalizeShop() {
+    const stock = this.s.shop?.stock;
+    if (!stock) return;
+    for (let i = 0; i < stock.length; i++) {
+      const id = stock[i].startsWith("card:") ? stock[i].slice(5) : null;
+      if (!excludedStarterOffers.has(id)) continue;
+      const replacement = this.pool(cards[id].rarity, true).find(
+        (c) => !stock.includes("card:" + c.id),
+      );
+      // Replace only retired offers; preserve stock positions and run randomness.
+      if (replacement) stock[i] = "card:" + replacement.id;
+      else stock.splice(i--, 1);
+    }
   }
   present(kind, detail = {}) {
     if (this.capturePresentation)
@@ -972,7 +988,7 @@ export class Game {
         (c.stratum || 1) <= (this.s.stratum || 1) &&
         c.rarity === rarity &&
         !["surge"].includes(c.id) &&
-        (!reward || !excludedStarterRewards.has(c.id)),
+        (!reward || !excludedStarterOffers.has(c.id)),
     );
   }
   legendaryOffer() {
@@ -2798,7 +2814,7 @@ export class Game {
     this.s.mode = "tavern";
     this.s.shop = {
       stock: [
-        ...this.offer(true, false).map((id) => "card:" + id),
+        ...this.offer(true).map((id) => "card:" + id),
         ...this.shuffle(
           Object.keys(items).filter(
             (id) => !items[id].cursed && !items[id].consumable,
