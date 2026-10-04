@@ -2,7 +2,7 @@ import { loomGuide, loomActions, loomAfter } from "./loom-tutorial.mjs";
 import { cards, items, enemies, DRUID_COMPANION_STORY } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 9,
+  version: 10,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -376,63 +376,6 @@ reward(
 );
 back("rootling-back");
 note(
-  "consumables",
-  "Supplies along the path",
-  "Three bottles have been visible on the Field since you arrived. Ordinary Strata scatter three supplies in seeded random places, including Healing Sap. They do not decay. Take a detour when useful, or leave them for later. Your Satchel holds 10 loose items; equipped gear and socketed Gems take no space.",
-  ".field",
-  "supply-route",
-);
-move(
-  "healing-road",
-  9,
-  3,
-  "Move west onto the Healing Sap. Entering a supply space ends your movement, just like other pickups.",
-);
-action(
-  "healing-pickup",
-  "Collect or drink",
-  "Collect Healing Sap for the Satchel. When injured you can also Drink now directly from a pickup, even with a full Satchel. Leave it here preserves these visible supplies for a later visit.",
-  { type: "takeItem", index: 0 },
-);
-action(
-  "consume-healing",
-  "Drink Healing Sap",
-  "Use Healing Sap in the tray to restore 5 HP. It costs no Channel, but the bottle is gone permanently, including in later battles. On the map you may use one healing consumable per movement round.",
-  { type: "consume", itemId: "healingSap" },
-  ".consumable-tray",
-);
-move(
-  "insight-road",
-  8,
-  3,
-  "Move west to the blue Insight Dew. We will save this bottle for battle.",
-);
-action(
-  "insight-pickup",
-  "Keep an extra draw",
-  "Collect Insight Dew. Each bottle takes one Satchel slot; this one draws a card immediately during Placement.",
-  { type: "takeItem", index: 0 },
-);
-move("focus-road", 8, 2, "Move north to the golden Focus Draught.");
-action(
-  "focus-pickup",
-  "Keep an extra placement",
-  "Collect Focus Draught. We will use its extra Focus in the next fight.",
-  { type: "takeItem", index: 0 },
-);
-move(
-  "supplies-return-one",
-  9,
-  3,
-  "Move southeast toward the item we were pursuing.",
-);
-move(
-  "supplies-return-two",
-  10,
-  3,
-  "Move east for your second step. With the supplies collected, return to the distant item.",
-);
-note(
   "gem-road",
   "Return to the item",
   "The next movement turn has begun. You have 2 movement points again, and the item is only 1 space north. Landing on an encounter or pickup ends your movement, even if a point remains.",
@@ -464,6 +407,57 @@ note(
   '[data-ui="inventory"]',
 );
 note(
+  "consumables",
+  "Supplies along the path",
+  "Three bottles now line the northern edge in the northeast corner. Ordinary Strata scatter three supplies in seeded random places, including Healing Sap. They do not decay. Take a detour when useful, or leave them for later. Your Satchel holds 10 loose items; equipped gear and socketed Gems take no space.",
+  ".field",
+  "supply-route",
+);
+move(
+  "supplies-approach",
+  10,
+  1,
+  "Move north toward the three bottles in the corner. You have one more step before the round ends.",
+);
+move(
+  "healing-road",
+  10,
+  0,
+  "Move north onto the Healing Sap. Entering a supply space ends your movement, just like other pickups.",
+);
+action(
+  "healing-pickup",
+  "Collect or drink",
+  "Collect Healing Sap for the Satchel. When injured you can also Drink now directly from a pickup, even with a full Satchel. Leave it here preserves these visible supplies for a later visit.",
+  { type: "takeItem", index: 0 },
+);
+action(
+  "consume-healing",
+  "Drink Healing Sap",
+  "Use Healing Sap in the tray to restore 5 HP. It costs no Channel, but the bottle is gone permanently, including in later battles. On the map you may use one healing consumable per movement round.",
+  { type: "consume", itemId: "healingSap" },
+  ".consumable-tray",
+);
+move(
+  "insight-road",
+  9,
+  0,
+  "Move west to the blue Insight Dew. We will save this bottle for battle.",
+);
+action(
+  "insight-pickup",
+  "Keep an extra draw",
+  "Collect Insight Dew. Each bottle takes one Satchel slot; this one draws a card immediately during Placement.",
+  { type: "takeItem", index: 0 },
+);
+move("focus-road", 8, 0, "Move west to the golden Focus Draught.");
+action(
+  "focus-pickup",
+  "Keep an extra placement",
+  "Collect Focus Draught. We will use its extra Focus in the next fight.",
+  { type: "takeItem", index: 0 },
+);
+note(
   "curses",
   "Read before you take",
   "Some objects are Cursed; some cards are Hexes. Their drawbacks can persist between battles. Inspect their text before taking them. A visiting Tavern Healer can remove them, sometimes for Gold, HP or a sacrifice.",
@@ -472,9 +466,9 @@ note(
 );
 move(
   "ember-move",
-  9,
-  2,
-  "Move west onto the Ember Mote to explore elemental matchups.",
+  7,
+  1,
+  "Move southwest onto the Ember Mote to explore elemental matchups.",
 );
 note(
   "elements",
@@ -532,7 +526,33 @@ phase("attune-phase");
 activate(
   "attune-attack",
   23,
-  "Select Blast's Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
+  "Select Blast's Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6, and your Ring adds 2. The Mote survives so we can answer its Fire attack with Water defense.",
+  "Water",
+);
+activate(
+  "attune-shield",
+  21,
+  "You have 1 Channel left. Select the Shield, choose the neighboring Water Blast to preview Water attunement, then activate the Shield. Its 4 Guard protects for 6 against Fire. The same element cycle helps both attacks and defenses.",
+  "Water",
+);
+end("water-shield-enemy");
+defend(
+  "water-shield-block",
+  "block",
+  21,
+  "Click your Water-attuned Shield. Its 4 Guard can absorb 6 Fire damage, so it stops this entire 5-damage hit without losing HP. Watch the blue Shield catch the attack.",
+);
+note(
+  "water-shield-result",
+  "Water defends against Fire",
+  "Your Shield stopped all 5 Fire damage. Attunement lasts for this round; prepare it again on a later turn if you need Water defense. Now finish the Mote with another Water-attuned Blast.",
+  '[data-slot="21"], header .hp',
+);
+phase("element-finish-phase");
+activate(
+  "element-finish",
+  23,
+  "Attune Blast to Water again and attack. Its 6 damage plus the Ring's 2 finish the Mote.",
   "Water",
 );
 action(
@@ -550,8 +570,8 @@ note(
 );
 move(
   "tavern-move",
-  8,
-  2,
+  6,
+  1,
   "Move west into the Lantern Rest. Time to spend some hard-earned gold!",
 );
 ui(
@@ -678,35 +698,15 @@ action(
 note(
   "final-intro",
   "The Patient Warden",
-  "Inspect its Tell, place your cards, watch your resources, and choose how to defend. It alternates pauses with modest attacks. One final guided consumable lesson comes first; then your decisions are your own.",
+  "Inspect its Tell, place your cards, watch your resources, and choose how to defend. It alternates pauses with modest attacks. Your choices are your own from the first placement. The Channel Draught and Star Flask are available whenever you decide they will help.",
   ".field",
   "final",
 );
 move(
   "final-move",
-  7,
-  2,
+  5,
+  1,
   "Move west to challenge the Patient Warden. Defeating it completes The First Clearing.",
-);
-place(
-  "warden-shield",
-  "shield",
-  20,
-  "Place a Shield before the final consumable lesson. You will choose how to use your Channel next.",
-);
-action(
-  "consume-channel",
-  "One more activation",
-  "Use Channel Draught during Activation after placing your opening cards. For this lesson, first advance with the phase arrow; the extra Channel will be available for this turn only.",
-  { type: "activatePhase" },
-  "",
-);
-action(
-  "consume-channel-use",
-  "Channel when you need it",
-  "Use Channel Draught now: Channel rises from 2 to 3. This is your one consumable for the turn. Keep Star Flask for a later turn; throw it at an enemy when the six damage matters.",
-  { type: "consume", itemId: "channelDraught" },
-  ".consumable-tray",
 );
 steps.push({
   id: "independent",
@@ -817,10 +817,19 @@ function enter(g) {
     };
   switch (step.setup) {
     case "supply-route":
+      if (t.relocateSupplies) {
+        const ids = ["healingSap", "insightDew", "focusDraught"];
+        f.entities = f.entities.filter((e) => !e.fieldSupply);
+        for (const id of ids) {
+          const i = g.s.inventory.findIndex((x) => x.id === id);
+          if (i >= 0) g.s.inventory.splice(i, 1);
+        }
+        delete t.relocateSupplies;
+      }
       for (const [id, x, y] of [
-        ["healingSap", 9, 3],
-        ["insightDew", 8, 3],
-        ["focusDraught", 8, 2],
+        ["healingSap", 10, 0],
+        ["insightDew", 9, 0],
+        ["focusDraught", 8, 0],
       ])
         if (!f.entities.some((e) => e.fieldSupply && e.item === id))
           spawn(g, "Item", x, y, { item: id, fieldSupply: true });
@@ -843,13 +852,13 @@ function enter(g) {
       f.moves = 2;
       break;
     case "ember":
-      spawn(g, "Mote", 9, 2, { enemy: "tutorialEmber", count: 1 });
+      spawn(g, "Mote", 7, 1, { enemy: "tutorialEmber", count: 1 });
       break;
     case "tavern":
-      spawn(g, "Tavern", 8, 2);
+      spawn(g, "Tavern", 6, 1);
       break;
     case "final":
-      spawn(g, "Eidolon", 7, 2, { enemy: "tutorialWarden", count: 1 });
+      spawn(g, "Eidolon", 5, 1, { enemy: "tutorialWarden", count: 1 });
       break;
   }
 }
@@ -886,12 +895,6 @@ export function startTutorial(g) {
     stage: "player",
   });
   s.stats.itemsGained = ["Bronze Bracelet"];
-  for (const [id, x, y] of [
-    ["healingSap", 9, 3],
-    ["insightDew", 8, 3],
-    ["focusDraught", 8, 2],
-  ])
-    spawn(g, "Item", x, y, { item: id, fieldSupply: true });
   enter(g);
   return g;
 }
@@ -923,7 +926,11 @@ export function tutorialAfter(g, a) {
   }
   if (steps[t.step].kind === "free" || t.completed) return;
   t.step++;
-  if (a.type === "consume" && t.legacySkipSupplyRoute) {
+  if (
+    a.type === "consume" &&
+    t.legacySkipSupplyRoute &&
+    !g.s.inventory.some((x) => x.id === "sapphire")
+  ) {
     t.step = steps.findIndex((x) => x.id === "gem-road");
     delete t.legacySkipSupplyRoute;
   }
@@ -1016,6 +1023,94 @@ export function normalizeTutorial(s) {
       !s.shop.stock.includes("channelDraught")
     )
       s.shop.stock.push("channelDraught");
+  }
+  if (t.version < 10) {
+    const route = [
+      "consumables",
+      "healing-road",
+      "healing-pickup",
+      "consume-healing",
+      "insight-road",
+      "insight-pickup",
+      "focus-road",
+      "focus-pickup",
+      "supplies-return-one",
+      "supplies-return-two",
+    ];
+    const hasGem = s.inventory.some((x) => x.id === "sapphire");
+    if (route.includes(t.lesson) && !hasGem) {
+      t.lesson = "gem-road";
+      s.mode = "field";
+      s.field.x = 10;
+      s.field.y = 3;
+      s.field.moves = 2;
+      delete s.itemSource;
+      delete s.itemChoices;
+      t.relocateSupplies = true;
+    } else if (route.includes(t.lesson) && hasGem) {
+      t.lesson = "gem-save";
+      s.mode = "field";
+      s.field.x = 10;
+      s.field.y = 2;
+      s.field.moves = 2;
+      t.relocateSupplies = true;
+    }
+    if (t.fight < 3) {
+      s.field.entities = s.field.entities.filter((e) => !e.fieldSupply);
+      t.relocateSupplies = true;
+    }
+    if (["curses", "ember-move"].includes(t.lesson)) {
+      s.field.x = 8;
+      s.field.y = 0;
+      s.field.moves = 2;
+    }
+    if (t.fight === 3 && s.mode === "battle") {
+      s.field.x = 7;
+      s.field.y = 1;
+      const e = s.battle.enemies.find((e) => e.id === "tutorialEmber");
+      if (e) {
+        e.hp += Math.max(0, 29 - e.maxHp);
+        e.maxHp = Math.max(29, e.maxHp);
+        e.rotation = structuredClone(enemies.tutorialEmber.rotation);
+      }
+    }
+    if (["element-back", "cycle", "tavern-move"].includes(t.lesson)) {
+      s.field.x = 7;
+      s.field.y = 1;
+    }
+    if (
+      s.mode === "tavern" ||
+      ["final-intro", "final-move"].includes(t.lesson)
+    ) {
+      s.field.x = 6;
+      s.field.y = 1;
+    }
+    for (const e of s.field.entities) {
+      if (e.enemy === "tutorialEmber") {
+        e.x = 7;
+        e.y = 1;
+      }
+      if (e.type === "Tavern") {
+        e.x = 6;
+        e.y = 1;
+      }
+      if (e.enemy === "tutorialWarden") {
+        e.x = 5;
+        e.y = 1;
+      }
+    }
+    if (
+      ["warden-shield", "consume-channel", "consume-channel-use"].includes(
+        t.lesson,
+      )
+    ) {
+      t.lesson = "independent";
+      t.finalStart = {
+        battle: structuredClone(s.battle),
+        hp: s.hp,
+        inventory: structuredClone(s.inventory),
+      };
+    }
   }
   const old = t.version < 3;
   if (old && t.lesson === "gem-step") t.lesson = "gem-road";

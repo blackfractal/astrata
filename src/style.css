@@ -3237,3 +3237,80 @@ header {
     animation: none;
   }
 }
+
+.first-glimmer {
+  padding: 30px 5vw 45px;
+  min-height: 80vh;
+  background: radial-gradient(ellipse at top, #23453880, transparent 70%);
+}
+.glimmer-heading {
+  text-align: center;
+  margin-bottom: 26px;
+}
+.glimmer-heading h2 {
+  font-size: 42px;
+  margin: 10px 0;
+}
+.glimmer-heading p {
+  color: var(--muted);
+}
+.glimmer-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  max-width: 970px;
+  margin: 0 auto;
+}
+.glimmer-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #7b8060;
+  background: #172820;
+  box-shadow: 0 12px 24px #0005;
+}
+.glimmer-card .eyebrow {
+  text-align: center;
+}
+.glimmer-art {
+  padding: 0;
+  border: 1px solid #6b7255;
+  background: #0e1915;
+  overflow: hidden;
+}
+.glimmer-art img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.glimmer-gem .glimmer-art {
+  cursor: grab;
+}
+.glimmer-card h3 {
+  font-size: 24px;
+  margin: 0;
+  text-align: center;
+}
+.glimmer-card p {
+  margin: 0 0 10px;
+  line-height: 1.5;
+  font-size: 16px;
+}
+.glimmer-card > .primary,
+.glimmer-drag {
+  margin-top: auto;
+  text-align: center;
+}
+.glimmer-drag {
+  color: #d6c48b;
+  padding: 12px 0;
+}
+.glimmer-setting.drop-ready {
+  border-color: #d6c48b;
+  box-shadow:
+    0 0 0 2px #d6c48b80,
+    0 0 24px #d6c48b30;
+}

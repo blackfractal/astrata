@@ -168,7 +168,12 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
   ctx.close();
   const elements = [...new Set(choices.map((a) => a.element))];
   // A targetless card with no attunement choice retains its one-click activation.
-  if (!dragging && choices.length === 1 && choices[0].target == null) {
+  if (
+    !dragging &&
+    choices.length === 1 &&
+    choices[0].target == null &&
+    ctx.o.tutorial?.lesson !== "attune-shield"
+  ) {
     run(ctx, choices[0]);
     return;
   }
@@ -815,6 +820,17 @@ function bindEquipment(ctx, root) {
       el.dataset.itemDetail ||
       (el.dataset.equipSlot ? ctx.o.equipment[el.dataset.equipSlot] : null);
     if (setting && drag.item != null) {
+      if (
+        ctx.o.mode === "gem" &&
+        ctx.o.inventory.find((x) => x.uid === drag.item)?.id === ctx.o.startGem
+      ) {
+        const initial = current().find(
+          (a) =>
+            a.type === "startGem" &&
+            ctx.o.equipment[a.slot] === Number(setting),
+        );
+        if (initial) return initial;
+      }
       const socket = current().find(
         (a) =>
           a.type === "socket" &&
@@ -1201,10 +1217,36 @@ function incomingDetails(ctx) {
   );
   bindActions(ctx, ctx.modal);
 }
+function firstGlimmer(ctx) {
+  const { o, app, actions } = ctx,
+    gem = o.inventory.find((x) => x.id === o.startGem);
+  const choices = actions.filter((a) => a.type === "startGem");
+  const itemCard = (x, action) => {
+    const d = items[x.id];
+    return `<article class="glimmer-card ${action ? "glimmer-setting" : "glimmer-gem"}" ${action ? `data-socket="${x.uid}"` : ""}>
+      <span class="eyebrow">${action ? slotNames[action.slot] : "Your Gem · " + d.element}</span>
+      <button class="glimmer-art" data-item-detail="${x.uid}" data-item-uid="${x.uid}" draggable="${!action}" aria-label="View ${ctx.esc(d.name)}${action ? "" : "; drag onto a Setting"}">${ctx.img("item-" + x.id)}</button>
+      <h3>${d.name}</h3><p>${ctx.text(d.text)}</p>
+      ${action ? button(ctx, { ...action, label: "Socket here" }, "primary") : '<span class="glimmer-drag">Drag to either Setting →</span>'}
+    </article>`;
+  };
+  const scene = app.querySelector(".scene");
+  scene.className = "first-glimmer";
+  scene.innerHTML = `<div class="glimmer-heading"><div class="eyebrow">Choose your starting socket</div><h2>A first glimmer</h2><p>Drag your Gem onto the Bracelet to protect, or the Ring to strike.</p></div><div class="glimmer-cards">${itemCard(gem)}${choices
+    .map((a) =>
+      itemCard(
+        o.inventory.find((x) => x.uid === o.equipment[a.slot]),
+        a,
+      ),
+    )
+    .join("")}</div>`;
+  bindActions(ctx, scene);
+}
 export function enhance(ctx) {
   if (ctx.app.querySelector(".satchel-overflow")) return;
   clearTargeting();
   const { o, actions, app, game } = ctx;
+  if (o.mode === "gem") firstGlimmer(ctx);
   const sidebar = app.querySelector(".sidebar");
   if (sidebar) {
     const gate = Array.from(sidebar.children).find((el) =>

@@ -6,7 +6,7 @@ export const MIND_COLUMNS = 7,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
   rules: "2.0.0",
-  content: "2.0.0",
+  content: "2.0.1",
   observation: 2,
   actions: 5,
 };
@@ -1453,9 +1453,13 @@ enemy(
   "Ember Mote",
   "Mote",
   "Fire",
-  21,
+  29,
   "Sentinel",
-  [attack("Ember Puff", 3, "Fire"), effect("Breathe", {})],
+  [
+    attack("Ember Puff", 3, "Fire"),
+    attack("Brighter Ember", 5, "Fire"),
+    effect("Breathe", {}),
+  ],
   "A Fire enemy; Poison cannot affect it.",
   "Water attacks exploit its weakness.",
   { tutorialOnly: true },

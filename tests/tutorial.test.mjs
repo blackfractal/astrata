@@ -41,6 +41,16 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
   );
   assert.equal(checkpoints["route-done"].hp, 59);
   assert.equal(checkpoints["cycle"].hp, 63);
+  assert.equal(checkpoints["water-shield-block"].battle.reaction.damage, 5);
+  assert.equal(
+    checkpoints["water-shield-result"].hp,
+    checkpoints["water-shield-block"].hp,
+  );
+  assert.equal(checkpoints["attune-shield"].battle.channel, 1);
+  assert.equal(g.s.battle.phase, "place");
+  assert.ok(g.s.battle.grid.every((stack) => stack.length === 0));
+  assert.ok(g.s.inventory.some((x) => x.id === "channelDraught"));
+  assert.ok(g.legal().filter((a) => a.type === "place").length > 1);
   assert.equal(g.s.hp, 70);
   assert.equal(
     g.s.inventory.find((x) => x.id === "bronze").gem,

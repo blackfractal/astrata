@@ -97,10 +97,12 @@ async function perform(g, a) {
     return;
   }
   if (a.type === "activate") {
-    if (step === "attune-attack") {
+    if (["attune-attack", "element-finish", "attune-shield"].includes(step)) {
       await p.locator(`[data-activate-slot="${a.slot}"]`).click();
       await p.locator('[data-slot="22"].target-option').click();
-      await p.locator(`[data-enemy-uid="${a.target}"]`).click();
+      if (a.target != null)
+        await p.locator(`[data-enemy-uid="${a.target}"]`).click();
+      else await p.locator("[data-target-activate]").click();
     } else if (step === "first-blast") {
       await p
         .locator(`[data-slot="${a.slot}"]`)
@@ -186,7 +188,10 @@ try {
         "consume-healing",
         "consume-insight",
         "consume-focus",
-        "consume-channel-use",
+        "consumables",
+        "attune-shield",
+        "water-shield-block",
+        "water-shield-result",
         "market-consumables",
         "shield-place",
         "route-ally",
@@ -279,15 +284,18 @@ try {
       assert.ok(await portrait.count(), "dedicated tutorial portrait " + id);
       await portrait.evaluate((img) => img.decode());
     }
-    if (step === "consume-channel-use") {
+    if (step === "independent" && !report.steps.includes(step)) {
       assert.equal(state.battle.channel, 2);
       assert.deepEqual(
         state.stats.consumablesUsed.map((x) => x.id),
         ["healingSap", "insightDew", "focusDraught"],
       );
       report.checks.push(
-        "Consumable lessons preserve 5HP healing, immediate draw and extra Focus; Channel use follows the phase arrow, with Star Flask retained for independent play.",
+        "Consumable lessons preserve 5HP healing, immediate draw and extra Focus; Warden starts with an empty board in Placement, Channel Draught and Star Flask retained for independent play.",
       );
+      assert.equal(state.battle.phase, "place");
+      assert.ok(state.battle.grid.every((stack) => !stack.length));
+      assert.ok(state.inventory.some((x) => x.id === "channelDraught"));
     }
     const a =
       step === "independent"

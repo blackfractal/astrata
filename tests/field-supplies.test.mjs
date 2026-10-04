@@ -177,19 +177,24 @@ test("enemies on a supply tile fight first and inspection evidence discovers onl
   assert.ok(g.s.field.entities.some((x) => x.uid === e.uid));
   assert.ok(!g.legal().some((a) => a.type === "usePickup"));
 });
-test("tutorial supplies are visible from start and collected through the authored route; legacy healing resumes", () => {
+test("tutorial supplies appear in a corner after Sapphire and are collected through the authored route", () => {
   const g = startTutorial(new Game(TUTORIAL.seed));
-  assert.equal(g.s.field.entities.filter((e) => e.fieldSupply).length, 3);
+  assert.equal(g.s.field.entities.filter((e) => e.fieldSupply).length, 0);
   assert.ok(!g.s.inventory.some((x) => items[x.id].consumable));
+  while (g.s.tutorial.lesson !== "consumables") act(g, g.legal()[0].type);
+  assert.ok(g.s.inventory.some((x) => x.id === "sapphire"));
+  assert.deepEqual(
+    g.s.field.entities
+      .filter((e) => e.fieldSupply)
+      .map((e) => [e.item, e.x, e.y]),
+    [
+      ["healingSap", 10, 0],
+      ["insightDew", 9, 0],
+      ["focusDraught", 8, 0],
+    ],
+  );
   while (g.s.tutorial.lesson !== "consume-healing") act(g, g.legal()[0].type);
   assert.ok(g.s.inventory.some((x) => x.id === "healingSap"));
-  const old = structuredClone(g.s);
-  old.tutorial.version = 8;
-  for (const id of ["insightDew", "focusDraught", "channelDraught"])
-    old.inventory.push({ uid: 1000 + old.inventory.length, id, gem: null });
-  const h = new Game(0, old);
-  act(h, "consume");
-  assert.equal(h.s.tutorial.lesson, "gem-road");
   while (g.s.tutorial.lesson !== "independent") {
     assert.ok(g.legal().length, g.s.tutorial.lesson);
     g.act(g.legal()[0]);
