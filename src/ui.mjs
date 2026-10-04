@@ -435,7 +435,7 @@ function render(frame = null) {
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
           e = foe || entities[0];
-        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
+        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe && !items[e?.item]?.consumable ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : items[e.item]?.consumable ? items[e.item].name + ": " + items[e.item].text : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : items[e?.item]?.consumable ? `<span class="field-supply" data-field-supply="${e.item}">${img("item-" + e.item)}<small>${{ healingSap: "+5 HP", focusDraught: "+Focus", channelDraught: "+Channel", insightDew: "+Draw", starFlask: "6 Arcane" }[e.item]}</small></span>` : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
       },
     ).join("")}</div><div class="row spread"><div class="queue">${
       Array.from(
@@ -527,7 +527,19 @@ function render(frame = null) {
           isCard =
             a.type === "rewardCard" ||
             (a.type === "takeItem" && o.itemOffer[a.index].startsWith("card:"));
-        return `<div class="reward-option">${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div class="reward-choice">${pausedPickup ? "<button disabled>Continue the lesson to collect</button>" : actionButton(a, "primary")}</div></div>`;
+        return `<div class="reward-option">${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div class="reward-choice">${
+          pausedPickup
+            ? "<button disabled>Continue the lesson to collect</button>"
+            : actionButton(a, "primary") +
+              (a.type === "takeItem"
+                ? actions
+                    .filter(
+                      (x) => x.type === "usePickup" && x.index === a.index,
+                    )
+                    .map((x) => actionButton(x))
+                    .join("")
+                : "")
+        }</div></div>`;
       })
       .join("")}</div><div class="row" style="margin-top:30px">${actions
       .filter((a) =>
@@ -1025,14 +1037,16 @@ function bind(root = app) {
             `<h2>Across the Weald</h2>${entities
               .map((e) => {
                 if (!e.enemy)
-                  return `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`;
+                  return items[e.item]?.consumable
+                    ? `<article class="field-supply-preview">${img("item-" + e.item)}<div><h3>${items[e.item].name}</h3><p>${text(items[e.item].text)}</p><p>${e.fieldSupply ? "Stays here until collected or used. Does not decay." : "A visible supply."}</p></div></article>`
+                    : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`;
                 const d = enemies[e.enemy],
                   preview = game.fieldEnemyPreview(e);
                 return `<article class="field-enemy-preview"><div class="row">${img("enemy-" + e.enemy)}<div><h3>${d.name}${preview.count > 1 ? " ×" + preview.count : ""}</h3><p>${d.element} · ${preview.hp} HP each · ${d.tier}</p><p class="enemy-age">${preview.age == null ? "Spawn age unavailable for this older save" : `Spawned in pair ${preview.born} · ${preview.age === 0 ? "Just appeared" : `${preview.age} movement rounds old`}`}</p><p class="enemy-restless">Restless ${preview.restless} · +${preview.restless} damage per attack hit</p><p>${preview.movement}</p><p>${d.signature}</p></div></div><h4>If fought now · first cycle</h4>${preview.rotation.map((t) => `<p>${text(tellText(t))}</p>`).join("")}</article>`;
               })
               .join(
                 "",
-              )}<p class="muted">Restless increases after spawn pairs 4, 8 and 12, not every movement turn. It adds attack damage, not HP. Movement increases for Stalkers, Wanderers and Skittish enemies; Sentinels stay still and Hunters/Archons follow their own rules. Each completed battle cycle adds another +1 attack damage.</p>${move ? actionButton({ ...move, label: "Move here · start battle" }, "primary") : ""}`,
+              )}${entities.some((e) => e.enemy) ? `<p class="muted">Restless increases after spawn pairs 4, 8 and 12, not every movement turn. It adds attack damage, not HP. Movement increases for Stalkers, Wanderers and Skittish enemies; Sentinels stay still and Hunters/Archons follow their own rules. Each completed battle cycle adds another +1 attack damage.</p>` : ""}${move ? actionButton({ ...move, label: entities.some((e) => e.enemy) ? "Move here · start battle" : "Move here · collect" }, "primary") : ""}`,
           );
         }
       }),

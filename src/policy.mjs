@@ -20,7 +20,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v1.20";
+    this.id = "weighted-druid-v1.21";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -210,32 +210,38 @@ export class WeightedPolicy {
       }
       case "move": {
         const p = { x: a.x, y: a.y };
-        const targets = o.field.entities.map((e) => {
-          let value =
-            e.type === "Gold"
-              ? e.value * 0.35
-              : e.type === "Item"
-                ? 25
-                : e.type === "Event"
-                  ? 20
-                  : e.type === "Tavern"
-                    ? o.gold >= 20
-                      ? injured * 0.8 + 12
-                      : 2
-                    : e.enemy
-                      ? enemies[e.enemy].tier === "Archon"
-                        ? o.field.round > 18
-                          ? 20
-                          : -5
-                        : enemies[e.enemy].tier === "Eidolon"
-                          ? -12
-                          : 9
-                      : 0;
-          if (e.enemy) value -= ((e.count || 1) - 1) * 5;
-          const d = dist(p, e),
-            old = dist(o.field, e);
-          return { e, score: value / (d + 1) + (old - d) * 3 };
-        });
+        const targets = o.field.entities
+          .filter((e) => !o.field.leftSupplies?.includes(e.uid))
+          .map((e) => {
+            let value =
+              e.type === "Gold"
+                ? e.value * 0.35
+                : e.type === "Item"
+                  ? items[e.item]?.consumable
+                    ? items[e.item].consumable.heal && injured > 0
+                      ? Math.min(5, injured) * 3 + 8
+                      : this.itemValue({ id: e.item }, o) * 2
+                    : 25
+                  : e.type === "Event"
+                    ? 20
+                    : e.type === "Tavern"
+                      ? o.gold >= 20
+                        ? injured * 0.8 + 12
+                        : 2
+                      : e.enemy
+                        ? enemies[e.enemy].tier === "Archon"
+                          ? o.field.round > 18
+                            ? 20
+                            : -5
+                          : enemies[e.enemy].tier === "Eidolon"
+                            ? -12
+                            : 9
+                        : 0;
+            if (e.enemy) value -= ((e.count || 1) - 1) * 5;
+            const d = dist(p, e),
+              old = dist(o.field, e);
+            return { e, score: value / (d + 1) + (old - d) * 3 };
+          });
         n = targets.length ? Math.max(...targets.map((x) => x.score)) : 0;
         for (const e of o.field.entities.filter((x) => x.enemy)) {
           if (dist(p, e) === 0) {
@@ -478,6 +484,11 @@ export class WeightedPolicy {
         return [
           this.cardValue(a.id, o) - (o.deck.length > 20 ? 6 : 0),
           "Choose a card by its damage, defense, economy, and growth features.",
+        ];
+      case "usePickup":
+        return [
+          Math.min(injured, f.heal) * w.survival + 8,
+          "Drink visible healing now when injured, without needing a Satchel slot.",
         ];
       case "leaveItem":
         return [0, "Leave an unwanted item without accepting its effects."];

@@ -4,10 +4,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "1.3.49",
-  content: "1.1.56",
+  rules: "1.3.50",
+  content: "1.1.57",
   observation: 1,
-  actions: 3,
+  actions: 4,
 };
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",

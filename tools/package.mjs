@@ -62,6 +62,8 @@ for (const name of [
   "resource-balance-verification.json",
   "consumables-verification.json",
   "companion-intro-verification.json",
+  "field-supplies-verification.json",
+  "field-supplies-evaluation",
   "consumables-evaluation",
   "consumable-art-prompts.json",
   "resource-balance-evaluation",

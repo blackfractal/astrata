@@ -30,7 +30,10 @@ export function discover(collection, state, at = new Date().toISOString()) {
   };
   for (const c of state.deck || []) seen("cards", c.id);
   for (const i of state.inventory || []) seen("equipment", i.id);
-  for (const e of state.field?.entities || []) seen("enemies", e.enemy);
+  for (const e of state.field?.entities || []) {
+    seen("enemies", e.enemy);
+    if (items[e.item]?.consumable) seen("equipment", e.item);
+  }
   for (const e of state.battle?.enemies || []) seen("enemies", e.id);
   if (state.mode === "reward")
     for (const id of state.reward?.cards || []) seen("cards", id);

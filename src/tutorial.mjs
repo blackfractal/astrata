@@ -1,7 +1,7 @@
 import { cards, items, enemies, DRUID_COMPANION_STORY } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 8,
+  version: 9,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -23,7 +23,7 @@ const ui = (id, title, text, control, focus) =>
 const place = (id, card, slot, text, gesture = null) =>
   action(
     id,
-    "Placement · " + cards[card].name,
+    "Placement Â· " + cards[card].name,
     text,
     { type: "place", card, slot },
     "",
@@ -154,7 +154,7 @@ phase("first-phase");
 note(
   "tell3",
   "Read the Tell",
-  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 Guard for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the card’s activation limit is its total uses across rounds before Recall or the next battle restores it.",
+  "Mosswing is about to deal 3 Arcane damage. A Shield activation costs 1 Channel and creates 4 Guard for this turn. Keep an eye on two numbers: Channel (2 each round) pays for activations this round; the cardâ€™s activation limit is its total uses across rounds before Recall or the next battle restores it.",
   ".enemy .tell, .resources > span:nth-child(3)",
 );
 activate(
@@ -172,7 +172,7 @@ defend(
 note(
   "shield-expiry",
   "The card stays; its Guard expires",
-  "The attack was absorbed. Unused Shield Guard disappears at round end, but the card remains. Activate it again to make fresh Guard. This Shield has one use left; keep an eye on Channel and each card’s allowance.",
+  "The attack was absorbed. Unused Shield Guard disappears at round end, but the card remains. Activate it again to make fresh Guard. This Shield has one use left; keep an eye on Channel and each cardâ€™s allowance.",
   '[data-slot="18"], .resources',
 );
 place(
@@ -221,7 +221,7 @@ phase("third-phase");
 activate(
   "synergy-kill",
   23,
-  "Activate the new Blast against Mosswing. Its 5 damage and the Ring’s first-hit 2 will finish this fight.",
+  "Activate the new Blast against Mosswing. Its 5 damage and the Ringâ€™s first-hit 2 will finish this fight.",
 );
 reward(
   "ward-reward",
@@ -264,7 +264,7 @@ defend(
   "ambush-bracelet",
   "bracelet",
   null,
-  "Use your Bracelet against the Rootling’s opening 3-damage attack. It absorbs 2; the remaining 1 reaches you. Then your first Reveal begins.",
+  "Use your Bracelet against the Rootlingâ€™s opening 3-damage attack. It absorbs 2; the remaining 1 reaches you. Then your first Reveal begins.",
 );
 place(
   "ward-place",
@@ -312,7 +312,7 @@ phase("route-phase");
 activate(
   "route-shield-activate",
   20,
-  "Double-click Shield’s activation to use it without attunement. This creates 4 Guard on the right, before the attack reaches Sapling and Ward.",
+  "Double-click Shieldâ€™s activation to use it without attunement. This creates 4 Guard on the right, before the attack reaches Sapling and Ward.",
 );
 activate(
   "route-sapling-attack",
@@ -376,10 +376,22 @@ reward(
 back("rootling-back");
 note(
   "consumables",
-  "A small traveling kit",
-  "The Rootling left four single-use supplies. Your Satchel holds 10 loose items total: spare equipment, loose Gems and each consumable compete for space. Equipped gear and socketed Gems take no space. Inspect the bottles in the tray to read their effects.",
-  ".consumable-tray",
-  "consumable-kit",
+  "Supplies along the path",
+  "Three bottles have been visible on the Field since you arrived. Ordinary Strata scatter three supplies in seeded random places, including Healing Sap. They do not decay. Take a detour when useful, or leave them for later. Your Satchel holds 10 loose items; equipped gear and socketed Gems take no space.",
+  ".field",
+  "supply-route",
+);
+move(
+  "healing-road",
+  9,
+  3,
+  "Move west onto the Healing Sap. Entering a supply space ends your movement, just like other pickups.",
+);
+action(
+  "healing-pickup",
+  "Collect or drink",
+  "Collect Healing Sap for the Satchel. When injured you can also Drink now directly from a pickup, even with a full Satchel. Leave it here preserves these visible supplies for a later visit.",
+  { type: "takeItem", index: 0 },
 );
 action(
   "consume-healing",
@@ -387,6 +399,37 @@ action(
   "Use Healing Sap in the tray to restore 5 HP. It costs no Channel, but the bottle is gone permanently, including in later battles. On the map you may use one healing consumable per movement round.",
   { type: "consume", itemId: "healingSap" },
   ".consumable-tray",
+);
+move(
+  "insight-road",
+  8,
+  3,
+  "Move west to the blue Insight Dew. We will save this bottle for battle.",
+);
+action(
+  "insight-pickup",
+  "Keep an extra draw",
+  "Collect Insight Dew. Each bottle takes one Satchel slot; this one draws a card immediately during Placement.",
+  { type: "takeItem", index: 0 },
+);
+move("focus-road", 8, 2, "Move north to the golden Focus Draught.");
+action(
+  "focus-pickup",
+  "Keep an extra placement",
+  "Collect Focus Draught. We will use its extra Focus in the next fight.",
+  { type: "takeItem", index: 0 },
+);
+move(
+  "supplies-return-one",
+  9,
+  3,
+  "Move southeast toward the item we were pursuing.",
+);
+move(
+  "supplies-return-two",
+  10,
+  3,
+  "Move east for your second step. With the supplies collected, return to the distant item.",
 );
 note(
   "gem-road",
@@ -435,7 +478,7 @@ move(
 note(
   "elements",
   "Fire meets Water",
-  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemy’s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
+  "This enemy is Fire. Water attacks deal +50% damage to Fire, rounded up; Earth attacks deal half. Fire, Wind, Chaos, Light and Arcane attacks stay neutral against this Fire enemy. The enemyâ€™s Tell shows its attack element. The same cycle applies to defensive attunements and equipment: Water Shields, Sapphire Bracelets and Water Armor protect better against Fire.",
   ".enemy",
 );
 note(
@@ -456,7 +499,7 @@ phase("water-phase");
 activate(
   "water-attack",
   22,
-  "Water Blast’s 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
+  "Water Blastâ€™s 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
 );
 end("ember-enemy");
 defend(
@@ -488,7 +531,7 @@ phase("attune-phase");
 activate(
   "attune-attack",
   23,
-  "Select Blast’s Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
+  "Select Blastâ€™s Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6; your Ring supplies the final 2.",
   "Water",
 );
 action(
@@ -556,6 +599,12 @@ action(
   "Buy Star Flask for 30 Gold. In battle, choose its throw control then click a highlighted enemy, or drag the bottle onto one. Target selection can be cancelled without consuming it.",
   { type: "buy", itemId: "starFlask" },
 );
+action(
+  "channel-buy",
+  "A reserve of Channel",
+  "Buy Channel Draught for 40 Gold. It gives one immediate Channel during Activation, while each card still obeys its own activation limit.",
+  { type: "buy", itemId: "channelDraught" },
+);
 ui(
   "jeweler",
   "Visit the Jeweler",
@@ -587,7 +636,7 @@ ui(
 action(
   "gossip",
   "Learn what lies ahead",
-  "Pay 15 Gold for gossip. It reveals Cinder Hart, the Archon of this lesson’s imagined onward journey. You will not fight that boss in the tutorial.",
+  "Pay 15 Gold for gossip. It reveals Cinder Hart, the Archon of this lessonâ€™s imagined onward journey. You will not fight that boss in the tutorial.",
   { type: "gossip" },
 );
 note(
@@ -752,6 +801,7 @@ function enter(g) {
   if (!step) throw Error("Unknown tutorial step");
   t.lesson = step.id;
   if (
+    t.legacySupplies &&
     step.match?.type === "consume" &&
     !g.s.inventory.some((x) => x.id === step.match.itemId)
   )
@@ -763,14 +813,14 @@ function enter(g) {
       inventory: structuredClone(g.s.inventory),
     };
   switch (step.setup) {
-    case "consumable-kit":
-      for (const id of [
-        "healingSap",
-        "focusDraught",
-        "channelDraught",
-        "insightDew",
+    case "supply-route":
+      for (const [id, x, y] of [
+        ["healingSap", 9, 3],
+        ["insightDew", 8, 3],
+        ["focusDraught", 8, 2],
       ])
-        g.addItem(id);
+        if (!f.entities.some((e) => e.fieldSupply && e.item === id))
+          spawn(g, "Item", x, y, { item: id, fieldSupply: true });
       break;
     case "gold":
       spawn(g, "Gold", 6, 5, { value: 200 });
@@ -833,6 +883,12 @@ export function startTutorial(g) {
     stage: "player",
   });
   s.stats.itemsGained = ["Bronze Bracelet"];
+  for (const [id, x, y] of [
+    ["healingSap", 9, 3],
+    ["insightDew", 8, 3],
+    ["focusDraught", 8, 2],
+  ])
+    spawn(g, "Item", x, y, { item: id, fieldSupply: true });
   enter(g);
   return g;
 }
@@ -863,6 +919,10 @@ export function tutorialAfter(g, a) {
   }
   if (steps[t.step].kind === "free" || t.completed) return;
   t.step++;
+  if (a.type === "consume" && t.legacySkipSupplyRoute) {
+    t.step = steps.findIndex((x) => x.id === "gem-road");
+    delete t.legacySkipSupplyRoute;
+  }
   enter(g);
 }
 export function tutorialBattle(g, entities) {
@@ -921,7 +981,7 @@ export function tutorialReward(g) {
 export function tutorialTavern(g) {
   if (!g.s.tutorial) return;
   g.s.shop = {
-    stock: ["crown", "starFlask"],
+    stock: ["crown", "starFlask", "channelDraught"],
     healer: true,
     healerPrice: 35,
     hexPrice: { kind: "gold", gold: 35, hp: 0 },
@@ -933,6 +993,16 @@ export function tutorialTavern(g) {
 export function normalizeTutorial(s) {
   const t = s.tutorial;
   if (!t) return;
+  if (t.version < 9) {
+    t.legacySupplies = true;
+    if (t.lesson === "consume-healing") t.legacySkipSupplyRoute = true;
+    if (
+      s.mode === "tavern" &&
+      s.shop &&
+      !s.shop.stock.includes("channelDraught")
+    )
+      s.shop.stock.push("channelDraught");
+  }
   const old = t.version < 3;
   if (old && t.lesson === "gem-step") t.lesson = "gem-road";
   const index = steps.findIndex((step) => step.id === t.lesson);

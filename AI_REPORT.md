@@ -740,3 +740,18 @@ Rules1.3.49/content1.1.55/actions3; weighted-druid-v1.20. Legal consumption expo
 |825587|Win|19|393|20HP; Void-Colossus defeated in13turns|
 
 All five completed without errors, invalid actions or stalls. Full versioned states/actions/source snapshots are retained in reports/consumables-evaluation. None acquired or used a consumable, and none purchased an item, so this batch does not validate consumable strategy or establish balance. Focused rules tests verify the policy takes a flask finishing hit; the complete tutorial/UI walkthrough exercises all five supplies and the independent Warden fight. All357 rules tests pass, plus dedicated packaged checks for consumption, targeting/cancellation, capacity and save behavior. Future larger paired experiments should explicitly condition on item acquisition.
+
+
+## Visible Field supplies — 1.3.92
+
+Rules1.3.50/content1.1.57/actions4; weighted-druid-v1.21. Route scoring recognizes visible bottle effects, favors healing when injured, and skips a supply left on the current visit. Direct-pickup healing has a legal scored action. Same turn allowances, full-Satchel choices and saved identities apply to human and AI. No learned training.
+
+| Seed | Result | Round | Decisions | Cause | Consumables used |
+| --- | --- | ---: | ---: | --- | --- |
+|825683|Loss|7|107|Burn|None|
+|825684|Loss|11|96|Lance|Healing Sap directly from pickup|
+|825685|Loss|19|275|Collapse|Two Channel Draughts; Healing Sap directly from pickup|
+|825686|Loss|11|132|Burn|Channel Draught; Healing Sap directly from pickup|
+|825687|Loss|19|189|Void fist|Focus Draught; Healing Sap directly from pickup|
+
+All five finish without errors, stalls or invalid actions; two reach Void-Colossus. Four runs exercise supplies (eight uses total). Complete states/actions/versioned sources and starting-supply locations are retained in reports/field-supplies-evaluation. These are integration runs, not a paired balance experiment or estimate of human difficulty. Rules and dedicated UI checks validate placement, pickup, capacity and persistence; the deterministic mouse tutorial completes its new fixed pickup route and final independent encounter.

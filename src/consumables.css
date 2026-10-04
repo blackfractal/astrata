@@ -140,3 +140,45 @@
 .battle-dock > .consumable-tray {
   margin-left: auto;
 }
+
+.field-supply {
+  position: absolute;
+  inset: 2px;
+  display: grid;
+  place-items: center;
+}
+.tile .field-supply img {
+  width: 92%;
+  height: 92%;
+  border: 2px solid #e2c986;
+  border-radius: 7px;
+  filter: drop-shadow(0 2px 3px #000);
+}
+.field-supply small {
+  position: absolute;
+  bottom: -1px;
+  background: #122319ef;
+  padding: 0 2px;
+  border: 1px solid #b6a775;
+  color: #fff3cc;
+  font-size: 10px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.field-supply-preview {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 20px 0;
+}
+.field-supply-preview > img {
+  width: 190px;
+  height: 190px;
+  object-fit: contain;
+}
+.reward-choice:has(button + button) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}

@@ -1000,6 +1000,64 @@ export class Game {
     if (!enemies[id].grouped || round <= 4) return 1;
     return (round <= 10 ? 1 : 2) + Math.floor(this.rand() * 2);
   }
+
+  scatterSupplies() {
+    const f = this.s.field;
+    if (f.suppliesScattered) return;
+    f.suppliesScattered = true;
+    const ids = this.shuffle([
+      "healingSap",
+      ...this.shuffle([
+        "focusDraught",
+        "channelDraught",
+        "insightDew",
+        "starFlask",
+      ]).slice(0, 2),
+    ]);
+    const direction = Math.floor(this.rand() * 8);
+    ids.forEach((item, i) => {
+      const sector = (direction + [0, 3, 5][i]) % 8;
+      let candidates = [];
+      for (let y = 0; y <= 10; y++)
+        for (let x = 0; x <= 10; x++) {
+          const dx = x - f.x,
+            dy = y - f.y,
+            distance = Math.max(Math.abs(dx), Math.abs(dy));
+          if (!distance || f.entities.some((e) => e.x === x && e.y === y))
+            continue;
+          const angle =
+            (Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) + 8) % 8;
+          candidates.push({ x, y, distance, angle });
+        }
+      const preferred = candidates.filter(
+        (p) =>
+          p.angle === sector &&
+          (i === 0 ? p.distance >= 2 && p.distance <= 3 : p.distance >= 4),
+      );
+      if (preferred.length) candidates = preferred;
+      if (!candidates.length) return;
+      const { x, y } = this.pick(candidates);
+      const e = {
+        uid: this.uid(),
+        type: "Item",
+        item,
+        fieldSupply: true,
+        x,
+        y,
+        born: f.round,
+        restless: 0,
+      };
+      f.entities.push(e);
+      (this.s.stats.fieldSupplies ||= []).push({
+        uid: e.uid,
+        item,
+        x,
+        y,
+        round: f.round,
+      });
+      this.log(items[item].name + " lies at " + (x + 1) + ", " + (y + 1) + ".");
+    });
+  }
   beginRound() {
     if (this.s.mode === "result") return;
     const f = this.s.field;
@@ -1080,6 +1138,7 @@ export class Game {
         for (const e of f.entities) if (e.enemy) e.restless++;
       this.batch();
     }
+    if (f.round === 1 && f.spawned === 2) this.scatterSupplies();
     this.resolveTile();
   }
   resolveTile(enemyFirst = false) {
@@ -1098,7 +1157,7 @@ export class Game {
       this.beginBattle(foes, { enemyFirst });
       return;
     }
-    const e = here[0];
+    const e = here.find((e) => !f.leftSupplies?.includes(e.uid));
     if (e) {
       f.entities = f.entities.filter((x) => x.uid !== e.uid);
       if (e.type === "Gold") {
@@ -1112,6 +1171,8 @@ export class Game {
         ];
         s.mode = "item";
         s.itemOffer = options;
+        if (e.fieldSupply) s.itemSource = structuredClone(e);
+        else delete s.itemSource;
         return;
       }
       if (e.type === "Event") {
@@ -2809,7 +2870,25 @@ export class Game {
           { item: id },
         ),
       );
-      add("leaveItem", "Leave item", {}, { skip: true });
+      const offered = items[s.itemOffer[0]];
+      if (
+        offered?.consumable?.heal &&
+        s.hp < s.maxHp &&
+        s.field.consumableRound !== s.field.round
+      )
+        add(
+          "usePickup",
+          "Drink now · restore up to 5 HP",
+          { index: 0 },
+          { ...offered.consumable, consumable: true },
+          { channel: 0 },
+        );
+      add(
+        "leaveItem",
+        s.itemSource?.fieldSupply ? "Leave it here" : "Leave item",
+        {},
+        { skip: true },
+      );
       return actions;
     }
     if (s.mode === "event") {
@@ -3246,6 +3325,7 @@ export class Game {
         break;
       case "move": {
         const from = { x: s.field.x, y: s.field.y };
+        s.field.leftSupplies = [];
         s.field.x = a.x;
         s.field.y = a.y;
         s.field.moves--;
@@ -3275,12 +3355,25 @@ export class Game {
           if (s.equipment[k] === a.item) s.equipment[k] = null;
         s.equipment[a.slot] = a.item;
         break;
+      case "usePickup": {
+        const item = this.addItem(s.itemOffer[a.index]);
+        this.consume({ uid: item.uid });
+        s.stats.consumablesUsed.at(-1).source = "fieldPickup";
+        delete s.itemOffer;
+        delete s.itemSource;
+        this.resolveTile();
+        break;
+      }
       case "takeItem": {
         const id = s.itemOffer[a.index];
         if (id.startsWith("card:")) this.addCard(id.slice(5));
         else this.addItem(id);
         delete s.itemOffer;
-        this.resolveTile();
+        delete s.itemSource;
+        if (satchelContents(s).length > SATCHEL_CAPACITY && !s.tutorial) {
+          s.pendingPickupResolution = true;
+          s.mode = "field";
+        } else this.resolveTile();
         break;
       }
       case "leaveItem": {
@@ -3289,6 +3382,11 @@ export class Game {
           ? cards[id.slice(5)].name
           : items[id].name;
         this.log(`Left ${name} behind.`);
+        if (s.itemSource?.fieldSupply) {
+          s.field.entities.push(s.itemSource);
+          (s.field.leftSupplies ||= []).push(s.itemSource.uid);
+        }
+        delete s.itemSource;
         delete s.itemOffer;
         this.resolveTile();
         break;
@@ -3601,6 +3699,13 @@ export class Game {
         this.advanceHit();
         this.pump();
         break;
+    }
+    if (
+      s.pendingPickupResolution &&
+      satchelContents(s).length <= SATCHEL_CAPACITY
+    ) {
+      delete s.pendingPickupResolution;
+      this.resolveTile();
     }
     tutorialAfter(this, a);
     return this.observe();

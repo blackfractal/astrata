@@ -5,9 +5,9 @@ test("first pair always lands two king-moves from the starting player, for every
   for (let seed = 1; seed <= 100; seed++) {
     const g = new Game(seed);
     g.beginRound();
-    assert.equal(g.s.field.entities.length, 2);
+    assert.equal(g.s.field.entities.filter((e) => !e.fieldSupply).length, 2);
     assert.equal(g.s.mode, "field");
-    for (const e of g.s.field.entities)
+    for (const e of g.s.field.entities.filter((e) => !e.fieldSupply))
       assert.equal(
         Math.max(Math.abs(e.x - g.s.field.x), Math.abs(e.y - g.s.field.y)),
         2,

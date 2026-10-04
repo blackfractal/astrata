@@ -11,7 +11,7 @@ test("first four pairs draw only easy single Motes; fifth pair unlocks full deck
     for (let round = 1; round <= 5; round++) {
       g.s.field.entities = [];
       g.beginRound();
-      for (const e of g.s.field.entities) {
+      for (const e of g.s.field.entities.filter((e) => e.enemy)) {
         if (round <= 4) {
           assert.ok(EARLY_MOTES.includes(e.enemy));
           assert.equal(e.count, 1);
