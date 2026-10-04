@@ -53,6 +53,10 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "loom-pressure-tests.txt",
+  "loom-pressure-evaluation",
+  "corruption-visual-verification.json",
+  "corruption-art-provenance.json",
   "starter-reward-evaluation",
   "starter-reward-tests.txt",
   "satchel-twelve-tests.txt",

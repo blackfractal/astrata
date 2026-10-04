@@ -43,7 +43,13 @@ export function prepareCorruption(g, e, t) {
   for (const kind of kinds) {
     if (room-- <= 0) break;
     let candidates = b.grid.flatMap((stack, i) => {
-      if (b.corruptions[i] || e.corruptionPlan.some((p) => p.slot === i))
+      if (
+        b.corruptions[i] ||
+        b.enemies.some(
+          (enemy) =>
+            enemy.hp > 0 && enemy.corruptionPlan?.some((p) => p.slot === i),
+        )
+      )
         return [];
       const c = top(stack),
         d = cards[c?.id],
@@ -65,11 +71,19 @@ export function prepareCorruption(g, e, t) {
         return (
           g.cardPower(c, i) + (cards[c.id].effects.ward || g.shieldPower(c, i))
         );
-      if (kind === "nausea" || kind === "hole")
-        return (
-          (c ? 0 : 10) + neighbors(i).filter((j) => b.grid[j].length).length
+      const adjacent = neighbors(i).filter((j) => b.grid[j].length).length;
+      if (t.spread && e.corruptionPlan.length) {
+        const distance = Math.min(
+          ...e.corruptionPlan.map(
+            (p) =>
+              Math.abs((i % 7) - (p.slot % 7)) +
+              Math.abs(Math.floor(i / 7) - Math.floor(p.slot / 7)),
+          ),
         );
-      return c ? 0 : 1;
+        return distance * 10 + adjacent;
+      }
+      // Empty spaces beside the most cards threaten useful formations.
+      return (c ? 0 : 100) + adjacent * 10;
     };
     const best = Math.max(...candidates.map(score));
     candidates = candidates.filter((i) => score(i) === best);
@@ -86,14 +100,16 @@ export function prepareCorruption(g, e, t) {
         ((slot % 7) + 1) +
         ". One player turn to respond.",
     );
-    g.present("corruption", {
-      slot,
-      name: "Foretold: " + CORRUPTIONS[kind].name,
-    });
   }
+  if (e.corruptionPlan.length)
+    g.present("corruption", {
+      slots: e.corruptionPlan.map((p) => p.slot),
+      name: "Foretold Corruptions",
+    });
 }
 export function applyCorruptions(g, e) {
   const b = g.s.battle;
+  const applied = [];
   for (const { slot, kind } of e.corruptionPlan || []) {
     if (b.corruptions[slot] || (kind === "hole" && b.grid[slot].length)) {
       g.log(CORRUPTIONS[kind].name + " fails at its committed space.");
@@ -108,10 +124,12 @@ export function applyCorruptions(g, e) {
       createdTurn: b.turn,
     };
     g.log(CORRUPTIONS[kind].name + " corrupts a space.");
-    g.present("corruption", { slot, name: CORRUPTIONS[kind].name });
+    applied.push(slot);
   }
   e.corruptionPlan = [];
   resetCoveredInsanity(b);
+  if (applied.length)
+    g.present("corruption", { slots: applied, name: "Corrupted spaces" });
 }
 export function retargetCoveredCorruptions(g, covered) {
   const b = g.s.battle;
@@ -134,7 +152,7 @@ export function retargetCoveredCorruptions(g, covered) {
           ? [i]
           : [];
       });
-      if (["hole", "nausea"].includes(mark.kind) && candidates.length) {
+      if (mark.kind !== "hypnosis" && candidates.length) {
         const score = (i) =>
           neighbors(i).filter((j) => b.grid[j].length).length;
         const best = Math.max(...candidates.map(score));

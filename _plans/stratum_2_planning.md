@@ -1,6 +1,6 @@
 # Stratum 2 planning — The Unfinished Loom
 
-Implementation baseline 0.4 · 2026-10-04 · Jonathan / Codex
+Implementation baseline 0.5 · 2026-10-04 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md), especially §§1.4 and11.5. Jonathan authorized implementation and repository consolidation on 2026-10-04. Main design §10.12 now records the selected playable v2 rules; the earlier proposals below remain useful rationale, not competing requirements. Main-design rules take precedence. No hidden lore is exposed by the current Sapling introduction.
 
@@ -9,6 +9,8 @@ Companion to [the main design](astrata_design.md), especially §§1.4 and11.5. J
 The Unfinished Loom, eight Motes, three Eidolons and three signature-Corruption Archons are implemented in astrata 2.0.0. Basic Machine Elves repair Nausea/Insanity; the 100-Gold upgrade repairs all five types and enters Memory Holes. One Corruption per space; covering a marked empty space immediately relocates its warning to another eligible space; no eligible replacement cancels the mark. Other marks remain committed, and Hypnosis requires an occupied eligible card. Mines use 18 Arcane with three full response turns; Nausea halves once, rounded down. Hypnosis borrows only direct damage/Guard components and obeys card allowance and once-per-turn. Full rules and selected boss numbers are in main design §10.12; future Shear/Wildfire proposals remain future. The independent tutorial finale is the Patient Spoolkeeper.
 
 ## What is confirmed
+
+**Current pressure tuning (2.0.6):** Sourcap Tender, Loop Moth, Borrowed Face and Censer Engine mark an opening Corruption before the first player turn and apply it with their first regular attack. If enemies attack first on arrival, they still attack immediately but defer that Corruption until the player has had one response turn. Other Corruptors mark multiple spaces while attacking, then apply while attacking. Nausea and other empty-space warnings prioritize adjacency to the most cards. Hollow Scribe is deliberately exceptional: fourteen scattered Memory Holes, one third of the 7×6 grid; fourteen active at most, replacing repaired holes on later cycles. Detailed cycles are recorded in main design §10.12. Non-Corrupting enemies retain some relief turns, and the tutorial opponents remain gentle. Each Corruption has its own painted space-card art and localized animation, including falling crater particles and queasy green Nausea swirls; covered effects remain identifiable without obscuring the player's card.
 
 - Each Stratum introduces a specific Ally through a brief illustrated story.
 - Stratum1's Ally depends on the chosen character. Druid meets Sapling; this is the existing starting card, not an extra copy. Other characters' companions are not chosen yet.

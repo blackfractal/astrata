@@ -510,12 +510,46 @@ export function normalizeMindGrid(state) {
   if (state.checkpoint) normalizeMindGrid(state.checkpoint);
 }
 
+function bypassOpeningCorruption(b, e, d, t) {
+  return (
+    b?.enemyFirst &&
+    b.turn === 0 &&
+    e.cycle === 0 &&
+    d.openingCorruption &&
+    t.applyCorruption
+  );
+}
+function normalizeLoomRotations(s) {
+  for (const e of s.battle?.enemies || []) {
+    const d = enemies[e.id];
+    if (d?.stratum !== 2 || d.tutorialOnly) continue;
+    const old = e.rotation;
+    if (old?.length && JSON.stringify(old) !== JSON.stringify(d.rotation)) {
+      const t = old[e.cycle % old.length];
+      let next = d.rotation.findIndex((r) => r.name === t.name);
+      if (t.applyCorruption)
+        next = d.rotation.findIndex((r) => r.applyCorruption);
+      else if (t.markCorruption)
+        next = d.rotation.findIndex(
+          (r) => r.markCorruption === t.markCorruption,
+        );
+      e.cycle =
+        Math.floor(e.cycle / old.length) * d.rotation.length +
+        Math.max(0, next);
+      e.rotation = clone(d.rotation);
+    }
+    e.corruptionCap = d.corruptionCap;
+  }
+  if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
+}
+
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
       if (
         ![
           VERSION.rules,
+          "2.0.3",
           "2.0.2",
           "2.0.1",
           "2.0.0",
@@ -584,6 +618,7 @@ export class Game {
       normalizeCardCaps(this.s);
       normalizeCharges(this.s);
       normalizeEquipmentHealing(this.s);
+      normalizeLoomRotations(this.s);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1456,6 +1491,9 @@ export class Game {
         b.next.focus++;
       }
     this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));
+    for (const e of b.enemies)
+      if (enemies[e.id].openingCorruption)
+        prepareCorruption(this, e, enemies[e.id].openingCorruption);
     s.stats.encounters.push({
       stratum: s.stratum || 1,
       round: s.field.round,
@@ -1702,6 +1740,12 @@ export class Game {
       return { name: "Purify", purify: true, damage: 0 };
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    // Even an ambush must leave a first player turn to respond to opening marks.
+    if (bypassOpeningCorruption(this.s.battle, e, d, t)) {
+      t.applyCorruption = false;
+      t.openingWarning = true;
+      t.name += " · Corruption follows your first turn";
+    }
     if (t.currentElement) t.element = e.element;
     // Forecast from the current board; enemyAction snapshots this before grid effects.
     if (t.damagePerEmpty) {
@@ -1824,7 +1868,7 @@ export class Game {
         const e = b.enemies.find((x) => x.uid === j.uid && x.hp > 0);
         if (!e) continue;
         const t = this.tell(e);
-        if (!t.purify) e.cycle++;
+        if (!t.purify && !t.openingWarning) e.cycle++;
         this.log(
           e.name +
             ": " +
@@ -1874,6 +1918,7 @@ export class Game {
         }
         if (
           !t.purify &&
+          !t.openingWarning &&
           enemies[e.id].tier === "Archon" &&
           e.cycle % enemies[e.id].rotation.length === 0
         )

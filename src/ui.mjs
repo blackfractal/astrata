@@ -166,7 +166,9 @@ function tellText(t) {
       ? `${t.damage || 0} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
       : "",
     t.randomElement ? "Change element randomly" : "",
-    t.markCorruption ? "Mark spaces · one turn to respond" : "",
+    t.markCorruption
+      ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + 1 " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
+      : "",
     t.applyCorruption ? "Corrupt marked spaces" : "",
     t.releaseCorruption ? "Remove its Corruptions" : "",
     t.damagePerEmpty

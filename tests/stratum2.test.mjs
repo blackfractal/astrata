@@ -400,7 +400,7 @@ test("Enemy corruption caps prevent filling the entire grid; removal frees capac
     prepareCorruption(g, e, { markCorruption: "nausea" });
     applyCorruptions(g, e);
   }
-  assert.equal(Object.keys(g.s.battle.corruptions).length, 1);
+  assert.equal(Object.keys(g.s.battle.corruptions).length, 2);
 });
 test("Each boss has a signature Corruption, while several motes never corrupt", () => {
   const bosses = Object.values(enemies).filter(

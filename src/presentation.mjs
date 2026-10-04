@@ -403,10 +403,12 @@ export async function playFrames(before, frames, after, render, isFast) {
         render(frame.state);
       } else if (frame.kind === "corruption") {
         render(frame.state);
-        const target = card(frame.slot);
-        target?.classList.add("corruption-flare");
+        const targets = (frame.slots || [frame.slot]).map(card).filter(Boolean);
+        targets.forEach((target) => target.classList.add("corruption-flare"));
         await pause(650);
-        target?.classList.remove("corruption-flare");
+        targets.forEach((target) =>
+          target.classList.remove("corruption-flare"),
+        );
       } else if (frame.kind === "resources") {
         render(frame.state);
         await pause(220);

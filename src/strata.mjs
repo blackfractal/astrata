@@ -117,14 +117,13 @@ export function registerStratum2(card, enemy, glossary) {
     28,
     "Stalker",
     [
-      hit("Spore tap", 5, "Earth"),
-      mark("nausea"),
-      apply("nausea"),
+      { ...apply("nausea"), ...hit("Sickening tap", 5, "Earth") },
       hit("Root lash", 7, "Earth"),
+      { ...mark("nausea"), ...hit("Spore tap", 5, "Earth") },
     ],
-    "Telegraphs one Nausea space; covering it restores neighboring cards' power.",
-    "Cover the marked space, or keep your attacks away from its neighbors.",
-    { corruptionCap: 1 },
+    "Marks Nausea at battle start and applies it with its first attack. Later marks also attack.",
+    "Redirect the warning by placing a card, then cover the resulting Nausea or keep attacks away from it.",
+    { corruptionCap: 2, openingCorruption: mark("nausea") },
   );
   add(
     "loopMoth",
@@ -133,10 +132,14 @@ export function registerStratum2(card, enemy, glossary) {
     "Wind",
     25,
     "Skittish",
-    [hit("Frayed wing", 6, "Wind"), mark("insanity"), apply("insanity"), rest],
-    "Telegraphs one Insanity space, which hurts while uncovered.",
+    [
+      { ...apply("insanity"), ...hit("Frayed wing", 4, "Wind") },
+      hit("Looping cut", 7, "Wind"),
+      { ...mark("insanity"), ...hit("Unravel thought", 5, "Wind") },
+    ],
+    "Marks Insanity at battle start and applies it with its first attack. Maximum two active spaces.",
     "A cheap cover stops the escalating loss.",
-    { corruptionCap: 1 },
+    { corruptionCap: 2, openingCorruption: mark("insanity") },
   );
   add(
     "dewThief",
@@ -147,11 +150,10 @@ export function registerStratum2(card, enemy, glossary) {
     "Skittish",
     [
       hit("Dew needle", 6, "Water"),
-      { name: "Glass dew", guard: 6, element: "Water" },
-      rest,
+      { ...hit("Glass dew", 5, "Water"), guard: 6 },
     ],
-    "Steals a quiet turn to gather 6 Guard.",
-    "Build during the pause, then strike with Wind.",
+    "Alternates a Water needle with a lighter attack that gathers 6 Guard.",
+    "Wind cuts through its defense; it no longer pauses to gather dew.",
   );
   add(
     "threadMite",
@@ -160,13 +162,9 @@ export function registerStratum2(card, enemy, glossary) {
     "Arcane",
     20,
     "Stalker",
-    [
-      hit("Snip", 4, "Arcane"),
-      { name: "Tangle", channel: -1, element: "Arcane" },
-      rest,
-    ],
+    [hit("Snip", 4, "Arcane"), { ...hit("Tangle", 3, "Arcane"), channel: -1 }],
     "Tangle removes one Channel next turn only.",
-    "Use its quiet rounds to place cards.",
+    "Place efficient defenses before its Channel tax; groups keep attacking.",
     { grouped: true },
   );
   add(
@@ -191,10 +189,18 @@ export function registerStratum2(card, enemy, glossary) {
     "Light",
     34,
     "Sentinel",
-    [mark("hole"), apply("hole"), hit("Unwrite", 8, "Light"), rest],
-    "Telegraphs one Memory Hole on an empty space.",
-    "Occupying its mark before it resolves prevents the Hole.",
-    { corruptionCap: 1 },
+    [
+      {
+        ...mark("hole", 14),
+        spread: true,
+        ...hit("Erase the page", 4, "Light"),
+      },
+      { ...apply("hole"), ...hit("Unwrite", 8, "Light") },
+      hit("Inkless quill", 8, "Light"),
+    ],
+    "Telegraphs up to 14 Memory Holes across the grid: one third of its 42 spaces. Maximum 14 active Holes; later casts replace repaired ones.",
+    "Placing on a warning redirects it. Plan around the holes, kill the Scribe before the cast, or repair with upgraded Elves.",
+    { corruptionCap: 14 },
   );
   add(
     "bellowsGrub",
@@ -203,9 +209,13 @@ export function registerStratum2(card, enemy, glossary) {
     "Fire",
     38,
     "Stalker",
-    [{ name: "Draw breath", element: "Fire" }, hit("Exhale", 10, "Fire"), rest],
-    "A heavy breath with two turns between attacks.",
-    "Prepare Water Guard while it inhales.",
+    [
+      { ...hit("Draw breath", 5, "Fire"), guard: 5 },
+      hit("Exhale", 12, "Fire"),
+      rest,
+    ],
+    "A light breath gathers 5 Guard before a heavy exhale and a recovery turn.",
+    "Prepare Water Guard before Exhale; build while it recovers.",
   );
   add(
     "looseEcho",
@@ -214,8 +224,12 @@ export function registerStratum2(card, enemy, glossary) {
     "Chaos",
     32,
     "Stalker",
-    [hit("First echo", 7, "Chaos"), hit("Answer", 7, "Light"), rest],
-    "Alternates Chaos and Light attacks before a pause.",
+    [
+      hit("First echo", 8, "Chaos"),
+      hit("Answer", 8, "Light"),
+      { ...hit("Reverberate", 5, "Chaos"), guard: 6 },
+    ],
+    "Alternates Chaos and Light attacks, then gathers Guard with a softer Chaos echo.",
     "Read each Tell; neutral defense avoids mutual weaknesses.",
   );
   add(
@@ -226,11 +240,10 @@ export function registerStratum2(card, enemy, glossary) {
     85,
     "Stalker",
     [
-      hit("Spindle", 8, "Arcane"),
-      mark("nausea", 2),
-      apply("nausea"),
+      { ...mark("nausea", 2), ...hit("Spindle", 8, "Arcane") },
+      { ...apply("nausea"), ...hit("Sick stitch", 7, "Arcane") },
       hit("Double stitch", 6, "Arcane", { hits: 2 }),
-      rest,
+      { ...hit("Wind the spool", 6, "Arcane"), guard: 6 },
     ],
     "Two Nausea spaces disrupt formations. Maximum two active Corruptions.",
     "Spread your damage, or cover the sick spaces.",
@@ -244,15 +257,13 @@ export function registerStratum2(card, enemy, glossary) {
     80,
     "Hunter",
     [
-      mark("insanity"),
-      apply("insanity"),
-      hit("Borrowed smile", 9, "Water"),
-      { name: "Mirror skin", guard: 8, element: "Water" },
-      hit("Tear", 9, "Water"),
+      { ...apply("insanity"), ...hit("Borrowed smile", 8, "Water") },
+      { ...hit("Mirror skin", 9, "Water"), guard: 8 },
+      { ...mark("insanity", 2), ...hit("Tear", 9, "Water") },
     ],
-    "Adds Insanity while sheltering behind Guard. Maximum two.",
+    "Applies one Insanity with its first attack, then marks two on later cycles while attacking. Maximum three.",
     "Cover early; Wind cuts through its defenses.",
-    { corruptionCap: 2 },
+    { corruptionCap: 3, openingCorruption: mark("insanity") },
   );
   add(
     "surveyor",
@@ -262,14 +273,13 @@ export function registerStratum2(card, enemy, glossary) {
     90,
     "Sentinel",
     [
-      mark("hole"),
-      apply("hole"),
-      hit("Measure twice", 7, "Earth", { hits: 2 }),
-      rest,
+      { ...mark("hole", 2), ...hit("Survey", 8, "Earth") },
+      { ...apply("hole"), ...hit("Measure twice", 7, "Earth", { hits: 2 }) },
+      { ...hit("Set the boundary", 8, "Earth"), guard: 8 },
     ],
-    "Telegraphs empty spaces for Memory Holes. Maximum two.",
-    "Occupy its marks, route around holes, or upgrade the Elves.",
-    { corruptionCap: 2 },
+    "Marks two Memory Holes beside your formations while attacking. Maximum four.",
+    "Redirect its marks, route around holes, or upgrade the Elves.",
+    { corruptionCap: 4 },
   );
   add(
     "seamstress",
@@ -279,15 +289,18 @@ export function registerStratum2(card, enemy, glossary) {
     190,
     "Archon",
     [
-      hit("Silver needles", 8, "Light", { hits: 2 }),
-      { ...mark("hole"), alsoCorruption: "nausea" },
-      apply("hole"),
-      hit("Cut the seam", 12, "Light"),
-      { name: "Fold inward", guard: 10, element: "Light" },
+      {
+        ...mark("hole", 2),
+        alsoCorruption: "nausea",
+        ...hit("Silver needles", 8, "Light", { hits: 2 }),
+      },
+      { ...apply("hole"), ...hit("Cut the seam", 12, "Light") },
+      { ...hit("Fold inward", 8, "Light"), guard: 10 },
+      hit("Unravel", 14, "Light"),
     ],
-    "Unthreads empty spaces into Memory Holes beside a Nausea mark. Maximum three active Corruptions.",
-    "Fill a Hole mark before it resolves. Cover Nausea; preserve a flexible formation.",
-    { corruptionCap: 3, bossMode: "stalker" },
+    "Marks two Memory Holes and one Nausea while attacking. Maximum five active Corruptions.",
+    "Redirect Hole marks. Cover Nausea; preserve a flexible formation.",
+    { corruptionCap: 5, bossMode: "stalker" },
   );
   add(
     "censer",
@@ -297,15 +310,13 @@ export function registerStratum2(card, enemy, glossary) {
     210,
     "Archon",
     [
-      hit("Furnace breath", 9, "Fire"),
-      mark("mine"),
-      apply("mine"),
-      hit("Bellows", 6, "Fire", { hits: 2 }),
-      rest,
+      { ...apply("mine"), ...hit("Furnace breath", 9, "Fire") },
+      hit("Bellows", 7, "Fire", { hits: 2 }),
+      { ...mark("mine", 2), ...hit("Stoke the fuse", 10, "Fire") },
     ],
-    "Plants telegraphed Mind Mines with three full response turns. Maximum two. An uncovered explosion deals 18 Arcane; a cover sacrifices its top card.",
+    "Plants one Mind Mine with its first attack, then marks two while attacking. Three full response turns per fuse; maximum three Mines. Uncovered explosion: 18 Arcane; covered: sacrifice the top card.",
     "Use spent cards as covers, or repair early with upgraded Elves.",
-    { corruptionCap: 2, bossMode: "stalker" },
+    { corruptionCap: 3, bossMode: "stalker", openingCorruption: mark("mine") },
   );
   add(
     "borrowedChoir",
@@ -315,19 +326,18 @@ export function registerStratum2(card, enemy, glossary) {
     180,
     "Archon",
     [
-      hit("Invitation", 8, "Chaos"),
-      mark("hypnosis"),
-      apply("hypnosis"),
+      { ...mark("hypnosis", 2), ...hit("Invitation", 8, "Chaos") },
+      { ...apply("hypnosis"), ...hit("Borrowed chorus", 8, "Chaos") },
       hit("Marionette hymn", 10, "Chaos"),
       {
-        name: "Release the strings",
+        ...hit("Release the strings", 7, "Chaos"),
         releaseCorruption: true,
         element: "Chaos",
       },
     ],
-    "Hypnosis compels a marked attack or defense card on enemy turns, spending its normal uses. Releases its Corruption at cycle end.",
+    "Marks up to two useful attack or defense cards while attacking. Hypnosis spends their normal uses on enemy turns. Releases its Corruptions at cycle end.",
     "Activate the marked card first, Recall it, or let its allowance run out. Repair with upgraded Elves.",
-    { corruptionCap: 1, bossMode: "hunter" },
+    { corruptionCap: 2, bossMode: "hunter" },
   );
   add(
     "mendingTutor",

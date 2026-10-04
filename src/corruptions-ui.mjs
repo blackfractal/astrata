@@ -1,5 +1,6 @@
 import { CORRUPTIONS } from "./strata.mjs";
 import { corruptionPower } from "./corruptions.mjs";
+import { artPaths } from "./art-paths.mjs";
 const esc = (s) =>
   String(s)
     .replaceAll("&", "&amp;")
@@ -18,6 +19,7 @@ export function paintCorruptions(o, app) {
         suppressed = !!c && ["nausea", "insanity"].includes(q.kind);
       el.classList.add("corrupted", "corruption-" + q.kind);
       el.classList.toggle("corruption-covered", suppressed);
+      el.classList.toggle("corruption-occupied", !!c);
       const title =
         d.name +
         " · " +
@@ -29,8 +31,9 @@ export function paintCorruptions(o, app) {
         d.text;
       el.insertAdjacentHTML(
         "beforeend",
-        `<span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "mine" ? q.remaining : q.kind === "insanity" && !c ? q.value : suppressed ? "covered" : ""}</small></span>`,
+        `<span class="corruption-card" aria-hidden="true"><img class="corruption-art" src="${artPaths["corruption-" + q.kind]}" alt=""><span class="corruption-motion">${Array.from({ length: q.kind === "hole" ? 8 : 3 }, (_, n) => `<i style="--particle:${n};--angle:${n * 45}deg;--delay:${-n * 0.37}s"></i>`).join("")}</span><span class="corruption-name">${d.name}</span></span><span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "mine" ? q.remaining + " turns" : q.kind === "insanity" && !c ? q.value + " HP" : suppressed ? "covered" : ""}</small></span>`,
       );
+      if (!c) el.title = title;
     }
     if (c?.mending)
       el.insertAdjacentHTML(

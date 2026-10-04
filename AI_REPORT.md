@@ -1,3 +1,19 @@
+# Loom pressure and Corruption presentation — package2.0.6
+
+Rules2.0.4/content2.0.5. Policy weighted-druid-v2.0 unchanged. Early Corruptions, multi-space casts and attacks on warning/application turns replace most passive setup moves. Hollow Scribe threatens fourteen Memory Holes. All394 rules tests and isolated packaged visual/tutorial checks pass.
+
+| Seed | Outcome | Round | Decisions | HP |
+| --- | --- | --- | --- | --- |
+| 104060 | loss | 13 | 330 | 0 |
+| 104061 | loss | 14 | 446 | 0 |
+| 104062 | win | 16 | 376 | 65 |
+| 104063 | loss | 13 | 362 | 0 |
+| 104064 | win | 18 | 508 | 8 |
+
+Five Stratum2 carry-in fixture runs completed legally without stalls/crashes: two wins, three losses. The fixture starts with a strong authored collection (including Gold Bracelet, Stone Armor and Crown),55HP and180Gold; it does not demonstrate earning that build through Stratum1. Both victories defeated Seamstress of Absence. Losses came from multi-enemy fights, including Spoolkeeper/Borrowed Face pairs. This small batch is playability evidence, not a calibrated human difficulty target or a controlled before/after comparison. No training or automatic balancing was performed. Full versioned decisions, snapshots and sources: reports/loom-pressure-evaluation.
+
+---
+
 # Starting-card reward exclusions — package2.0.3
 
 Rules2.0.1/content2.0.2, policy weighted-druid-v2.0 unchanged. Card rewards exclude Druid starting cards except Focus Energy. Existing owned copies, shops and authored Events unchanged. All383tests pass, including100seeds in both Strata, common/rare offer validity and deterministic pending-offer migration without RNG changes.

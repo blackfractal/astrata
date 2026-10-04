@@ -157,6 +157,16 @@ export const artPaths = {
 };
 
 // Dedicated tutorial enemy illustrations.
+Object.assign(
+  artPaths,
+  Object.fromEntries(
+    ["hole", "nausea", "insanity", "mine", "hypnosis"].map((kind) => [
+      "corruption-" + kind,
+      "assets/corruption-" + kind + ".png",
+    ]),
+  ),
+);
+
 Object.assign(artPaths, {
   "enemy-tutorialMosswing": "assets/enemy-tutorialMosswing.png",
   "enemy-tutorialRootling": "assets/enemy-tutorialRootling.png",

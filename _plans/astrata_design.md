@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.144
+# Astrata: Game Design Document v4.145
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -1018,3 +1018,33 @@ Replace the start-screen **Run History** button with **Archives**, opening five 
 Before the first Ember Mote placement, require Insight Dew to draw one additional card while preserving the hand. On its next turn, use Focus Draught to place both Blast and Shield beside Water Blast. The tutorial-only Mote has29HP and a3Fire →5Fire →rest cycle. Demonstrate offensive Water attunement, then spend the remaining Channel to attune and activate the Shield as Water. Actually select that Shield against the5Fire attack, showing4Guard protecting for6 and no HP lost. Finish with another Water-attuned Blast on the following turn. In the Tavern, buy Star Flask and Channel Draught and explain their effects, but do not require using them in the Warden battle. The Warden begins independent immediately in first-turn Placement with an empty grid: the player chooses the first card, phase changes, and whether/when to drink the Channel potion. Retry restores the opening state and unused supplies. Preserve the one-time introduction and optional15-second idle hints.
 
 Keep enough Gold and an HP deficit for Tavern lessons. Newly drawn cards and consumables must remain clear of the callout. Preserve older tutorial saves; an old save in the relocated potion segment can resume at the Sapphire approach and have its teaching bottles relocated to the new corner. Preserve spent battle actions, and grant only necessary missing lesson supplies. Removed final-fight forced steps become independent at their current board/phase.
+
+
+### 10.12 Playable Stratum 2 — The Unfinished Loom
+
+The v2 extension carries the run through The Unfinished Loom after the end-of-Stratum-1 Tavern and Machine Elves encounter (§1.4). It uses a new Field illustration and candlelit meditation-grid backdrop. Eight new Motes, three Eidolons and three Archons form its enemy pool; not every enemy uses Corruptions. The Mending Ground tutorial introduces space-bound effects, covering, repair, advanced repair, Mines and Hypnosis, ending in an independent Patient Spoolkeeper fight. Strata 3–5 remain future work.
+
+**Space Corruptions:** One per space, independent of the stack. Memory Hole prevents placement except upgraded Machine Elves. Uncovered Nausea halves adjacent cards' damage and generated Guard, rounded down, without multiplying for overlapping Nauseas; covering suppresses it. Uncovered Insanity costs 1, 2, 3… HP on successive player-turn starts, bypassing defenses; covering suppresses it and resets the counter to 1. Mind Mine explodes after three full player turns: uncovered, 18 Arcane damage through normal defenses; covered, destroys the top card instead. Covering does not pause its fuse. Hypnosis compels an eligible top card on enemy turns, spending its normal allowance and obeying once-per-turn: direct damage hits the player; Guard protects the source enemy; a charge action charges instead. Utility-only cards and Machine Elves cannot be compelled. Basic Elves repair Nausea/Insanity; their 100-Gold upgrade also repairs Hole/Mine/Hypnosis. Mend completes at the next player-turn start if the Elves survive (Freeze delays it), then returns them to discard.
+
+**Pressure and warnings:** Avoid turns spent solely announcing the next move for normal Corruption enemies. Combine their warnings and applications with attacks. Some enemies mark at battle start and apply on turn one. If an enemy lands on the player and attacks before the first Reveal, it still deals its opening attack, but its opening Corruption waits until after one player response turn. Delayed Corruptions threaten multiple spaces. Prefer empty spaces adjacent to the most cards; Hypnosis selects occupied, useful attack/defense cards. Ties are seeded. Multiple warnings reserve distinct spaces, persist in saves, and follow the immediate coverage-retarget rule in §1.4.
+
+| Enemy | Repeating cycle (base damage; all attacks use the enemy's element unless shown) | Corruption cap |
+| --- | --- | --- |
+| Sourcap Tender | Opening Nausea warning → 5 + apply Nausea; 7; 5 + mark one Nausea | 2 |
+| Loop Moth | Opening Insanity warning → 4 + apply Insanity; 7; 5 + mark one Insanity | 2 |
+| Dew Thief | 6; 5 + gain 6 Guard | — |
+| Thread Mite | 4; 3 + reduce next-turn Channel by 1 | — |
+| Frayed Hound | 5 × 2; reduce next-turn Focus by 1; 9 | — |
+| Hollow Scribe | 4 + mark up to 14 Memory Holes; 8 + apply; 8 | 14 |
+| Bellows Grub | 5 + gain 5 Guard; 12; recovery | — |
+| Loose Echo | 8 Chaos; 8 Light; 5 Chaos + gain 6 Guard | — |
+| Spoolkeeper | 8 + mark two Nauseas; 7 + apply; 6 × 2; 6 + gain 6 Guard | 2 |
+| Borrowed Face | Opening Insanity warning → 8 + apply; 9 + gain 8 Guard; 9 + mark two Insanities | 3 |
+| Quiet Surveyor | 8 + mark two Holes; 7 × 2 + apply; 8 + gain 8 Guard | 4 |
+| Seamstress of Absence | 8 × 2 + mark two Holes and one Nausea; 12 + apply; 8 + gain 10 Guard; 14 | 5 |
+| Censer Engine | Opening Mine warning → 9 + apply; 7 × 2; 10 + mark two Mines | 3 |
+| Choir of Borrowed Hands | 8 + mark up to two Hypnoses; 8 + apply; 10; 7 + release its Corruptions | 2 |
+
+Caps count active Corruptions from that enemy. Later casts fill remaining capacity, never overwrite existing Corruptions. **Hollow Scribe should make holes all over the field: fourteen of forty-two spaces.** Spread its targets across rows and columns rather than clustering fourteen beside one formation. If fewer eligible spaces remain, use those available. Placing on a warning redirects the hole, not cancels it, unless no eligible replacement exists. Repairing holes frees capacity for later casts. Boss escalation and cycle-end Purify remain in force; tutorial enemies keep their gentler authored cycles.
+
+**Corruption presentation:** Each of the five types has its own painted card-like illustration attached to the space, with a persistent name/symbol and any countdown or damage counter. Memory Hole is an energy crater with particles falling inward from the rim. Nausea uses sickly green art and queasy localized swirls. Insanity uses fractured violet reflections, Mind Mine amber pulses, and Hypnosis contracting blue rings. When covered, keep a visible art corner and status indicator without obscuring the player's card or activation controls; stop suppressed Nausea/Insanity effects. Warnings remain visually distinct from applied Corruptions. Apply multi-space casts together visually. Honor reduced-motion preferences.
