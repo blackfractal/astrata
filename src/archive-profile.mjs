@@ -25,6 +25,11 @@ export const achievements = [
   { id: "defeat-apex", name: "Defeat the Apex Predator" },
   { id: "calm-apex", name: "Calm the Apex Predator" },
   { id: "calm-astrata", name: "Calm Astrata" },
+  {
+    id: "traveler-kindness",
+    name: "A Little Kindness",
+    hiddenStratumPrerequisite: true,
+  },
 ];
 export function emptyCollection() {
   return { schema: 1, cards: {}, enemies: {}, equipment: {}, achievements: {} };
@@ -96,5 +101,14 @@ export function discover(collection, state, at = new Date().toISOString()) {
         collection.achievements[achievement.id] ||= { earnedAt: at };
     }
   }
+  if (
+    !state.tutorial &&
+    [1, 2, 3].every((afterStratum) =>
+      state.stats?.travelerDonations?.some(
+        (d) => d.afterStratum === afterStratum && d.gold > 0,
+      ),
+    )
+  )
+    collection.achievements["traveler-kindness"] ||= { earnedAt: at };
   return collection;
 }

@@ -23,6 +23,8 @@ import {
   enemies,
   CARD_BUY_PRICES,
   DEPLETED_WARD_TEXT,
+  TRAVELER_STORIES,
+  TRAVELER_DONATION,
 } from "./content.mjs";
 import {
   activationGrowth,
@@ -948,12 +950,13 @@ function tavern(ctx) {
   }
   const host = app.querySelector(".layout>section");
   const service = ctx.service === "shop" ? "market" : ctx.service;
+  const afterStratum = o.shop.afterStratum ?? (o.loomIntro ? 1 : null);
   const services = [
     ["market", "Market", "Goods & cards", "◈"],
     ["rest", "Innkeeper", "Rest & recovery", "☀"],
     ["equipment", "Jeweler", "Equipment & Gems", "◇"],
     ["grimoire", "Scribe", "Cards & upgrades", "✧"],
-    ["gossip", "Traveler", "Rumors", "?"],
+    ["gossip", "Traveler", afterStratum ? "An empty cup" : "Rumors", "?"],
     [
       "healer",
       "Healer",
@@ -971,7 +974,23 @@ function tavern(ctx) {
     .querySelectorAll("[data-tavern]")
     .forEach((el) => (el.onclick = () => ctx.setService(el.dataset.tavern)));
   const content = host.querySelector(".service-content");
-  if (service === "equipment") {
+  if (service === "gossip" && afterStratum) {
+    const decision =
+      o.shop.travelerDecision ||
+      (o.stats.travelerDonations?.some((d) => d.afterStratum === afterStratum)
+        ? "gave"
+        : null);
+    content.innerHTML = `<p>${TRAVELER_STORIES[Math.min(afterStratum, 3) - 1]}</p>${
+      decision
+        ? `<p>${decision === "gave" ? "He closes his hand around the coins. 'Thank you. Truly.'" : "He nods and looks back into his cup."}</p>`
+        : `<div class="choices">${actions
+            .filter((a) => ["giveTraveler", "declineTraveler"].includes(a.type))
+            .map((a) => button(ctx, a))
+            .join(
+              "",
+            )}${o.gold < TRAVELER_DONATION ? `<button disabled title="Not enough Gold">Give ${TRAVELER_DONATION} Gold</button>` : ""}</div>`
+    }`;
+  } else if (service === "equipment") {
     content.innerHTML = `<h3>Equipped</h3>${equipmentBody(ctx)}`;
     bindEquipment(ctx, content);
   } else if (service === "market") {

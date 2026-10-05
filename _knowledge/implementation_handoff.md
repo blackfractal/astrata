@@ -1,5 +1,16 @@
 # Astrata implementation handoff
 
+## Latest: Mixed boss rewards, Traveler gifts and Recall lessons — 2026-10-04
+
+Package 2.1.6, rules 2.1.5, content 2.1.4, actions 7, design 4.158; BUILD_LOG114. All six Archons offer one Legendary then two distinct weighted Rares, choosing exactly one before Gem/Setting/transition. Pending older offers migrate once from saved RNG; valid offers remain stable and settled choices remain settled. Removed the guaranteed-Legendary carry-in assumption.
+
+Intermission Traveler replaces gossip with a short story about waiting for his missing sister, optional 15 Gold gift or refusal, once per visit. Midpoint gossip retained. shop.afterStratum is the explicit future intermission hook; older loomIntro saves infer afterStratum1. Donations recorded in stats by intermission, amount and step; no material reward or new information/RNG. A Little Kindness (traveler-kindness) requires positive gifts after Strata1/2/3 in the same normal run, persists profile-wide, no visible hints/counters, marked as a future hidden-Stratum prerequisite. Later intermissions and actual Stratum5 gate remain future content. AI declines to preserve Gold without knowledge of secret benefits.
+
+First Clearing version11 now requires Recall of surviving Shield after Rootling's heavy attack, using its existing Recover move for a safe extra round. Costs1Focus, enters Discard, pile viewer contrasts it with Destroyed Sapling, explains recycling and temporary destruction vs permanent removal, with vague stronger-enemy warning. Existing HP outcome unchanged; stable lesson IDs preserve older progress. Mending Ground retains version3/indices, copy says Memory Hole and other more powerful Corruptions rather than prematurely naming Hypnosis. Room to think explains free automatic Recall after final successful repair and optional early Recall1Focus. Elves previously inherited no Recall from Ally default; now explicitly recall1. Early recall cancels pending repair; redraw restores three uses; AI avoids canceling pending repairs.
+
+435 rules tests pass, including all six mixed boss offers and every choice, migrations/RNG stability, donation affordability/refusal/reload/same-run deduplication, both tutorial walkthroughs with save reloads, real Shield pile movement and Elves recall/canceled repairs/free final return. UI checks cover reward details/relaunch/Rare choice and Traveler gift/refusal/field gossip. Full First Clearing mouse walkthrough wins, preserves normal test save and resumes mid-defense correctly. Full revised Mending Ground UI also verified; source-matched app/CRC-verifiedZIP rebuilt. Actual user profile and frozen seed/puzzle evidence untouched. No full-run balance batch or learned training.
+
+
 ## Latest: Tavern excludes the Archon center — 2026-10-04
 
 Package 2.1.5 / rules 2.1.4 / content 2.1.3 / design 4.154, BUILD_LOG113. beginRound rerolls all four Location dice for a Tavern at internal (5,5), displayed (6,6), in both Strata. Other spawns and the fixed Archon center retain their rules. Seeded rerolls only when rejected. Already placed saved Taverns keep their coordinates; unspawned Taverns follow the new rule. Accepts rules2.1.3 saves. 431 tests pass, including repeated rejections and reload persistence. App/CRC-verified ZIP refreshed; no UI changes. User profile and frozen seed proofs untouched.

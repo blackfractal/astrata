@@ -5,11 +5,17 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.4",
-  content: "2.1.3",
+  rules: "2.1.5",
+  content: "2.1.4",
   observation: 2,
-  actions: 6,
+  actions: 7,
 };
+export const TRAVELER_DONATION = 15;
+export const TRAVELER_STORIES = [
+  "The Traveler turns an empty cup between his hands. 'I came through with my sister. We agreed that if we lost each other, we would wait at the next fire. I've paid for three nights already. Could you spare 15 Gold for one more?'",
+  "The Traveler has stitched his coat with thread that does not match. 'I left word at every shelter. No answer yet. The innkeeper lets me sleep beside the ashes, but I should pay my way. Could you spare 15 Gold?'",
+  "The Traveler keeps the chair beside him empty. 'I used to be afraid she would arrive after I'd gone. Now I'm afraid I'll stop expecting her. Just one more night. Could you spare 15 Gold?'",
+];
 export const DEPLETED_WARD_TEXT =
   "Depleted: fully depleted wards cannot activate.";
 export const ENEMY_STATUS_IMMUNITY = {

@@ -13,6 +13,7 @@ const report = {
 const dir = "reports/screenshots/tutorial";
 await fs.mkdir(dir, { recursive: true });
 const profile = path.resolve(".tmp/tutorial-ui-" + Date.now());
+const source = process.argv.includes("--source");
 await fs.mkdir(profile, { recursive: true });
 const normal = new Game(123);
 normal.s.uiMeta = { runId: "preserved-normal", elapsed: 400 };
@@ -25,8 +26,15 @@ await fs.writeFile(
 let app, p;
 const open = async () => {
   app = await electron.launch({
-    executablePath: path.resolve("release/Astrata/Astrata.exe"),
-    args: ["--user-data-dir=" + profile],
+    executablePath: path.resolve(
+      source
+        ? "node_modules/electron/dist/electron.exe"
+        : "release/Astrata/Astrata.exe",
+    ),
+    args: [
+      ...(source ? [path.resolve(".")] : []),
+      "--user-data-dir=" + profile,
+    ],
   });
   p = await app.firstWindow();
   p.on("pageerror", (e) => report.errors.push(e.message));
@@ -196,6 +204,9 @@ try {
         "shield-place",
         "route-ally",
         "route-done",
+        "recall-discard",
+        "discard-destroyed",
+        "recall-protection",
         "socket",
         "independent",
         "pursuit-one-left",
@@ -210,9 +221,30 @@ try {
       await p.mouse.move(5, 5);
       await p.screenshot({ path: dir + "/" + step + ".png" });
     }
-    if (["elements", "cycle", "socket", "gossip-learned"].includes(step)) {
+    if (
+      [
+        "elements",
+        "cycle",
+        "socket",
+        "gossip-learned",
+        "recall-discard",
+        "discard-destroyed",
+        "recall-protection",
+      ].includes(step)
+    ) {
       const guide = p.locator(".tutorial-guide");
       const copy = await guide.textContent();
+      if (step === "recall-discard") {
+        assert.equal(state.battle.focus, 0);
+        assert.equal(state.battle.grid[20].length, 0);
+        assert.ok(state.battle.discard.some((c) => c.id === "shield"));
+      }
+      if (step === "discard-destroyed") {
+        assert.match(copy, /More powerful enemies can send cards to Destroyed/);
+        assert.match(await p.locator("#modal").textContent(), /discard/);
+        assert.match(await p.locator("#modal").textContent(), /Sapling/);
+        assert.ok(await p.locator("#modal").isVisible());
+      }
       if (step === "elements")
         assert.match(
           copy,

@@ -1,9 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
-import { cards } from "../src/content.mjs";
+import { cards, enemies } from "../src/content.mjs";
 function victory(enemy = "hart", seed = 91) {
   const g = new Game(seed);
+  g.s.stratum = enemies[enemy].stratum || 1;
   g.s.equipment = {};
   g.s.field.round = 16;
   g.beginBattle([{ uid: g.uid(), enemy, restless: 0 }]);
@@ -16,31 +17,49 @@ function victory(enemy = "hart", seed = 91) {
   }
   return g;
 }
-test("all three Archons offer three distinct legendaries and cannot skip before selecting one", () => {
-  for (const boss of ["hart", "colossus", "choir"]) {
-    const g = victory(boss);
-    assert.equal(g.s.mode, "reward");
-    assert.equal(g.s.reward.boss, true);
-    assert.equal(g.s.reward.cards.length, 3);
-    assert.equal(new Set(g.s.reward.cards).size, 3);
-    assert.ok(g.s.reward.cards.every((id) => cards[id].rarity === "legendary"));
-    assert.ok(g.legal().every((a) => a.type === "rewardCard"));
-    const before = g.s.deck.length,
-      chosen = g.s.reward.cards[0];
-    g.act(g.legal().find((a) => a.id === chosen));
-    assert.equal(g.s.deck.length, before + 1);
-    assert.equal(g.s.deck.at(-1).id, chosen);
-    assert.equal(g.s.reward.cards, null);
-    g.act(g.legal().find((a) => a.type === "rewardGem"));
-    g.act(g.legal().find((a) => a.type === "rewardSetting"));
-    g.act(g.legal().find((a) => a.type === "continueReward"));
-    assert.equal(g.s.stratum, 2);
-    assert.equal(g.s.mode, "tavern");
-    assert.ok(g.s.shop.healer);
-    assert.ok(g.s.deck.some((c) => cards[c.id].rarity === "legendary"));
+function mixedOffer(offer) {
+  assert.equal(offer.length, 3);
+  assert.equal(new Set(offer).size, 3);
+  assert.deepEqual(
+    offer.map((id) => cards[id].rarity),
+    ["legendary", "rare", "rare"],
+  );
+}
+
+test("all six Archons offer one Legendary and two Rares; either rarity may be selected", () => {
+  for (const boss of [
+    "hart",
+    "colossus",
+    "choir",
+    "blackBile",
+    "bombadier",
+    "trickster",
+  ]) {
+    for (const choice of [0, 1, 2]) {
+      const g = victory(boss);
+      assert.equal(g.s.mode, "reward");
+      assert.equal(g.s.reward.boss, true);
+      mixedOffer(g.s.reward.cards);
+      assert.ok(g.legal().every((a) => a.type === "rewardCard"));
+      const before = g.s.deck.length,
+        chosen = g.s.reward.cards[choice];
+      g.act(g.legal().find((a) => a.id === chosen));
+      assert.equal(g.s.deck.length, before + 1);
+      assert.equal(g.s.deck.at(-1).id, chosen);
+      assert.equal(g.s.reward.cards, null);
+      g.act(g.legal().find((a) => a.type === "rewardGem"));
+      g.act(g.legal().find((a) => a.type === "rewardSetting"));
+      g.act(g.legal().find((a) => a.type === "continueReward"));
+      assert.equal(g.s.stratum, 2);
+      if (enemies[boss].stratum === 2) assert.equal(g.s.mode, "result");
+      else {
+        assert.equal(g.s.mode, "tavern");
+        assert.ok(g.s.shop.healer);
+      }
+    }
   }
 });
-test("legendary offers use seed, survive repeated observation/load and migrate pending old rare boss offers once", () => {
+test("mixed boss offers use seed, survive observation/load and migrate pending old offers once", () => {
   const a = victory(),
     b = victory();
   assert.deepEqual(a.s.reward, b.s.reward);
@@ -54,14 +73,19 @@ test("legendary offers use seed, survive repeated observation/load and migrate p
   assert.equal(loaded.s.rng, rng);
   const old = a.save();
   old.version = { ...old.version, rules: "1.3.43" };
-  old.reward.cards = ["storm", "prism", "magnify"];
-  const c = new Game(0, old),
-    d = new Game(0, old);
-  assert.deepEqual(c.s.reward, d.s.reward);
-  assert.ok(c.s.reward.cards.every((id) => cards[id].rarity === "legendary"));
-  const e = new Game(0, c.save());
-  assert.equal(e.s.rng, c.s.rng);
-  assert.deepEqual(e.s.reward, c.s.reward);
+  for (const previous of [
+    ["storm", "prism", "magnify"],
+    ["grove", "eclipse", "bastion"],
+  ]) {
+    old.reward.cards = previous;
+    const c = new Game(0, old),
+      d = new Game(0, old);
+    assert.deepEqual(c.s.reward, d.s.reward);
+    mixedOffer(c.s.reward.cards);
+    const e = new Game(0, c.save());
+    assert.equal(e.s.rng, c.s.rng);
+    assert.deepEqual(e.s.reward, c.s.reward);
+  }
   old.reward.cards = null;
   const settled = new Game(0, old);
   assert.equal(

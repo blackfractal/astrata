@@ -537,7 +537,7 @@ function render(frame = null) {
         ? "Something left behind"
         : o.reward.cards
           ? o.reward.boss
-            ? "Choose one legendary card"
+            ? "Choose one boss reward"
             : "The spoils of victory"
           : o.reward.gem
             ? "A glimmer to keep"
@@ -930,6 +930,7 @@ async function ui(name) {
           )
           .join(""),
       );
+      await tutorialSignal("piles");
       break;
     }
     case "help":

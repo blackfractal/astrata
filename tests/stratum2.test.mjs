@@ -627,6 +627,42 @@ test("Multiple Angers respect once per turn, and Mend removes Anger immediately"
   assert.equal(g.allowance(elves, 7), 2);
 });
 
+test("Elves can Recall early for Focus, cancel pending repair, and automatically Recall after final success for free", () => {
+  const g = arena(),
+    b = g.s.battle;
+  q(g, 14, "hole");
+  const c = place(g, "elves", 7);
+  b.phase = "activate";
+  action(g, "activate", { slot: 7, cardTarget: 14 });
+  assert.ok(c.mending);
+  round(g);
+  const before = b.focus;
+  action(g, "recall", { slot: 7 });
+  assert.equal(b.focus, before - 1);
+  assert.ok(b.discard.some((x) => x.uid === c.uid));
+  assert.equal(b.grid[7].length, 0);
+  round(g);
+  assert.equal(
+    b.corruptions[14].kind,
+    "hole",
+    "canceled repair cannot complete off-grid",
+  );
+  const refreshed = g.instance({ id: c.id, uid: c.uid, upgrade: c.upgrade });
+  assert.equal(g.allowance(refreshed, 7), 3);
+  const h = arena(),
+    hb = h.s.battle;
+  q(h, 14, "nausea");
+  const last = place(h, "elves", 14);
+  last.used = 2;
+  hb.phase = "activate";
+  hb.focus = 0;
+  action(h, "activate", { slot: 14, cardTarget: 14 });
+  assert.equal(hb.focus, 0);
+  assert.equal(hb.grid[14].length, 0);
+  assert.ok(hb.discard.some((x) => x.uid === last.uid));
+  assert.equal(hb.corruptions[14], undefined);
+});
+
 test("Anger spends one Channel even on a normally free activation and handles lethal attacks", () => {
   const g = arena(),
     b = g.s.battle;

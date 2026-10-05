@@ -142,7 +142,7 @@ export const LOOM_STEPS = [
   note(
     "hole",
     "A hole in your memory",
-    "This Memory Hole cannot accept ordinary cards. Machine Elves can enter it or repair it from a neighboring space. Strong Corruptions take time: an ordinary Mend needs two player-turn starts to repair a Memory Hole.",
+    "This Memory Hole cannot accept ordinary cards. Machine Elves can enter it or repair it from a neighboring space. Memory Hole and other more powerful Corruptions take time: an ordinary Mend needs two player-turn starts.",
     "hole",
   ),
   note(
@@ -187,12 +187,12 @@ export const LOOM_STEPS = [
   note(
     "hole-done",
     "Room to think",
-    "The Hole has vanished. Your Elves still have one Mend use left. After their final successful repair, they return to discard. An upgrade shortens stronger repairs from two turns to one; ordinary repairs already finish immediately.",
+    "The Hole has vanished. Your Elves have one Mend use left. After their final successful repair, they Recall to Discard automatically, costing no Focus. You can also spend 1 Focus during Placement to Recall them early; unfinished repairs are canceled. An upgrade reduces repair time for Memory Hole and other more powerful Corruptions from two turns to one.",
   ),
   note(
     "tells",
     "Read the marked spaces",
-    "Cover a marked empty space and the enemy immediately chooses another eligible space: watch the warning move before ending your turn. With no eligible replacement, that mark is canceled. Hypnosis targets an occupied card space. Existing Corruptions stay on their spaces when covered or uncovered.",
+    "Cover a marked empty space and the enemy immediately chooses another eligible space: watch the warning move before ending your turn. With no eligible replacement, that mark is canceled. Some Corruptions target occupied spaces. Existing Corruptions stay on their spaces when covered or uncovered.",
   ),
   note(
     "complete",

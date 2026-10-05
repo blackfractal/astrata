@@ -41,6 +41,7 @@ import { describeDeath } from "./death.mjs";
 import {
   cards,
   CARD_BUY_PRICES,
+  TRAVELER_DONATION,
   items,
   enemies,
   events,
@@ -587,6 +588,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.4",
           "2.1.3",
           "2.1.2",
           "2.1.1",
@@ -857,9 +859,12 @@ export class Game {
         s.reward.boss &&
         (s.reward.cards.length !== 3 ||
           new Set(s.reward.cards).size !== 3 ||
-          s.reward.cards.some((id) => cards[id]?.rarity !== "legendary"))
+          s.reward.cards.filter((id) => cards[id]?.rarity === "legendary")
+            .length !== 1 ||
+          s.reward.cards.filter((id) => cards[id]?.rarity === "rare").length !==
+            2)
       )
-        s.reward.cards = this.legendaryOffer();
+        s.reward.cards = this.bossOffer();
       s.reward.cards = [...s.reward.cards];
       for (let i = 0; i < s.reward.cards.length; i++) {
         const id = s.reward.cards[i];
@@ -1050,11 +1055,13 @@ export class Game {
         (!reward || !excludedStarterOffers.has(c.id)),
     );
   }
-  legendaryOffer() {
+  bossOffer() {
     const pool = this.pool("legendary", true).map((c) => c.id);
-    if (pool.length < 3)
-      throw Error("Boss rewards require at least three legendary cards.");
-    return this.shuffle(pool).slice(0, 3);
+    if (!pool.length || this.pool("rare", true).length < 2)
+      throw Error(
+        "Boss rewards require one legendary and two distinct rare cards.",
+      );
+    return [this.pick(pool), ...this.rareOffer(2, true)];
   }
   rareOffer(count = 1, reward = true) {
     const pool = this.pool("rare", reward),
@@ -2811,7 +2818,7 @@ export class Game {
       s.status = blankStatus();
       s.mode = "reward";
       s.reward = {
-        cards: boss ? this.legendaryOffer() : this.offer(elite || skittish),
+        cards: boss ? this.bossOffer() : this.offer(elite || skittish),
         boss,
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
         setting: boss,
@@ -2821,7 +2828,7 @@ export class Game {
       delete s.checkpoint;
       this.log(
         boss
-          ? "Victory. Choose one legendary card."
+          ? "Victory. Choose one card: one Legendary or either of two Rares."
           : "Victory. Choose a card or skip.",
       );
     }
@@ -2889,15 +2896,16 @@ export class Game {
     ]);
     s.status = blankStatus();
     s.loomIntro = true;
-    this.openTavern();
+    this.openTavern({ afterStratum: 1 });
     s.shop.healer = true;
     this.log(
       "The Whispering Weald is behind you. A Tavern welcomes you before the Unfinished Loom.",
     );
   }
-  openTavern() {
+  openTavern({ afterStratum = null } = {}) {
     this.s.mode = "tavern";
     this.s.shop = {
+      afterStratum,
       stock: [
         ...this.offer(true).map((id) => "card:" + id),
         ...this.shuffle(
@@ -3246,7 +3254,8 @@ export class Game {
     }
     if (s.mode === "tavern") {
       const shop = s.shop,
-        recovery = s.loomIntro ? 50 : 20;
+        afterStratum = shop.afterStratum ?? (s.loomIntro ? 1 : null),
+        recovery = afterStratum ? 50 : 20;
       add("leave", "Leave the Lantern Rest", {}, { progress: 1 });
       if (s.gold >= recovery && !shop.healUsed && s.hp < s.maxHp)
         add(
@@ -3256,7 +3265,27 @@ export class Game {
           { heal: Math.min(recovery, s.maxHp - s.hp) },
           { gold: recovery },
         );
-      if (s.gold >= 15 && !shop.gossipUsed)
+      if (
+        afterStratum &&
+        !shop.travelerDecision &&
+        !s.stats.travelerDonations?.some((d) => d.afterStratum === afterStratum)
+      ) {
+        if (s.gold >= TRAVELER_DONATION)
+          add(
+            "giveTraveler",
+            `Give ${TRAVELER_DONATION} Gold`,
+            { afterStratum },
+            { donation: TRAVELER_DONATION },
+            { gold: TRAVELER_DONATION },
+          );
+        add(
+          "declineTraveler",
+          "Keep your Gold",
+          { afterStratum },
+          { progress: 1 },
+        );
+      }
+      if (!afterStratum && s.gold >= 15 && !shop.gossipUsed)
         add(
           "gossip",
           "Gossip · Archon and next healer · 15 Gold",
@@ -3806,6 +3835,22 @@ export class Game {
             : "No healer will visit the next Tavern.",
         );
         this.log("The traveler names " + enemies[s.archon].name + ".");
+        break;
+      case "giveTraveler":
+        this.spend(a.costs.gold);
+        s.shop.travelerDecision = "gave";
+        (s.stats.travelerDonations ||= []).push({
+          afterStratum: a.afterStratum,
+          gold: a.costs.gold,
+          step: s.steps,
+        });
+        this.log(
+          "The Traveler closes his hand around the coins. 'Thank you. Truly.'",
+        );
+        break;
+      case "declineTraveler":
+        s.shop.travelerDecision = "declined";
+        this.log("The Traveler nods and looks back into his cup.");
         break;
       case "buy": {
         const id = s.shop.stock.splice(a.index, 1)[0];

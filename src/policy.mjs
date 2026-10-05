@@ -380,6 +380,8 @@ export class WeightedPolicy {
         ];
       }
       case "recall":
+        if (b.grid[a.slot].at(-1)?.mending)
+          return [-20, "Let the pending repair finish rather than canceling it."];
         return [
           f.spent && b.grid.filter((x) => x.length).length > 10 ? 3 : -15,
           "Clear exhausted cards only when grid space is scarce.",
@@ -642,6 +644,10 @@ export class WeightedPolicy {
           !o.archon && o.gold > 100 ? 2 : -5,
           "Buy Archon information only with surplus Gold.",
         ];
+      case "giveTraveler":
+        return [-5, "Keep Gold for survival; this gift offers no known material benefit."];
+      case "declineTraveler":
+        return [0.1, "Politely decline the request before continuing."];
       case "leave":
         return [0, "Continue when useful services are exhausted."];
       case "replaceArmor":

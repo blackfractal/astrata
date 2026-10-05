@@ -1,3 +1,7 @@
+# Mixed rewards and Recall support — package 2.1.6
+
+Rules2.1.5/content2.1.4/actions7. Reward choices use the existing shared action interface for either rarity. Added explicit handling for Traveler gifts/refusal; the survival policy declines rather than exploiting undisclosed achievement rewards. It avoids recalling Elves during a pending repair. Both tutorials complete headlessly; full UI walkthroughs verify the teaching flows. No new full-run balance batch or learned training. Secret progression remains profile achievement data, not an AI reward hint.
+
 # Tutorial verification — package 2.1.4
 
 Rules/content2.1.3. The weighted policy recognizes covering Anger and the danger of recalling its cover. Shared legal actions support the new mechanic without a separate AI interface. The revised deterministic tutorial survives reload after every action and the policy wins its independent practice finale. The mouse UI walkthrough also wins with legal choices and no renderer errors. This verifies tutorial completion, not overall Stratum 2 balance; no new full-run evaluation or training was performed.

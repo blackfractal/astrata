@@ -40,6 +40,19 @@ test("Every guided lesson is legal, deterministic and preserves actual costs, in
     [30, 26, 19, 11],
   );
   assert.equal(checkpoints["route-done"].hp, 60);
+  const recalled = checkpoints["recall-shield"].battle.grid[20][0];
+  const afterRecall = checkpoints["recall-discard"].battle;
+  assert.equal(afterRecall.focus, 0);
+  assert.equal(afterRecall.grid[20].length, 0);
+  assert.ok(afterRecall.discard.some((c) => c.uid === recalled.uid));
+  assert.ok(!afterRecall.hand.some((c) => c.uid === recalled.uid));
+  assert.ok(afterRecall.destroyed.some((c) => c.id === "sapling"));
+  assert.equal(checkpoints["rootling-blast"].battle.focus, 1);
+  assert.equal(checkpoints["rootling-blast"].hp, 60);
+  assert.ok(
+    checkpoints["elements"].battle.deck.some((c) => c.id === "sapling"),
+  );
+  assert.equal(checkpoints["elements"].battle.destroyed.length, 0);
   assert.equal(checkpoints["cycle"].hp, 64);
   assert.equal(checkpoints["water-shield-block"].battle.reaction.damage, 5);
   assert.equal(

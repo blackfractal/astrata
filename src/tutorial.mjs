@@ -2,7 +2,7 @@ import { loomGuide, loomActions, loomAfter } from "./loom-tutorial.mjs";
 import { cards, items, enemies, DRUID_COMPANION_STORY } from "./content.mjs";
 export const TUTORIAL = {
   id: "stratum1",
-  version: 10,
+  version: 11,
   name: "The First Clearing",
   seed: 11001,
 };
@@ -356,6 +356,48 @@ note(
   "Every layer matters",
   "You took only 9 of the original 30 damage. Each hit showed the actual HP or Guard lost. Warning: attacks will NEVER move backwards toward the right side, so choose the order of your defending cards wisely!",
   ".battle-player, header .hp",
+);
+note(
+  "recall-intro",
+  "Bring a card back",
+  "The Rootling is recovering. Your Shield survived with a use left, but you can Recall it now. Recall happens during Placement and spends the card's listed Focus cost. Most Allies cannot Recall unless their text allows it.",
+  '[data-slot="20"], .resources > span:nth-child(2)',
+);
+action(
+  "recall-shield",
+  "Recall the Shield",
+  "Click the Shield's name to open its full details, then click Recall. This Shield costs 1 Focus to Recall. It leaves the grid and goes to Discard, not directly into your hand.",
+  { type: "recall", slot: 20 },
+);
+note(
+  "recall-discard",
+  "Waiting in Discard",
+  "Your Shield is now in Discard and Focus is 0. When the remaining Grimoire is drawn, Discard recycles into it. You can draw the Shield again during this battle, and placing it again restores its activation allowance.",
+  '[data-ui="piles"], .resources > span:nth-child(2)',
+);
+ui(
+  "recall-piles",
+  "Inspect the piles",
+  "Open the Grimoire / Discard / Destroyed button at the bottom left. Find the recalled Shield in Discard and the defeated Sapling in Destroyed.",
+  "piles",
+  '[data-ui="piles"]',
+);
+note(
+  "discard-destroyed",
+  "Discard returns; Destroyed waits",
+  "Discard can recycle during this battle. Destroyed cannot: your Sapling is unavailable for the rest of this fight. More powerful enemies can send cards to Destroyed, too. Don't worry: after battle, those cards return safely to your Grimoire.",
+  "#modal",
+);
+note(
+  "recall-protection",
+  "A little foresight",
+  "Recall can save an important card before a dangerous enemy move. It still takes time to draw it again. Destroyed is temporary; a card permanently removed or sacrificed by an Event is different and does not return.",
+  '[data-ui="piles"]',
+);
+phase("recall-phase");
+end(
+  "recall-enemy",
+  "The Rootling spends this turn recovering. Advance to Enemy. Your Focus will refill for next round's placement.",
 );
 place(
   "rootling-blast",

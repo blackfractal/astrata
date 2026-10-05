@@ -58,10 +58,11 @@ export function registerStratum2(card, enemy, glossary) {
     1,
     3,
     { mend: true },
-    "Mend: choose this space or an orthogonally adjacent Corruption. Three uses; one per turn. Most repairs are immediate; Memory Hole and Hypnosis take two turns (upgraded: one). May be placed anywhere, including Holes. Remains between repairs; returns to discard after the final successful repair. Intercepts Bile, spending one use to remove it.",
+    "Mend: choose this space or an orthogonally adjacent Corruption. Three uses; one per turn. Most repairs are immediate; Memory Hole and other more powerful Corruptions take two turns (upgraded: one). May be placed anywhere, including Holes. After the final successful repair, Recall to Discard automatically for no Focus. May Recall early for 1 Focus; unfinished repairs are canceled. Intercepts Bile, spending one use to remove it.",
     {
       stratum: 2,
       companion: true,
+      recall: 1,
       hp: 4,
       upgrade: {
         gold: 100,
@@ -472,5 +473,5 @@ export function registerStratum2(card, enemy, glossary) {
   glossary["Phase disruption"] =
     "Trickster moves a committed row right two or column down two, wrapping whole stacks. Holes destroy arriving stacks; Hypnosis compels the top card immediately, even after its normal activation.";
   glossary.Mend =
-    "Machine Elves have three uses, one per player turn. Mend this space or one orthogonally adjacent space. Ordinary repairs are immediate; Memory Hole/Hypnosis take two player-turn starts, or one upgraded. Freeze delays completion. After the final successful repair, return to discard.";
+    "Machine Elves have three uses, one per player turn. Mend this space or one orthogonally adjacent space. Ordinary repairs are immediate; Memory Hole and other more powerful Corruptions take two player-turn starts, or one upgraded. Freeze delays completion. After the final successful repair, Recall to Discard automatically for no Focus. May Recall early for 1 Focus during Placement; unfinished repairs are canceled.";
 }
