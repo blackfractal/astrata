@@ -105,6 +105,46 @@ test("Stratum transition grants the companion only on Enter the Unfinished Loom"
     true,
   );
 });
+test("Rest restores 50 HP for 50 Gold between Strata, 20 for 20 at Field Taverns, once per visit", () => {
+  for (const transition of [false, true]) {
+    let g = new Game(3);
+    g.s.hp = 7;
+    if (transition) g.enterStratum2();
+    else g.openTavern();
+    const amount = transition ? 50 : 20;
+    g.s.gold = amount - 1;
+    assert.ok(!g.legal().some((a) => a.type === "heal"));
+    g.s.gold = amount;
+    // Existing unspent transition saves use the new offer without a reset.
+    const saved = g.save();
+    saved.version.rules = "2.1.1";
+    g = new Game(0, saved);
+    const offer = g.legal().find((a) => a.type === "heal");
+    assert.equal(offer.effects.heal, amount);
+    assert.equal(offer.costs.gold, amount);
+    assert.match(offer.label, new RegExp(`up to ${amount} HP`));
+    g.act(offer);
+    assert.equal(g.s.hp, 7 + amount);
+    assert.equal(g.s.gold, 0);
+    g.s.gold = 500;
+    g = new Game(0, g.save());
+    assert.ok(!g.legal().some((a) => a.type === "heal"));
+    g.s.shop.healUsed = false;
+    g.s.hp = g.s.maxHp - 3;
+    action(g, "heal");
+    assert.equal(g.s.hp, g.s.maxHp);
+    assert.equal(g.s.gold, 500 - amount);
+    assert.ok(!g.legal().some((a) => a.type === "heal"));
+    if (transition) {
+      action(g, "leave");
+      action(g, "enterLoom");
+      g.openTavern();
+      g.s.hp = 7;
+      assert.equal(g.legal().find((a) => a.type === "heal").effects.heal, 20);
+    }
+  }
+});
+
 test("Legacy transition saves defer the exact Elves copy through reload without duplicating acquisition", () => {
   for (const mode of ["tavern", "loomIntro"]) {
     let g = new Game(3);

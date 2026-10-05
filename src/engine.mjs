@@ -586,6 +586,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.1",
           "2.1.0",
           "2.0.7",
           "2.0.6",
@@ -3222,15 +3223,16 @@ export class Game {
       return actions;
     }
     if (s.mode === "tavern") {
-      const shop = s.shop;
+      const shop = s.shop,
+        recovery = s.loomIntro ? 50 : 20;
       add("leave", "Leave the Lantern Rest", {}, { progress: 1 });
-      if (s.gold >= 20 && !shop.healUsed && s.hp < s.maxHp)
+      if (s.gold >= recovery && !shop.healUsed && s.hp < s.maxHp)
         add(
           "heal",
-          "Rest · heal 20 HP · 20 Gold",
+          `Rest · heal up to ${recovery} HP · ${recovery} Gold`,
           {},
-          { heal: Math.min(20, s.maxHp - s.hp) },
-          { gold: 20 },
+          { heal: Math.min(recovery, s.maxHp - s.hp) },
+          { gold: recovery },
         );
       if (s.gold >= 15 && !shop.gossipUsed)
         add(
@@ -3766,8 +3768,8 @@ export class Game {
         } else this.resolveTile();
         break;
       case "heal":
-        this.spend(20);
-        s.hp = Math.min(s.maxHp, s.hp + 20);
+        this.spend(a.costs.gold);
+        s.hp = Math.min(s.maxHp, s.hp + a.effects.heal);
         s.shop.healUsed = true;
         break;
       case "gossip":

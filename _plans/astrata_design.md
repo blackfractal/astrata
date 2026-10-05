@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.151
+# Astrata: Game Design Document v4.152
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -120,6 +120,8 @@ Then the next round begins with the next Spawn. Newly spawned enemies take their
 
 ### 2.6 Strata and the Archon
 The run is **four Strata**. Each Stratum is exactly 16 pairs, totaling 32 spawns (2.2). Between Strata / after an Archon fight the player gets an **automatic Tavern** with full services, then starts the next Stratum at the True Center of a fresh Field. The second spawn of pair 16 in Strata 1 to 3 is always the **Archon**, which spawns at the True Center rather than rolling Location dice. The second spawn of pair 16 in Strata 4 is the final boss, **the Apex Predator**. Defeating the Archon ends the Stratum and opens the next one with a fresh Field. The Apex Predator uses Hunter movement.
+
+**Tavern recovery.** The automatic between-Strata Tavern offers one rest restoring **up to 50 HP for 50 Gold**. The midpoint Field Tavern offers one rest restoring **up to 20 HP for 20 Gold**. Add the recovery to current HP, capped at maximum HP; this is not a target HP total. Pay the full listed price even if fewer HP are missing. Rest is unavailable at full HP, without enough Gold, or after using it at that visit. The used-rest flag survives saving and reloading. The current Archon reward of 120 Gold covers the larger recovery; purchases and upgrades compete for the remainder. Existing unspent Tavern visits use their appropriate offer; an already-used rest is not refreshed.
 
 **Archon pacing.** The Archon's arrival should give the player a short window, a few Field rounds to move around, collect what is left, and fight smaller enemies, before the Archon fight becomes effectively forced. This window is a design guideline, not a fixed mechanic: each Archon prints its own waiting and pursuit behavior, and the builder tunes it. **Within six Field rounds of the Archon appearing, avoiding the fight should be almost impossible, if not impossible.** Examples: a Hunter Archon that waits four rounds and then hunts; a pursuing Archon that moves 0 tiles on the round it spawns, then 1, 2, 3, 4. A Sentinel Archon must eventually pursue, or have another printed behavior that prevents indefinite evasion. The player may engage sooner, and the usual collision rules apply. Rounds are counted from the round the Archon spawns, which is round one; battle turns do not advance the count. This is the target for v1, which has a single difficulty. Harder difficulties with shorter windows are future work (11.1).
 

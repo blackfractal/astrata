@@ -1,6 +1,6 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 2.1.2** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**. Loom enemies now apply Corruptions earlier and attack during their warnings; Hollow Scribe threatens fourteen Memory Holes. All five Corruptions have dedicated art and animated effects.
+A spatial deckbuilding roguelike by Jonathan. **Version 2.1.3** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**. Loom enemies now apply Corruptions earlier and attack during their warnings; Hollow Scribe threatens fourteen Memory Holes. All five Corruptions have dedicated art and animated effects.
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 

@@ -1,5 +1,11 @@
 # Astrata implementation handoff
 
+## Latest: Between-Strata rest50HP/50Gold — 2026-10-04
+
+Package2.1.3/rules2.1.2/content2.1.2/design4.152, BUILD_LOG111. Rest uses s.loomIntro to distinguish automatic transition Tavern50HP/50Gold from Field/Tutorial20HP/20Gold. Full price, restore up to missingHP, one use per visit. Execution reads revalidated action.effects.heal/costs.gold. Accepts2.1.1 saves; existing pending visits update, used rests remain used. Archon reward120Gold unchanged. After enterLoom clears transition marker, S2Field Tavern returns20/20.
+
+424tests pass including boundaries, capped recovery, old-save compatibility, spent persistence and later midpoint; packaged GUI verifies visible labels and actual heal/payment, no renderer errors/overflow. App/ZIP rebuilt. User profile untouched. No AI balance batch. Seed155242295 winning proof under run-studies is frozen to prior2.1.1: preserves all363 human actions up to17HP Colossus, then wins11HP and Bombadier2HP; verified921actions from freshseed. Do not silently update that proof to new recovery rules.
+
 ## Latest: Tavern fits the fixed window — 2026-10-04
 
 Package2.1.2, rules/content2.1.1 unchanged, design4.151, BUILD_LOG110. Main shop overflow reproduced972px in900px stage. ui.mjs gives Tavern its own layout class; battle-layout.css budgets62px header+838px main,220px illustration, bounded service panel; Market title and Buy/Sell share a row. All ordinary stock and purchase controls fit without scroll at four presets1280–1920. Long owned-card/Scribe/Jeweler lists scroll locally, navigation/Leave fixed; readable text retained. No other screen/rules changes.
