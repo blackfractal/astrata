@@ -22,3 +22,7 @@ git clone --branch main _knowledge/git-lfs-migration-2026-10-05/pre-lfs.bundle <
 Publication uploads every LFS object reachable from rewritten main before a guarded force-push, expecting GitHub main to still equal the original hash above. Existing external clones should preserve uncommitted/local work and then clone afresh; do not merge the old history back into the migrated main. This working copy is already migrated. Ordinary commits and pushes continue normally after migration.
 
 No gameplay code or release binary changed, and no game tests were repeated: this is a storage migration verified through file and historical content hashes. Game version remains 2.1.7.
+
+## Publication verified
+
+Uploaded all844LFSobjects (878MB displayed by LFS), then successfully updated GitHub main with the explicit old-head lease. Verified published10886f8 in a fresh GitHub clone and downloaded both an artwork PNG and a verification screenshot from LFS; their bytes/hash match the workspace. Fresh Git pack:17,554,433bytes (git reports16.88MiB including index), image contents stored separately. The original Git credential-helper selector stalled awaiting interaction, so this repository now overrides it with a direct Git Credential Manager helper while retaining the blackfractal username preference. No tokens were read or stored in the repository. This verification is recorded in a subsequent ordinary documentation commit.
