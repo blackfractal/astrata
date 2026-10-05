@@ -1,5 +1,10 @@
 # Astrata implementation handoff
 
+## Latest: Tavern excludes the Archon center — 2026-10-04
+
+Package 2.1.5 / rules 2.1.4 / content 2.1.3 / design 4.154, BUILD_LOG113. beginRound rerolls all four Location dice for a Tavern at internal (5,5), displayed (6,6), in both Strata. Other spawns and the fixed Archon center retain their rules. Seeded rerolls only when rejected. Already placed saved Taverns keep their coordinates; unspawned Taverns follow the new rule. Accepts rules2.1.3 saves. 431 tests pass, including repeated rejections and reload persistence. App/CRC-verified ZIP refreshed; no UI changes. User profile and frozen seed proofs untouched.
+
+
 ## Latest: Anger and the revised Mending Ground — 2026-10-04
 
 Package2.1.4/rules2.1.3/content2.1.3/design4.153, BUILD_LOG112. Anger is suppressed by covering. After Reveal, each uncovered Anger forces the lowest printed damage/Guard eligible NESW card, utility0/ties row-major, native/permanent element, first legal target, exactly1Channel plus ordinary allowance/once-per-turn. Uses shared legal/activation engine; multiple spaces resolve in grid order and exact-state saves preserve per-turn markers. Policy recognizes cover/recall danger. Anger currently comes from tutorial content; normal enemy cycles unchanged.

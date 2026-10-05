@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.153
+# Astrata: Game Design Document v4.154
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -64,7 +64,7 @@ Show Sapling and this story in the normal opening before entering the Field, and
 * Spawn locations are rolled with two pairs of dice, one pair per axis, with the 6 sides of each die labeled from 0 to 5.  The numbers in each pair are added to find the coordinate for that axis.  This means the center (5,5) is the most likely landing zone (**Probability Peak**) and the outer ring is nearly empty (only spawns there on Snake Eyes or Double Sixes for one of the pairs).
 
 ### 2.2 The Spawn Queue ("What")
-A Stratum is **16 spawning rounds of two spawns each: 16 pairs, 32 spawns total**. The player always sees the **next four pairs** in order, or all remaining pairs near the end. **The second slot of pair 8 is the Stratum's only Field Tavern; the second slot of pair 16 is its Archon.** Neither is rolled randomly. The Tavern uses the normal spawn-location rules, stays until visited, and must be reached; its scheduled appearance is not an automatic visit. The automatic between-Strata Tavern (2.6) is separate and remains outside v1.
+A Stratum is **16 spawning rounds of two spawns each: 16 pairs, 32 spawns total**. The player always sees the **next four pairs** in order, or all remaining pairs near the end. **The second slot of pair 8 is the Stratum's only Field Tavern; the second slot of pair 16 is its Archon.** Neither is rolled randomly. The Tavern uses the normal spawn-location rules, except it cannot spawn at the True Center (internal 5,5; displayed 6,6), where the Archon appears. Reroll all four Location dice until a different space is obtained. This applies in every Stratum. The Tavern stays until visited and must be reached; its scheduled appearance is not an automatic visit. The automatic between-Strata Tavern (2.6) is separate and remains outside v1.
 
 The other **30 spawns** use two-stage rolls. The design weights are **Mote 40, Eidolon 10, Gold 15, Item 10, Event 20**. With Taverns fixed instead of random, these weights total 95 and are normalized over the random spawns. Later random rolls are therefore approximately **42.11% Mote, 10.53% Eidolon, 15.79% Gold, 10.53% Item, 21.05% Event**.
 

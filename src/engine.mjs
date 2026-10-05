@@ -587,6 +587,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.3",
           "2.1.2",
           "2.1.1",
           "2.1.0",
@@ -1264,6 +1265,12 @@ export class Game {
               x: type === "Archon" ? 5 : die() + die(),
               y: type === "Archon" ? 5 : die() + die(),
             };
+        // Reserve the True Center (displayed as 6,6) for the Archon's arrival.
+        // Reroll all four Location dice, retaining their distribution elsewhere.
+        while (type === "Tavern" && location.x === 5 && location.y === 5) {
+          location.x = die() + die();
+          location.y = die() + die();
+        }
         const e = {
           uid: this.uid(),
           type,

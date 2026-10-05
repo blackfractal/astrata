@@ -1,6 +1,38 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
+
+test("Taverns reroll the Archon's center in either Stratum, including repeated center rolls", () => {
+  for (const stratum of [1, 2]) {
+    const g = new Game(8);
+    g.s.stratum = stratum;
+    Object.assign(g.s.field, {
+      spawned: 14,
+      round: 7,
+      x: 0,
+      y: 0,
+      queue: ["Item", "Tavern"],
+      entities: [],
+    });
+    g.batch = () => {};
+    // Item may occupy center; Tavern rejects it twice, then keeps (4,6).
+    const rolls = [2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 2, 3, 3];
+    g.rand = () => {
+      assert.ok(rolls.length, "unexpected extra random draw");
+      return (rolls.shift() + 0.5) / 6;
+    };
+    g.beginRound();
+    const [item, tavern] = g.s.field.entities;
+    assert.deepEqual([item.x, item.y], [5, 5]);
+    assert.deepEqual([tavern.x, tavern.y], [4, 6]);
+    assert.equal(tavern.type, "Tavern");
+    assert.equal(rolls.length, 0);
+    assert.deepEqual(
+      new Game(0, g.save()).s.field.entities,
+      g.s.field.entities,
+    );
+  }
+});
 test("first pair always lands two king-moves from the starting player, for every spawn type", () => {
   for (let seed = 1; seed <= 100; seed++) {
     const g = new Game(seed);
