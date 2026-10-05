@@ -8,6 +8,11 @@ export const STRATA = {
 export const ELVES_STORY =
   "The path ends at a tear in the ground. Three small figures kneel beside it, passing a silver thread through places your eyes cannot follow. One pulls; the far bank draws close. They pack their needles when they see you. The smallest points at your grimoire, then at the damaged path ahead. You open the book. They climb inside.";
 export const CORRUPTIONS = {
+  anger: {
+    name: "Anger",
+    symbol: "✷",
+    text: "At each player-turn start, after Reveal, uncovered Anger forces one eligible north/east/south/west card to activate without choosing an Attunement. Lowest printed damage/Guard strength first (utility: 0); ties use topmost then leftmost space. Costs 1 Channel and the normal card allowance. Attacks target the topmost living enemy; other choices use the first legal target. Fixed or Transmuted elements remain. No eligible card or Channel: nothing happens. Cover to suppress, or Mend immediately.",
+  },
   bile: {
     name: "Bile",
     symbol: "◒",
@@ -445,16 +450,21 @@ export function registerStratum2(card, enemy, glossary) {
     "Arcane",
     40,
     "Sentinel",
-    [
-      rest,
-      hit("Loose spindle", 5, "Arcane"),
-      mark("nausea"),
-      apply("nausea"),
-      rest,
-    ],
-    "A gentle final practice: one Nausea space, with pauses between attacks.",
-    "Cover the space or Mend; keep an attack ready.",
-    { tutorialOnly: true, corruptionCap: 1 },
+    ["insanity", "hypnosis", "anger", "nausea", "hole"].map(
+      (kind, i, kinds) => ({
+        ...hit("Loose spindle · " + CORRUPTIONS[kind].name, 7, "Arcane"),
+        fixedDamage: true,
+        applyCorruption: true,
+        nextCorruption: kinds[(i + 1) % kinds.length],
+      }),
+    ),
+    "Every turn: one 7 Arcane attack and the warned Corruption, then a warning for the next. Cycles Insanity, Hypnosis, Anger, Nausea and Memory Hole. Maximum five Corruptions.",
+    "Read unfamiliar Corruption tooltips. Cover or Mend dangerous spaces while keeping an attack ready.",
+    {
+      tutorialOnly: true,
+      corruptionCap: 5,
+      openingCorruption: mark("insanity"),
+    },
   );
   for (const def of Object.values(CORRUPTIONS)) glossary[def.name] = def.text;
   glossary["Anti-elemental"] =

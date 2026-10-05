@@ -164,7 +164,7 @@ export const artPaths = {
 Object.assign(
   artPaths,
   Object.fromEntries(
-    ["hole", "nausea", "insanity", "mine", "hypnosis"].map((kind) => [
+    ["hole", "nausea", "insanity", "mine", "hypnosis", "anger"].map((kind) => [
       "corruption-" + kind,
       "assets/corruption-" + kind + ".png",
     ]),

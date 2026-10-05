@@ -122,7 +122,7 @@ test("Old guided Mending lesson restarts with new rules; independent lesson can 
       step: independent ? 34 : 10,
     });
     const loaded = new Game(0, structuredClone(g.s));
-    assert.equal(loaded.s.tutorial.version, 2);
+    assert.equal(loaded.s.tutorial.version, 3);
     assert.equal(
       loaded.s.tutorial.lesson,
       independent ? "independent" : "loom-welcome",

@@ -9,6 +9,8 @@ import {
   corruptionRound,
   canEnter,
   startRepairs,
+  angerChoice,
+  triggerAnger,
 } from "../src/corruptions.mjs";
 import { startLoomTutorial, LOOM_STEPS } from "../src/loom-tutorial.mjs";
 const arena = (id = "mendingTutor") => {
@@ -508,6 +510,19 @@ test("Entire deterministic Loom tutorial survives reload at every step and compl
   while (g.s.mode !== "result" && count++ < 400) {
     g = new Game(0, g.s);
     assert.ok(g.legal().length, g.s.tutorial.lesson);
+    const b = g.s.battle;
+    if (g.s.tutorial.lesson === "anger-fired") {
+      assert.equal(b.channel, 1);
+      assert.equal(b.grid[15][0].lastActivatedTurn, b.turn);
+      assert.equal(g.s.stats.angerActivations.at(-1).element, "Arcane");
+    }
+    if (g.s.tutorial.lesson === "anger-covered") assert.equal(b.channel, 2);
+    if (g.s.tutorial.lesson === "hole-working") assert.ok(b.corruptions[21]);
+    if (g.s.tutorial.lesson === "hole-wait") assert.ok(b.corruptions[21]);
+    if (g.s.tutorial.lesson === "hole-done") {
+      assert.equal(b.corruptions[21], undefined);
+      assert.equal(g.allowance(b.grid[14][0], 14), 1);
+    }
     g.act(
       g.s.tutorial.lesson === "independent"
         ? new WeightedPolicy().choose(g.observe(), g.legal()).action
@@ -517,6 +532,118 @@ test("Entire deterministic Loom tutorial survives reload at every step and compl
   assert.equal(g.s.outcome, "win");
   assert.ok(count >= LOOM_STEPS.length);
   assert.equal(g.s.tutorial.completed, true);
+});
+
+test("Anger uses weakest legal neighbor, native element, first enemy and exactly one Channel", () => {
+  const g = arena(),
+    b = g.s.battle;
+  q(g, 16, "anger");
+  const weak = place(g, "blast", 15);
+  place(g, "blast", 17, true);
+  place(g, "shield", 8).element = "Water";
+  b.channel = 2;
+  const a = angerChoice(g, 16);
+  assert.equal(a.slot, 15);
+  assert.equal(a.element, "Arcane");
+  assert.equal(a.target, b.enemies[0].uid);
+  const phase = b.phase;
+  triggerAnger(g, 16);
+  assert.equal(b.channel, 1);
+  assert.equal(b.phase, phase);
+  assert.equal(weak.lastActivatedTurn, b.turn);
+  assert.equal(g.allowance(weak, 15), 1);
+  const loaded = new Game(0, structuredClone(g.s));
+  triggerAnger(loaded, 16);
+  assert.equal(loaded.s.battle.channel, 1);
+});
+
+test("Anger skips covered, frozen, spent and Channel-starved situations", () => {
+  for (const reason of ["covered", "frozen", "spent", "channel"]) {
+    const g = arena(),
+      b = g.s.battle;
+    q(g, 16, "anger");
+    const c = place(g, "blast", 15);
+    if (reason === "covered") place(g, "shield", 16);
+    if (reason === "frozen") c.freeze = b.turn;
+    if (reason === "spent") c.used = 2;
+    if (reason === "channel") b.channel = 0;
+    assert.equal(angerChoice(g, 16), null, reason);
+    triggerAnger(g, 16);
+    assert.equal(g.s.stats.angerActivations, undefined, reason);
+  }
+});
+
+test("Anger retains permanent element and utility cards can be forced at one Channel", () => {
+  const g = arena(),
+    b = g.s.battle;
+  q(g, 16, "anger");
+  const c = place(g, "blast", 15);
+  c.element = "Water";
+  assert.equal(angerChoice(g, 16).element, "Water");
+  const utility = place(g, "clear", 17);
+  assert.equal(angerChoice(g, 16).slot, 17);
+  triggerAnger(g, 16);
+  assert.equal(utility.lastActivatedTurn, b.turn);
+  assert.equal(b.channel, 1);
+});
+
+test("Practice Spoolkeeper keeps seven Arcane damage and introduces unseen Corruptions", () => {
+  const g = arena("mendingWarden"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  assert.equal(e.openingCorruption.markCorruption, "insanity");
+  for (const t of e.rotation) {
+    assert.equal(t.damage, 7);
+    assert.equal(t.element, "Arcane");
+    assert.equal(t.fixedDamage, true);
+    assert.ok(t.applyCorruption && t.nextCorruption);
+  }
+  for (const kind of ["insanity", "hypnosis", "anger", "nausea", "hole"]) {
+    // Hypnosis needs an eligible occupied space when its warning is prepared.
+    place(g, "shield", 30);
+    const planned = e.corruptionPlan.map((x) => ({ ...x }));
+    round(g);
+    for (const mark of planned)
+      assert.equal(b.corruptions[mark.slot]?.kind, mark.kind);
+    assert.equal(g.tell(e).damage, 7);
+    assert.ok(b.enemies[0].hp > 0);
+  }
+});
+
+test("Multiple Angers respect once per turn, and Mend removes Anger immediately", () => {
+  const g = arena(),
+    b = g.s.battle;
+  q(g, 14, "anger");
+  q(g, 16, "anger");
+  const c = place(g, "blast", 15);
+  triggerAnger(g, 14);
+  triggerAnger(g, 16);
+  assert.equal(b.channel, 1);
+  assert.equal(g.allowance(c, 15), 1);
+  const elves = place(g, "elves", 7);
+  b.phase = "activate";
+  action(g, "activate", { slot: 7, cardTarget: 14 });
+  assert.equal(b.corruptions[14], undefined);
+  assert.equal(g.allowance(elves, 7), 2);
+});
+
+test("Anger spends one Channel even on a normally free activation and handles lethal attacks", () => {
+  const g = arena(),
+    b = g.s.battle;
+  q(g, 16, "anger");
+  place(g, "resonance", 15);
+  assert.equal(cards.resonance.channel, 0);
+  triggerAnger(g, 16);
+  // Pay one, gain one from Resonance; its usual zero-cost activation would gain one net.
+  assert.equal(b.channel, 2);
+  assert.equal(g.allowance(b.grid[15][0], 15), 0);
+  const kill = arena();
+  q(kill, 16, "anger");
+  place(kill, "blast", 15);
+  kill.s.battle.enemies[0].hp = 1;
+  kill.s.battle.jobs = [{ kind: "anger", slot: 16 }];
+  kill.pump();
+  assert.notEqual(kill.s.mode, "battle");
 });
 test("Version 1.3.50 saves load as Stratum 1 without Corruptions or Elves", () => {
   const g = arena();

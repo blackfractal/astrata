@@ -28,6 +28,63 @@ export function resetCoveredInsanity(b) {
   for (const [i, q] of Object.entries(b.corruptions || {}))
     if (q.kind === "insanity" && b.grid[i].length) q.value = 1;
 }
+// Stable, deliberately simple value: the card's printed damage/Guard strength.
+// Utility cards score zero; ties follow row-major order, then normal target order.
+export function angerChoice(g, slot) {
+  const b = g.s.battle;
+  if (b.channel < 1 || b.grid[slot].length) return null;
+  const phase = b.phase,
+    channel = b.channel;
+  let choices;
+  try {
+    b.phase = "activate";
+    b.channel = Number.MAX_SAFE_INTEGER;
+    choices = g.baseLegal().filter((a) => {
+      const c = a.type === "activate" && top(b.grid[a.slot]);
+      return c && neighbors(slot).includes(a.slot) && a.element === c.element;
+    });
+  } finally {
+    b.phase = phase;
+    b.channel = channel;
+  }
+  const value = (a) => {
+    const c = top(b.grid[a.slot]),
+      d = cards[c.id],
+      f = d.effects;
+    const printed = Math.max(
+      f.damage || 0,
+      f.randomDamage || 0,
+      f.hpDamage ? d.hp || 0 : 0,
+      f.shield || 0,
+      f.ward || 0,
+    );
+    return printed + (printed && c.upgrade ? d.upgrade?.bonus || 0 : 0);
+  };
+  return (
+    choices.sort((a, z) => value(a) - value(z) || a.slot - z.slot)[0] || null
+  );
+}
+export function triggerAnger(g, slot) {
+  const b = g.s.battle,
+    q = b.corruptions?.[slot];
+  if (q?.kind !== "anger" || q.triggeredTurn === b.turn) return;
+  q.triggeredTurn = b.turn;
+  const a = angerChoice(g, slot);
+  if (!a) return;
+  const c = top(b.grid[a.slot]);
+  g.log(
+    `Anger forces ${cards[c.id].name} without Attunement, spending 1 Channel and its activation allowance.`,
+  );
+  g.present("corruption", { slot, name: "Anger · forced activation" });
+  (g.s.stats.angerActivations ||= []).push({
+    turn: b.turn,
+    corruptionSlot: slot,
+    slot: a.slot,
+    card: c.uid,
+    element: a.element,
+  });
+  g.activate(a, { channelCost: 1, deferPump: true });
+}
 export function prepareCorruption(g, e, t) {
   const b = g.s.battle;
   b.corruptions ||= {};

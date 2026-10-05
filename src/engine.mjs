@@ -19,6 +19,7 @@ import {
   applyCorruptions,
   startRepairs,
   corruptionRound,
+  triggerAnger,
 } from "./corruptions.mjs";
 import {
   SATCHEL_CAPACITY,
@@ -586,6 +587,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.2",
           "2.1.1",
           "2.1.0",
           "2.0.7",
@@ -740,7 +742,7 @@ export class Game {
         if (this.s.tutorial.lesson !== "independent") {
           startLoomTutorial(this);
           this.log(
-            "The Mending Ground restarts to teach the new three-use, adjacent Mend rules.",
+            "The Mending Ground restarts to teach Anger and the updated repair lessons.",
           );
         } else this.s.tutorial.version = LOOM_TUTORIAL.version;
       }
@@ -1761,7 +1763,14 @@ export class Game {
               ? s.status[k] + 1
               : s.status[k];
       }
-    b.jobs.push({ kind: "reveal" });
+    b.jobs.push(
+      { kind: "reveal" },
+      ...Object.keys(b.corruptions || {})
+        .map(Number)
+        .sort((a, z) => a - z)
+        .filter((slot) => b.corruptions[slot].kind === "anger")
+        .map((slot) => ({ kind: "anger", slot })),
+    );
     this.pump();
   }
   refillResources() {
@@ -1910,6 +1919,10 @@ export class Game {
       b = s.battle;
     while (s.mode === "battle" && !b.reaction && b.jobs.length) {
       const j = b.jobs.shift();
+      if (j.kind === "anger") {
+        triggerAnger(this, j.slot);
+        continue;
+      }
       if (j.kind === "corruptionRound") {
         corruptionRound(this);
         continue;
@@ -2010,6 +2023,8 @@ export class Game {
         if (t.disrupt) disrupt(this, e, t.phasePlan);
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.applyCorruption) applyCorruptions(this, e);
+        if (t.nextCorruption && !t.openingWarning)
+          prepareCorruption(this, e, { markCorruption: t.nextCorruption });
         if (t.grid) this.gridAttack(t, e);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;
@@ -2695,7 +2710,7 @@ export class Game {
       this.log(d.name + " is Destroyed after its single activation.");
     }
   }
-  activate(a) {
+  activate(a, { channelCost = null, deferPump = false } = {}) {
     const b = this.s.battle,
       slot = b.grid[a.slot],
       c = top(slot),
@@ -2710,7 +2725,7 @@ export class Game {
           ? `${d.name} · Release`
           : d.name,
     });
-    b.channel -= d.channel;
+    b.channel -= channelCost ?? d.channel;
     const ctx = {};
     if (d.stack === "pile") {
       for (const ball of [...slot].reverse())
@@ -2736,7 +2751,7 @@ export class Game {
     }
     this.log("Activated " + d.name + ".");
     this.checkBattle();
-    if (this.s.mode === "battle") this.pump();
+    if (this.s.mode === "battle" && !deferPump) this.pump();
   }
   checkBattle() {
     const s = this.s,

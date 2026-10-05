@@ -3284,6 +3284,36 @@ header {
     opacity: 0.45;
   }
 }
+.slot.corruption-anger {
+  --corruption-color: #f36666;
+}
+.corruption-anger .corruption-motion i {
+  inset: 15%;
+  border: 2px solid #ff6e6880;
+  clip-path: polygon(
+    0 0,
+    70% 12%,
+    100% 0,
+    88% 70%,
+    100% 100%,
+    30% 88%,
+    0 100%,
+    12% 30%
+  );
+  box-shadow: inset 0 0 12px #ec3333;
+  animation: anger-throb 2s var(--delay) ease-in-out infinite;
+}
+@keyframes anger-throb {
+  0%,
+  100% {
+    transform: rotate(var(--angle)) scale(0.75);
+    opacity: 0.35;
+  }
+  50% {
+    transform: rotate(calc(var(--angle) + 12deg)) scale(1.15);
+    opacity: 0.95;
+  }
+}
 .corruption-insanity .corruption-motion i {
   inset: 20%;
   border: 1px solid #e9b4f8a0;

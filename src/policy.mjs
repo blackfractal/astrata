@@ -37,7 +37,7 @@ export class WeightedPolicy {
         if (a.type === "place" && b) {
           const card = b.hand.find((c) => c.uid === a.uid),
             d = cards[card?.id];
-          if (q?.kind === "insanity" || q?.kind === "nausea")
+          if (["anger", "insanity", "nausea"].includes(q?.kind))
             score += q.kind === "insanity" ? 14 : 7;
           if (card?.id === "elves") {
             const spaces = [a.slot, ...adjacent(a.slot)];
@@ -78,7 +78,7 @@ export class WeightedPolicy {
         if (
           a.type === "recall" &&
           q &&
-          ["nausea", "insanity", "mine"].includes(q.kind)
+          ["anger", "nausea", "insanity", "mine"].includes(q.kind)
         )
           score -= 20;
         if (a.type === "activate" && q?.kind === "hypnosis") score += 8;

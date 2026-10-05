@@ -32,7 +32,7 @@ export function paintCorruptions(o, app) {
       c = b.grid[i].at(-1);
     if (q) {
       const d = CORRUPTIONS[q.kind],
-        suppressed = !!c && ["nausea", "insanity"].includes(q.kind);
+        suppressed = !!c && ["anger", "nausea", "insanity"].includes(q.kind);
       el.classList.add("corrupted", "corruption-" + q.kind);
       el.classList.toggle("corruption-covered", suppressed);
       el.classList.toggle("corruption-occupied", !!c);

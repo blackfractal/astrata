@@ -1,3 +1,7 @@
+# Tutorial verification — package 2.1.4
+
+Rules/content2.1.3. The weighted policy recognizes covering Anger and the danger of recalling its cover. Shared legal actions support the new mechanic without a separate AI interface. The revised deterministic tutorial survives reload after every action and the policy wins its independent practice finale. The mouse UI walkthrough also wins with legal choices and no renderer errors. This verifies tutorial completion, not overall Stratum 2 balance; no new full-run evaluation or training was performed.
+
 # Spatial Archons and three-use Menders — package 2.1.0
 
 Rules/content2.1.0, action schema6, weighted-druid-v2.1. The policy values nearby repair opportunities and targeted Mend, and recognizes the full three-hit Steam threat. Legal actions remain shared with the player; no learned training. Exact source snapshots include the new loom-bosses.mjs module in both desktop and headless archives.

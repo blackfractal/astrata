@@ -1,7 +1,7 @@
 import { ELVES_STORY } from "./strata.mjs";
 export const LOOM_TUTORIAL = {
   id: "stratum2",
-  version: 2,
+  version: 3,
   name: "The Mending Ground",
   seed: 22002,
 };
@@ -21,7 +21,12 @@ const action = (id, title, text, match) => ({
   kind: "action",
 });
 export const LOOM_STEPS = [
-  note("loom-welcome", "The Mending Ground", ELVES_STORY),
+  note(
+    "loom-welcome",
+    "They have learned to fight back",
+    "Did you think the Apex Predator's minions would not start fighting back? You got a taste of it with the Archon from the Whispering Weald. Here in the Unfinished Loom, they attack the spaces in your mind itself: your emotions, your sensations, your very consciousness.",
+  ),
+  note("companions", "A thread through the damage", ELVES_STORY),
   note(
     "space",
     "Corruptions belong to spaces",
@@ -88,91 +93,101 @@ export const LOOM_STEPS = [
     "Nausea is gone and the Elves remain ready to repair a neighboring space. After their final successful repair, they return to discard to be drawn again.",
   ),
   note(
-    "insanity",
-    "Insanity grows while uncovered",
-    "This spiral beside the Elves would cost 1 HP next turn, then 2, then 3. Covering suppresses it and resets the count. Repair it from the neighboring space instead.",
-    "insanity",
+    "anger",
+    "Anger steals a choice",
+    "The red knot is Anger. At the start of your turn, it forces the eligible adjacent card with the lowest printed damage or Guard to activate, spending a card use and 1 Channel. Utility cards count as zero. Covering the space suppresses it.",
+    "anger",
   ),
   note(
-    "insanity-place",
-    "Repair from next door",
-    "The Elves can reach the Insanity directly below them. You do not need another placement.",
+    "anger-choice",
+    "The weaker Blast",
+    "Anger borders a Blast and an upgraded Blast. It will choose the weaker one. Water is beside that Blast, but Anger will not choose an Attunement: the Blast fires as Arcane. Watch its allowance and your Channel.",
+    "anger-focus",
   ),
-  action("phase3", "Advance", "Advance to Activation.", {
+  action("anger-phase", "Watch the next turn", "Advance to Activation.", {
     type: "activatePhase",
   }),
-  action("mend3", "Repair Insanity", "Activate Mend.", {
-    type: "activate",
-    slot: 14,
-    cardTarget: 21,
+  action(
+    "anger-end",
+    "Let Anger act",
+    "Advance to Enemy. As your next turn begins, watch Anger force the weaker Blast to activate.",
+    { type: "endTurn" },
+  ),
+  note(
+    "anger-fired",
+    "One Channel already spent",
+    "You begin Placement with only 1 of your 2 Channel remaining. The weaker Blast has spent a use and already activated this turn. You did not choose that attack or its Attunement.",
+    "anger-fired",
+  ),
+  action(
+    "anger-cover",
+    "Quiet the Anger",
+    "Place the Shield over Anger. As with Nausea, covering suppresses the Corruption but does not remove it.",
+    { type: "place", card: "shield", slot: 16 },
+  ),
+  action("anger-phase2", "Advance", "Advance to Activation.", {
+    type: "activatePhase",
   }),
-  action("end3", "Protect and wait", "Advance to Enemy.", { type: "endTurn" }),
+  action(
+    "anger-end2",
+    "A calmer turn",
+    "Advance to Enemy. Covered Anger will leave your next turn's Channel alone.",
+    { type: "endTurn" },
+  ),
+  note(
+    "anger-covered",
+    "Your choices return",
+    "Both Channel are available again. The red knot remains beneath its cover. Machine Elves can also Mend Anger immediately.",
+  ),
   note(
     "hole",
-    "Stronger repairs take time",
-    "Only Machine Elves can enter a Memory Hole, but they can also repair it from beside it. Hole and Hypnosis repairs take two turns normally, one when upgraded. Your remaining Elves are now upgraded for this lesson.",
+    "A hole in your memory",
+    "This Memory Hole cannot accept ordinary cards. Machine Elves can enter it or repair it from a neighboring space. Strong Corruptions take time: an ordinary Mend needs two player-turn starts to repair a Memory Hole.",
     "hole",
   ),
   note(
     "hole-place",
-    "Stay beside the Hole",
-    "Your upgraded Elves have one use left. Repair the Hole from the same neighboring space.",
+    "Repair from next door",
+    "Your Elves can reach the Hole directly below them. Keep them alive and beside it while they work.",
   ),
-  action("phase4", "Advance", "Advance to Activation.", {
+  action("phase4", "Prepare to Mend", "Advance to Activation.", {
     type: "activatePhase",
   }),
-  action("mend4", "Stitch the void", "Activate Mend.", {
-    type: "activate",
-    slot: 14,
-    cardTarget: 21,
+  action(
+    "mend4",
+    "Stitch the void",
+    "Activate Mend, then select the Memory Hole.",
+    { type: "activate", slot: 14, cardTarget: 21 },
+  ),
+  note(
+    "hole-working",
+    "The repair has begun",
+    "One use is spent, but the Hole remains. The repair ribbon shows the remaining wait. The Elves cannot begin another repair while this one is unfinished.",
+  ),
+  action(
+    "end4",
+    "Give them time",
+    "Advance to Enemy, then watch the first player-turn start pass.",
+    { type: "endTurn" },
+  ),
+  note(
+    "hole-wait",
+    "One more turn",
+    "The Hole is still there. Protect the Elves for one more turn. Perhaps a Scribe could make their work more efficient...",
+  ),
+  action("phase4b", "Advance", "Advance to Activation.", {
+    type: "activatePhase",
   }),
-  action("end4", "Wait for repair", "Advance to Enemy.", { type: "endTurn" }),
+  action(
+    "end4b",
+    "Finish the repair",
+    "Advance to Enemy. The repair finishes at the next player-turn start.",
+    { type: "endTurn" },
+  ),
   note(
     "hole-done",
     "Room to think",
-    "The Hole has vanished. Their third repair complete, the Elves return to discard. Protect them during delayed repairs; dying interrupts the job. You can also leave Holes alone and build elsewhere.",
-  ),
-  note(
-    "mine",
-    "A Mind Mine",
-    "After a mine is placed, you get one player turn to respond. It explodes on the next enemy turn: every mine deals 20 Fire. Machine Elves defuse immediately with Mend. Cover this mine with the spare Shield: the explosion sacrifices only the top card instead of damaging you.",
-    "mine",
-  ),
-  action(
-    "mine-cover",
-    "A willing sacrifice",
-    "Place the Shield over the mine.",
-    { type: "place", card: "shield", slot: 27 },
-  ),
-  action("phase5", "Advance", "Advance to Activation.", {
-    type: "activatePhase",
-  }),
-  action(
-    "end5",
-    "Contain the explosion",
-    "Advance to Enemy. Watch the covered mine destroy its Shield.",
-    { type: "endTurn" },
-  ),
-  note(
-    "hypnosis",
-    "Hypnosis borrows your cards",
-    "Hypnosis is attached beneath your Blast. On enemy rounds it can spend that card's normal allowance against you. Activate it first this turn so the once-per-turn rule prevents compulsion.",
-    "hypnosis",
-  ),
-  action("phase6", "Advance", "Advance to Activation.", {
-    type: "activatePhase",
-  }),
-  action(
-    "deny",
-    "Keep your own turn",
-    "Activate the marked Blast against the enemy.",
-    { type: "activate", slot: 15 },
-  ),
-  action(
-    "end6",
-    "Deny the borrowed attack",
-    "Advance to Enemy: Hypnosis cannot activate that Blast a second time this turn.",
-    { type: "endTurn" },
+    "The Hole has vanished. Your Elves still have one Mend use left. After their final successful repair, they return to discard. An upgrade shortens stronger repairs from two turns to one; ordinary repairs already finish immediately.",
   ),
   note(
     "tells",
@@ -182,14 +197,14 @@ export const LOOM_STEPS = [
   note(
     "complete",
     "Ready for the Loom",
-    "Cover, route around, sacrifice, or Mend. Inspect every enemy's Tell. A gentle Spoolkeeper waits for one final practice. Your normal journey remains safe at Continue.",
+    "Cover, route around, sacrifice, or Mend. Inspect every enemy's Tell. The Patient Spoolkeeper will now test you with different Corruptions and single 7-damage Arcane attacks. Some Corruptions are unfamiliar: hover their symbols and inspect the Tell.",
   ),
 ];
 LOOM_STEPS.push({
   id: "independent",
   kind: "free",
   title: "Your turn to decide",
-  text: "Defeat the Patient Spoolkeeper. Read its Tell, cover or Mend its Nausea, and protect your Elves. The guided prompts stop here; a gentle suggestion appears if you pause.",
+  text: "Defeat the Patient Spoolkeeper. It attacks for 7 Arcane and rotates Corruptions. Inspect unfamiliar symbols, cover or Mend dangerous spaces, and protect your Elves. You choose your placements; gentle suggestions appear only if you pause.",
   focus: "",
 });
 export function loomGuide(g) {
@@ -332,7 +347,7 @@ export function loomAfter(g, a) {
     return;
   }
   const setup = step.setup;
-  if (setup === "insanity" || setup === "hole") {
+  if (setup === "hole") {
     const slot = 21;
     b.corruptions[slot] = {
       kind: setup,
@@ -340,27 +355,15 @@ export function loomAfter(g, a) {
       source: b.enemies[0].uid,
       value: 1,
     };
-    if (setup === "hole") {
-      const elf = b.grid[14].at(-1);
-      if (elf?.id === "elves") elf.upgrade = true;
-    }
   }
-  if (setup === "mine") {
-    b.corruptions[27] = {
-      kind: "mine",
-      uid: g.uid(),
-      source: b.enemies[0].uid,
-      remaining: 1,
-      element: "Fire",
-      damage: 20,
-      createdTurn: b.turn - 1,
-    };
-    draw(g, "shield");
-  }
-  if (setup === "hypnosis")
-    b.corruptions[15] = {
-      kind: "hypnosis",
+  if (setup === "anger") {
+    b.corruptions[16] = {
+      kind: "anger",
       uid: g.uid(),
       source: b.enemies[0].uid,
     };
+    b.grid[17] = [g.instance(g.newCard("blast", true))];
+    b.grid[8] = [g.instance(g.newCard("water"))];
+  }
+  if (setup === "anger-fired") draw(g, "shield");
 }

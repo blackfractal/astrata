@@ -1,5 +1,14 @@
 # Astrata implementation handoff
 
+## Latest: Anger and the revised Mending Ground — 2026-10-04
+
+Package2.1.4/rules2.1.3/content2.1.3/design4.153, BUILD_LOG112. Anger is suppressed by covering. After Reveal, each uncovered Anger forces the lowest printed damage/Guard eligible NESW card, utility0/ties row-major, native/permanent element, first legal target, exactly1Channel plus ordinary allowance/once-per-turn. Uses shared legal/activation engine; multiple spaces resolve in grid order and exact-state saves preserve per-turn markers. Policy recognizes cover/recall danger. Anger currently comes from tutorial content; normal enemy cycles unchanged.
+
+Mending Ground version3 introduces the Apex-minions story and Elves, demonstrates Nausea, then weaker-Blast Anger spending1Channel, suppression restoring2 nextturn, then basicElves2turnHole repair with upgradehint. Final40HPPatientSpoolkeeper rotatesInsanity/Hypnosis/Anger/Nausea/Hole with one fixed7Arcane hit each turn, applyprevious+warnnext, cap5. Independent placements, retry and idlehints preserved. Guidedolderversions restart; independentprogress retained. NormalContinue isolated. Built-inimage_gen paintedAnger asset, prompt/source/hash in reports/anger-art-provenance.json; redpulses respectreducedmotion.
+
+430rules tests pass, including fulltutorial with reload every action, ChannelafterReveal, suppressedAnger, nativeelement/weakestselection, freezes/spent/zeroChannel, zero-costactivationoverride, multipleAngers/Mend, lethalattack and finale warnings/damage. Full mouse UI tutorial wins, normaltestsave byte-identical, renderererrors0; screenshots reviewed. Harness corrected its outdated single-click for unattuned Shields to double-click. Art audit169/169 withprovenance. No general balance evaluation. Portable app/CRC-verifiedZIP refreshed. User profile and frozen seed155242295 evidence untouched.
+
+
 ## Latest: Between-Strata rest50HP/50Gold — 2026-10-04
 
 Package2.1.3/rules2.1.2/content2.1.2/design4.152, BUILD_LOG111. Rest uses s.loomIntro to distinguish automatic transition Tavern50HP/50Gold from Field/Tutorial20HP/20Gold. Full price, restore up to missingHP, one use per visit. Execution reads revalidated action.effects.heal/costs.gold. Accepts2.1.1 saves; existing pending visits update, used rests remain used. Archon reward120Gold unchanged. After enterLoom clears transition marker, S2Field Tavern returns20/20.

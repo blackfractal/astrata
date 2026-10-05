@@ -68,7 +68,18 @@ try {
           : g.legal()[0];
     assert.ok(a, step);
     if (
-      ["space", "covered", "delay", "hole", "mine", "hypnosis"].includes(step)
+      [
+        "space",
+        "covered",
+        "delay",
+        "anger",
+        "anger-fired",
+        "anger-covered",
+        "hole",
+        "hole-working",
+        "hole-wait",
+        "hole-done",
+      ].includes(step)
     ) {
       await p.mouse.move(5, 5);
       await p.screenshot({ path: dir + "/" + step + ".png" });
@@ -85,6 +96,17 @@ try {
         assert.ok(await p.locator(".corruption-covered").count());
       if (step === "delay")
         assert.equal(await p.locator(".mending-ribbon").count(), 0);
+      if (step === "anger-fired") {
+        assert.equal(s.battle.channel, 1);
+        assert.equal(s.battle.grid[15][0].lastActivatedTurn, s.battle.turn);
+      }
+      if (step === "anger-covered") assert.equal(s.battle.channel, 2);
+      if (["hole-working", "hole-wait"].includes(step))
+        assert.equal(await p.locator(".mending-ribbon").count(), 1);
+      if (step === "hole-done") {
+        assert.equal(await p.locator(".mending-ribbon").count(), 0);
+        assert.equal(s.battle.corruptions[21], undefined);
+      }
     }
     if (
       step === "independent" &&
@@ -99,7 +121,7 @@ try {
         .dragTo(p.locator('[data-slot="' + a.slot + '"]'));
     else if (a.type === "activate") {
       const el = p.locator('[data-activate-slot="' + a.slot + '"]');
-      if (a.target != null) await el.dblclick();
+      if (a.cardTarget == null) await el.dblclick();
       else {
         await el.click();
         if (a.cardTarget != null)
