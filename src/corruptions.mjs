@@ -95,10 +95,10 @@ export function prepareCorruption(g, e, t) {
   e.corruptionPlan = [];
   const kinds = [
     ...Array(t.count || 1).fill(t.markCorruption),
-    ...(t.alsoCorruption ? [t.alsoCorruption] : []),
+    ...(t.alsoCorruption ? Array(t.alsoCount || 1).fill(t.alsoCorruption) : []),
   ];
   for (const kind of kinds) {
-    // Bombadier reserves a separate mine pool so accumulated Holes cannot
+    // Bombadier reserves a separate mine pool so accumulated Holes and Anger cannot
     // silently cancel the promised late-cycle three-bomb cast.
     if (!(e.id === "bombadier" && kind === "mine") && room-- <= 0) break;
     if (

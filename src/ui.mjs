@@ -178,7 +178,7 @@ function tellText(t) {
         " 2 spaces; Holes destroy, Hypnosis compels"
       : "",
     t.markCorruption
-      ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + 1 " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
+      ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + " + (t.alsoCount || 1) + " " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
       : "",
     t.applyCorruption ? "Corrupt marked spaces" : "",
     t.releaseCorruption ? "Remove its Corruptions" : "",

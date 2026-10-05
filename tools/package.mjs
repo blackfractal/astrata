@@ -56,6 +56,8 @@ for (const name of [
   "tavern-location-tests.txt",
   "mixed-boss-reward-tests.txt",
   "spoolkeeper-tools-tests.txt",
+  "bombadier-pairs-tests.txt",
+  "bombadier-pairs-ui-verification.json",
   "tools-ui-verification.json",
   "tools-art-provenance.json",
   "mixed-boss-reward-verification.json",

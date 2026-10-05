@@ -555,9 +555,9 @@ function normalizeLoomRotations(s) {
     if (old?.length && JSON.stringify(old) !== JSON.stringify(d.rotation)) {
       const t = old[e.cycle % old.length];
       let next = d.rotation.findIndex((r) => r.name === t.name);
-      if (t.applyCorruption)
+      if (next < 0 && t.applyCorruption)
         next = d.rotation.findIndex((r) => r.applyCorruption);
-      else if (t.markCorruption)
+      else if (next < 0 && t.markCorruption)
         next = d.rotation.findIndex(
           (r) => r.markCorruption === t.markCorruption,
         );
@@ -607,6 +607,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.6",
           "2.1.5",
           "2.1.4",
           "2.1.3",
@@ -1865,7 +1866,7 @@ export class Game {
       return { name: "Purify", purify: true, damage: 0 };
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
-    // This warning is for the following cycle's opening bombardment.
+    // The warning at cycle 15 precedes the fifth full cycle; both waves escalate thereafter.
     if (e.id === "bombadier" && t.markCorruption === "mine" && e.cycle >= 15)
       t.count = 3;
     // Even an ambush must leave a first player turn to respond to opening marks.

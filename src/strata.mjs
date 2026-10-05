@@ -373,7 +373,12 @@ export function registerStratum2(card, enemy, glossary) {
     "Archon",
     [
       { ...apply("mine"), ...hit("Royal bombardment", 10, "Fire") },
-      { ...mark("hole", 2), ...hit("Excavation", 12, "Arcane") },
+      {
+        ...mark("mine", 2),
+        alsoCorruption: "anger",
+        alsoCount: 2,
+        ...hit("Excavation", 12, "Arcane"),
+      },
       {
         ...apply("hole"),
         name: "Deconstructed Steam",
@@ -385,16 +390,25 @@ export function registerStratum2(card, enemy, glossary) {
         ],
         fixedDamage: true,
       },
-      { ...mark("mine", 2), ...hit("Light the fuses", 12, "Fire") },
+      {
+        ...mark("mine", 2),
+        alsoCorruption: "hole",
+        alsoCount: 2,
+        ...hit("Light the fuses", 12, "Fire"),
+      },
     ],
-    "Telegraphs two bombs at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. From the fifth bombardment, casts three bombs instead of two. Machine Elves defuse immediately. Also creates Memory Holes. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
+    "Alternates two Memory Holes + two bombs with two Anger spaces + two bombs. The first wave is telegraphed at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. After four full cycles, both waves cast three bombs instead of two. Machine Elves defuse immediately. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
     "Defuse or cover the bombs; prepare different elements for each Steam hit. Memory Holes take two turns to Mend, one when upgraded.",
     {
       corruptionCap: 10,
       mineCap: 4,
       mineTurns: 1,
       mineDamage: 20,
-      openingCorruption: mark("mine", 2),
+      openingCorruption: {
+        ...mark("mine", 2),
+        alsoCorruption: "hole",
+        alsoCount: 2,
+      },
       bossMode: "stalker",
     },
   );

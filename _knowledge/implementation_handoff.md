@@ -1,5 +1,11 @@
 # Astrata implementation handoff
 
+## Latest: Bombadier paired Corruption waves — 2026-10-05
+
+Package 2.1.8 / rules 2.1.7 / content 2.1.6 / design 4.160; BUILD_LOG117. Opening warning and Royal Bombardment pair two Holes with two Mines. Excavation warns two Anger + two Mines; Steam applies them. Light the Fuses warns the next Hole/Mine pair. Existing attack damage and one-response-turn mine fuse retained. After four complete four-move cycles, both waves use three Mines (first warning at cycle15), secondary counts stay two. Existing cap10 is shared by persistent Holes/Anger; separate mineCap4 retained. Covering suppresses Anger normally. Existing saved warnings remain committed; rotation migration now prioritizes matching move names so Steam and Excavation do not jump to the wrong phase.
+
+444 rules tests pass, including full alternating cycle, explosion timing, late escalation on both casts, cap reservation, every old phase and committed-warning reload. Isolated source Electron UI verifies opening and Anger warnings (four distinct marks), correct two-plus-two intent text, both applied art/effects, zero renderer errors. Screenshot reviewed. User profile untouched; no full-run balance claim. Portable app and CRC-checked ZIP refreshed.
+
 ## Latest: Git LFS history migration — 2026-10-05
 
 Jonathan explicitly authorized enabling LFS and rewriting published history. All raster artwork/screenshots throughout120commits migrated;844 unique image versions retained, all2,344 existing current files byte-identical before documentation updates, historical non-image blobs/modes unchanged. Full old-history bundle retained locally/ignored at `_knowledge/git-lfs-migration-2026-10-05/pre-lfs.bundle`; commit-map/verification/README tracked beside it. Old references in game reports map through the CSV. All844LFSobjects uploaded; explicit-lease push replaced18ea249 with10886f8. Fresh GitHub clone/downloads verified, Git pack16.88MiB; direct local GCM helper avoids interactive helper-selector stall; no code/version change (2.1.7), no pruning of original local objects. Other old clones should preserve local work and reclone; never merge old binary history back. Local `git lfs install --local` and .gitattributes handle future images.

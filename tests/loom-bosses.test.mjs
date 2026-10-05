@@ -262,9 +262,11 @@ test("Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse 
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
-  assert.equal(e.corruptionPlan.length, 2);
+  assert.equal(e.corruptionPlan.length, 4);
   applyCorruptions(g, e);
-  const i = Number(Object.keys(b.corruptions)[0]);
+  const i = Number(
+    Object.keys(b.corruptions).find((i) => b.corruptions[i].kind === "mine"),
+  );
   assert.equal(b.corruptions[i].remaining, 1);
   assert.equal(b.corruptions[i].damage, 20);
   const elf = put(g, "elves", i);
@@ -272,7 +274,9 @@ test("Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse 
   act(g, "activate", { slot: i, cardTarget: i });
   assert.equal(b.corruptions[i], undefined);
   assert.equal(elf.used, 1);
-  const j = Number(Object.keys(b.corruptions)[0]);
+  const j = Number(
+    Object.keys(b.corruptions).find((i) => b.corruptions[i].kind === "mine"),
+  );
   corruptionRound(g);
   assert.equal(b.corruptions[j].remaining, 1);
   b.turn++;
@@ -300,6 +304,86 @@ test("Steam preserves ordered independent elements and exact8/10/12 damage", () 
     [10, "Water"],
     [12, "Wind"],
   ]);
+});
+
+test("Bombadier alternates paired Hole and Anger waves with a full mine response turn", () => {
+  const g = arena("bombadier"),
+    b = g.s.battle,
+    e = b.enemies[0];
+  const kinds = (entries) => entries.map((q) => q.kind).sort();
+  assert.deepEqual(kinds(e.corruptionPlan), ["hole", "hole", "mine", "mine"]);
+  assert.equal(new Set(e.corruptionPlan.map((q) => q.slot)).size, 4);
+  round(g);
+  assert.deepEqual(kinds(Object.values(b.corruptions)), [
+    "hole",
+    "hole",
+    "mine",
+    "mine",
+  ]);
+  assert.equal(e.cycle, 1);
+  round(g);
+  assert.deepEqual(kinds(e.corruptionPlan), ["anger", "anger", "mine", "mine"]);
+  assert.deepEqual(kinds(Object.values(b.corruptions)), ["hole", "hole"]);
+  round(g);
+  assert.deepEqual(kinds(Object.values(b.corruptions)), [
+    "anger",
+    "anger",
+    "hole",
+    "hole",
+    "mine",
+    "mine",
+  ]);
+  round(g);
+  assert.deepEqual(kinds(e.corruptionPlan), ["hole", "hole", "mine", "mine"]);
+  assert.deepEqual(kinds(Object.values(b.corruptions)), [
+    "anger",
+    "anger",
+    "hole",
+    "hole",
+  ]);
+});
+
+test("both Bombadier waves escalate only after four complete cycles; secondary counts stay two", () => {
+  for (const [cycle, mines, secondary] of [
+    [13, 2, "anger"],
+    [15, 3, "hole"],
+    [17, 3, "anger"],
+  ]) {
+    const g = arena("bombadier"),
+      e = g.s.battle.enemies[0];
+    e.cycle = cycle;
+    prepareCorruption(g, e, g.tell(e));
+    assert.equal(
+      e.corruptionPlan.filter((q) => q.kind === "mine").length,
+      mines,
+    );
+    assert.equal(
+      e.corruptionPlan.filter((q) => q.kind === secondary).length,
+      2,
+    );
+  }
+});
+
+test("older Bombadier saves retain every rotation phase and their committed warnings", () => {
+  for (let phase = 0; phase < 4; phase++) {
+    const g = arena("bombadier"),
+      e = g.s.battle.enemies[0];
+    e.cycle = 12 + phase;
+    e.rotation = structuredClone(enemies.bombadier.rotation);
+    e.rotation[1].markCorruption = "hole";
+    delete e.rotation[1].alsoCorruption;
+    delete e.rotation[1].alsoCount;
+    delete e.rotation[3].alsoCorruption;
+    delete e.rotation[3].alsoCount;
+    e.corruptionPlan = [{ slot: 4, kind: phase === 2 ? "hole" : "mine" }];
+    const r = new Game(g.s.seed, structuredClone(g.s));
+    assert.equal(r.s.battle.enemies[0].cycle, 12 + phase);
+    assert.deepEqual(r.s.battle.enemies[0].corruptionPlan, e.corruptionPlan);
+    assert.deepEqual(
+      r.s.battle.enemies[0].rotation,
+      enemies.bombadier.rotation,
+    );
+  }
 });
 test("Phase H commits fullest row, shifts stacks simultaneously, destroys whole stack in Hole", () => {
   const g = arena("trickster"),
@@ -461,7 +545,7 @@ test("fourth-cycle final Bile action still uses the single-glob forecast", () =>
   assert.equal(Object.keys(b.biles).length, 1);
 });
 
-test("Bombadier telegraphs three mines for its fifth bombardment, with ordinary caps retained", () => {
+test("Bombadier telegraphs three mines for its fifth full cycle, with ordinary caps retained", () => {
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
@@ -472,9 +556,9 @@ test("Bombadier telegraphs three mines for its fifth bombardment, with ordinary 
   e.cycle = 15;
   assert.equal(g.tell(e).count, 3);
   prepareCorruption(g, e, g.tell(e));
-  assert.equal(e.corruptionPlan.length, 3);
+  assert.equal(e.corruptionPlan.length, 5);
   const r = new Game(g.s.seed, structuredClone(g.s));
-  assert.equal(r.s.battle.enemies[0].corruptionPlan.length, 3);
+  assert.equal(r.s.battle.enemies[0].corruptionPlan.length, 5);
 });
 
 test("ordinary mines also grant exactly one response turn, preserve covered lower stacks, and emit explosion frames", () => {
