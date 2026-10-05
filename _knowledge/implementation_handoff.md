@@ -1,5 +1,9 @@
 # Astrata implementation handoff
 
+## Latest: Git LFS history migration — 2026-10-05
+
+Jonathan explicitly authorized enabling LFS and rewriting published history. All raster artwork/screenshots throughout120commits migrated;844 unique image versions retained, all2,344 existing current files byte-identical before documentation updates, historical non-image blobs/modes unchanged. Full old-history bundle retained locally/ignored at `_knowledge/git-lfs-migration-2026-10-05/pre-lfs.bundle`; commit-map/verification/README tracked beside it. Old references in game reports map through the CSV. Upload all LFS objects before explicit-lease push replacing18ea249; no code/version change (2.1.7), no pruning of original local objects. Other old clones should preserve local work and reclone; never merge old binary history back. Local `git lfs install --local` and .gitattributes handle future images.
+
 ## Latest: Continuous Spoolkeeper and Elves Tools — 2026-10-04
 
 Package2.1.7/rules2.1.6/content2.1.5/actions7/design4.159; BUILD_LOG115. Mending Ground remains tutorial version3 (same step IDs): mendingTutor is visibly Patient Spoolkeeper, 100HP, waiting during guided steps. At independent transition change only enemy behavior to mendingWarden; preserve uid/HP, board, resources, piles, Corruptions and basic Elves' remaining allowance. Full practice deck available from start; authored comparison cards added to owned deck. Six-turn cycle 7Arcane+markNausea, apply, 7Arcane+markAnger, apply, 7Arcane+markHole, apply; cap5/no opening warning/no scaling. Old independent saves and retry snapshots migrate rotation/cap while retaining HP and pending warning. Jonathan's read-only live tutorial inspection showed rules2.1.2, legacy Nausea-only pattern, 1/40HP; no user-profile writes.
