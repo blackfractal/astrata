@@ -216,3 +216,8 @@ The useful balance question is not only win rate. Measure how often players had 
 ### 2.1.1 follow-up — one-turn bombs and clearer Corruptions
 
 Main design4.150 supersedes older timing notes: every newly placed Mind Mine gives one player turn before detonation; all uncovered mines deal20 Fire. From the fifth bombardment, three bombs; after four Black Bile cycles, two fresh globs when none can spread (one spreading move remains). Telegraph both glob targets and all bomb targets. Nausea swirls extend over affected cards; Bile flows over its space/card; remove tiny Bile/half-power labels and trailing Corruption-warning arrows. Covered/uncovered mine explosions visibly precede card destruction or the Fire defense-chain attack. Existing saved mine fuses/types remain intact.
+
+
+### 2.1.7 follow-up — continuous lesson and Tools
+
+Main design4.159 supersedes earlier tutorial/upgrade proposals. Patient Spoolkeeper waits through the guided demonstration, then continues at his remaining HP on the same board (100 initial HP). Alternate7Arcane+warning with a no-attack Corruption application, rotating only Nausea/Anger/MemoryHole. Stratum2 starts with two potions (HealingSap plus one random other) and one visible Tools pickup. Tools occupy a Satchel slot and are consumed with100Gold at a Tavern Scribe to upgrade one MachineElves; this is their only upgrade route. Extra basic Elves can appear as normal Stratum2 card rewards. See main design for current repair rules; the earlier proposals above are historical.

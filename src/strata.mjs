@@ -66,7 +66,8 @@ export function registerStratum2(card, enemy, glossary) {
       hp: 4,
       upgrade: {
         gold: 100,
-        text: "Strong repairs take one turn instead of two.",
+        item: "tools",
+        text: "Strong repairs take one turn instead of two. Requires Tools + 100 Gold at a Tavern; consumes the Tools.",
       },
     },
   );
@@ -434,8 +435,8 @@ export function registerStratum2(card, enemy, glossary) {
   );
   add(
     "mendingTutor",
-    "Patient Spool",
-    "Mote",
+    "Patient Spoolkeeper",
+    "Eidolon",
     "Arcane",
     100,
     "Sentinel",
@@ -449,22 +450,25 @@ export function registerStratum2(card, enemy, glossary) {
     "Patient Spoolkeeper",
     "Eidolon",
     "Arcane",
-    40,
+    100,
     "Sentinel",
-    ["insanity", "hypnosis", "anger", "nausea", "hole"].map(
-      (kind, i, kinds) => ({
-        ...hit("Loose spindle · " + CORRUPTIONS[kind].name, 7, "Arcane"),
+    ["nausea", "anger", "hole"].flatMap((kind) => [
+      {
+        ...mark(kind),
+        ...hit(
+          "Loose spindle · foretell " + CORRUPTIONS[kind].name,
+          7,
+          "Arcane",
+        ),
         fixedDamage: true,
-        applyCorruption: true,
-        nextCorruption: kinds[(i + 1) % kinds.length],
-      }),
-    ),
-    "Every turn: one 7 Arcane attack and the warned Corruption, then a warning for the next. Cycles Insanity, Hypnosis, Anger, Nausea and Memory Hole. Maximum five Corruptions.",
-    "Read unfamiliar Corruption tooltips. Cover or Mend dangerous spaces while keeping an attack ready.",
+      },
+      apply(kind),
+    ]),
+    "Alternates a 7 Arcane attack plus a warning, then the warned Corruption without an attack. Rotates Nausea, Anger and Memory Hole. Maximum five Corruptions.",
+    "Respond to the marked space before the next enemy turn. Cover or Mend dangerous spaces while keeping an attack ready.",
     {
       tutorialOnly: true,
       corruptionCap: 5,
-      openingCorruption: mark("insanity"),
     },
   );
   for (const def of Object.values(CORRUPTIONS)) glossary[def.name] = def.text;

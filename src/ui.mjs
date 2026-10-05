@@ -463,7 +463,7 @@ function render(frame = null) {
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
           e = foe || entities[0];
-        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe && !items[e?.item]?.consumable ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : items[e.item]?.consumable ? items[e.item].name + ": " + items[e.item].text : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : items[e?.item]?.consumable ? `<span class="field-supply" data-field-supply="${e.item}">${img("item-" + e.item)}<small>${{ healingSap: "+5 HP", focusDraught: "+Focus", channelDraught: "+Channel", insightDew: "+Draw", starFlask: "6 Arcane" }[e.item]}</small></span>` : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
+        return `<button class="tile ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe && !(items[e?.item]?.consumable || e?.item === "tools") ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : items[e.item]?.consumable || e.item === "tools" ? items[e.item].name + ": " + items[e.item].text : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : items[e?.item]?.consumable || e?.item === "tools" ? `<span class="field-supply" data-field-supply="${e.item}">${img("item-" + e.item)}<small>${{ healingSap: "+5 HP", focusDraught: "+Focus", channelDraught: "+Channel", insightDew: "+Draw", starFlask: "6 Arcane", tools: "Tools" }[e.item]}</small></span>` : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
       },
     ).join("")}</div><div class="row spread"><div class="queue">${
       Array.from(
@@ -1082,7 +1082,7 @@ function bind(root = app) {
             `<h2>Across the Weald</h2>${entities
               .map((e) => {
                 if (!e.enemy)
-                  return items[e.item]?.consumable
+                  return items[e.item]?.consumable || e.item === "tools"
                     ? `<article class="field-supply-preview">${img("item-" + e.item)}<div><h3>${items[e.item].name}</h3><p>${text(items[e.item].text)}</p><p>${e.fieldSupply ? "Stays here until collected or used. Does not decay." : "A visible supply."}</p></div></article>`
                     : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`;
                 const d = enemies[e.enemy],

@@ -1146,6 +1146,7 @@ function scribeCatalog(ctx) {
         const requirements = u
           ? [
               u.gold ? `${u.gold} Gold` : null,
+              u.item ? items[u.item].name : null,
               u.hp ? `${u.hp} HP (must survive)` : null,
               u.element ? `an equipped ${u.element}-imbued Setting` : null,
               u.sacrifice ? `another ${d.rarity} card as a sacrifice` : null,

@@ -1,4 +1,5 @@
 import { ELVES_STORY } from "./strata.mjs";
+import { enemies } from "./content.mjs";
 export const LOOM_TUTORIAL = {
   id: "stratum2",
   version: 3,
@@ -173,7 +174,7 @@ export const LOOM_STEPS = [
   note(
     "hole-wait",
     "One more turn",
-    "The Hole is still there. Protect the Elves for one more turn. Perhaps a Scribe could make their work more efficient...",
+    "The Hole is still there. Protect the Elves for one more turn. Perhaps a Scribe could make their work more efficient with the right Tools...",
   ),
   action("phase4b", "Advance", "Advance to Activation.", {
     type: "activatePhase",
@@ -187,7 +188,7 @@ export const LOOM_STEPS = [
   note(
     "hole-done",
     "Room to think",
-    "The Hole has vanished. Your Elves have one Mend use left. After their final successful repair, they Recall to Discard automatically, costing no Focus. You can also spend 1 Focus during Placement to Recall them early; unfinished repairs are canceled. An upgrade reduces repair time for Memory Hole and other more powerful Corruptions from two turns to one.",
+    "The Hole has vanished. After their last successful repair, the Elves Recall to Discard for no Focus. You can Recall them early for 1 Focus during Placement; unfinished repairs are canceled. At a Tavern, Tools + 100 Gold upgrades one Elves card: strong repairs take one turn instead of two. Tools use a Satchel space and are consumed by the upgrade.",
   ),
   note(
     "tells",
@@ -197,14 +198,14 @@ export const LOOM_STEPS = [
   note(
     "complete",
     "Ready for the Loom",
-    "Cover, route around, sacrifice, or Mend. Inspect every enemy's Tell. The Patient Spoolkeeper will now test you with different Corruptions and single 7-damage Arcane attacks. Some Corruptions are unfamiliar: hover their symbols and inspect the Tell.",
+    "The same Patient Spoolkeeper now fights back. Your cards, repairs and his remaining HP stay as they are. He alternates a 7-damage Arcane attack plus a warning, then the warned Corruption without an attack. He rotates Nausea, Anger and Memory Hole: all three you have practiced.",
   ),
 ];
 LOOM_STEPS.push({
   id: "independent",
   kind: "free",
   title: "Your turn to decide",
-  text: "Defeat the Patient Spoolkeeper. It attacks for 7 Arcane and rotates Corruptions. Inspect unfamiliar symbols, cover or Mend dangerous spaces, and protect your Elves. You choose your placements; gentle suggestions appear only if you pause.",
+  text: "Defeat the Patient Spoolkeeper. Watch for 7 Arcane damage plus a warning, then the Corruption on his following turn. Nausea, Anger and Memory Hole repeat in that order. Cover or Mend dangerous spaces and Recall spent cards to reuse them. You choose your actions; gentle suggestions appear only if you pause.",
   focus: "",
 });
 export function loomGuide(g) {
@@ -272,7 +273,21 @@ export function startLoomTutorial(g) {
   g.s.mode = "field";
   g.s.hp = 70;
   g.s.gold = 0;
-  g.s.deck = ["elves", "shield", "blast", "shield"].map((id) => g.newCard(id));
+  g.s.deck = [
+    "elves",
+    "shield",
+    "blast",
+    "shield",
+    "blast",
+    "blast",
+    "blast",
+    "shield",
+    "shield",
+    "sapling",
+    "ward",
+    "focus",
+    "clear",
+  ].map((id) => g.newCard(id));
   g.beginBattle([{ uid: g.uid(), enemy: "mendingTutor", restless: 0 }]);
   g.s.tutorial = {
     ...LOOM_TUTORIAL,
@@ -332,21 +347,25 @@ export function loomAfter(g, a) {
   const step = LOOM_STEPS[t.step];
   t.lesson = step.id;
   if (step.kind === "free") {
-    g.s.deck = [
-      ...Array(4).fill("blast"),
-      ...Array(4).fill("shield"),
-      "sapling",
-      "ward",
-      "elves",
-      "focus",
-      "clear",
-    ].map((id) => g.newCard(id, id === "elves"));
-    g.s.hp = 70;
-    g.beginBattle([{ uid: g.uid(), enemy: "mendingWarden", restless: 0 }]);
+    // Change the waiting teacher's behavior, preserving the actual encounter.
+    const e = b.enemies[0],
+      d = enemies.mendingWarden;
+    Object.assign(e, {
+      id: "mendingWarden",
+      enemy: "mendingWarden",
+      name: d.name,
+      tier: d.tier,
+      rotation: structuredClone(d.rotation),
+      signature: d.signature,
+      counter: d.counter,
+      corruptionCap: d.corruptionCap,
+      cycle: 0,
+    });
     t.finalStart = { battle: structuredClone(g.s.battle), hp: g.s.hp };
     return;
   }
   const setup = step.setup;
+  if (step.id === "menders") draw(g, "elves");
   if (setup === "hole") {
     const slot = 21;
     b.corruptions[slot] = {
@@ -362,8 +381,11 @@ export function loomAfter(g, a) {
       uid: g.uid(),
       source: b.enemies[0].uid,
     };
-    b.grid[17] = [g.instance(g.newCard("blast", true))];
-    b.grid[8] = [g.instance(g.newCard("water"))];
+    const strong = g.newCard("blast", true),
+      water = g.newCard("water");
+    g.s.deck.push(strong, water);
+    b.grid[17] = [g.instance(strong)];
+    b.grid[8] = [g.instance(water)];
   }
   if (setup === "anger-fired") draw(g, "shield");
 }

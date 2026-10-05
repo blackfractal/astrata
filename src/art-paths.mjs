@@ -1,4 +1,5 @@
 export const artPaths = {
+  "item-tools": "assets/item-tools.png",
   "enemy-blackBile": "assets/enemy-blackBile.png",
   "enemy-bombadier": "assets/enemy-bombadier.png",
   "enemy-trickster": "assets/enemy-trickster.png",

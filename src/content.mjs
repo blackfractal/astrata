@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.5",
-  content: "2.1.4",
+  rules: "2.1.6",
+  content: "2.1.5",
   observation: 2,
   actions: 7,
 };
@@ -755,6 +755,15 @@ export const items = {};
 function item(id, name, slot, effect, worth, text, extra = {}) {
   items[id] = { id, name, slot, effect, worth, text, ...extra };
 }
+item(
+  "tools",
+  "Tools",
+  "material",
+  {},
+  50,
+  "Carry to a Tavern Scribe. Spend these Tools and 100 Gold to upgrade one Machine Elves card, reducing strong repairs from two turns to one. Uses one Satchel space; consumed by the upgrade. Cannot be equipped or used in battle.",
+  { stratum: 2, fieldOnly: true },
+);
 for (const [id, name, effect, worth, short] of [
   [
     "healingSap",
@@ -1806,6 +1815,7 @@ export const enemyDeathLines = {
   bombadier: "His Majesty announced the finale. The fuses applauded.",
   trickster: "The last place you expected was where you stood.",
   mendingWarden: "The thread slipped. The lesson can begin again.",
+  mendingTutor: "Even a patient teacher must leave room for another attempt.",
   seamstress: "She found a loose thread. It was yours.",
   censer: "The incense rose. The traveler did not.",
   borrowedChoir: "Your hands knew the song before you did.",

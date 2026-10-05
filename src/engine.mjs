@@ -533,6 +533,23 @@ function bypassOpeningCorruption(b, e, d, t) {
 function normalizeLoomRotations(s) {
   for (const e of s.battle?.enemies || []) {
     const d = enemies[e.id];
+    if (e.id === "mendingTutor") {
+      e.name = d.name;
+      e.tier = d.tier;
+    }
+    if (e.id === "mendingWarden") {
+      if (JSON.stringify(e.rotation) !== JSON.stringify(d.rotation)) {
+        // Honor any already visible warning before beginning the new rotation.
+        const pending = e.corruptionPlan?.[0]?.kind;
+        const at = ["nausea", "anger", "hole"].indexOf(pending);
+        e.cycle = pending ? Math.max(0, at) * 2 + 1 : 0;
+        e.rotation = clone(d.rotation);
+        delete e.openingCorruption;
+      }
+      e.signature = d.signature;
+      e.counter = d.counter;
+      e.corruptionCap = d.corruptionCap;
+    }
     if (d?.stratum !== 2 || d.tutorialOnly) continue;
     const old = e.rotation;
     if (old?.length && JSON.stringify(old) !== JSON.stringify(d.rotation)) {
@@ -552,6 +569,8 @@ function normalizeLoomRotations(s) {
     e.corruptionCap = d.corruptionCap;
   }
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
+  if (s.tutorial?.finalStart?.battle)
+    normalizeLoomRotations({ battle: s.tutorial.finalStart.battle });
 }
 
 function normalizeLoomRoster(s) {
@@ -588,6 +607,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.5",
           "2.1.4",
           "2.1.3",
           "2.1.2",
@@ -833,7 +853,7 @@ export class Game {
       events.filter((e) => e.id !== "shrine").map((e) => e.id),
     );
     this.s.itemDeck = this.shuffle([
-      ...Object.keys(items),
+      ...Object.keys(items).filter((id) => !items[id].fieldOnly),
       ...Object.keys(cards)
         .filter(
           (id) =>
@@ -1048,7 +1068,8 @@ export class Game {
     return Object.values(cards).filter(
       (c) =>
         c.type !== "Hex" &&
-        !c.companion &&
+        (!c.companion ||
+          (reward && c.id === "elves" && (this.s.stratum || 1) >= 2)) &&
         (c.stratum || 1) <= (this.s.stratum || 1) &&
         c.rarity === rarity &&
         !["surge"].includes(c.id) &&
@@ -1077,9 +1098,11 @@ export class Game {
     }
     return result;
   }
-  offer(rare = false, reward = true) {
+  offer(rare = false, reward = true, companions = reward) {
     const common = this.shuffle(
-      this.pool("common", reward).map((c) => c.id),
+      this.pool("common", reward)
+        .filter((c) => companions || !c.companion)
+        .map((c) => c.id),
     ).slice(0, rare ? 2 : 3);
     return rare ? [...common, ...this.rareOffer(1, reward)] : common;
   }
@@ -1185,7 +1208,8 @@ export class Game {
         "channelDraught",
         "insightDew",
         "starFlask",
-      ]).slice(0, 2),
+      ]).slice(0, this.s.stratum === 2 ? 1 : 2),
+      ...(this.s.stratum === 2 ? ["tools"] : []),
     ]);
     const direction = Math.floor(this.rand() * 8);
     ids.forEach((item, i) => {
@@ -1349,7 +1373,11 @@ export class Game {
       }
       if (e.type === "Item") {
         const options = [
-          e.item || this.drawDeck("itemDeck", Object.keys(items)),
+          e.item ||
+            this.drawDeck(
+              "itemDeck",
+              Object.keys(items).filter((id) => !items[id].fieldOnly),
+            ),
         ];
         s.mode = "item";
         s.itemOffer = options;
@@ -2890,7 +2918,7 @@ export class Game {
     );
     s.enemyDecks = {};
     s.itemDeck = this.shuffle([
-      ...Object.keys(items),
+      ...Object.keys(items).filter((id) => !items[id].fieldOnly),
       ...this.pool("common").map((c) => "card:" + c.id),
       ...this.pool("rare").map((c) => "card:" + c.id),
     ]);
@@ -2907,10 +2935,13 @@ export class Game {
     this.s.shop = {
       afterStratum,
       stock: [
-        ...this.offer(true).map((id) => "card:" + id),
+        ...this.offer(true, true, false).map((id) => "card:" + id),
         ...this.shuffle(
           Object.keys(items).filter(
-            (id) => !items[id].cursed && !items[id].consumable,
+            (id) =>
+              !items[id].cursed &&
+              !items[id].consumable &&
+              !items[id].fieldOnly,
           ),
         ).slice(0, 6),
         ...this.shuffle(
@@ -3395,6 +3426,7 @@ export class Game {
           up &&
           !c.upgrade &&
           s.gold >= (up.gold || 0) &&
+          (!up.item || s.inventory.some((x) => x.id === up.item)) &&
           s.hp > (up.hp || 0) &&
           (!up.element || this.equipped().some((e) => e.element === up.element))
         ) {
@@ -3411,7 +3443,7 @@ export class Game {
           } else
             add(
               "upgrade",
-              `Upgrade ${d.name} · ${up.gold ? up.gold + " Gold" : up.hp + " HP"}`,
+              `Upgrade ${d.name} · ${up.item ? items[up.item].name + " + " : ""}${up.gold ? up.gold + " Gold" : up.hp + " HP"}`,
               { uid: c.uid },
               { upgrade: 1 },
               { gold: up.gold || 0, hp: up.hp || 0 },
@@ -3895,6 +3927,16 @@ export class Game {
         const c = s.deck.find((x) => x.uid === a.uid),
           u = cards[c.id].upgrade;
         if (u.gold) this.spend(u.gold);
+        if (u.item) {
+          const material = s.inventory.find((x) => x.id === u.item);
+          s.inventory = s.inventory.filter((x) => x.uid !== material.uid);
+          (s.stats.upgradeMaterials ||= []).push({
+            cardUid: c.uid,
+            itemUid: material.uid,
+            item: material.id,
+            step: s.steps,
+          });
+        }
         if (u.hp) {
           s.hp -= u.hp;
           s.stats.damageTaken += u.hp;

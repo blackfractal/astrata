@@ -55,6 +55,9 @@ await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "tavern-location-tests.txt",
   "mixed-boss-reward-tests.txt",
+  "spoolkeeper-tools-tests.txt",
+  "tools-ui-verification.json",
+  "tools-art-provenance.json",
   "mixed-boss-reward-verification.json",
   "traveler-verification.json",
   "anger-tests.txt",

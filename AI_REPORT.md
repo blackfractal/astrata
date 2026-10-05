@@ -1,3 +1,7 @@
+# Spoolkeeper and Tools verification — package 2.1.7
+
+Rules2.1.6/content2.1.5/actions7. The continuous 100-HP tutorial encounter completes headlessly with reloads after every decision and through the full mouse UI. The shared legal-action interface enforces Tools plus 100 Gold for each Elves upgrade; additional Elves enter Stratum2 reward choices. Tools pickup/Scribe GUI checks pass. No new full-run balance batch, policy tuning or learned training; tutorial success is not a claim about normal Stratum2 balance.
+
 # Mixed rewards and Recall support — package 2.1.6
 
 Rules2.1.5/content2.1.4/actions7. Reward choices use the existing shared action interface for either rarity. Added explicit handling for Traveler gifts/refusal; the survival policy declines rather than exploiting undisclosed achievement rewards. It avoids recalling Elves during a pending repair. Both tutorials complete headlessly; full UI walkthroughs verify the teaching flows. No new full-run balance batch or learned training. Secret progression remains profile achievement data, not an AI reward hint.

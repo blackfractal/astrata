@@ -587,27 +587,95 @@ test("Anger retains permanent element and utility cards can be forced at one Cha
   assert.equal(b.channel, 1);
 });
 
-test("Practice Spoolkeeper keeps seven Arcane damage and introduces unseen Corruptions", () => {
+test("Practice Spoolkeeper alternates attacks with warned, taught Corruptions", () => {
   const g = arena("mendingWarden"),
     b = g.s.battle,
     e = b.enemies[0];
-  assert.equal(e.openingCorruption.markCorruption, "insanity");
-  for (const t of e.rotation) {
-    assert.equal(t.damage, 7);
-    assert.equal(t.element, "Arcane");
-    assert.equal(t.fixedDamage, true);
-    assert.ok(t.applyCorruption && t.nextCorruption);
-  }
-  for (const kind of ["insanity", "hypnosis", "anger", "nausea", "hole"]) {
-    // Hypnosis needs an eligible occupied space when its warning is prepared.
-    place(g, "shield", 30);
-    const planned = e.corruptionPlan.map((x) => ({ ...x }));
+  assert.equal(e.maxHp, 100);
+  assert.equal(e.openingCorruption, undefined);
+  g.s.hp = 1000;
+  for (const kind of ["nausea", "anger", "hole", "nausea", "anger", "hole"]) {
+    const attack = g.tell(e);
+    assert.equal(attack.damage, 7);
+    assert.equal(attack.element, "Arcane");
+    assert.equal(attack.fixedDamage, true);
+    assert.equal(attack.markCorruption, kind);
+    const before = g.s.hp;
     round(g);
-    for (const mark of planned)
-      assert.equal(b.corruptions[mark.slot]?.kind, mark.kind);
-    assert.equal(g.tell(e).damage, 7);
-    assert.ok(b.enemies[0].hp > 0);
+    assert.equal(g.s.hp, before - 7);
+    assert.equal(e.corruptionPlan.length, 1);
+    const mark = structuredClone(e.corruptionPlan[0]);
+    assert.equal(mark.kind, kind);
+    assert.equal(b.corruptions[mark.slot], undefined);
+    assert.equal(g.tell(e).damage, 0);
+    round(g);
+    assert.equal(g.s.hp, before - 7, "application turn has no attack");
+    assert.equal(b.corruptions[mark.slot]?.kind, kind);
+    assert.equal(e.corruptionPlan.length, 0);
+    b.corruptions = {}; // Make room to verify a second complete rotation.
   }
+});
+
+test("Spoolkeeper lesson becomes independent without resetting enemy, cards or repairs", () => {
+  const g = startLoomTutorial(new Game(22002));
+  while (g.s.tutorial.lesson !== "complete") g.act(g.legal()[0]);
+  const b = g.s.battle,
+    before = structuredClone(b),
+    hp = g.s.hp;
+  const deck = structuredClone(g.s.deck),
+    encounters = g.s.stats.encounters.length;
+  g.act(g.legal()[0]);
+  assert.equal(g.s.battle, b);
+  assert.equal(b.enemies[0].id, "mendingWarden");
+  for (const key of ["uid", "hp", "maxHp", "status"])
+    assert.deepEqual(b.enemies[0][key], before.enemies[0][key], key);
+  assert.ok(b.enemies[0].hp < 100 && b.enemies[0].hp > 40);
+  for (const key of [
+    "grid",
+    "corruptions",
+    "hand",
+    "deck",
+    "discard",
+    "turn",
+    "focus",
+    "channel",
+  ])
+    assert.deepEqual(b[key], before[key], key);
+  assert.equal(g.s.hp, hp);
+  assert.deepEqual(g.s.deck, deck);
+  assert.equal(g.s.stats.encounters.length, encounters);
+  assert.equal(g.allowance(b.grid[14][0], 14), 1);
+  assert.deepEqual(g.s.tutorial.finalStart.battle, b);
+});
+
+test("Old Spoolkeepers adopt the new cycle without losing HP, warnings or retry progress", () => {
+  const g = startLoomTutorial(new Game(22002));
+  while (g.s.tutorial.lesson !== "independent") g.act(g.legal()[0]);
+  const e = g.s.battle.enemies[0];
+  e.hp = 1;
+  e.maxHp = 40;
+  e.cycle = 20;
+  e.corruptionCap = 1;
+  e.rotation = [
+    { name: "Gather the threads" },
+    { name: "Foretell Nausea", markCorruption: "nausea" },
+  ];
+  e.corruptionPlan = [{ slot: 30, kind: "nausea" }];
+  g.s.tutorial.finalStart.battle = structuredClone(g.s.battle);
+  g.s.version.rules = "2.1.2";
+  const h = new Game(0, structuredClone(g.s)),
+    enemy = h.s.battle.enemies[0];
+  assert.equal(enemy.hp, 1);
+  assert.equal(enemy.maxHp, 40);
+  assert.equal(enemy.corruptionCap, 5);
+  assert.equal(h.tell(enemy).applyCorruption, true);
+  assert.deepEqual(enemy.corruptionPlan, e.corruptionPlan);
+  assert.deepEqual(enemy.rotation, enemies.mendingWarden.rotation);
+  assert.deepEqual(
+    h.s.tutorial.finalStart.battle.enemies[0].rotation,
+    enemy.rotation,
+  );
+  assert.deepEqual(new Game(0, structuredClone(h.s)).s.battle, h.s.battle);
 });
 
 test("Multiple Angers respect once per turn, and Mend removes Anger immediately", () => {

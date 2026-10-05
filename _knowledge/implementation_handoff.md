@@ -1,5 +1,14 @@
 # Astrata implementation handoff
 
+## Latest: Continuous Spoolkeeper and Elves Tools — 2026-10-04
+
+Package2.1.7/rules2.1.6/content2.1.5/actions7/design4.159; BUILD_LOG115. Mending Ground remains tutorial version3 (same step IDs): mendingTutor is visibly Patient Spoolkeeper, 100HP, waiting during guided steps. At independent transition change only enemy behavior to mendingWarden; preserve uid/HP, board, resources, piles, Corruptions and basic Elves' remaining allowance. Full practice deck available from start; authored comparison cards added to owned deck. Six-turn cycle 7Arcane+markNausea, apply, 7Arcane+markAnger, apply, 7Arcane+markHole, apply; cap5/no opening warning/no scaling. Old independent saves and retry snapshots migrate rotation/cap while retaining HP and pending warning. Jonathan's read-only live tutorial inspection showed rules2.1.2, legacy Nausea-only pattern, 1/40HP; no user-profile writes.
+
+Loom starting supplies now HealingSap + one random other potion + Tools, same seeded scatter/non-decay/inspect/leave/capacity rules. Weald still3potions. Tools fieldOnly item/material, Satchel1, not wearable/drinkable; consumes1Tools+100Gold at Tavern for each Elves upgrade, only route. worth50/sell25 default. Not normal Item-deck loot or shop stock. Already scattered saves not retrofitted. Extra unupgraded Elves in ordinary Stratum2 reward pool, excluded from shops/Stratum1. New Tools painted art via built-inimage_gen, prompt/hash/source retained in reports/tools-art-provenance.json and manifest. Tutorial explains Tools upgrade.
+
+441 rules tests pass. Full MendingGround mouse walkthrough and isolated Tools inspect/missing requirement/upgrade flows pass, no renderer errors. Normal test Continue preserved byte-for-byte. Art170/170 with provenance. No general balance batch or AI policy retraining. Portable app and CRC-verified ZIP rebuilt. Actual profile untouched.
+
+
 ## Latest: Mixed boss rewards, Traveler gifts and Recall lessons — 2026-10-04
 
 Package 2.1.6, rules 2.1.5, content 2.1.4, actions 7, design 4.158; BUILD_LOG114. All six Archons offer one Legendary then two distinct weighted Rares, choosing exactly one before Gem/Setting/transition. Pending older offers migrate once from saved RNG; valid offers remain stable and settled choices remain settled. Removed the guaranteed-Legendary carry-in assumption.
