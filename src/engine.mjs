@@ -41,6 +41,7 @@ import { describeDeath } from "./death.mjs";
 import {
   cards,
   CARD_BUY_PRICES,
+  gemServiceCost,
   TRAVELER_DONATION,
   items,
   enemies,
@@ -607,6 +608,9 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.9",
+          "2.1.8",
+          "2.1.7",
           "2.1.6",
           "2.1.5",
           "2.1.4",
@@ -1900,6 +1904,17 @@ export class Game {
           e.buff +
           (e.tier === "Archon" && e.hp <= e.maxHp / 2 ? 3 : 0)
         : 0);
+    if (t.sequence && !t.fixedDamage) {
+      const bonus =
+        Math.floor(e.cycle / d.rotation.length) +
+        (e.restless || 0) +
+        (e.buff || 0) +
+        (e.tier === "Archon" && e.hp <= e.maxHp / 2 ? 3 : 0);
+      t.sequence = t.sequence.map((hit) => ({
+        ...hit,
+        damage: hit.damage + bonus,
+      }));
+    }
     return t;
   }
   armorCapacity() {
@@ -2126,7 +2141,7 @@ export class Game {
             ? -1
             : j.gridSourceSlot != null
               ? j.gridSourceSlot % MIND_COLUMNS
-              : MIND_COLUMNS - 1,
+              : (j.collapsedColumn ?? MIND_COLUMNS - 1),
           ...(j.gridSourceSlot != null
             ? { lastNode: { kind: "card", slot: j.gridSourceSlot } }
             : {}),
@@ -2182,7 +2197,10 @@ export class Game {
         : h.lastNode?.kind === "item" || h.stage === "bracelet"
           ? -1
           : MIND_COLUMNS - 1);
-    const reachable = (i) => !h.pierce && i % MIND_COLUMNS <= column;
+    // Collapse starts inside the grid. Also constrain already-saved reactions
+    // from older builds, without resetting progress after an interception.
+    const frontier = Math.min(column, h.collapsedColumn ?? MIND_COLUMNS - 1);
+    const reachable = (i) => !h.pierce && i % MIND_COLUMNS <= frontier;
     return {
       wards: h.cull ? [] : this.activeWards().filter((x) => reachable(x.i)),
       shields: h.cull
@@ -3340,30 +3358,49 @@ export class Game {
       }
       this.equipChoices(add);
       for (const inst of s.inventory) {
-        const d = items[inst.id];
-        const value = Math.floor(d.worth / 2);
-        if (!d.cursed || (shop.healer && s.gold >= value))
+        const d = items[inst.id],
+          gem = this.getItem(inst.gem);
+        const fitted = s.inventory.some((x) => x.gem === inst.uid);
+        const cursedGem = gem && items[gem.id].cursed;
+        const value =
+          Math.floor(d.worth / 2) +
+          (!d.cursed && gem ? Math.floor(items[gem.id].worth / 2) : 0);
+        if (d.cursed ? shop.healer && s.gold >= value : !fitted && !cursedGem)
           add(
             "sell",
-            `${d.cursed ? "Remove" : "Sell"} ${d.name} · ${d.cursed ? "-" : "+"}${value} Gold`,
-            { uid: inst.uid, value },
+            `${d.cursed ? "Remove" : "Sell"} ${d.name}${!d.cursed && gem ? " + " + items[gem.id].name : ""} · ${d.cursed ? "-" : "+"}${value} Gold`,
+            {
+              uid: inst.uid,
+              value,
+              ...(!d.cursed && gem ? { gem: gem.uid } : {}),
+            },
             { sale: value, cursed: !!d.cursed },
           );
         if (d.socket) {
-          if (inst.gem)
-            add("unsocket", "Unsocket " + d.name, { uid: inst.uid });
-          for (const gem of s.inventory.filter(
+          if (gem && s.gold >= gemServiceCost(gem.id))
+            add(
+              "unsocket",
+              `Unsocket ${items[gem.id].name} from ${d.name} · ${gemServiceCost(gem.id)} Gold`,
+              { uid: inst.uid, price: gemServiceCost(gem.id) },
+              {},
+              { gold: gemServiceCost(gem.id) },
+            );
+          if (inst.gem) continue;
+          for (const looseGem of s.inventory.filter(
             (x) =>
               items[x.id].slot === "gem" &&
               !s.inventory.some((i) => i.gem === x.uid),
-          ))
-            if (!d.forbid?.includes(gem.id))
+          )) {
+            const price = gemServiceCost(looseGem.id);
+            if (!d.forbid?.includes(looseGem.id) && s.gold >= price)
               add(
                 "socket",
-                `Socket ${items[gem.id].name} into ${d.name}`,
-                { uid: inst.uid, gem: gem.uid },
-                { gear: items[gem.id].effect },
+                `Socket ${items[looseGem.id].name} into ${d.name} · ${price} Gold`,
+                { uid: inst.uid, gem: looseGem.uid, price },
+                { gear: items[looseGem.id].effect },
+                { gold: price },
               );
+          }
         }
       }
       for (const c of s.deck) {
@@ -3898,13 +3935,19 @@ export class Game {
         if (items[item.id].cursed) this.spend(a.value);
         else this.gainGold(a.value);
         s.stats.sales.push(item.id);
+        if (a.gem) {
+          s.stats.sales.push(this.getItem(a.gem).id);
+          this.removeItem(a.gem);
+        }
         this.removeItem(a.uid);
         break;
       }
       case "socket":
+        this.spend(a.price);
         this.getItem(a.uid).gem = a.gem;
         break;
       case "unsocket":
+        this.spend(a.price);
         this.getItem(a.uid).gem = null;
         break;
       case "remove":
@@ -4089,11 +4132,6 @@ export class Game {
         b.armorBlock = result.block;
         if (armor.reflect) {
           b.mirror = true;
-          const enemy = b.enemies.find((e) => e.uid === h.source);
-          if (enemy) {
-            enemy.hp -= stopped;
-            s.stats.damageDealt += stopped;
-          }
         }
         h.damage -= stopped;
         this.presentIncomingNode(
@@ -4106,6 +4144,14 @@ export class Game {
           },
           { kind: "item", uid: a.uid },
         );
+        if (armor.reflect)
+          this.damageEnemy(
+            b.enemies.find((e) => e.uid === h.source),
+            stopped,
+            h.element,
+            {},
+            a.uid,
+          );
         this.advanceHit();
         this.pump();
         break;

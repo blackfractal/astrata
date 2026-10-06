@@ -108,6 +108,52 @@ test("Collapse live preview retargets, handles full/empty columns and uses no ra
   assert.equal(t.damage, 20);
   assert.equal(g.s.rng, before);
 });
+
+test("Collapse starts at its column and never permits defenses behind its origin or latest impact", () => {
+  const g = setup("colossus", 2),
+    b = g.s.battle;
+  for (const slot of [3, 10, 17]) put(g, "blast", slot);
+  put(g, "ward", 1).ward = 2;
+  put(g, "ward", 5).ward = 20;
+  put(g, "familiar", 0);
+  put(g, "familiar", 6);
+  const left = put(g, "shield", 2),
+    right = put(g, "shield", 4);
+  b.shields = [left, right].map((c, n) => ({
+    uid: 800 + n,
+    slot: n ? 4 : 2,
+    owner: c.uid,
+    block: 4,
+    element: "Arcane",
+  }));
+  b.bracelets = [{ uid: 802, block: 2, element: "Arcane", name: "Bracelet" }];
+  run(g);
+  assert.equal(b.reaction.column, 3);
+  for (const game of [g, new Game(g.s.seed, structuredClone(g.s))]) {
+    const choices = game.defenseChoices();
+    assert.deepEqual(
+      choices.wards.map((x) => x.i),
+      [1],
+    );
+    assert.deepEqual(
+      choices.shields.map((x) => x.slot),
+      [2],
+    );
+    assert.deepEqual(
+      choices.allies.map((x) => x.i),
+      [0],
+    );
+    assert.equal(choices.bracelets.length, 1);
+    // Old builds saved the outer edge as the initial frontier.
+    game.s.battle.reaction.column = 6;
+    assert.deepEqual(
+      game.defenseChoices().shields.map((x) => x.slot),
+      [2],
+    );
+    game.s.battle.reaction.column = 1;
+    assert.deepEqual(game.defenseChoices().shields, []);
+  }
+});
 test("Glare attacks in its newly chosen element, bypasses all grid defenses, and permits equipment", () => {
   const g = setup("colossus", 3),
     b = g.s.battle;

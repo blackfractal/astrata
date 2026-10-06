@@ -22,6 +22,7 @@ import {
   items,
   enemies,
   CARD_BUY_PRICES,
+  gemServiceCost,
   DEPLETED_WARD_TEXT,
   TRAVELER_STORIES,
   TRAVELER_DONATION,
@@ -745,6 +746,11 @@ function playerMarkup(ctx, battle = false) {
     .map(([k, v]) => `<span>${k} ${v}</span>`)
     .join("")}</div></section>`;
 }
+function fittedGem(ctx, setting, draggable = false) {
+  const gem = ctx.o.inventory.find((x) => x.uid === setting.gem);
+  if (!gem) return "";
+  return `<span class="fitted-gem" data-fitted-gem="${gem.uid}" ${draggable ? `data-gem-drag="${gem.uid}" data-setting-drag="${setting.uid}" draggable="true"` : ""} data-tooltip="${ctx.esc(items[gem.id].name + ": " + items[gem.id].text)}" aria-label="Socketed ${ctx.esc(items[gem.id].name)}">${ctx.img("item-" + gem.id)}</span>`;
+}
 function equipmentBody(ctx) {
   return `${gearMarkup(ctx, true)}<h3 class="stash-label">Satchel · ${ctx.o.satchel.used} / ${ctx.o.satchel.capacity}</h3><div class="satchel" data-unsocket-drop>${ctx.o.inventory
     .filter(
@@ -754,7 +760,7 @@ function equipmentBody(ctx) {
     )
     .map(
       (x) =>
-        `<button class="stash-item" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(items[x.id].text)}">${ctx.img("item-" + x.id)}<span>${items[x.id].name}</span></button>`,
+        `<button class="stash-item" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(items[x.id].text)}">${ctx.img("item-" + x.id)}${fittedGem(ctx, x, ctx.o.mode === "tavern")}<span>${items[x.id].name}</span></button>`,
     )
     .join(
       "",
@@ -776,7 +782,7 @@ function itemDetails(ctx, uid) {
         (a.type === "socket" && a.gem === uid),
     );
   ctx.dialog(
-    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
+    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${x.gem ? `<p class="fitted-detail">${fittedGem(ctx, x)}Socketed: ${items[ctx.o.inventory.find((g) => g.uid === x.gem)?.id]?.name}. Unsocket at the Jeweler: ${gemServiceCost(ctx.o.inventory.find((g) => g.uid === x.gem)?.id)} Gold.</p>` : ""}${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
       [
         "equip",
         "unequip",
@@ -991,7 +997,7 @@ function tavern(ctx) {
             )}${o.gold < TRAVELER_DONATION ? `<button disabled title="Not enough Gold">Give ${TRAVELER_DONATION} Gold</button>` : ""}</div>`
     }`;
   } else if (service === "equipment") {
-    content.innerHTML = `<h3>Equipped</h3>${equipmentBody(ctx)}`;
+    content.innerHTML = `<p class="jeweler-fees">Socket or unsocket: 20 Gold per Gem; Amber Thought, Storm Opal and Clear Quartz: 35 Gold. Unsocket first to replace a Gem. Fitted Settings sell together with their Gem.</p><h3>Equipped</h3>${equipmentBody(ctx)}`;
     bindEquipment(ctx, content);
   } else if (service === "market") {
     content.insertAdjacentHTML(
@@ -1174,6 +1180,7 @@ function sellCatalog(ctx) {
   const body =
     marketCategory.sell !== "Grimoire"
       ? o.inventory
+          .filter((x) => !o.inventory.some((setting) => setting.gem === x.uid))
           .filter((x) =>
             marketCategory.sell === "Consumables"
               ? !!items[x.id].consumable
@@ -1186,9 +1193,9 @@ function sellCatalog(ctx) {
                 actions.find((a) => a.type === "sell" && a.uid === x.uid),
               gem = o.inventory.find((g) => g.uid === x.gem),
               setting = o.inventory.find((i) => i.gem === x.uid),
-              equipped =
-                !!setting || Object.values(o.equipment).includes(x.uid);
-            return `<article class="market-item ${d.cursed ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}${setting ? "<br>Socketed in " + items[setting.id].name : ""}</p>${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${d.cursed ? healerRequired : "Sale unavailable during this tutorial lesson"}">Sell unavailable</button>`}</div></article>`;
+              restricted = d.cursed || (gem && items[gem.id].cursed),
+              equipped = Object.values(o.equipment).includes(x.uid);
+            return `<article class="market-item ${restricted ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}${fittedGem(ctx, x)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}${setting ? "<br>Socketed in " + items[setting.id].name : ""}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : "Sale unavailable during this tutorial lesson"}">Sell unavailable</button>`}</div></article>`;
           })
           .join("")
       : o.deck

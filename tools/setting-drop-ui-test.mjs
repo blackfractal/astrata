@@ -11,6 +11,7 @@ const report = {
 };
 for (const mode of ["tavern", "field"]) {
   const g = new Game(8285);
+  g.s.gold = 100;
   g.s.mode = "field";
   const bronze = g.getItem(g.s.equipment.wrist2),
     silver = g.addItem("silver"),

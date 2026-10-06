@@ -65,6 +65,21 @@ const round = (g) => {
   resolve(g);
 };
 
+test("Machine Elves have 8 HP, or 11 with the Tools upgrade, without healing deployed saves", () => {
+  const g = arena();
+  const basic = put(g, "elves", 0),
+    upgraded = put(g, "elves", 1, true);
+  assert.equal(basic.hp, 8);
+  assert.equal(basic.maxHp, 8);
+  assert.equal(upgraded.hp, 11);
+  assert.equal(upgraded.maxHp, 11);
+  basic.hp = 2;
+  basic.maxHp = 4;
+  const r = new Game(g.s.seed, structuredClone(g.s));
+  assert.equal(r.s.battle.grid[0][0].hp, 2);
+  assert.equal(r.s.battle.grid[0][0].maxHp, 4);
+});
+
 test("New bosses replace the Archon pool; former bosses are weaker Eidolons", () => {
   assert.deepEqual(
     Object.values(enemies)

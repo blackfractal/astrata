@@ -63,11 +63,12 @@ export function registerStratum2(card, enemy, glossary) {
       stratum: 2,
       companion: true,
       recall: 1,
-      hp: 4,
+      hp: 8,
       upgrade: {
         gold: 100,
         item: "tools",
-        text: "Strong repairs take one turn instead of two. Requires Tools + 100 Gold at a Tavern; consumes the Tools.",
+        bonus: 3,
+        text: "+3 HP (11 total). Strong repairs take one turn instead of two. Requires specialized tools (Tools) + 100 Gold at a Tavern; consumes the Tools.",
       },
     },
   );
@@ -95,6 +96,11 @@ export function registerStratum2(card, enemy, glossary) {
     ...extra,
   });
   const rest = { name: "Gather the threads", element: "Arcane" };
+  const sequence = (name, hits) => ({
+    name,
+    element: hits[0][1],
+    sequence: hits.map(([damage, element]) => ({ damage, element })),
+  });
   const mark = (kind, count = 1) => ({
     name: "Foretell " + CORRUPTIONS[kind].name,
     element: "Arcane",
@@ -162,11 +168,14 @@ export function registerStratum2(card, enemy, glossary) {
     30,
     "Skittish",
     [
-      hit("Dew needle", 7, "Water"),
+      sequence("Dew needle", [
+        [4, "Water"],
+        [3, "Wind"],
+      ]),
       { ...hit("Glass dew", 6, "Water"), guard: 6 },
     ],
-    "Alternates a Water needle with a lighter attack that gathers 6 Guard.",
-    "Wind cuts through its defense; it no longer pauses to gather dew.",
+    "Dew needle strikes for 4 Water, then 3 Wind in the same turn. Glass dew attacks for 6 Water and gathers 6 Guard.",
+    "Prepare for both Water and Wind on Dew needle; Wind attacks cut through its Water defense.",
   );
   add(
     "threadMite",
@@ -175,9 +184,15 @@ export function registerStratum2(card, enemy, glossary) {
     "Arcane",
     20,
     "Stalker",
-    [hit("Snip", 5, "Arcane"), { ...hit("Tangle", 4, "Arcane"), channel: -1 }],
-    "Tangle removes one Channel next turn only.",
-    "Place efficient defenses before its Channel tax; groups keep attacking.",
+    [
+      sequence("Snip", [
+        [3, "Earth"],
+        [2, "Wind"],
+      ]),
+      { ...hit("Tangle", 4, "Arcane"), channel: -1 },
+    ],
+    "Snip strikes for 3 Earth, then 2 Wind in the same turn. Tangle deals 4 Arcane and removes one Channel next turn only.",
+    "Split defenses between Earth and Wind, then prepare for its Channel tax; groups keep attacking.",
     { grouped: true },
   );
   add(
@@ -188,12 +203,15 @@ export function registerStratum2(card, enemy, glossary) {
     40,
     "Hunter",
     [
-      hit("Twin fangs", 6, "Fire", { hits: 2 }),
+      sequence("Twin fangs", [
+        [6, "Fire"],
+        [6, "Wind"],
+      ]),
       { name: "Distraction", focus: -1, element: "Fire" },
       hit("Bound", 10, "Fire"),
     ],
-    "Two Fire bites, then a Focus tax and one heavy attack.",
-    "Water defenses handle the bites; develop during Distraction.",
+    "Twin fangs strikes for 6 Fire, then 6 Wind in the same turn, followed by a Focus tax and a heavy Fire attack.",
+    "Water handles the Fire fang but is weak against Wind; save Earth or neutral defense for the second bite. Develop during Distraction.",
   );
   add(
     "hollowScribe",
@@ -224,11 +242,14 @@ export function registerStratum2(card, enemy, glossary) {
     "Stalker",
     [
       { ...hit("Draw breath", 6, "Fire"), guard: 5 },
-      hit("Exhale", 13, "Fire"),
+      sequence("Exhale", [
+        [7, "Fire"],
+        [6, "Wind"],
+      ]),
       rest,
     ],
-    "A light breath gathers 5 Guard before a heavy exhale and a recovery turn.",
-    "Prepare Water Guard before Exhale; build while it recovers.",
+    "A light Fire breath gathers 5 Guard before Exhale strikes for 7 Fire, then 6 Wind in the same turn, followed by recovery.",
+    "Prepare separate Fire and Wind defenses before Exhale; build while it recovers.",
   );
   add(
     "looseEcho",
@@ -239,11 +260,14 @@ export function registerStratum2(card, enemy, glossary) {
     "Stalker",
     [
       hit("First echo", 9, "Chaos"),
-      hit("Answer", 9, "Light"),
+      sequence("Answer", [
+        [5, "Light"],
+        [4, "Chaos"],
+      ]),
       { ...hit("Reverberate", 6, "Chaos"), guard: 6 },
     ],
-    "Alternates Chaos and Light attacks, then gathers Guard with a softer Chaos echo.",
-    "Read each Tell; neutral defense avoids mutual weaknesses.",
+    "First echo deals 9 Chaos. Answer strikes for 5 Light, then 4 Chaos in the same turn. Reverberate deals 6 Chaos and gathers 6 Guard.",
+    "Read both hits of Answer; Light and Chaos defenses are mutually vulnerable, while neutral defense remains consistent.",
   );
   add(
     "spoolkeeper",

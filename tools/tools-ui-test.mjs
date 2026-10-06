@@ -40,7 +40,7 @@ for (const scenario of ["field", "missing", "upgrade"]) {
       await p.locator(".field-supply-preview").waitFor();
       assert.match(
         await p.locator(".field-supply-preview").innerText(),
-        /Tools.*100 Gold/s,
+        /A sturdy set of machinery tools/,
       );
       assert.ok(
         await p

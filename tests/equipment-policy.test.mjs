@@ -109,6 +109,7 @@ test("recall and Dew synergy count; shield bonus depends on owning Shields", () 
 test("socketing an owned cursed Garnet suppresses its Poison rather than adding a new curse penalty", () => {
   const g = field();
   g.openTavern();
+  g.s.gold = 100;
   const garnet = own(g, "curseGem");
   const a = g.legal().find((a) => a.type === "socket" && a.gem === garnet.uid);
   assert.ok(a);

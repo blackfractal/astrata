@@ -215,6 +215,7 @@ test("equipment changes work before and between map steps; Gem changes stay Tave
   assert.equal(g.s.field.moves, 1);
   assert.ok(g.legal().some((a) => a.type === "equip"));
   g.openTavern();
+  g.s.gold = 100;
   assert.ok(g.legal().some((a) => a.type === "socket"));
   g.beginBattle([{ uid: g.uid(), enemy: "beetle", restless: 0 }]);
   assert.ok(

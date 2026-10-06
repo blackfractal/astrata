@@ -685,7 +685,7 @@ action(
 action(
   "socket",
   "Imbue the Bracelet",
-  "Drag the Sapphire onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Water defense follows the same cycle as Water attacks: this Bracelet absorbs 3 against Fire, 1 against Wind, and 2 otherwise.",
+  "Pay the Jeweler 20 Gold to socket the Sapphire. Drag it onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Socketing or unsocketing costs 20 Gold, or 35 for Amber, Opal and Quartz. Water defense follows the same cycle as Water attacks: this Bracelet absorbs 3 against Fire, 1 against Wind, and 2 otherwise.",
   { type: "socket", itemId: "bronze", gemId: "sapphire" },
   '.satchel, [data-equip-slot="wrist2"]',
 );

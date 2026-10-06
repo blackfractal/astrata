@@ -119,41 +119,18 @@ try {
   await page.locator("[data-owned-view]").first().click();
   assert.ok(await page.locator("#modal .full-art").count());
   await page.locator("[data-close]").click();
-  const socketedRow = page.locator(`[data-catalog-item="${socketed.uid}"]`);
-  assert.match(await socketedRow.textContent(), /Equipped.*Socketed in/s);
-  await socketedRow.locator("[data-action]").click();
-  await socketedRow.waitFor({ state: "detached" });
-  let state = JSON.parse(
-    await fs.readFile(path.join(profile, "save.json"), "utf8"),
-  );
-  assert.equal(
-    state.inventory.find((x) => x.uid === g.s.equipment.wrist2).gem,
-    null,
-  );
-  assert.ok(!state.inventory.some((x) => x.uid === socketed.uid));
-  await page
-    .locator(`[data-catalog-item="${spareSetting.uid}"] [data-action]`)
-    .click();
-  await page
-    .locator(`[data-catalog-item="${spareSetting.uid}"]`)
-    .waitFor({ state: "detached" });
-  const freedGem = page.locator(`[data-catalog-item="${spareGem.uid}"]`);
-  assert.equal(await freedGem.locator(".equipped-label").count(), 0);
-  assert.ok(await freedGem.locator("[data-action]").isEnabled());
-  const braceletRow = page.locator(
-    `[data-catalog-item="${g.s.equipment.wrist2}"]`,
-  );
+  assert.equal(await page.locator(`[data-catalog-item="${socketed.uid}"]`).count(), 0);
+  const braceletRow = page.locator(`[data-catalog-item="${g.s.equipment.wrist2}"]`);
+  assert.equal(await braceletRow.locator(".fitted-gem").count(), 1);
+  assert.match(await braceletRow.textContent(), /Equipped.*Socket: Sapphire/s);
   await braceletRow.locator("[data-action]").click();
-  await page.waitForFunction(
-    () => !document.querySelector(".presentation-bar"),
-  );
-  assert.equal(await braceletRow.count(), 0);
-  assert.equal(
-    await page
-      .getByRole("tab", { name: "Equipment", exact: true })
-      .getAttribute("aria-selected"),
-    "true",
-  );
+  await braceletRow.waitFor({ state: "detached" });
+  let state = JSON.parse(await fs.readFile(path.join(profile, "save.json"), "utf8"));
+  assert.ok(!state.inventory.some((x) => [socketed.uid, g.s.equipment.wrist2].includes(x.uid)));
+  await page.locator(`[data-catalog-item="${spareSetting.uid}"] [data-action]`).click();
+  await page.locator(`[data-catalog-item="${spareSetting.uid}"]`).waitFor({ state: "detached" });
+  assert.equal(await page.locator(`[data-catalog-item="${spareGem.uid}"]`).count(), 0);
+  assert.equal(await page.getByRole("tab", { name: "Equipment", exact: true }).getAttribute("aria-selected"), "true");
   await page.getByRole("tab", { name: "Grimoire", exact: true }).click();
   assert.ok(await page.locator("[data-owned-card]").count());
   assert.equal(await page.locator(".healer-only [data-action]").count(), 0);
@@ -245,8 +222,8 @@ try {
         viewSell: true,
         cardCatalog: true,
         oneRemoval: true,
-        socketedGemSale: true,
-        settingSaleRetainsGem: true,
+        pairedSettingSale: true,
+        settingSaleRemovesGem: true,
         scribeGalleryViewUpgrade: true,
       },
       null,

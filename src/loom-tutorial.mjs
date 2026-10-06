@@ -65,7 +65,7 @@ export const LOOM_STEPS = [
   action(
     "menders",
     "Send the Machine Elves",
-    "Place the Elves on Nausea. They have 4 HP and three Mend activations. They can stand anywhere and repair their own space or a north, east, south or west neighbor.",
+    "Place the Elves on Nausea. They have 8 HP and three Mend activations. They can stand anywhere and repair their own space or a north, east, south or west neighbor.",
     { type: "place", card: "elves", slot: 14 },
   ),
   action("phase2", "Prepare to Mend", "Advance to Activation.", {
@@ -188,7 +188,7 @@ export const LOOM_STEPS = [
   note(
     "hole-done",
     "Room to think",
-    "The Hole has vanished. After their last successful repair, the Elves Recall to Discard for no Focus. You can Recall them early for 1 Focus during Placement; unfinished repairs are canceled. At a Tavern, Tools + 100 Gold upgrades one Elves card: strong repairs take one turn instead of two. Tools use a Satchel space and are consumed by the upgrade.",
+    "The Hole has vanished. After their last successful repair, the Elves Recall to Discard for no Focus. You can Recall them early for 1 Focus during Placement; unfinished repairs are canceled.",
   ),
   note(
     "tells",

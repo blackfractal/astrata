@@ -67,7 +67,7 @@ export function paintCorruptions(o, app) {
     if (c?.mending)
       el.insertAdjacentHTML(
         "beforeend",
-        '<span class="mending-ribbon" data-tooltip="Repair completes after its remaining turns if these Elves survive and remain adjacent.">Mending…</span>',
+        `<span class="mending-ribbon" data-tooltip="Mending ${esc(CORRUPTIONS[c.mending.kind]?.name || "Corruption")} at row ${Math.floor(c.mending.slot / 7) + 1}, column ${(c.mending.slot % 7) + 1}. ${Math.max(0, c.mending.due - b.turn)} player-turn starts remaining; Elves must survive and stay within reach.">Mending…</span>`,
       );
     if (c && corruptionPower(b, i, 4) < 4) {
       el.classList.add("nausea-affected");
@@ -102,6 +102,47 @@ export function paintCorruptions(o, app) {
       ? [el.offsetLeft + el.offsetWidth / 2, el.offsetTop + el.offsetHeight / 2]
       : null;
   };
+  const repairs = [];
+  for (const [from, stack] of b.grid.entries()) {
+    const c = stack.at(-1),
+      m = c?.mending;
+    if (!m) continue;
+    const source = app.querySelector(`[data-slot="${from}"]`);
+    const target = app.querySelector(`[data-slot="${m.slot}"]`);
+    const layer = m.kind === "bile" ? b.biles : b.corruptions;
+    const inReach =
+      from === m.slot ||
+      Math.abs(Math.floor(from / 7) - Math.floor(m.slot / 7)) +
+        Math.abs((from % 7) - (m.slot % 7)) ===
+        1;
+    const stalled =
+      !inReach ||
+      layer?.[m.slot]?.uid !== m.corruptionUid ||
+      c.freeze >= b.turn;
+    source?.classList.add("mending-source");
+    target?.classList.add("mending-target");
+    if (target) {
+      target.insertAdjacentHTML(
+        "beforeend",
+        `<span class="mending-target-ring${stalled ? " mending-stalled" : ""}" aria-hidden="true"></span>`,
+      );
+      hazardHelp(
+        target,
+        `Machine Elves are mending this space${from === m.slot ? " beneath themselves" : " from an adjacent space"}.${stalled ? " Repair is waiting: the Elves must be unfrozen and within reach of the original Corruption." : ""}`,
+      );
+    }
+    const x = point(from),
+      y = point(m.slot);
+    if (x && y && from !== m.slot)
+      repairs.push(
+        `<path class="mending-thread${stalled ? " mending-stalled" : ""}" data-mending-from="${from}" data-mending-to="${m.slot}" d="M ${x[0]} ${x[1]} L ${y[0]} ${y[1]}"/>`,
+      );
+  }
+  if (repairs.length)
+    mind.insertAdjacentHTML(
+      "beforeend",
+      `<svg class="mending-links" viewBox="0 0 ${mind.clientWidth} ${mind.clientHeight}" aria-hidden="true">${repairs.join("")}</svg>`,
+    );
   for (const e of b.enemies) {
     const p = e.bilePlan;
     for (const to of p ? [p.to, ...(p.additional || [])] : []) {

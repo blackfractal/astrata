@@ -1,6 +1,6 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 2.1.8** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**. Loom enemies now apply Corruptions earlier and attack during their warnings; Hollow Scribe threatens fourteen Memory Holes. Corruptions have dedicated art and animated effects, including the new Anger.
+A spatial deckbuilding roguelike by Jonathan. **Version 2.1.13** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**. Every normal Loom enemy has a mixed-element attack or opening Corruption warnings; Hollow Scribe threatens fourteen Memory Holes. Corruptions have dedicated art and animated effects, including the new Anger.
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
@@ -25,3 +25,5 @@ Development: `npm start`, `npm test`, `node tools/audit.mjs`. Package with `node
 Artwork and verification screenshots are stored in **Git LFS**, including their historical versions. Install Git LFS before cloning, then run `git lfs install`. In an existing checkout, `git lfs pull` downloads the actual images if they are missing. Use `npm ci` before the development commands above. Normal `git add`, `git commit` and `git push` handle subsequent image changes through `.gitattributes` and the LFS hook.
 
 The image history was migrated on 2026-10-05. Existing clones from before that migration should preserve local work and clone afresh; this workspace has already been migrated. [Migration record and old-to-new commit map](_knowledge/git-lfs-migration-2026-10-05/README.md).
+
+Launch the packaged game from the repository root with `Astrata.cmd` (also works from another working directory).

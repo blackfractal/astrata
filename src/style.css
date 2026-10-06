@@ -3128,9 +3128,6 @@ header {
 }
 .slot.corrupted {
   --corruption-color: #be8ad6;
-  box-shadow:
-    inset 0 0 0 2px var(--corruption-color),
-    0 0 12px #a659ca44;
 }
 .slot.corruption-hole {
   --corruption-color: #998bb6;
@@ -3164,7 +3161,7 @@ header {
   gap: 3px;
   padding: 2px 4px;
   border: 1px solid var(--corruption-color);
-  border-radius: 5px;
+  border-radius: 999px;
   color: var(--corruption-color);
   background: #11131cf2;
   font-size: 22px;
@@ -3175,17 +3172,19 @@ header {
   font-size: 10px;
 }
 .empty .corruption-seal {
-  top: 4px;
-  left: 4px;
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 18px;
 }
 .corruption-card {
   position: absolute;
-  inset: 3px;
+  inset: 7% 4%;
   z-index: 1;
   overflow: hidden;
-  border: 1px solid var(--corruption-color);
-  border-radius: 5px;
+  border: 2px solid var(--corruption-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--corruption-color) 45%, transparent);
   pointer-events: none;
   background: #0c1011;
   contain: paint;
@@ -3197,8 +3196,8 @@ header {
 }
 .corruption-name {
   position: absolute;
-  inset: auto 0 0;
-  padding: 13px 1px 3px;
+  inset: auto 8% 10%;
+  padding: 10px 1px 4px;
   background: linear-gradient(transparent, #060909f5);
   color: #fff3dc;
   font-size: 11px;
@@ -3206,11 +3205,11 @@ header {
   text-align: center;
   text-shadow: 0 1px 3px #000;
 }
-/* A card covers the space art, while an exposed corner keeps the Corruption visible. */
+/* Cards remain rectangular; a small oval preserves the covered space's identity. */
 .corruption-occupied .corruption-card {
   inset: 3px 3px auto auto;
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 26px;
   z-index: 4;
 }
 .corruption-occupied .corruption-name {
@@ -3636,7 +3635,8 @@ header {
   outline: 2px solid #c291e9;
   outline-offset: -2px;
 }
-.loom-route-lines {
+.loom-route-lines,
+.mending-links {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -3644,6 +3644,54 @@ header {
   pointer-events: none;
   z-index: 6;
   overflow: visible;
+}
+.mending-links {
+  z-index: 7;
+}
+.mending-thread {
+  fill: none;
+  stroke: #a0ffe1;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 9 9;
+  filter: drop-shadow(0 0 5px #29d5b0);
+  animation: mending-flow 1s linear infinite;
+}
+.mending-source {
+  box-shadow: inset 0 0 16px #69e7bd88;
+}
+.mending-target-ring {
+  position: absolute;
+  inset: 7px;
+  border: 3px solid #a0ffe1;
+  border-radius: 24%;
+  box-shadow:
+    0 0 12px #35d9b4,
+    inset 0 0 12px #35d9b4;
+  pointer-events: none;
+  z-index: 8;
+  animation: mending-pulse 1.5s ease-in-out infinite alternate;
+}
+.mending-stalled {
+  animation: none;
+  opacity: 0.45;
+}
+@keyframes mending-flow {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+@keyframes mending-pulse {
+  to {
+    opacity: 0.6;
+    transform: scale(0.93);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mending-thread,
+  .mending-target-ring {
+    animation: none;
+  }
 }
 .loom-route-lines path[stroke] {
   fill: none;
@@ -3697,4 +3745,49 @@ header {
 }
 .bile-motion {
   opacity: 0.72;
+  inset: 7% 4%;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px #88954488;
+}
+
+/* Socketed Gems remain visible on their Setting in storage and sale listings. */
+.stash-item,
+.market-item {
+  position: relative;
+}
+.fitted-gem {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #e2c778;
+  border-radius: 50%;
+  background: #152d2a;
+  box-shadow: 0 0 8px #000b;
+  z-index: 3;
+  overflow: hidden;
+}
+.fitted-gem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+}
+.fitted-detail {
+  min-height: 40px;
+}
+.fitted-detail .fitted-gem {
+  position: relative;
+  display: inline-grid;
+  vertical-align: middle;
+  top: auto;
+  right: auto;
+  margin-right: 8px;
+}
+.jeweler-fees {
+  font-size: 0.85rem;
+  color: #d5c8a5;
 }

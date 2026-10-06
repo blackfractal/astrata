@@ -422,7 +422,7 @@ export async function playFrames(before, frames, after, render, isFast) {
           ghost.className += " phase-moving-card";
           ghost
             .querySelectorAll(
-              ".corruption-card,.corruption-seal,.corruption-foretell,.bile-motion,.bile-forecast,.phase-label,.mending-ribbon,.nausea-aura",
+              ".corruption-card,.corruption-seal,.corruption-foretell,.bile-motion,.bile-forecast,.phase-label,.mending-ribbon,.mending-target-ring,.nausea-aura",
             )
             .forEach((el) => el.remove());
           for (const cls of [...ghost.classList])

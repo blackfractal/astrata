@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.7",
-  content: "2.1.6",
+  rules: "2.1.10",
+  content: "2.1.10",
   observation: 2,
   actions: 7,
 };
@@ -752,18 +752,15 @@ export const starter = [
   "sapling",
 ];
 export const items = {};
+export const gemServiceCost = (id) =>
+  ["focusGem", "channelGem", "insightGem"].includes(id) ? 35 : 20;
 function item(id, name, slot, effect, worth, text, extra = {}) {
   items[id] = { id, name, slot, effect, worth, text, ...extra };
 }
-item(
-  "tools",
-  "Tools",
-  "material",
-  {},
-  50,
-  "Carry to a Tavern Scribe. Spend these Tools and 100 Gold to upgrade one Machine Elves card, reducing strong repairs from two turns to one. Uses one Satchel space; consumed by the upgrade. Cannot be equipped or used in battle.",
-  { stratum: 2, fieldOnly: true },
-);
+item("tools", "Tools", "material", {}, 50, "A sturdy set of machinery tools", {
+  stratum: 2,
+  fieldOnly: true,
+});
 for (const [id, name, effect, worth, short] of [
   [
     "healingSap",
@@ -960,7 +957,7 @@ item(
   "torso",
   { reflect: true },
   110,
-  "Choose to reflect an incoming attack. Once per battle; you may skip it and save reflection for a later hit.",
+  "Choose to reflect an incoming attack in its original element, applying the normal elemental matchup against its source and enemy Guard. Once per battle; you may skip it and save reflection for a later hit.",
 );
 item(
   "crown",
@@ -1361,7 +1358,7 @@ enemy(
       fixedDamage: true,
     }),
   ],
-  "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane, then deals 5 damage in that new element with Pierce (equipment can defend). Collapse destroys the fullest column, then deals 5 Arcane damage per space empty in that column before destruction. These two attacks do not gain cycle or half-HP damage bonuses; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
+  "Chaotic Glare randomly chooses Fire, Earth, Wind, Water, Chaos or Light, never Arcane, then deals 5 damage in that new element with Pierce (equipment can defend). Collapse destroys the fullest column, then deals 5 Arcane damage per space empty in that column before destruction. That attack originates in the collapsed column: only defenses toward the player, never to its right, can intercept. These two attacks do not gain cycle or half-HP damage bonuses; Void Fist and defensive matchups follow its current element. Hits matching its current element summon a Mini-Void of that element (once per activation). Each Mini-Void keeps its birth element. At half HP or lower: +3 attack.",
   "Start with Light attacks, then adapt. Collapse trades card loss against damage: spreading protects more cards from destruction, but each empty space in the targeted column adds 5 damage. Filling that column reduces damage at the cost of losing more cards; destroyed defenses cannot absorb the hit.",
   {
     schedule: "Wait 3 rounds, then pursue 3, 4, then Hunt.",

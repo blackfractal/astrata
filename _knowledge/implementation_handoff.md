@@ -1,5 +1,33 @@
 # Astrata implementation handoff
 
+## Latest: Mixed-element Loom attacks and class direction — 2026-10-06
+
+Package2.1.13/rules+content2.1.10/design4.165; BUILD_LOG122. Five Motes now use ordered mixed attacks: Dew4Water/3Wind, Mite3Earth/2Wind, Hound6Fire/6Wind, Grub7Fire/6Wind, Echo5Light/4Chaos. Base budgets and HP unchanged. Every normal S2 enemy meets mixed-move OR first-turn Corruption warning; tutorial excluded. Normal per-hit cycle/restless/buff scaling now supports sequences, fixed Steam unaffected.452tests and isolated intent UI pass; source-matched app/CRC ZIP refreshed. Astrata.cmd added at root, uses script-relative executable and release working directory. No actual-profile edits or push.
+
+Class decision: Jonathan saves movement cards for SORCERER, not Druid, to avoid redesigning current balance. Alchemist split/fuse plus Transmute. Main design4.1 updated; candidate movement suite recorded as future proposals, no new cards implemented. Costs, target rules and stack/corruption interactions need definition when that class is built.
+
+## Latest: Oval Corruptions and late-game discussion — 2026-10-06
+
+Package2.1.12; rules/content unchanged2.1.9; design4.164; BUILD_LOG121. Applied Corruptions now have oval art/particle clipping and curved colored rims; names/counters stay readable, covered markers are small ovals, Bile uses oval ink. Player cards and grid cells remain rectangles. Existing square warning boxes remain distinct. Checked all six illustrated types uncovered/covered plus Bile, art loading, pointer transparency and reduced motion in isolated source Electron; screenshots reviewed. Portable app/CRC-checked ZIP refreshed. No balance changes.
+
+Discussion, not implemented: Jonathan wants late Stratum4 to support a nearly full Mind Grid and about10Channel, meaningful element chains, Recall/replay/draw upkeep, durable larger decks and Ideon disruption. He is considering rarer/event/shop-only Focus/Channel Gems OR tougher S2 HP/damage, and more naturally attunable cards. No concrete balance change authorized this turn. Recommendation under discussion: pace access to permanent resources across Strata, preserve native-element anchors, make resource-rich engines require rebuilding/repair, earlier telegraphed enemy escalation; avoid universal Attune and routine upkeep clicks. Current relays persist for the remainder of their committed turn even when spent, then expire next turn.
+
+## Latest: Fitted Settings, Jeweler fees and elemental reflection — 2026-10-05
+
+Package2.1.11/rules2.1.9/content2.1.9/design4.163; BUILD_LOG120. Satchel Settings visibly carry a Gem badge/hover; item details expose the fitted Gem. Unequipping preserves ownership/socket and uses one Satchel slot. Jeweler charges20Gold per socket/unsocket,35for focusGem/channelGem/insightGem (Amber/Opal/Quartz). Occupied sockets require explicit paid unsocket before replacement. First Glimmer remains free. Costs appear in legal actions, labels and Jeweler; no services outside Tavern. Fitted normal Setting+Gem sell as one pair for sum of individually floored half-worth prices; remove both exact instances and log both. Fitted Gems not separately listed/sellable; loose Gems normal. Pair with Cursed component unavailable for sale, Healer remains separate and preserves other component.
+
+Mirror Armor formerly subtracted raw reflected damage. Now routes the remaining hit through damageEnemy with its incoming element and Armor sourceItem, after the Armor impact: normal elemental matchup, enemy Guard, resistances, Colossus same-element summon and death processing. Still once/battle, optional, no equipment attack procs added. Water10 vs Fire Bombadier returns15 before enemy Guard.448rules tests pass (tutorials included); new service fees/affordability/replacement, paired ownership/stats/reload, curse restrictions and Mirror strong/weak/neutral+Guard+visual-source coverage. Isolated GUI verifies paid drag services, unequip+visible badge, hidden fitted-Gem sale row, combined payout/removal; screenshots reviewed, no renderer errors. Portable app/CRC-verified ZIP refreshed. No live-profile edits or push.
+
+## Latest: Tools discovery wording — 2026-10-05
+
+Package2.1.10/content2.1.8/rules2.1.8/design4.162; BUILD_LOG119. Tools item text exactly "A sturdy set of machinery tools". Scribe upgrade still explicitly requires specialized tools (Tools) +100Gold and consumes them. Removed explicit tutorial recipe; vague Scribe hint retained. Mechanics unchanged. Existing Tools GUI expectation updated. Portable app and CRC-checked ZIP refreshed. No push.
+
+## Latest: Collapse origin and visible Mending — 2026-10-05
+
+Package2.1.9/rules2.1.8/content2.1.7/design4.161; BUILD_LOG118. Collapse reaction starts at collapsedColumn, excludes defenses to its right, and keeps moving left after each interception. Older active Collapse reactions are also clamped to their origin without resetting any later frontier. Existing multi-origin animation, combined damage and equipment defense retained. Machine Elves now8HP/11upgraded (upgrade.bonus3), with the existing Tools+100Gold and faster repairs. Already-deployed saved Allies retain their actual HP/maxHP; newly placed instances use new stats. Tutorial HP and Colossus description updated.
+
+Mending has a mint luminous flowing thread from source to adjacent committed target, pulsing ring on target, and source glow; self-space repairs use the ring on the Elves. Tooltip specifies target coordinates, Corruption and remaining player-turn starts. Frozen/out-of-reach/missing-target repairs become dim and static. Click-through, reduced motion and card-clone effect cleanup supported. 446 rules tests pass; isolated Electron GUI verifies self/adjacent/frozen states, target mapping, timing tooltip, reduced motion and pointer behavior, no renderer errors. Screenshots reviewed. App/CRC-checked ZIP refreshed, live profile untouched; no push.
+
 ## Latest: Bombadier paired Corruption waves — 2026-10-05
 
 Package 2.1.8 / rules 2.1.7 / content 2.1.6 / design 4.160; BUILD_LOG117. Opening warning and Royal Bombardment pair two Holes with two Mines. Excavation warns two Anger + two Mines; Steam applies them. Light the Fuses warns the next Hole/Mine pair. Existing attack damage and one-response-turn mine fuse retained. After four complete four-move cycles, both waves use three Mines (first warning at cycle15), secondary counts stay two. Existing cap10 is shared by persistent Holes/Anger; separate mineCap4 retained. Covering suppresses Anger normally. Existing saved warnings remain committed; rotation migration now prioritizes matching move names so Steam and Excavation do not jump to the wrong phase.
