@@ -1,3 +1,15 @@
+## Latest: Object seeds/Core and Guardian names — 2026-10-10
+
+Package2.1.23/content2.1.19/design4.176/rules2.1.15. Approved and applied: Prismatic Core, Patient Seed, Eclipse Seed now Objects; Aqua Veil renamed Aqua Guardian, Ember Nest renamed Ember Guardian. IDs/art/stats unchanged. Energy Guardian is the other existing Guardian (Arcane10HP/swallow killing-hit overflow); no Guardian tag introduced.21charge/healing/interception tests + direct type/name checks pass, portable+ZIP refreshed. BUILD_LOG138. Proposed additional Construct tags still unapproved; elemental Ward math decision still pending.
+
+## Latest: Kiln and Object/Spell art — 2026-10-10
+
+Package2.1.22/content2.1.18/design4.175/rules2.1.15. Kiln now Object (approved); current Objects are Kiln, Keystone, Rain Lantern, Wild Conduit. New built-in image_gen Conduit totem and spell Shield v4 art selected; prior revisions retained. Prompts/provenance/hashes in reports/object-spell-art-revisions.json, manifests/selections updated.14charge tests + isolated UI both full art/noerrors pass, screenshots reviewed, portable+ZIP refreshed. BUILD_LOG137. Suggested only: Object Prismatic Core/Patient Seed/possibly Eclipse Seed; Construct Keystone/Kiln/Wild Conduit; rename Aqua Veil/Ember Nest to clarify Ally identity. None of those suggestions approved or changed. Elemental Ward math question still pending.
+
+## Latest: Spell/Object classification — 2026-10-10
+
+Package2.1.21/content2.1.17/design4.174/rules2.1.15. Shield, Clear Mind, Focus Energy, Resonance, Opening Rite, Tide Memory now Spells. Only Wild Conduit, Rain Lantern and Keystone remain Objects. Updated glossary and design; no mechanics changes. Kiln is still Spell; recommended Object to Jonathan but not yet authorized. Twelve activation/resource tests and direct classification checks pass; portable/ZIP refreshed. BUILD_LOG136. Pending elemental Ward question from earlier work remains unanswered.
+
 ## Latest: Construct approved — 2026-10-10
 
 Tower category renamed Construct in design4.173 and runtime content2.1.16/package2.1.20 (rules2.1.15 unchanged). Four existing card definitions now use construct:true; no code used the old tower field except updated assertion. Bastion text and Construct/Constructs keyword help updated. Historical card name Magnifying Glass Tower unchanged in historical references. Targeted4tests and direct tooltip/category checks pass; portable/ZIP refreshed. BUILD_LOG135. Earlier Construct naming proposal is now approved. Pending elemental Ward question remains unanswered; no absorption changes.

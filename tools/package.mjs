@@ -53,6 +53,8 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "object-spell-art-revisions.json",
+  "object-spell-art-ui-verification.json",
   "utility-meld-tests.txt",
   "utility-meld-ui-verification.json",
   "plasma-meld-tests.txt",

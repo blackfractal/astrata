@@ -1522,3 +1522,20 @@ All484tests pass includingeighttargetedutilitytests: dynamiczero/expensive/locke
 ## Post-build polish — Construct category, round135
 
 2026-10-10. Jonathan approved Construct as the replacement for Tower. Design4.173/package2.1.20/content2.1.16; rules remain2.1.15. Renamed the structural category in the main design, existing four card metadata tags, Heartwood Bastion text and singular/plural keyword help. Category membership and gameplay unchanged; historical references to the former Magnifying Glass Tower retain its old name. Existing legendary reward/Ward tests pass (4/4); direct checks verify Construct/Constructs tooltips and category membership. Portable build and ZIP refreshed for delivery. Additional time approximately5minutes.
+
+
+## Post-build polish — Spell and Object classification, round136
+
+2026-10-10. Jonathan approved moving Shield, Clear Mind, Focus Energy, Resonance, Opening Rite and Tide Memory from Object to Spell, retaining Wild Conduit, Rain Lantern and Keystone as Objects. Package2.1.21/content2.1.17/design4.174; rules2.1.15 unchanged. Updated definitions, type glossary and main design, including broadening the zero-Focus utility rule wording from Objects to Cards. Costs, effects, IDs and activation rules unchanged. Kiln currently remains Spell; recommended Object in discussion, awaiting approval. Twelve existing activation/resource tests pass plus direct checks of all six changed types and exact three-Object list. Portable app and ZIP refreshed for delivery. Additional time approximately5minutes.
+
+
+## Post-build polish — Kiln Object and distinct Object/Spell artwork, round137
+
+2026-10-10. Jonathan approved Kiln as Object and requested Wild Conduit as a tangible energized totem and Shield as a magical shield spell. Package2.1.22/content2.1.18/design4.175; rules remain2.1.15. Kiln type and design table updated, with identical Charge/effects/costs. Built-in image_gen produced new square painterly art using each v3 image as a style reference; selected assets/card-conduit-v4.png and assets/card-shield-v4.png. All earlier images retained. Prompts, references, sources, timestamps and SHA256 hashes recorded in reports/object-spell-art-revisions.json and appended to art manifest; selections updated. No model identity beyond image_gen inferred. Fourteen charge/resource tests pass. Isolated Electron UI verifies both v4 images load, correct card names, no renderer errors; detail and board screenshots reviewed. Portable app and CRC-checked ZIP refreshed for delivery. No actual player profile changes. Additional time approximately8minutes.
+
+Discussed only, not implemented: Prismatic Core/Patient Seed and possibly Eclipse Seed as Objects; Construct tags for Keystone/Kiln/Wild Conduit; clearer Ally names for Aqua Veil/Ember Nest. Wait for approval before changing these.
+
+
+## Post-build polish — Object seeds/Core and Guardian names, round138
+
+2026-10-10. Jonathan approved Prismatic Core, Patient Seed and Eclipse Seed as Objects; Aqua Veil becomes Aqua Guardian and Ember Nest becomes Ember Guardian. Package2.1.23/content2.1.19/design4.176; rules2.1.15 unchanged. Updated live card definitions and main design references. Stable prism/seed/eclipse/aqua/ember IDs, art, costs and effects retained, preserving owned cards and saves. Existing Energy Guardian is Arcane/10HP, swallowing excess from its killing hit; Guardian remains a name rather than a new type/tag. Twenty-one charge/healing/interception tests and direct type/name checks pass. Portable app and ZIP refreshed for delivery. Additional time approximately4minutes.
