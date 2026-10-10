@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.12",
-  content: "2.1.12",
+  rules: "2.1.15",
+  content: "2.1.16",
   observation: 2,
   actions: 7,
 };
@@ -191,8 +191,8 @@ card(
   1,
   2,
   { burn: 2 },
-  "Burn 2. Stack on a Water/Earth Spell: also activate it and add Burn 6.",
-  { stack: "fusion" },
+  "Burn 2. May instead meld beneath an Earth, Water or Wind attack card. Its next two attack activations also apply Burn 2 to their targets, spending one Heat use each. No independent activation or Recall while melded; recalls with its host for no extra Focus and is destroyed with it.",
+  { stack: "heatMeld" },
 );
 card(
   "kiln",
@@ -223,9 +223,9 @@ card(
   "Spell",
   1,
   2,
-  { damage: 8 },
-  "Deal 8 Chaos damage to a random enemy. Pile: one Channel fires each ball with an available activation for 8 damage. Each firing ball spends one of its own uses; adding a ball never refreshes other balls. Recall the whole pile for 1 Focus per ball before discounts.",
-  { stack: "pile" },
+  { damage: 16 },
+  "Deal 16 Chaos damage to a random enemy. May meld beneath another Plasma Ball, maximum 4 balls. Each added ball gives the host +1 activation allowance and +1 Recall Focus; spent uses stay spent. Combined damage: 16 / 24 / 28 / 30 for 1 / 2 / 3 / 4 balls. One Channel fires the whole stack as one attack. Recall returns all cards separately.",
+  { stack: "plasmaMeld", meld: { activations: 1, recall: 1 } },
 );
 card(
   "palimpsest",
@@ -233,10 +233,10 @@ card(
   "Arcane",
   "Spell",
   1,
-  2,
-  hit(4),
-  "Stack on anything. Covered cards inert. Recall entire slot for 1.",
-  { stack: "supersede", recallWhole: 1 },
+  0,
+  {},
+  "Meld beneath an already placed card. Reduce the whole stack's Recall cost by 1 Focus, minimum 0. Cannot bypass Locked or Cannot Recall. No independent activation; returns separately with its host and is destroyed with it.",
+  { stack: "recallDiscount", requiresHost: true, meld: { recall: -1 } },
 );
 card(
   "undertow",
@@ -244,10 +244,10 @@ card(
   "Water",
   "Spell",
   1,
-  1,
-  hit(4),
-  "Stack on anything. On place: Recall eligible covered cards for free.",
-  { stack: "recall" },
+  0,
+  {},
+  "Play on a recallable card. Placement costs that stack's current Recall cost. Return the entire stack to your revealed hand as separate, reset cards, ready to place again at their normal Focus costs. Undertow goes to discard. Cannot bypass Locked or Cannot Recall.",
+  { stack: "returnHand", requiresHost: true, recallPlacement: true },
 );
 card(
   "aqua",
@@ -302,18 +302,18 @@ card(
   2,
   { ward: 10 },
   "Isolated. Starts with 1 ward value. Activate: +10. Fully depleted wards cannot activate. Absorbs incoming damage when chosen.",
-  { condition: "isolated", tower: true },
+  { condition: "isolated", construct: true },
 );
 card(
   "magnify",
-  "Magnifying Glass Tower",
+  "Magnifier Ward",
   "Arcane",
-  "Object",
-  2,
-  3,
-  { magnify: true },
-  "Stack on a Tower. At level 2+: activate on two consecutive turns; damage at this level in other slots doubles.",
-  { tower: true, stack: "tower" },
+  "Ward",
+  1,
+  1,
+  { ward: 10 },
+  "Starts with 1 Ward. Activate: +10 Ward. May instead meld beneath a placed Ward: give it +1 activation allowance; if depleted, restore 1 Ward and clear Depleted. While melded, has no independent Guard, activation or Recall. Recalls with its host for no additional Focus; is destroyed with its host.",
+  { construct: true, stack: "reinforce", meld: { activations: 1 } },
 );
 card(
   "resonance",
@@ -540,9 +540,9 @@ card(
   "Ward",
   1,
   2,
-  { ward: 8 },
-  "Starts with 1 ward value. Activate: +8. Fully depleted wards cannot activate. Stack on a Tower; covered Wards still absorb.",
-  { tower: true, stack: "tower", coveredWards: true },
+  { ward: 5 },
+  "Choose an element on placement; retain it until Recall or destruction. Starts with 1 Ward. Activate: +5 Ward, twice. May instead meld beneath a Ward: immediately add 5 Ward, revive it if depleted, and choose its element. No extra activation allowance or independent Guard pool while melded; Recall resets both cards separately.",
+  { construct: true, stack: "latticeMeld", choosePlacementElement: true, meld: {} },
 );
 card(
   "conduit",
@@ -595,8 +595,8 @@ card(
   2,
   3,
   { ward: 18 },
-  "Starts with 1 ward value. Activate: +18 ward value. Fully depleted wards cannot activate. No isolation required. Tower.",
-  { tower: true, rarity: "legendary" },
+  "Starts with 1 ward value. Activate: +18 ward value. Fully depleted wards cannot activate. No isolation required. Construct.",
+  { construct: true, rarity: "legendary" },
 );
 card(
   "eclipse",
@@ -719,7 +719,7 @@ cards.heat.upgrade = {
   gold: 60,
   element: "Fire",
   bonus: 1,
-  text: "Wear a Fire-imbued Setting and pay 60 Gold: Burn 2 becomes Burn 3. Fusion still adds Burn 6.",
+  text: "Wear a Fire-imbued Setting and pay 60 Gold: Burn 2 becomes Burn 3, including its two melded attack uses.",
 };
 cards.spore.upgrade = {
   gold: 100,
@@ -1669,9 +1669,9 @@ export const glossary = {
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
-  Ward: "Starts at 1; activate to add persistent defense. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
+  Ward: "Starts at 1; activate to add persistent defense. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1; Magnifier Ward or Living Lattice can also revive it. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Depleted:
-    "Fully depleted wards cannot activate. Recall and replay to restore their starting 1 ward value and activation allowance.",
+    "Fully depleted wards cannot activate. Recall and replay reset them; Magnifier Ward or Living Lattice can revive them without resetting spent uses.",
   Shield:
     "Guard expires after the enemy turn. Choose which portion absorbs a hit. Attuned Guard uses the same elemental cycle as attacks: +50% forward, -50% backward, rounded up; same element is neutral.",
   Ally: "May intercept when in the attack’s column or closer to the player. Destroyed Allies return next battle.",
@@ -1685,7 +1685,7 @@ export const glossary = {
     "Frozen cards cannot activate. The effect lasts through the indicated turn; it does not prevent another card from covering them.",
   Sever: "Ignores and contributes no adjacency or patterns.",
   Stack:
-    "Place onto a compatible occupied slot. Top card determines covered functionality.",
+    "Multiple cards share one space. Meld places a card underneath a host and changes the host according to its printed effect.",
   Purify:
     "After a full move cycle, an afflicted boss spends its next move clearing all its Burn, Poison and Corrode. Status damage still ticks before this move; then the normal cycle resumes. Purify does not heal HP or advance cycle scaling.",
   Charge:
@@ -1699,7 +1699,7 @@ export const glossary = {
   Isolated: "No orthogonal neighbors; Sever also satisfies this.",
   Cornerstone: "Only functions in a grid corner.",
   Bonded: "Requires a neighbor of the printed element.",
-  Tower: "All Wards and designated Objects. Supports Tower stacks.",
+  Construct: "A structural card category. Some effects apply only to Constructs. Melded cards do not automatically make a Construct; this keyword does not grant permission to Meld or imply height.",
   Siphon:
     "Consumes one remaining activation allowance from the affected card. It does not activate that card or spend your Channel.",
   Newest:
@@ -1748,12 +1748,11 @@ export const glossary = {
   Satchel:
     "Ten shared spaces for loose items, Gems and consumables. Equipped gear and socketed Gems take no spaces. Each item uses one space; copies do not stack.",
   Pile: "A stacking rule that can activate eligible matching cards beneath the top card. Each card still respects its own activation limits.",
-  Fusion:
-    "A stacking rule that can also activate an eligible covered card. The top card's text states which cards and extra effects qualify.",
+  Meld: "Place a card beneath a host. Its own stats and effects stop functioning independently; only its printed modifications to the host remain. It cannot act, defend or Recall separately. Granted effects keep their printed limits. Recall separates and resets both cards; host destruction destroys the melded cards too.",
   Supersede:
     "A stacking rule that leaves covered cards inactive unless the top card says otherwise.",
   Consecutive:
-    "Activated on consecutive player turns. The card's text states the benefit; Magnifying Glass Tower requires two such turns.",
+    "Activated on consecutive player turns. The card's text states the benefit.",
   Spell:
     "A card with its printed activation effect and limits. It stays on the grid unless an effect, Recall or destruction removes it.",
   Object:

@@ -1158,3 +1158,14 @@ body {
 #app .companion-intro .companion-world {
   font-size: 16px;
 }
+
+/* Offset card edges show attachments beneath the exposed host. */
+.battle-scene .mind .slot .meld-layers {
+  position: absolute; left: 7px; right: 7px; bottom: 0;
+  height: 4px; pointer-events: none; z-index: 5;
+}
+.battle-scene .mind .slot .meld-layers i {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  border: 1px solid #c7b982; background: #17262b; border-radius: 1px;
+}
+.battle-scene .mind .slot .meld-layers i + i { left: 4px; right: 4px; bottom: 2px; }

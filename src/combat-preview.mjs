@@ -21,7 +21,7 @@ export function attackPreview(b, c, i, enemy, element = c.element) {
   if (
     !(f.damage || f.hpDamage) ||
     f.randomDamage ||
-    d.stack === "pile" ||
+    d.stack === "plasmaMeld" ||
     (d.charge && c.charge < d.charge)
   )
     return null;

@@ -63,46 +63,7 @@ test("Tide snapshots 0-4 connected orthogonal neighbors; covers, diagonals and S
   b.grid[1].at(-1).sever = true;
   assert.equal(insightGain(b, c, 8), 2);
 });
-test("Plasma keeps each ball's uses, flat damage, whole-pile recall and no per-turn refresh", () => {
-  const g = base(),
-    b = g.s.battle,
-    first = put(g, "plasma");
-  first.used = 1;
-  const second = put(g, "plasma");
-  const before = b.enemies[0].hp;
-  assert.equal(act(g).effects.damage, 16);
-  assert.equal(before - b.enemies[0].hp, 16);
-  assert.deepEqual(
-    b.grid[8].map((c) => c.used),
-    [2, 1],
-  );
-  assert.equal(b.channel, 19);
-  assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 8));
-  b.turn++;
-  assert.equal(act(g).effects.damage, 8);
-  assert.deepEqual(
-    b.grid[8].map((c) => c.used),
-    [2, 2],
-  );
-  const third = put(g, "plasma");
-  assert.deepEqual(
-    b.grid[8].map((c) => c.used),
-    [2, 2, 0],
-  );
-  assert.equal(act(g).effects.damage, 8);
-  assert.equal(g.recallCost(b.grid[8]), 3);
-  b.phase = "place";
-  b.focus = 3;
-  g.act(g.legal().find((a) => a.type === "recall" && a.slot === 8));
-  assert.equal(b.focus, 0);
-  assert.equal(b.grid[8].length, 0);
-  assert.equal(b.discard.filter((c) => c.id === "plasma").length, 3);
-  const h = base();
-  for (let n = 0; n < 3; n++) put(h, "plasma");
-  assert.equal(stackValue(h.s.battle, 8).power, 24);
-  assert.equal(act(h).effects.damage, 24);
-  assert.equal(h.s.battle.enemies[0].hp, 975);
-});
+
 test("Specific status upgrades preserve Corrode 1 and add a direct Water hit; previews and AI effects agree", () => {
   for (const [id, upgrade, status, amount, damage] of [
     ["rot", false, "corrode", 1, 0],
@@ -140,10 +101,12 @@ test("Specific status upgrades preserve Corrode 1 and add a direct Water hit; pr
   assert.match(upgradeHelp(cards.spore), /Poison 2.*3/);
   assert.match(upgradeHelp(cards.heat), /Burn 2.*3/);
   const h = base();
-  put(h, "water");
-  put(h, "heat", 8, true);
+  const host = put(h, "water");
+  const heat = put(h, "heat", 8, true);
+  heat.attachedTo = host.uid;
+  h.s.battle.grid[8] = [heat, host];
   act(h);
-  assert.equal(h.s.battle.enemies[0].status.burn, 9); // 3 plus unchanged Fusion 6.
+  assert.equal(h.s.battle.enemies[0].status.burn, 3); // Upgraded melded Heat, no separate Fusion bonus.
 });
 test("Healing gear has two persistent triggers each, wastes none at full HP and resets only next battle", () => {
   const g = base(),

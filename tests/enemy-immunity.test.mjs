@@ -80,11 +80,13 @@ test("Kiln still damages a Water target but its area Burn skips only Water enemi
     [0, 2],
   );
 });
-test("Heat fusion bonus cannot burn Water; its covered spell still resolves", () => {
+test("Melded Heat cannot burn Water; its host attack still resolves", () => {
   const g = base("Water"),
     b = g.s.battle;
   put(g, "thorn");
-  b.grid[0].push(g.instance(g.newCard("heat")));
+  const heat = g.instance(g.newCard("heat"));
+  heat.attachedTo = b.grid[0][0].uid;
+  b.grid[0].unshift(heat);
   activate(g);
   assert.equal(b.enemies[0].status.burn, 0);
   assert.ok(b.grid[0][0].used > 0);

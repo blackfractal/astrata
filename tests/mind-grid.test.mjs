@@ -97,7 +97,7 @@ test("bottom-right 2×2 formation doubles once, respects Sever and cannot cross 
   for (const i of [6, 13, 14]) put(g, "shield", i);
   assert.equal(cardPower(b, edge, 7), 6);
 });
-test("sixth-row bonuses, corner Keystone and last-slot Towers use expanded geometry", () => {
+test("sixth-row bonuses, corner Keystone and legacy magnification use expanded geometry", () => {
   const g = base(),
     b = g.s.battle,
     c = put(g, "ignis", 35);
@@ -116,7 +116,7 @@ test("sixth-row bonuses, corner Keystone and last-slot Towers use expanded geome
   tower.magnified = true;
   put(g, "plasma", 0);
   const upper = put(g, "plasma", 0);
-  assert.equal(cardPower(b, upper, 0), 16);
+  assert.equal(cardPower(b, upper, 0), 16); // Removed height mechanic cannot amplify damage.
 });
 test("boss line selection and telegraphs include the last row and column, all stacks counted", () => {
   const g = base(),

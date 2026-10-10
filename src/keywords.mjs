@@ -1,5 +1,8 @@
 import { glossary } from "./content.mjs";
 const aliases = {
+  Melded: "Meld",
+  Melding: "Meld",
+  Melds: "Meld",
   Siphons: "Siphon",
   Siphoned: "Siphon",
   Piercing: "Pierce",
@@ -23,7 +26,7 @@ const aliases = {
   Stacks: "Stack",
   Stacked: "Stack",
   Stacking: "Stack",
-  Towers: "Tower",
+  Constructs: "Construct",
   Burns: "Burn",
   Poisoned: "Poison",
   Corroded: "Corrode",

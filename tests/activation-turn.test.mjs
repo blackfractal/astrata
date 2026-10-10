@@ -80,23 +80,26 @@ test("Blink permits paid repeats while respecting allowance and Channel", () => 
     delete cards.testblink;
   }
 });
-test("stack-triggered cards each consume their own per-turn opportunity", () => {
+test("Melding another Plasma cannot refresh the host's per-turn opportunity", () => {
   const { g, b, c } = setup("plasma");
-  b.enemies[0].element = "Arcane"; // Keep this per-turn fixture free of Colossus summons.
-  const lower = g.instance(g.newCard("plasma"));
-  b.grid[0].unshift(lower);
+  b.enemies[0].element = "Arcane";
   g.act(action(g));
+  b.phase = "place";
+  b.focus = 1;
+  const extra = g.newCard("plasma");
+  b.hand = [extra];
+  g.act(g.legal().find((a) => a.type === "place" && a.slot === 0));
+  assert.equal(b.grid[0].at(-1), c);
   assert.equal(c.used, 1);
-  assert.equal(lower.used, 1);
-  const extra = g.instance(g.newCard("plasma"));
-  b.grid[0].push(extra);
-  const before = b.enemies[0].hp;
+  assert.equal(g.allowance(c, 0), 2);
+  b.phase = "activate";
+  assert.equal(action(g), undefined);
+  b.turn++;
   g.act(action(g));
-  assert.equal(c.used, 1);
-  assert.equal(lower.used, 1);
-  assert.equal(extra.used, 1);
-  assert.equal(before - b.enemies[0].hp, 8);
+  assert.equal(c.used, 2);
+  assert.equal(b.grid[0][0].used, 0);
 });
+
 test("moving a used card and restoring its exact state cannot refresh the turn opportunity", () => {
   const { g, b, c } = setup();
   g.act(action(g));

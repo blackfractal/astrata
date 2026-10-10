@@ -30,6 +30,10 @@ import {
 import {
   activationGrowth,
   cardEffects,
+  attachedBurn,
+  attachments,
+  activationCost,
+  plasmaContributions,
   insightGain,
   chargeGain,
   chargeActivations,
@@ -108,9 +112,7 @@ function effect(c, slot, ctx) {
     (d.charge ? "Release · " : "") +
     ([
       f.damage || f.hpDamage
-        ? (d.stack === "pile"
-            ? "8 base damage per ready ball"
-            : damageMarkup(ctx.o.battle, c, slot)) +
+        ? damageMarkup(ctx.o.battle, c, slot) +
           (f.growAfterAttack
             ? ` → +${activationGrowth(ctx.o.battle, c, slot)} HP`
             : "")
@@ -140,6 +142,9 @@ function effect(c, slot, ctx) {
         ? `Burn ${f.burn + (c.upgrade ? d.upgrade?.bonus || 0 : 0)}`
         : null,
       f.burnAll ? `Burn ${f.burnAll} to all` : null,
+      attachedBurn(ctx.o.battle, c, slot)
+        ? `Heat: Burn ${attachedBurn(ctx.o.battle, c, slot)}`
+        : null,
       f.corrode
         ? `Corrode ${f.corrode + (c.upgrade ? d.upgrade?.bonus || 0 : 0)}`
         : null,
@@ -408,6 +413,53 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
   rebuild();
 }
 
+function placementChooser(ctx, action) {
+  if (!action.placementElement) return run(ctx, action);
+  clearTargeting();
+  ctx.close();
+  const choices = ctx.game
+    .legal()
+    .filter(
+      (a) =>
+        a.type === "place" && a.uid === action.uid && a.slot === action.slot,
+    );
+  const bar = document.createElement("div");
+  bar.className = "targeting-bar";
+  bar.innerHTML = `<strong>Living Lattice</strong><span>Choose an element · lasts until Recall or destruction</span><div class="target-elements"></div><button data-placement-cancel>Cancel</button>`;
+  const source = ctx.app.querySelector(`[data-slot="${action.slot}"]`);
+  source.classList.add("target-source");
+  ctx.app.querySelector(".mind").before(bar);
+  const controller = new AbortController();
+  targetingCleanup = () => {
+    controller.abort();
+    source.classList.remove("target-source", "drop-ready");
+    bar.remove();
+  };
+  for (const a of choices) {
+    const button = document.createElement("button");
+    button.textContent = a.placementElement;
+    button.dataset.placementElement = a.placementElement;
+    button.style.borderColor = `var(--${a.placementElement})`;
+    button.onclick = () => {
+      if (ctx.busy()) return;
+      clearTargeting();
+      run(ctx, a);
+    };
+    bar.querySelector(".target-elements").append(button);
+  }
+  bar.querySelector("[data-placement-cancel]").onclick = clearTargeting;
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        clearTargeting();
+      }
+    },
+    { capture: true, signal: controller.signal },
+  );
+}
 function activationChooser(ctx, slot, dragging = false) {
   if (ctx.busy()) return;
   if (dragging && targetingSlot === slot) return;
@@ -677,7 +729,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.channel}</dd><dt>Activations</dt><dd>${format(allowances)} / ${d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" ? (c.zeroWard ? DEPLETED_WARD_TEXT : "Ward " + c.ward) : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(d.text)}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.recallPlacement ? "Target stack Recall cost" : d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.requiresHost || c.attachedTo != null ? "No independent activation" : live ? activationCost(b, c, slot) : d.channel}</dd><dt>Activations</dt><dd>${c.attachedTo != null ? (c.id === "heat" ? Math.max(0, d.limit - c.used) + "/" + d.limit + " host attacks" : d.meld?.activations ? "+" + d.meld.activations + " host allowance" : "None while melded") : format(allowances) + " / " + (d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit)}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${c.attachedTo != null ? "With host only · " + ((d.meld?.recall || 0) >= 0 ? "+" : "") + (d.meld?.recall || 0) + " Focus" : live ? (ctx.game.recallCost(b.grid[slot]) == null ? "Cannot recall" : ctx.game.recallCost(b.grid[slot]) + " Focus for whole stack") : d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.attachedTo != null ? (c.id === "heat" ? `Melded Heat: ${Math.max(0, d.limit - c.used)}/${d.limit} attack uses left; no independent activation or Recall` : c.id === "plasma" ? "Melded Plasma: contributes diminishing damage; +1 host allowance and +1 Recall Focus; no independent activation" : c.id === "palimpsest" ? "Melded: whole-stack Recall −1 Focus; no independent effects" : c.id === "lattice" ? "Melded: +5 Ward and chosen element granted on placement; no independent effects" : "Melded reinforcement: no independent Guard, activation or Recall") : null, live && slot != null && b.grid[slot].some((x) => x.id === "magnify" && x.attachedTo === c.uid) ? "Reinforced: +" + b.grid[slot].filter((x) => x.id === "magnify" && x.attachedTo === c.uid).length + " activation allowance" : null, c.chosenElement ? "Chosen element: " + c.element + " until Recall or destruction" : c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" && c.attachedTo == null ? (c.zeroWard ? DEPLETED_WARD_TEXT : "Ward " + c.ward) : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, c.sever ? "Severed" : null, c.freeze >= b.turn ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
       b,
       c,
       slot,
@@ -693,8 +745,11 @@ export function showCard(ctx, c, slot = null) {
   if (slot != null) {
     const a = ctx.game
       .legal()
-      .filter((a) => a.slot === slot && actTypes.includes(a.type));
-    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">${c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, slot, ctx)}</button>${a
+      .filter(
+        (a) =>
+          c.attachedTo == null && a.slot === slot && actTypes.includes(a.type),
+      );
+    context.innerHTML = `<button data-full-activate ${a.some((a) => a.type === "activate") ? "" : "disabled"} title="${ctx.esc(a.some((a) => a.type === "activate") ? d.text : whyDisabled(ctx, c, slot))}">${c.attachedTo != null ? "Melded · activate the host" : c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, slot, ctx)}</button>${a
       .filter((a) => a.type === "recall")
       .map((a) => button(ctx, a))
       .join("")}`;
@@ -704,7 +759,7 @@ export function showCard(ctx, c, slot = null) {
     const stack = b.grid[slot];
     if (stack.length > 1) {
       const details = document.createElement("details");
-      details.innerHTML = `<summary>Stack · ${stack.length} cards</summary>${stack.map((x) => `<button data-stack-card="${x.uid}">${cards[x.id].name} · used ${x.used}</button>`).join("")}`;
+      details.innerHTML = `<summary>Stack · ${stack.length} cards</summary>${stack.map((x) => `<button data-stack-card="${x.uid}">${cards[x.id].name}${x.attachedTo != null ? (x.id === "heat" ? ` · Melded Heat (${Math.max(0, cards.heat.limit - x.used)}/2 uses)` : x.id === "palimpsest" ? " · Melded (−1 Recall)" : x.id === "lattice" ? " · Melded (+5 Ward and element)" : " · Melded (+1 host use)") : " · used " + x.used}</button>`).join("")}`;
       context.append(details);
       details.querySelectorAll("[data-stack-card]").forEach(
         (el) =>
@@ -1406,7 +1461,14 @@ export function enhance(ctx) {
             : cost > b.focus
               ? `Needs ${cost} Focus; ${b.focus} remaining`
               : "No legal slot";
-      el.querySelector(".cost").textContent = d.focus === 99 ? "—" : cost;
+      el.querySelector(".cost").textContent = d.recallPlacement
+        ? "R"
+        : d.focus === 99
+          ? "—"
+          : cost;
+      if (d.recallPlacement)
+        el.querySelector(".cost").title =
+          "Placement costs the target stack's current Recall cost";
       el.onclick = () => {
         if (ctx.busy()) return;
         ctx.select(legal ? c.uid : null);
@@ -1455,6 +1517,54 @@ export function enhance(ctx) {
           left = remaining(ctx, c, i),
           can = actions.some((a) => a.type === "activate" && a.slot === i);
         el.classList.toggle("ward-depleted", !!c.zeroWard);
+        const melds = attachments(b, c, i);
+        if (melds.length) {
+          el.classList.add("melded-host");
+          el.insertAdjacentHTML(
+            "beforeend",
+            `<span class="meld-layers" aria-hidden="true"><i></i><i></i></span>`,
+          );
+          el.setAttribute(
+            "aria-label",
+            cards[c.id].name +
+              ` with ${melds.length} melded card(s); inspect for details`,
+          );
+        }
+        if (c.id === "plasma" && melds.some((x) => x.id === "plasma")) {
+          const count = 1 + melds.filter((x) => x.id === "plasma").length;
+          const badge = el.querySelector(".level");
+          badge.textContent = `${count} balls`;
+          badge.dataset.tooltip = `Plasma stack: ${plasmaContributions(b, c, i).join(" + ")} base damage. ${ctx.game.allowance({ ...c, used: 0 }, i)} total activations; ${left} remaining. ${activationCost(b, c, i)} Channel per attack; ${ctx.game.recallCost(b.grid[i])} Focus to Recall all cards separately.`;
+        }
+        if (melds.some((x) => ["palimpsest", "lattice"].includes(x.id))) {
+          const badge = el.querySelector(".level");
+          badge.textContent = `${melds.length} melded`;
+          badge.dataset.tooltip =
+            melds.map((x) => cards[x.id].name).join(", ") +
+            `. Whole-stack Recall: ${ctx.game.recallCost(b.grid[i]) ?? "unavailable"}. Inspect for details.`;
+        }
+        const attached = b.grid[i].filter(
+          (x) => x.id === "magnify" && x.attachedTo === c.uid,
+        );
+        if (attached.length) {
+          const badge = el.querySelector(".level");
+          badge.textContent = `+${attached.length} use`;
+          badge.classList.add("ward-reinforcement");
+          badge.dataset.tooltip = `${attached.length} Magnifier Ward reinforcement(s). No separate Guard or activation; recalled and destroyed with this Ward.`;
+          badge.setAttribute("aria-label", badge.dataset.tooltip);
+        }
+        const heats = b.grid[i].filter(
+          (x) => x.id === "heat" && x.attachedTo === c.uid,
+        );
+        if (heats.length) {
+          const badge = el.querySelector(".level");
+          const uses = heats.reduce(
+            (n, x) => n + Math.max(0, cards.heat.limit - x.used),
+            0,
+          );
+          badge.textContent = `${c.id === "plasma" ? "Plasma + " : ""}Heat ${uses}/${heats.length * cards.heat.limit}`;
+          badge.dataset.tooltip = `Melded Heat: ${uses} attack uses remain. Adds Burn ${attachedBurn(b, c, i)} to the host's attack targets. No extra Channel; recalls and is destroyed with its host.`;
+        }
         el.querySelector(".name").textContent =
           cardName(c) + (c.upgrade ? " +" : "");
         el.dataset.element = c.element;
@@ -1496,7 +1606,7 @@ export function enhance(ctx) {
         };
         el.insertAdjacentHTML(
           "beforeend",
-          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">${c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, i, ctx)}</button>`,
+          `<button class="slot-activate ${can ? "available" : ""}" data-activate-slot="${i}" aria-disabled="${!can}" title="${ctx.esc(can ? d.text : whyDisabled(ctx, c, i))}">${c.attachedTo != null ? "Melded · activate the host" : c.zeroWard ? DEPLETED_WARD_TEXT : (d.charge ? "" : "Activate · ") + effect(c, i, ctx)}</button>`,
         );
         const activationChoices = actions.filter(
           (a) => a.type === "activate" && a.slot === i,
@@ -1527,7 +1637,7 @@ export function enhance(ctx) {
                 ?.classList.contains("selected"),
           );
         if (a && !(game.s.tutorial?.lesson === "shield-place" && e.detail > 0))
-          run(ctx, a);
+          placementChooser(ctx, a);
         else if (c) showCard(ctx, c, i);
       };
       el.onkeydown = (e) => {
@@ -1554,7 +1664,7 @@ export function enhance(ctx) {
           (a) => a.type === "place" && a.uid === drag?.card && a.slot === i,
         );
         drag = null;
-        if (a) run(ctx, a);
+        if (a) placementChooser(ctx, a);
       };
     });
     const hints = section.querySelectorAll(".row.spread>small");

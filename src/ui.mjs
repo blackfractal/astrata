@@ -227,7 +227,7 @@ function toast(s) {
 function card(c, { select = false } = {}) {
   const d = cards[c.id],
     live = c.used != null;
-  return `<button class="card ${selectedHand === c.uid ? "selected" : ""}" ${select ? `data-hand="${c.uid}"` : `data-inspect-card="${c.id}"`} title="${esc(d.text)}">${img("card-" + c.id)}${upgradeBadge(c)}<span class="cost" title="Focus cost">${d.focus === 99 ? "—" : d.focus}</span><div class="body"><div class="eyebrow" style="color:var(--${c.element || d.element})">${c.element || d.element} · ${d.type}</div><h4>${d.name}${c.upgrade ? " +" : ""}</h4><div class="text">${text(d.text)}</div><div class="meta">${d.limit < 0 ? "∞" : live ? Math.max(0, d.limit - c.used) : d.limit} activations · ${d.channel} Channel<br>Recall ${d.recall == null ? "—" : d.recall} · ${d.rarity}</div></div></button>`;
+  return `<button class="card ${selectedHand === c.uid ? "selected" : ""}" ${select ? `data-hand="${c.uid}"` : `data-inspect-card="${c.id}"`} title="${esc(d.text)}">${img("card-" + c.id)}${upgradeBadge(c)}<span class="cost" title="Focus cost">${d.focus === 99 ? "—" : d.focus}</span><div class="body"><div class="eyebrow" style="color:var(--${c.element || d.element})">${c.element || d.element} · ${d.type}</div><h4>${d.name}${c.upgrade ? " +" : ""}</h4><div class="text">${text(d.text)}</div><div class="meta">${d.requiresHost ? "On placement · no Channel<br>Requires " + (d.recallPlacement ? "a recallable card" : "a placed card") : `${d.limit < 0 ? "∞" : live ? Math.max(0, d.limit - c.used) : d.limit} activations · ${d.channel} Channel<br>Recall ${d.recall == null ? "—" : d.recall} · ${d.rarity}`}</div></div></button>`;
 }
 function actionButton(a, cls = "") {
   return `<button class="${cls}" data-action="${esc(a.key)}">${esc(a.label)}</button>`;

@@ -74,17 +74,10 @@ test("healing at full HP still consumes the card; ownership restores it next bat
   assert.equal(g.s.battle.destroyed.length, 0);
 });
 
-test("Fusion destroys only the covered healer, preserving Heat and its Burn", () => {
-  const g = setup(),
-    b = g.s.battle,
-    healer = put(g, "soothe", 1),
-    heat = put(g, "heat", 1);
-  g.s.hp = 20;
-  g.act(g.legal().find((a) => a.type === "activate" && a.slot === 1));
-  assert.equal(g.s.hp, 24);
-  assert.deepEqual(b.grid[1], [heat]);
-  assert.equal(b.destroyed[0].uid, healer.uid);
-  assert.equal(b.enemies[0].status.burn, 8);
+test("Heat cannot meld beneath a healing-only spell", () => {
+  const g = setup();
+  put(g, "soothe", 1);
+  assert.equal(g.canStack(g.newCard("heat"), g.s.battle.grid[1]), false);
 });
 
 test("healing cards are rare, weighted down in rare offers, and scarce in Item Decks", () => {

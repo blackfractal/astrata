@@ -56,8 +56,13 @@ test("Rootbound Ring adds two only on the first attack and refreshes each player
 test("Ring fires once across a Plasma pile, an area attack, and a multi-element Prism", () => {
   let g = setup();
   for (let i = 0; i < 4; i++) put(g, "plasma", 0);
+  {
+    const stack = g.s.battle.grid[0],
+      host = stack.at(-1);
+    for (const ball of stack.slice(0, -1)) ball.attachedTo = host.uid;
+  }
   activate(g, 0);
-  assert.equal(g.s.battle.enemies[0].hp, 966);
+  assert.equal(g.s.battle.enemies[0].hp, 968);
   g = setup(true);
   put(g, "storm", 0);
   activate(g, 0);
@@ -77,7 +82,7 @@ test("Ring fires once across a Plasma pile, an area attack, and a multi-element 
   activate(g, 8);
   assert.equal(g.s.battle.enemies[0].hp, 978);
 });
-test("Charge building and status-only activations preserve the Ring, including Fusion", () => {
+test("Charge building and status-only activations preserve the Ring, including melded Heat", () => {
   const g = setup(),
     b = g.s.battle;
   put(g, "kiln", 0);
@@ -89,11 +94,13 @@ test("Charge building and status-only activations preserve the Ring, including F
   activate(g, 10);
   assert.equal(b.enemies[0].hp, 994);
   const h = setup();
-  put(h, "water", 0);
-  put(h, "heat", 0);
+  const host = put(h, "water", 0);
+  const heat = h.instance(h.newCard("heat"));
+  heat.attachedTo = host.uid;
+  h.s.battle.grid[0].unshift(heat);
   activate(h, 0);
   assert.equal(h.s.battle.enemies[0].hp, 991);
-  assert.equal(h.s.battle.enemies[0].status.burn, 8);
+  assert.equal(h.s.battle.enemies[0].status.burn, 2);
 });
 test("Negated, guarded or lethal opening attacks spend the Ring without moving its proc to another target", () => {
   const g = setup(true),
@@ -139,8 +146,13 @@ test("Ring retains socketed elemental damage; other damage gear keeps its own tr
   h.addItem("thornCrown");
   h.s.equipment.head = h.s.inventory.at(-1).uid;
   for (let i = 0; i < 4; i++) put(h, "plasma", 0);
+  {
+    const stack = h.s.battle.grid[0],
+      host = stack.at(-1);
+    for (const ball of stack.slice(0, -1)) ball.attachedTo = host.uid;
+  }
   activate(h, 0);
-  assert.equal(h.s.battle.enemies[0].hp, 962);
+  assert.equal(h.s.battle.enemies[0].hp, 967);
 });
 test("Bronze Bracelet refills two block per enemy turn and starting gem previews match new equipment", () => {
   const g = new Game(12);

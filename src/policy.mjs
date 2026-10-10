@@ -382,6 +382,45 @@ export class WeightedPolicy {
         )
           n -= 10;
         if (c.stack === "tower" && !slot.length) n -= 6;
+        if (f.recallDiscount) n = b.focus > 1 ? 1 : -3;
+        if (f.returnHand) {
+          const host = slot.at(-1);
+          const spent = host.used >= cards[host.id].limit || host.zeroWard;
+          n =
+            spent && b.focus >= a.costs.focus + cards[host.id].focus ? 10 : -12;
+        }
+        if (f.placementElement) {
+          n += b.enemies.reduce(
+            (score, e) =>
+              score +
+              (e.tell.damage || 0) *
+                (defenseRate(f.placementElement, e.tell.element || e.element) -
+                  1),
+            0,
+          );
+          if (f.latticeMeld) n += f.revive ? 16 : 5;
+        }
+        if (f.plasmaMeld) {
+          const host = slot.at(-1);
+          n = 7 + f.damage * 0.35;
+          if (b.channel <= 2) n += 5;
+          if (b.grid.filter((x) => x.length).length > 24) n += 4;
+          if (host.lastActivatedTurn === b.turn) n -= 3;
+        }
+        if (f.heatMeld) {
+          const host = slot.at(-1);
+          n =
+            Math.max(0, Math.min(2, cards[host.id].limit - host.used)) *
+            f.heatBurn *
+            2;
+          if (b.enemies.every((e) => enemyImmuneTo(e, "burn"))) n = -20;
+        }
+        if (f.reinforce) {
+          const host = slot.at(-1);
+          n = 8 + (cards[host.id].effects.ward || 0) * 0.5;
+          if (f.revive)
+            n += 16 + Math.max(0, cards[host.id].limit - host.used) * 4;
+        }
         return [
           n * w.development,
           "Develop usable offense, growth, and economy while preserving placement conditions.",
@@ -434,7 +473,9 @@ export class WeightedPolicy {
         if (f.all) damage *= b.enemies.length;
         n +=
           damage * w.damage +
-          (target && enemyImmuneTo(target, "burn") ? 0 : (f.burn || 0) * 2) +
+          (target && enemyImmuneTo(target, "burn")
+            ? 0
+            : ((f.burn || 0) + (f.heatBurn || 0)) * 2) +
           (f.burnAll || (f.chargedBurnAll || 0) / (f.charge || 1)) *
             b.enemies.filter((e) => !enemyImmuneTo(e, "burn")).length *
             2 +
@@ -490,7 +531,6 @@ export class WeightedPolicy {
         }
         if (f.growAfterAttack && target && !target.flicker)
           n += activationGrowth(b, b.grid[a.slot].at(-1), a.slot) * 0.6;
-        if (f.magnify) n += 3;
         if (f.shift || f.transmute) n -= 4;
         return [
           n,

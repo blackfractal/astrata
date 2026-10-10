@@ -1,3 +1,29 @@
+## Latest: Construct approved — 2026-10-10
+
+Tower category renamed Construct in design4.173 and runtime content2.1.16/package2.1.20 (rules2.1.15 unchanged). Four existing card definitions now use construct:true; no code used the old tower field except updated assertion. Bastion text and Construct/Constructs keyword help updated. Historical card name Magnifying Glass Tower unchanged in historical references. Targeted4tests and direct tooltip/category checks pass; portable/ZIP refreshed. BUILD_LOG135. Earlier Construct naming proposal is now approved. Pending elemental Ward question remains unanswered; no absorption changes.
+
+## Latest: Meldable terminology, design-only — 2026-10-10
+
+Design4.172/BUILD_LOG134. Stack/Stackable retired as keywords; Meld is the action, Meldable grants incoming-card placement capability; eligible hosts need not have Meldable. Not meldable forbids receiving Melds, explicitly including Palimpsest and Undertow. No existing card assigned the restriction yet; runtime tag enforcement/UI terminology still to implement if requested. Tower retained as independent structural category targeted by specific effects; Construct proposed, not approved. Package unchanged2.1.19. Pending user choice from prior work: elemental Wards currently absorb neutrally; asked whether to apply normal elemental defense math. No answer yet, do not assume.
+
+## Latest: Palimpsest, Undertow, Lattice and Meld keyword — 2026-10-10
+
+Package2.1.19/rules+content2.1.15/design4.171; BUILD_LOG133. Supersedes priorpendingutilityproposals. Palimpsest1Focus/0activations, onlybeneathexistinghost, −1wholeRecall(min0), multiplesstack, cannotbypassunrecallable/Locked. Undertowonlytargetsrecallablestack; placementcost=currenteffectiveRecall(+Milkyplacementtax), returnsentirestackreset/separatetohand; Undertowdiscard, replaynormalFocus, noactivation. Lattice1Focus/2uses choose7elementsbeforecommit/cancel; starts1, adds5peractivation. MeldbeneathWardimmediate+5/revive/recolor, noextraallowance/independentpool; preservesused/turn/isolation. Chosen elementpersistsuntilRecall/destroy, newplacementresets. Newinlineplacementchooser; RcostbadgeforUndertow; hostcombinedRecall/UIstates/AIupdated. LegacyPal/LatticecoveringsconvertwithoutfreeGuardbonus; olddeployedUndertownotretroexecuted.
+
+Meldexplicitkeywordinmaindesign+glossary: underneathcard'sstats/effectsareinactiveindependently; onlyprintedhostmodificationsandtheirlimitsremain. AddedMelded/Melding/Melds aliases. UserexplicitlydoesNOTwantHeatlessoninS1; codealreadyhadnone, designnowprohibitsdedicatedHeat/heightlesson.484tests+isolatedGUI cancellation/Waterrevival/Recall0/returnhand/reset/FireLatticeactivationpass, screenshotsreviewed, portable+ZIPrefreshed. Noactualprofileedits/commit/push. KeepLatticerevivalbalanceopenforfutureplaytesting; currentlyYES.
+
+## Latest: Plasma Ball shared meld — 2026-10-10
+
+Package2.1.18/rules+content2.1.14/design4.170; BUILD_LOG132. Plasma16base approved, additionsbeneathoriginalhost, max4balls: damage16/24/28/30, allowance2/3/4/5,1Channelcombinedrandomtargetattack,hostelement. Noindependentunderlyinguses. Eachaddition+1allowance+1RecallFocus, preservingusedandturnmarker. Allcopiesrecalltogetherasseparatecards; resetsmelds; destructionfollows host. Metadatahelper supports futureChannelmodifiers(nonecurrent). UIcombinedstats,breakdown,Recallcost,countbadge,underneath-edgevisual acrossmelds.476rules tests and isolatedPlasmaUI pass; source-matchedportable+ZIP refreshed. Actualsave/profile untouched.
+
+UseraskedredesignPalimpsest/Undertow/Lattice, then choseKEEP PENDING, FINISH PLASMA FIRST. Proposals inmaindesign: Palimpsest beneathrecallablehostsetswholeRecall1; Undertowbeneathrecallablehostimmediatelyrecallsitselfandstackfreeafterplacement; LatticebeneathWardadds8Wardtohostnext2Wardactivations(noindependentpool,norevive). DoNOTimplementwithoutapproval. Existingthreecoveringexceptionsstillwork. S3planupdatedPlasma,stillIdeons/noheightviewer. LegacyPlasmamigration preservesallcards/spentuses/currentturn; bonuscap4evenlegacy5+, andnoadditionalplacements. Pending alternatives fromprevioushandoffbelow superseded forPlasma.
+
+## Latest: Magnifier Ward and Heat melds — 2026-10-10
+
+Package2.1.17/rules+content2.1.13/design4.169; BUILD_LOG131. `magnify` is now Magnifier Ward: standalone Arcane Ward1Focus/1Channel/1use/1Recall, starts1/adds10. Meld beneath any Ward gives +1 allowance preserving used count; revives depleted host to1. Inert attachment, no separate Guard/activation/Recall. Heat `heatMeld` beneath any Earth/Water/Wind direct attack (including Allies/transmuted): Burn2/upgrade3 on firstTWO actual attack activations, no oldFusion6; no consumption during charge, oneuse forAoE. Both follow host on Recall for0extraFocus (separate fresh cards in discard) and destruction. Multiple copies allowed. IDs/art retained. Old height amplification removed, eligible legacyHeat reordered underhost and oldMagnifier converted; uses preserved. Attachment badges, full-details and legal/AI effects updated.470tests + isolatedElectron drag/inspect/attack pass; release/ZIP rebuilt; actualprofile untouched.
+
+S3plan removes altitudeviewer, heightcap/magnification/flying proposals; keeps card-specific stacks and Ideons progression. Plasma unchanged. Jonathan proposes underneathPlasma +1sharedactivation and summed damage, thinking nerf; explained actuallybuff (2fresh48vs32,3fresh96vs48; renewsspentcontributions). Suggested instead eachaddedball contributesonlyoneattack while independentballgets2. Await user choice; do not implement without agreement.
+
 # Astrata implementation handoff
 
 ## Latest: Spell art and Thorn Eruption — 2026-10-08

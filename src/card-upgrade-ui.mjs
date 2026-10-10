@@ -2,6 +2,7 @@ import { corruptionPower } from "./corruptions.mjs";
 import { cards } from "./content.mjs";
 import {
   cardPower,
+  plasmaContributions,
   cardEffects,
   insightGain,
   matchingNeighbors,
@@ -45,7 +46,13 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
       text: `${parts.join(" + ")}${sick ? " → Nausea ×½, rounded down" : ""} = ${total} ${label.toLowerCase()}.`,
     });
   }
-  if (f.damage || f.hpDamage) {
+  if (c.id === "plasma" && live) {
+    const parts = plasmaContributions(b, c, slot);
+    rows.push({
+      label: "Damage",
+      text: `${parts.join(" + ")} diminishing Plasma damage${corruptionPower(b, slot, 4) < 4 ? " → Nausea ×½, rounded down" : ""} = ${cardPower(b, c, slot)} damage. One random target; host element applies to the combined attack.`,
+    });
+  } else if (f.damage || f.hpDamage) {
     const base = f.hpDamage ? (c.hp ?? d.hp) : d.effects.damage || 0,
       bonus = f.damage ? up + f.damage - (d.effects.damage || 0) : 0;
     const total = live

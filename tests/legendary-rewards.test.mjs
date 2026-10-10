@@ -126,5 +126,5 @@ test("Heartwood Bastion begins at one and can activate beside cards, stores Eart
   }
   assert.equal(g.allowance(c, 10), 0);
   assert.equal(c.ward, 55);
-  assert.equal(cards.bastion.tower, true);
+  assert.equal(cards.bastion.construct, true);
 });

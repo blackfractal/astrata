@@ -222,6 +222,45 @@ export function cardEffects(c) {
     ...(c.upgrade ? cards[c.id].upgrade?.effects : {}),
   };
 }
+export function attachments(b, c, i) {
+  return (b?.grid?.[i] || []).filter((x) => x.attachedTo === c.uid);
+}
+export function meldModifiers(b, c, i) {
+  const result = { activations: 0, channel: 0, recall: 0 };
+  let plasma = 0;
+  for (const x of attachments(b, c, i)) {
+    if (x.id === "plasma" && ++plasma > 3) continue;
+    for (const key of Object.keys(result))
+      result[key] += cards[x.id].meld?.[key] || 0;
+  }
+  return result;
+}
+export function activationCost(b, c, i) {
+  return Math.max(0, cards[c.id].channel + meldModifiers(b, c, i).channel);
+}
+export function plasmaContributions(b, c, i) {
+  const count =
+    1 +
+    Math.min(3, attachments(b, c, i).filter((x) => x.id === "plasma").length);
+  return Array.from(
+    { length: count },
+    (_, depth) => cards.plasma.effects.damage / 2 ** depth,
+  );
+}
+export function attachedHeat(b, c, i) {
+  return (b?.grid[i] || []).filter(
+    (x) =>
+      x.id === "heat" && x.attachedTo === c.uid && x.used < cards.heat.limit,
+  );
+}
+export function attachedBurn(b, c, i) {
+  return attachedHeat(b, c, i).reduce(
+    (n, x) =>
+      n + cardEffects(x).burn + (x.upgrade ? cards.heat.upgrade.bonus : 0),
+    0,
+  );
+}
+
 export function insightGain(b, c, i) {
   const f = cardEffects(c);
   return (f.insight || 0) + (f.adjInsight || 0) * gridNeighbors(b, i).length;
@@ -274,6 +313,8 @@ export function cardPower(b, c, i) {
     : f.damage
       ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
       : 0;
+  if (c.id === "plasma")
+    n = plasmaContributions(b, c, i).reduce((a, n) => a + n, 0);
   if (f.row)
     n += b.grid.reduce(
       (sum, slot, j) =>
@@ -290,12 +331,6 @@ export function cardPower(b, c, i) {
   if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square && squarePattern(b, c, i).length) n *= 2;
-  const level = b.grid[i].findIndex((x) => x.uid === c.uid) + 1;
-  for (let j = 0; j < b.grid.length; j++)
-    if (j !== i) {
-      const tower = top(b.grid[j]);
-      if (tower?.magnified && b.grid[j].length === level) n *= 2;
-    }
   return corruptionPower(b, i, n);
 }
 
@@ -357,6 +392,7 @@ const top = (slot) => slot?.at(-1),
   blankStatus = () => ({ burn: 0, poison: 0, corrode: 0 }),
   clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 export function cardAllowance(b, c, i) {
+  if (c.attachedTo != null) return 0;
   const d = cards[c.id];
   if (d.singleUse) return Math.max(0, 1 - c.used);
   if (d.limit < 0) return Infinity;
@@ -369,13 +405,17 @@ export function cardAllowance(b, c, i) {
   )
     ? 1
     : 0;
-  return Math.max(0, d.limit + plus - c.used);
+  return Math.max(
+    0,
+    d.limit + plus + meldModifiers(b, c, i).activations - c.used,
+  );
 }
 // Value recoverable damage/defense across the whole stack, including covered cards.
 // Charged damage is one eventual release, never multiplied by lifetime activations.
 export function stackValue(b, i) {
   const slot = b.grid[i];
   const power = [...slot].reverse().reduce((sum, c) => {
+    if (c.attachedTo != null) return sum;
     const d = cards[c.id],
       f = d.effects,
       allowance = cardAllowance(b, c, i);
@@ -606,12 +646,109 @@ function normalizeLoomRoster(s) {
   }
   if (s.checkpoint) normalizeLoomRoster(s.checkpoint);
 }
+function normalizeUtilityMelds(s) {
+  if (
+    (s.version?.rules || "0").localeCompare("2.1.15", undefined, {
+      numeric: true,
+    }) < 0
+  )
+    for (const slot of s.battle?.grid || [])
+      for (let i = 1; i < slot.length; i++) {
+        const c = slot[i],
+          host = slot[i - 1];
+        if (c.attachedTo != null || host.attachedTo != null) continue;
+        if (
+          c.id === "palimpsest" ||
+          (c.id === "lattice" && cards[host.id].type === "Ward")
+        ) {
+          if (c.id === "lattice") {
+            host.ward += c.ward || 0;
+            host.zeroWard = host.ward <= 0;
+            host.element = c.element;
+            host.chosenElement = true;
+            host.transmuted = true;
+            c.ward = 0;
+          }
+          c.attachedTo = host.uid;
+          slot.splice(i, 1);
+          slot.splice(i - 1, 0, c);
+        }
+      }
+  if (s.checkpoint) normalizeUtilityMelds(s.checkpoint);
+}
+function normalizePlasmaMelds(s) {
+  if (s.version?.rules !== VERSION.rules)
+    for (const slot of s.battle?.grid || []) {
+      const balls = slot.filter(
+        (c) => c.id === "plasma" && c.attachedTo == null,
+      );
+      if (balls.length < 2) continue;
+      const host = balls[0],
+        ids = new Set(balls.map((c) => c.uid));
+      host.used = Math.min(
+        2 + Math.min(3, balls.length - 1),
+        balls.reduce((n, c) => n + c.used, 0),
+      );
+      host.lastActivatedTurn = Math.max(
+        ...balls.map((c) => c.lastActivatedTurn ?? -1),
+      );
+      const position = slot.findIndex((c) => c.uid === host.uid);
+      for (const x of slot) if (ids.has(x.attachedTo)) x.attachedTo = host.uid;
+      for (const x of balls.slice(1)) {
+        x.attachedTo = host.uid;
+        x.used = 0;
+      }
+      const rest = slot.filter((c) => !ids.has(c.uid));
+      rest.splice(position, 0, ...balls.slice(1), host);
+      slot.splice(0, slot.length, ...rest);
+    }
+  if (s.checkpoint) normalizePlasmaMelds(s.checkpoint);
+}
+function normalizeMagnifierWards(s) {
+  if (s.version?.rules !== VERSION.rules)
+    for (const slot of s.battle?.grid || [])
+      for (let i = 1; i < slot.length; i++) {
+        const heat = slot[i],
+          host = slot[i - 1];
+        if (
+          heat.id === "heat" &&
+          heat.attachedTo == null &&
+          ["Earth", "Water", "Wind"].includes(host.element) &&
+          hasDirectDamageActivation(host)
+        ) {
+          heat.attachedTo = host.uid;
+          slot.splice(i, 1);
+          slot.splice(i - 1, 0, heat);
+        }
+      }
+  for (const c of s.battle?.grid.flat() || []) {
+    if (c.id !== "magnify") continue;
+    // Old deployed Objects become Wards without refreshing spent uses.
+    if (
+      (s.version?.rules || "0").localeCompare("2.1.13", undefined, {
+        numeric: true,
+      }) < 0 &&
+      c.attachedTo == null
+    ) {
+      c.ward = Math.max(1, c.ward || 0);
+      c.zeroWard = false;
+    }
+    delete c.magnified;
+    delete c.lastActivated;
+  }
+  if (s.checkpoint) {
+    normalizeMagnifierWards(s.checkpoint);
+    s.checkpoint.version = VERSION;
+  }
+}
+
 function normalizeInitialWards(s) {
   for (const c of s.battle?.grid.flat() || [])
     if (
       cards[c.id]?.type === "Ward" &&
       c.ward === 0 &&
       !c.zeroWard &&
+      c.attachedTo == null &&
       !c.mending &&
       c.used === 0
     )
@@ -625,6 +762,9 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.14",
+          "2.1.13",
+          "2.1.12",
           "2.1.11",
           "2.1.10",
           "2.1.9",
@@ -712,6 +852,9 @@ export class Game {
       normalizeEquipmentHealing(this.s);
       normalizeLoomRoster(this.s);
       normalizeLoomRotations(this.s);
+      normalizeUtilityMelds(this.s);
+      normalizePlasmaMelds(this.s);
+      normalizeMagnifierWards(this.s);
       normalizeInitialWards(this.s);
       refreshBossPlans(this);
       this.s.version = VERSION;
@@ -1681,7 +1824,14 @@ export class Game {
     if (slot.some((c) => cards[c.id].recall == null)) return null;
     return Math.max(
       0,
-      slot.reduce((n, c) => n + cards[c.id].recall, 0) - this.bonuses().recall,
+      slot.reduce(
+        (n, c) =>
+          n +
+          (c.attachedTo != null
+            ? cards[c.id].meld?.recall || 0
+            : cards[c.id].recall),
+        0,
+      ) - this.bonuses().recall,
     );
   }
   condition(c, i) {
@@ -1697,17 +1847,20 @@ export class Game {
     );
   }
   canStack(c, slot) {
-    if (!slot.length) return true;
+    if (!slot.length) return !cards[c.id].requiresHost;
     const d = cards[c.id],
       t = cards[top(slot).id];
     return (
-      d.stack === "supersede" ||
-      d.stack === "recall" ||
-      (d.stack === "pile" && c.id === top(slot).id) ||
-      (d.stack === "tower" && t.tower) ||
-      (d.stack === "fusion" &&
-        t.type === "Spell" &&
-        ["Water", "Earth"].includes(top(slot).element))
+      (d.stack === "reinforce" && t.type === "Ward") ||
+      d.stack === "recallDiscount" ||
+      (d.stack === "returnHand" && this.recallCost(slot) != null) ||
+      (d.stack === "latticeMeld" && t.type === "Ward") ||
+      (d.stack === "plasmaMeld" &&
+        c.id === top(slot).id &&
+        slot.filter((x) => x.id === "plasma").length < 4) ||
+      (d.stack === "heatMeld" &&
+        hasDirectDamageActivation(top(slot)) &&
+        ["Water", "Earth", "Wind"].includes(top(slot).element))
     );
   }
   applyFriendlyStatus(status, value, source = {}, slot = null, animate = true) {
@@ -2185,6 +2338,7 @@ export class Game {
           .filter(
             (c, k) =>
               cards[c.id].type === "Ward" &&
+              c.attachedTo == null &&
               c.ward > 0 &&
               (k === slot.length - 1 || cards[top(slot)?.id]?.coveredWards),
           )
@@ -2381,7 +2535,20 @@ export class Game {
   destroyCard(i, uid) {
     const b = this.s.battle,
       j = b.grid[i].findIndex((c) => c.uid === uid);
-    if (j >= 0) b.destroyed.push(...b.grid[i].splice(j, 1));
+    if (j >= 0) {
+      const removed = new Set([uid]);
+      // Follow attachment ownership, including a reinforced standalone Magnifier.
+      for (let changed = true; changed;) {
+        changed = false;
+        for (const c of b.grid[i])
+          if (removed.has(c.attachedTo) && !removed.has(c.uid)) {
+            removed.add(c.uid);
+            changed = true;
+          }
+      }
+      b.destroyed.push(...b.grid[i].filter((c) => removed.has(c.uid)));
+      b.grid[i] = b.grid[i].filter((c) => !removed.has(c.uid));
+    }
   }
   gridTelegraphs() {
     const b = this.s.battle;
@@ -2630,10 +2797,6 @@ export class Game {
       c.taunt = true;
       c.tauntUntil = f.tauntRound ? b.turn : null;
     }
-    if (f.magnify && b.grid[i].length >= 2) {
-      if (c.lastActivated === b.turn - 1) c.magnified = true;
-      c.lastActivated = b.turn;
-    }
     if (f.mend) mend(this, c, i, a.cardTarget ?? i, a.repairKind);
     if (f.stitch && ["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
       delete b.corruptions[i];
@@ -2689,16 +2852,26 @@ export class Game {
       const targets = f.all
         ? b.enemies.filter((x) => x.hp > 0)
         : [
-            f.randomDamage || d.stack === "pile"
+            f.randomDamage || d.stack === "plasmaMeld"
               ? this.pick(b.enemies.filter((x) => x.hp > 0))
               : b.enemies.find((x) => x.uid === target),
           ];
       const firstTarget = targets.find((e) => e?.hp > 0);
       const damaging = !!(f.damage || f.hpDamage || f.randomDamage);
+      const heats = damaging && firstTarget ? attachedHeat(b, c, i) : [];
+      const heatBurn = heats.reduce(
+        (n, x) =>
+          n + cardEffects(x).burn + (x.upgrade ? cards.heat.upgrade.bonus : 0),
+        0,
+      );
+      for (const heat of heats) {
+        heat.used++;
+        heat.lastActivatedTurn = b.turn;
+      }
       const firstAttack =
         damaging && firstTarget && b.firstAttackTurn !== b.turn;
       // Claim before Flicker/guard so a negated opening attack cannot bank the Ring.
-      // All targets, Pile members and Fusion effects share this turn marker.
+      // All targets and Pile members share this turn marker.
       if (firstAttack) b.firstAttackTurn = b.turn;
       const areaStart = this.presentation?.length || 0;
       for (const e of targets) {
@@ -2749,6 +2922,7 @@ export class Game {
         }
         for (const k of ["burn", "poison", "corrode"])
           if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus, i);
+        if (heatBurn) this.applyEnemyStatus(e, "burn", heatBurn, i);
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
       if (f.all) this.markAreaPresentation(areaStart, i);
@@ -2805,30 +2979,9 @@ export class Game {
           ? `${d.name} · Release`
           : d.name,
     });
-    b.channel -= channelCost ?? d.channel;
+    b.channel -= channelCost ?? activationCost(b, c, a.slot);
     const ctx = {};
-    if (d.stack === "pile") {
-      for (const ball of [...slot].reverse())
-        if (ball.id === c.id && this.activationAvailable(ball, a.slot)) {
-          this.applyCard(ball, a.slot, a.target, a.element, a, ctx);
-        }
-    } else {
-      this.applyCard(c, a.slot, a.target, a.element, a, ctx);
-      if (d.stack === "fusion" && slot.length > 1) {
-        const under = slot.at(-2),
-          u = cards[under.id];
-        if (
-          u.type === "Spell" &&
-          ["Water", "Earth"].includes(under.element) &&
-          this.activationAvailable(under, a.slot)
-        ) {
-          this.applyCard(under, a.slot, a.target, under.element, a, ctx);
-          const e = b.enemies.find((x) => x.uid === a.target);
-          if (e && !ctx.blocked?.has(e.uid))
-            this.applyEnemyStatus(e, "burn", 6, a.slot);
-        }
-      }
-    }
+    this.applyCard(c, a.slot, a.target, a.element, a, ctx);
     this.log("Activated " + d.name + ".");
     this.checkBattle();
     if (this.s.mode === "battle" && !deferPump) this.pump();
@@ -3573,10 +3726,15 @@ export class Game {
       }
       if (b.phase === "place") {
         for (const c of b.hand) {
-          const d = cards[c.id],
-            cost = d.focus + (b.milky ? 1 : 0);
-          if (d.unplaceable || cost > b.focus) continue;
-          for (let i = 0; i < b.grid.length; i++)
+          const d = cards[c.id];
+          if (d.unplaceable) continue;
+          for (let i = 0; i < b.grid.length; i++) {
+            const baseCost = d.recallPlacement
+              ? this.recallCost(b.grid[i])
+              : d.focus;
+            const cost =
+              baseCost == null ? Infinity : baseCost + (b.milky ? 1 : 0);
+            if (cost > b.focus) continue;
             if (
               canEnter(b, c, i) &&
               this.canStack(c, b.grid[i]) &&
@@ -3584,17 +3742,82 @@ export class Game {
                 d.condition !== "isolated" ||
                 this.neighbors(i).length === 0)
             )
-              add(
-                "place",
-                `Place ${d.name} · slot ${i + 1}`,
-                { uid: c.uid, slot: i },
-                {
-                  card: c.id,
-                  neighbors: this.neighbors(i).length,
-                  level: b.grid[i].length + 1,
-                },
-                { focus: cost },
-              );
+              for (const placementElement of d.choosePlacementElement
+                ? ELEMENTS
+                : [null])
+                add(
+                  "place",
+                  `${["reinforce", "heatMeld", "plasmaMeld", "recallDiscount", "latticeMeld"].includes(d.stack) && b.grid[i].length ? "Meld " + d.name + " beneath " + cards[top(b.grid[i]).id].name : "Place " + d.name} · slot ${i + 1}${placementElement ? " · " + placementElement : ""} · ${cost} Focus`,
+                  {
+                    uid: c.uid,
+                    slot: i,
+                    ...(placementElement ? { placementElement } : {}),
+                  },
+                  {
+                    card: c.id,
+                    ...(d.recallPlacement
+                      ? {
+                          returnHand: true,
+                          recallCost: cost,
+                          returned: b.grid[i].length,
+                        }
+                      : {}),
+                    ...(d.stack === "recallDiscount"
+                      ? { recallDiscount: 1 }
+                      : {}),
+                    ...(d.choosePlacementElement
+                      ? {
+                          latticeMeld: !!b.grid[i].length,
+                          wardGain: b.grid[i].length ? 5 : 0,
+                          placementElement,
+                          revive: !!top(b.grid[i])?.zeroWard,
+                        }
+                      : {}),
+                    neighbors: this.neighbors(i).length,
+                    level:
+                      [
+                        "reinforce",
+                        "heatMeld",
+                        "plasmaMeld",
+                        "recallDiscount",
+                        "latticeMeld",
+                      ].includes(d.stack) && b.grid[i].length
+                        ? b.grid[i].length
+                        : b.grid[i].length + 1,
+                    ...(d.stack === "plasmaMeld" && b.grid[i].length
+                      ? {
+                          plasmaMeld: true,
+                          activationBonus: 1,
+                          recallBonus: 1,
+                          damage: [16, 24, 28, 30][
+                            Math.min(
+                              3,
+                              b.grid[i].filter((x) => x.id === "plasma").length,
+                            )
+                          ],
+                        }
+                      : {}),
+                    ...(d.stack === "heatMeld" && b.grid[i].length
+                      ? {
+                          heatMeld: true,
+                          host: top(b.grid[i]).uid,
+                          heatBurn:
+                            cardEffects(c).burn +
+                            (c.upgrade ? d.upgrade.bonus : 0),
+                        }
+                      : {}),
+                    ...(d.stack === "reinforce" && b.grid[i].length
+                      ? {
+                          reinforce: true,
+                          revive: !!top(b.grid[i]).zeroWard,
+                          host: top(b.grid[i]).uid,
+                          activationBonus: 1,
+                        }
+                      : {}),
+                  },
+                  { focus: cost },
+                );
+          }
         }
         for (let i = 0; i < b.grid.length; i++) {
           const cost = this.recallCost(b.grid[i]);
@@ -3616,7 +3839,7 @@ export class Game {
           const d = cards[c.id],
             f = cardEffects(c);
           if (
-            d.channel > b.channel ||
+            activationCost(b, c, i) > b.channel ||
             !this.activationAvailable(c, i) ||
             !this.condition(c, i) ||
             (f.mend && !repairTargets(this, c, i).length) ||
@@ -3630,7 +3853,7 @@ export class Game {
             charging ||
             f.all ||
             f.randomDamage ||
-            d.stack === "pile" ||
+            d.stack === "plasmaMeld" ||
             !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode)
               ? [null]
               : b.enemies.filter((e) => e.hp > 0).map((e) => e.uid);
@@ -3667,6 +3890,7 @@ export class Game {
                   `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
+                    heatBurn: charging ? 0 : attachedBurn(b, c, i),
                     ...(charging
                       ? {
                           charging: true,
@@ -3677,20 +3901,7 @@ export class Game {
                           chargedBurnAll: f.burnAll || 0,
                         }
                       : f),
-                    damage: charging
-                      ? 0
-                      : d.stack === "pile"
-                        ? b.grid[i]
-                            .filter(
-                              (ball) =>
-                                ball.id === c.id &&
-                                this.activationAvailable(ball, i),
-                            )
-                            .reduce(
-                              (sum, ball) => sum + this.cardPower(ball, i),
-                              0,
-                            )
-                        : this.cardPower(c, i),
+                    damage: charging ? 0 : this.cardPower(c, i),
                     ...Object.fromEntries(
                       ["burn", "poison", "corrode"]
                         .filter((k) => f[k])
@@ -3718,7 +3929,7 @@ export class Game {
                       ? { charges: c.charge, chargeRequired: d.charge }
                       : {}),
                   },
-                  { channel: d.channel },
+                  { channel: activationCost(b, c, i) },
                 );
         }
         add("endTurn", "End turn", {}, { progress: 1 });
@@ -4037,17 +4248,97 @@ export class Game {
         b.focus -= a.costs.focus;
         b.milky = false;
         const slot = b.grid[a.slot];
-        if (d.stack === "recall" && slot.length) {
-          for (let i = slot.length - 1; i >= 0; i--)
-            if (cards[slot[i].id].recall != null && !slot[i].lock)
-              b.discard.push(
-                ...slot
-                  .splice(i, 1)
-                  .map((x) => ({ uid: x.uid, id: x.id, upgrade: x.upgrade })),
-              );
+        if (d.stack === "returnHand") {
+          b.hand.push(
+            ...slot.map((x) => ({ uid: x.uid, id: x.id, upgrade: x.upgrade })),
+          );
+          b.grid[a.slot] = [];
+          b.discard.push({ uid: c.uid, id: c.id, upgrade: c.upgrade });
+          this.present("recall", {
+            slot: a.slot,
+            name: "Undertow · returned to hand",
+          });
+          this.log(
+            `Undertow returns ${slot.length} card(s) to hand for ${a.costs.focus} Focus; Undertow goes to discard.`,
+          );
+          break;
         }
         const inst = this.instance(c);
-        slot.push(inst);
+        if (a.placementElement) {
+          inst.element = a.placementElement;
+          inst.chosenElement = true;
+        }
+        if (
+          [
+            "reinforce",
+            "heatMeld",
+            "plasmaMeld",
+            "recallDiscount",
+            "latticeMeld",
+          ].includes(d.stack) &&
+          slot.length
+        ) {
+          const host = top(slot);
+          inst.attachedTo = host.uid;
+          inst.ward = 0;
+          slot.splice(slot.length - 1, 0, inst);
+          if (d.stack === "reinforce") {
+            const revived = host.zeroWard || host.ward <= 0;
+            if (revived) {
+              host.ward = 1;
+              host.zeroWard = false;
+            }
+            this.log(
+              `${d.name} reinforces ${cards[host.id].name}: +1 activation allowance${revived ? "; restored 1 Ward" : ""}.`,
+            );
+            this.present("status", {
+              target: "card",
+              slot: a.slot,
+              name: revived
+                ? "Reinforced · +1 use · 1 Ward restored"
+                : "Reinforced · +1 use",
+            });
+          } else if (d.stack === "recallDiscount") {
+            this.log("Palimpsest stores 1 Focus toward this stack's Recall.");
+            this.present("status", {
+              target: "card",
+              slot: a.slot,
+              name: "Recall cost −1",
+            });
+          } else if (d.stack === "latticeMeld") {
+            host.ward += 5;
+            host.zeroWard = false;
+            host.element = a.placementElement;
+            host.chosenElement = true;
+            host.transmuted = true;
+            this.log(
+              `Living Lattice adds 5 Ward and changes its host to ${a.placementElement} until recalled or destroyed.`,
+            );
+            this.present("status", {
+              target: "card",
+              slot: a.slot,
+              name: `+5 ${a.placementElement} Ward · revived`,
+            });
+          } else if (d.stack === "plasmaMeld") {
+            this.log(
+              `Plasma Ball melds beneath its host: ${this.cardPower(host, a.slot)} damage, +1 activation allowance, +1 Recall Focus.`,
+            );
+            this.present("status", {
+              target: "card",
+              slot: a.slot,
+              name: "Plasma melded · +1 use · +1 Recall",
+            });
+          } else {
+            this.log(
+              `Heat melds beneath ${cards[host.id].name}: Burn ${cardEffects(inst).burn + (inst.upgrade ? d.upgrade.bonus : 0)} on its next two attack activations.`,
+            );
+            this.present("status", {
+              target: "card",
+              slot: a.slot,
+              name: "Heat melded · 2 attack uses",
+            });
+          }
+        } else slot.push(inst);
         if (
           d.bondHP &&
           this.neighbors(a.slot).some((j) => top(b.grid[j]).element === "Earth")

@@ -55,22 +55,24 @@ test("Wards are selectable and exhausted activations do not prevent absorption",
   assert.equal(b.ward, 1);
   assert.equal(g.s.hp, 70);
 });
-test("covered Wards inert unless top explicitly permits", () => {
+test("Melded Lattice has no independent Guard pool; the exposed Ward supplies defense", () => {
   const g = battle(),
-    w = put(g, "ward", 0, { ward: 10 });
-  put(g, "palimpsest", 0);
-  hit(g, 4);
-  assert.equal(w.ward, 10);
-  assert.equal(g.s.hp, 66);
-  const h = battle(),
-    v = put(h, "ward", 0, { ward: 10 });
-  put(h, "lattice", 0, { ward: 8 });
-  hit(h, 12);
-  act(h, "ward", (x) => x.uid === v.uid);
-  act(h, "ward");
-  assert.equal(v.ward, 0);
-  assert.equal(h.s.battle.grid[0][1].ward, 6);
+    b = g.s.battle,
+    host = put(g, "ward", 0, { ward: 10 });
+  b.phase = "place";
+  b.focus = 1;
+  const c = g.newCard("lattice");
+  b.hand = [c];
+  act(g, "place", (a) => a.slot === 0 && a.placementElement === "Arcane");
+  assert.equal(host.ward, 15);
+  assert.equal(b.grid[0].at(-1), host);
+  assert.equal(g.activeWards().length, 1);
+  hit(g, 12);
+  act(g, "ward", (a) => a.uid === host.uid);
+  assert.equal(host.ward, 3);
+  assert.equal(g.s.hp, 70);
 });
+
 test("Shield portions and Allies are optional choices sharing one defensive position", () => {
   const g = battle();
   const c = put(g, "shield", 0);
@@ -289,7 +291,7 @@ test("seed plus choices replay identically through a full run", () => {
   assert.equal(a.s.mode, "result");
   assert.deepEqual(a.s, b.s);
 });
-test("Plasma pile produces 8+8+8+8 before gear", () => {
+test("Plasma meld produces 16+8+4+2 before gear", () => {
   const g = battle();
   g.s.equipment = {};
   const b = g.s.battle;
@@ -298,39 +300,29 @@ test("Plasma pile produces 8+8+8+8 before gear", () => {
   b.enemies[0].hp = 1000;
   b.enemies[0].maxHp = 1000;
   for (let i = 0; i < 4; i++) put(g, "plasma", 0);
+  {
+    const stack = g.s.battle.grid[0],
+      host = stack.at(-1);
+    for (const ball of stack.slice(0, -1)) ball.attachedTo = host.uid;
+  }
   b.phase = "activate";
   act(g, "activate");
-  assert.equal(b.enemies[0].hp, 968);
-  assert.ok(b.grid[0].every((c) => c.used === 1));
+  assert.equal(b.enemies[0].hp, 970);
+  assert.equal(b.grid[0].at(-1).used, 1);
+  assert.ok(b.grid[0].slice(0, -1).every((c) => c.used === 0));
 });
-test("Fusion spends the covered Spell allowance; top spent never exposes it", () => {
-  const g = battle();
-  g.s.equipment = {};
-  const under = put(g, "water", 0),
-    heat = put(g, "heat", 0);
-  g.s.battle.phase = "activate";
-  g.s.battle.channel = 3;
-  act(g, "activate");
-  assert.equal(under.used, 1);
-  assert.equal(g.s.battle.enemies[0].status.burn, 8);
-  assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 0));
-  g.s.battle.turn++;
-  act(g, "activate");
-  assert.equal(heat.used, 2);
-  assert.ok(!g.legal().some((a) => a.type === "activate" && a.slot === 0));
-});
-test("Undertow leaves unrecallable Focus Energy covered with its battle bonus intact", () => {
+test("Undertow cannot bypass unrecallable Focus Energy", () => {
   const g = battle();
   put(g, "focus", 0);
-  g.s.battle.phase = "activate";
-  act(g, "activate");
   g.s.battle.phase = "place";
-  g.s.battle.focus = 1;
+  g.s.battle.focus = 10;
   g.s.battle.hand = [g.newCard("undertow")];
-  act(g, "place", (a) => a.slot === 0);
-  assert.equal(g.s.battle.grid[0].length, 2);
-  assert.equal(g.s.battle.permanent.focus, 1);
+  assert.equal(
+    g.legal().some((a) => a.type === "place"),
+    false,
+  );
 });
+
 test("Shift carries a full stack; Transmute changes future Attune choices", () => {
   const g = battle();
   put(g, "plasma", 0);
@@ -358,22 +350,6 @@ test("Shift carries a full stack; Transmute changes future Attune choices", () =
         (a) => a.type === "activate" && a.slot === 13 && a.element === "Water",
       ),
   );
-});
-test("Consecutive Tower doubles matching level, including a covered Pile level", () => {
-  const g = battle();
-  g.s.equipment = {};
-  put(g, "ward", 0);
-  const mag = put(g, "magnify", 0);
-  const p = put(g, "plasma", 4);
-  const upper = put(g, "plasma", 4);
-  g.s.battle.phase = "activate";
-  g.s.battle.channel = 4;
-  act(g, "activate", (a) => a.slot === 0);
-  g.s.battle.turn++;
-  act(g, "activate", (a) => a.slot === 0);
-  assert.ok(mag.magnified);
-  assert.equal(g.cardPower(upper, 4), 16);
-  assert.equal(g.cardPower(p, 4), 8);
 });
 test("upgraded Sapling gets initial HP once, not bonus damage twice", () => {
   const g = battle();
@@ -470,7 +446,7 @@ test("Wanderer stops on the player instead of completing its rolled path", () =>
 test("All Wards start at one, activation adds value, and Recall resets to one", () => {
   for (const [id, gain] of [
     ["ward", 10],
-    ["lattice", 8],
+    ["lattice", 5],
     ["bastion", 18],
   ]) {
     const g = battle(),
