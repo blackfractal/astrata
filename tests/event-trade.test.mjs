@@ -40,15 +40,49 @@ test("Trader exposes exact equipped and spare Bracelet copies and selecting one 
   assert.equal(g.s.field.moves, moves);
   assert.throws(() => g.act(a), /Illegal action/);
 });
-test("Equipped trade clears its slot and preserves socketed Gem in Satchel", () => {
+test("Equipped trade clears its slot and surrenders its socketed Gem", () => {
   const g = fixture(),
     uid = g.s.equipment.wrist2,
     gem = g.addItem("sapphire");
   g.getItem(uid).gem = gem.uid;
   g.act(trades(g).find((a) => a.tradeItem === uid));
   assert.equal(g.s.equipment.wrist2, null);
-  assert.ok(g.getItem(gem.uid));
+  assert.ok(!g.getItem(gem.uid));
   assert.ok(!g.s.inventory.some((x) => x.gem === gem.uid));
+});
+test("A saved spare fitted Bracelet trades its exact Gem, preserving loose duplicates", () => {
+  const g = fixture(),
+    spare = g.addItem("bronze"),
+    fitted = g.addItem("ruby"),
+    loose = g.addItem("ruby");
+  spare.gem = fitted.uid;
+  const h = new Game(0, g.save());
+  const a = trades(h).find((a) => a.tradeItem === spare.uid);
+  assert.match(a.label, /with Ruby/);
+  h.act(a);
+  assert.ok(!h.getItem(spare.uid));
+  assert.ok(!h.getItem(fitted.uid));
+  assert.ok(h.getItem(loose.uid));
+  assert.ok(h.getItem(h.s.equipment.wrist2));
+  const reloaded = new Game(0, h.save());
+  assert.ok(!reloaded.getItem(fitted.uid));
+  assert.equal(reloaded.s.deck.filter((c) => c.id === "grove").length, 1);
+});
+test("A Cursed fitted Gem prevents trading the Setting as a removal loophole", () => {
+  const g = fixture(),
+    uid = g.s.equipment.wrist2;
+  items.testCursedGem = { ...items.ruby, id: "testCursedGem", cursed: true };
+  try {
+    const gem = g.addItem("testCursedGem");
+    g.getItem(uid).gem = gem.uid;
+    assert.ok(!trades(g).some((a) => a.tradeItem === uid));
+    assert.equal(
+      tradeAssets(g.s, { kind: "item", slot: "wrist" })[0].eligible,
+      false,
+    );
+  } finally {
+    delete items.testCursedGem;
+  }
 });
 test("Satchel-only Bracelets qualify, keep belongings changes no ownership, observations enumerate without mutation", () => {
   const g = fixture();

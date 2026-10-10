@@ -1,0 +1,890 @@
+{
+  "version": {
+    "rules": "2.1.10",
+    "content": "2.1.10",
+    "observation": 2,
+    "actions": 7
+  },
+  "stratum": 1,
+  "seed": 303001354,
+  "rng": 3232529012,
+  "uid": 58,
+  "mode": "field",
+  "classId": "druid",
+  "hp": 53,
+  "maxHp": 70,
+  "gold": 220,
+  "deck": [
+    {
+      "uid": 1,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 2,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 3,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 4,
+      "id": "blast",
+      "upgrade": false
+    },
+    {
+      "uid": 5,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 6,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 7,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 8,
+      "id": "shield",
+      "upgrade": false
+    },
+    {
+      "uid": 9,
+      "id": "familiar",
+      "upgrade": false
+    },
+    {
+      "uid": 10,
+      "id": "clear",
+      "upgrade": false
+    },
+    {
+      "uid": 11,
+      "id": "focus",
+      "upgrade": false
+    },
+    {
+      "uid": 12,
+      "id": "sapling",
+      "upgrade": false
+    },
+    {
+      "uid": 22,
+      "id": "guardian",
+      "upgrade": false
+    },
+    {
+      "uid": 29,
+      "id": "water",
+      "upgrade": false
+    },
+    {
+      "uid": 38,
+      "id": "solitude",
+      "upgrade": false
+    },
+    {
+      "uid": 42,
+      "id": "transmute",
+      "upgrade": false
+    },
+    {
+      "uid": 49,
+      "id": "discord",
+      "upgrade": false
+    },
+    {
+      "uid": 55,
+      "id": "gust",
+      "upgrade": false
+    }
+  ],
+  "inventory": [
+    {
+      "uid": 13,
+      "id": "bronze",
+      "gem": 15
+    },
+    {
+      "uid": 14,
+      "id": "ring",
+      "gem": null
+    },
+    {
+      "uid": 15,
+      "id": "emerald",
+      "gem": null
+    },
+    {
+      "uid": 23,
+      "id": "ruby",
+      "gem": null
+    },
+    {
+      "uid": 56,
+      "id": "focusDraught",
+      "gem": null
+    }
+  ],
+  "equipment": {
+    "head": null,
+    "neck": null,
+    "torso": null,
+    "wrist1": null,
+    "wrist2": 13,
+    "finger1": null,
+    "finger2": 14
+  },
+  "field": {
+    "round": 11,
+    "spawned": 22,
+    "spawnWidth": 2,
+    "queue": [
+      "Mote",
+      "Mote",
+      "Event",
+      "Mote",
+      "Mote",
+      "Eidolon",
+      "Item",
+      "Item"
+    ],
+    "entities": [
+      {
+        "uid": 17,
+        "type": "Mote",
+        "x": 6,
+        "y": 10,
+        "restless": 2,
+        "born": 1,
+        "enemy": "bat",
+        "count": 1
+      },
+      {
+        "uid": 19,
+        "type": "Item",
+        "item": "healingSap",
+        "fieldSupply": true,
+        "x": 3,
+        "y": 0,
+        "born": 1,
+        "restless": 0
+      },
+      {
+        "uid": 20,
+        "type": "Item",
+        "item": "channelDraught",
+        "fieldSupply": true,
+        "x": 10,
+        "y": 7,
+        "born": 1,
+        "restless": 0
+      },
+      {
+        "uid": 24,
+        "type": "Mote",
+        "x": 0,
+        "y": 0,
+        "restless": 2,
+        "born": 2,
+        "enemy": "wisp",
+        "count": 1
+      },
+      {
+        "uid": 25,
+        "type": "Mote",
+        "x": 0,
+        "y": 8,
+        "restless": 2,
+        "born": 2,
+        "enemy": "beetle",
+        "count": 1
+      },
+      {
+        "uid": 34,
+        "type": "Event",
+        "x": 7,
+        "y": 2,
+        "restless": 0,
+        "born": 6
+      },
+      {
+        "uid": 39,
+        "type": "Gold",
+        "x": 9,
+        "y": 7,
+        "restless": 0,
+        "born": 7,
+        "value": 40
+      },
+      {
+        "uid": 40,
+        "type": "Gold",
+        "x": 9,
+        "y": 3,
+        "restless": 0,
+        "born": 7,
+        "value": 50
+      },
+      {
+        "uid": 43,
+        "type": "Gold",
+        "x": 4,
+        "y": 1,
+        "restless": 0,
+        "born": 8,
+        "value": 35
+      },
+      {
+        "uid": 44,
+        "type": "Tavern",
+        "x": 3,
+        "y": 2,
+        "restless": 0,
+        "born": 8
+      },
+      {
+        "uid": 50,
+        "type": "Eidolon",
+        "x": 3,
+        "y": 6,
+        "restless": 0,
+        "born": 9,
+        "enemy": "shard",
+        "count": 1
+      },
+      {
+        "uid": 51,
+        "type": "Gold",
+        "x": 6,
+        "y": 10,
+        "restless": 0,
+        "born": 9,
+        "value": 60
+      },
+      {
+        "uid": 53,
+        "type": "Mote",
+        "x": 10,
+        "y": 10,
+        "restless": 0,
+        "born": 10,
+        "enemy": "eel",
+        "count": 1
+      },
+      {
+        "uid": 57,
+        "type": "Eidolon",
+        "x": 2,
+        "y": 9,
+        "restless": 0,
+        "born": 11,
+        "enemy": "dervish",
+        "count": 1
+      },
+      {
+        "uid": 58,
+        "type": "Event",
+        "x": 4,
+        "y": 3,
+        "restless": 0,
+        "born": 11
+      }
+    ],
+    "x": 3,
+    "y": 8,
+    "moves": 2,
+    "stage": "player",
+    "suppliesScattered": true,
+    "leftSupplies": []
+  },
+  "status": {
+    "burn": 0,
+    "poison": 0,
+    "corrode": 0
+  },
+  "stats": {
+    "damageDealt": 116,
+    "damageTaken": 27,
+    "goldEarned": 220,
+    "goldSpent": 0,
+    "cardsGained": [
+      "Energy Guardian",
+      "Water Blast",
+      "Solitude",
+      "Transmute",
+      "Discordia Pulse",
+      "Gust"
+    ],
+    "itemsGained": [
+      "Bronze Bracelet",
+      "Rootbound Ring",
+      "Emerald",
+      "Ruby",
+      "Focus Draught"
+    ],
+    "purchases": [],
+    "sales": [],
+    "encounters": [
+      {
+        "stratum": 1,
+        "round": 1,
+        "enemies": [
+          "Veil Moth"
+        ],
+        "outcome": "victory",
+        "hpStart": 70,
+        "turns": 3,
+        "hpEnd": 70
+      },
+      {
+        "stratum": 1,
+        "round": 3,
+        "enemies": [
+          "Spark-Wisp"
+        ],
+        "outcome": "victory",
+        "hpStart": 70,
+        "turns": 6,
+        "hpEnd": 70
+      },
+      {
+        "stratum": 1,
+        "round": 6,
+        "enemies": [
+          "Fire Wolf"
+        ],
+        "outcome": "victory",
+        "hpStart": 70,
+        "turns": 4,
+        "hpEnd": 63
+      },
+      {
+        "stratum": 1,
+        "round": 7,
+        "enemies": [
+          "Fire Wolf"
+        ],
+        "outcome": "victory",
+        "hpStart": 63,
+        "turns": 3,
+        "hpEnd": 54
+      },
+      {
+        "stratum": 1,
+        "round": 8,
+        "enemies": [
+          "Bell Beetle"
+        ],
+        "outcome": "victory",
+        "hpStart": 54,
+        "turns": 5,
+        "hpEnd": 54
+      },
+      {
+        "stratum": 1,
+        "round": 10,
+        "enemies": [
+          "Ashling 1",
+          "Ashling 2"
+        ],
+        "outcome": "victory",
+        "hpStart": 64,
+        "turns": 3,
+        "hpEnd": 53
+      }
+    ],
+    "fieldSupplies": [
+      {
+        "uid": 18,
+        "item": "focusDraught",
+        "x": 3,
+        "y": 8,
+        "round": 1
+      },
+      {
+        "uid": 19,
+        "item": "healingSap",
+        "x": 3,
+        "y": 0,
+        "round": 1
+      },
+      {
+        "uid": 20,
+        "item": "channelDraught",
+        "x": 10,
+        "y": 7,
+        "round": 1
+      }
+    ]
+  },
+  "steps": 168,
+  "archon": "hart",
+  "enemyDecks": {
+    "Mote": [
+      "sludge",
+      "wisp",
+      "lichen",
+      "moth",
+      "wolf",
+      "bat",
+      "leech",
+      "wolf",
+      "beetle",
+      "ashling",
+      "leech",
+      "imp",
+      "lichen",
+      "imp",
+      "bat",
+      "eel",
+      "sludge",
+      "beetle"
+    ],
+    "Eidolon": [
+      "mason",
+      "elemental",
+      "undead",
+      "sentinel",
+      "weaver"
+    ],
+    "EarlyMote": [
+      "bat",
+      "moth"
+    ]
+  },
+  "eventDeck": [
+    "spring",
+    "healer",
+    "trader",
+    "ambush",
+    "swamp",
+    "helmet",
+    "oath",
+    "graft",
+    "merchant"
+  ],
+  "itemDeck": [
+    "necklace",
+    "card:prism",
+    "card:spore",
+    "card:cinder",
+    "card:golem",
+    "emerald",
+    "card:transmute",
+    "holyArmor",
+    "ruby",
+    "card:seed",
+    "card:plasma",
+    "windArmor",
+    "focusDraught",
+    "mirrorArmor",
+    "card:surge",
+    "topaz",
+    "card:ward",
+    "card:magnify",
+    "card:itch",
+    "card:sun",
+    "ring",
+    "card:solitude",
+    "channelDraught",
+    "card:rain",
+    "starFlask",
+    "crown",
+    "card:bone",
+    "card:undertow",
+    "thornCrown",
+    "card:thorn",
+    "card:guardian",
+    "strideGem",
+    "sightCrown",
+    "card:gust",
+    "card:ember",
+    "card:storm",
+    "card:lattice",
+    "channelGem",
+    "card:tide",
+    "healingSap",
+    "card:eclipse",
+    "card:rite",
+    "card:water",
+    "curseGem",
+    "card:grove",
+    "quickArmor",
+    "card:kiln",
+    "curseArmor",
+    "silver",
+    "card:moth",
+    "card:palimpsest",
+    "dewNeck",
+    "card:heat",
+    "card:bastion",
+    "insightDew",
+    "earthArmor",
+    "card:square",
+    "curseNeck",
+    "card:conduit",
+    "curseRing",
+    "card:discord",
+    "card:resonance",
+    "sapphire",
+    "card:rot",
+    "channelRing",
+    "gold",
+    "stoneArmor",
+    "card:fog",
+    "bronze",
+    "card:terra",
+    "card:root",
+    "waterArmor",
+    "fireArmor",
+    "focusRing",
+    "card:keystone",
+    "focusGem",
+    "insightGem",
+    "card:corner",
+    "recallGem",
+    "card:quicksilver",
+    "card:ignis",
+    "card:milky",
+    "card:rust"
+  ],
+  "startGem": "emerald",
+  "battle": {
+    "turn": 3,
+    "enemyFirst": false,
+    "phase": "activate",
+    "columns": 7,
+    "rows": 6,
+    "grid": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        {
+          "uid": 29,
+          "id": "water",
+          "upgrade": false,
+          "used": 2,
+          "lastActivatedTurn": 2,
+          "lastActivationElement": "Water",
+          "charge": 0,
+          "hp": 0,
+          "maxHp": 0,
+          "ward": 0,
+          "element": "Water",
+          "transmuted": false,
+          "placed": 1,
+          "lock": false,
+          "sever": false,
+          "freeze": 0,
+          "zeroWard": false,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          }
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false,
+          "used": 0,
+          "lastActivatedTurn": 0,
+          "lastActivationElement": null,
+          "charge": 0,
+          "hp": 0,
+          "maxHp": 0,
+          "ward": 0,
+          "element": "Arcane",
+          "transmuted": false,
+          "placed": 3,
+          "lock": false,
+          "sever": false,
+          "freeze": 0,
+          "zeroWard": false,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          }
+        }
+      ],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [
+        {
+          "uid": 38,
+          "id": "solitude",
+          "upgrade": false,
+          "used": 2,
+          "lastActivatedTurn": 3,
+          "lastActivationElement": "Light",
+          "charge": 0,
+          "hp": 0,
+          "maxHp": 0,
+          "ward": 0,
+          "element": "Light",
+          "transmuted": false,
+          "placed": 2,
+          "lock": false,
+          "sever": false,
+          "freeze": 0,
+          "zeroWard": false,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          }
+        }
+      ]
+    ],
+    "corruptions": {},
+    "deck": [
+      {
+        "uid": 2,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 7,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 8,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 11,
+        "id": "focus",
+        "upgrade": false
+      },
+      {
+        "uid": 49,
+        "id": "discord",
+        "upgrade": false
+      }
+    ],
+    "hand": [],
+    "discard": [
+      {
+        "uid": 1,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 4,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 5,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 22,
+        "id": "guardian",
+        "upgrade": false
+      },
+      {
+        "uid": 12,
+        "id": "sapling",
+        "upgrade": false
+      },
+      {
+        "uid": 6,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 3,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 42,
+        "id": "transmute",
+        "upgrade": false
+      },
+      {
+        "uid": 9,
+        "id": "familiar",
+        "upgrade": false
+      }
+    ],
+    "destroyed": [],
+    "enemies": [
+      {
+        "uid": 52,
+        "type": "Mote",
+        "x": 3,
+        "y": 8,
+        "restless": 0,
+        "born": 10,
+        "enemy": "ashling",
+        "count": 2,
+        "id": "ashling",
+        "name": "Ashling 1",
+        "tier": "Mote",
+        "element": "Fire",
+        "hp": -6,
+        "movement": "Stalker",
+        "rotation": [
+          {
+            "name": "Ash breath",
+            "element": "Arcane",
+            "burn": 2
+          },
+          {
+            "name": "Coal",
+            "damage": 5,
+            "element": "Fire"
+          }
+        ],
+        "signature": "Opens with Burn.",
+        "counter": "Keep Bracelet Guard ready for incoming attacks; ongoing status damage bypasses it.",
+        "nemesis": "Slow decks",
+        "grouped": true,
+        "speed": 1,
+        "entityUid": 52,
+        "maxHp": 18,
+        "cycle": 1,
+        "buff": 0,
+        "guard": 0,
+        "status": {
+          "burn": 0,
+          "poison": 0,
+          "corrode": 0
+        }
+      },
+      {
+        "uid": 54,
+        "type": "Mote",
+        "x": 3,
+        "y": 8,
+        "restless": 0,
+        "born": 10,
+        "enemy": "ashling",
+        "count": 2,
+        "id": "ashling",
+        "name": "Ashling 2",
+        "tier": "Mote",
+        "element": "Fire",
+        "hp": -2,
+        "movement": "Stalker",
+        "rotation": [
+          {
+            "name": "Ash breath",
+            "element": "Arcane",
+            "burn": 2
+          },
+          {
+            "name": "Coal",
+            "damage": 5,
+            "element": "Fire"
+          }
+        ],
+        "signature": "Opens with Burn.",
+        "counter": "Keep Bracelet Guard ready for incoming attacks; ongoing status damage bypasses it.",
+        "nemesis": "Slow decks",
+        "grouped": true,
+        "speed": 1,
+        "entityUid": 52,
+        "maxHp": 18,
+        "cycle": 2,
+        "buff": 0,
+        "guard": 0,
+        "status": {
+          "burn": 0,
+          "poison": 0,
+          "corrode": 0
+        }
+      }
+    ],
+    "order": 3,
+    "firstAttackTurn": 3,
+    "permanent": {
+      "focus": 0
+    },
+    "next": {
+      "focus": 0,
+      "insight": 0
+    },
+    "shields": [],
+    "bracelets": [
+      {
+        "uid": 13,
+        "block": 0,
+        "element": "Earth",
+        "name": "Bronze Bracelet"
+      }
+    ],
+    "armorBlock": 0,
+    "jobs": [],
+    "reaction": null,
+    "relief": 0,
+    "mirror": false,
+    "healUses": {},
+    "huskConverted": false,
+    "focus": 1,
+    "channel": 1,
+    "insight": 0,
+    "revealInsight": 4,
+    "milky": false
+  },
+  "reward": {
+    "cards": null,
+    "boss": false,
+    "gem": false,
+    "setting": false
+  },
+  "event": "dew",
+  "quest": false,
+  "revealedArchon": "hart"
+}

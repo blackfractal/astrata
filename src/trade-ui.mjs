@@ -12,7 +12,7 @@ const slots = {
 function details(ctx, x, kind) {
   const d = (kind === "item" ? items : cards)[x.id];
   const gem = kind === "item" && ctx.o.inventory.find((g) => g.uid === x.gem);
-  return `<p>${ctx.text(d.text)}</p>${x.upgrade && d.upgrade ? `<p>Upgrade: ${ctx.text(d.upgrade.text)}</p>` : ""}${kind === "card" ? `<p>${d.element} · ${d.type} · ${d.focus} Focus · ${d.channel} Channel · ${d.limit < 0 ? "∞" : d.limit} activations${x.upgrade ? " · Upgraded" : ""}</p>` : ""}${gem ? `<p class="trade-gem">${items[gem.id].name}: ${ctx.text(items[gem.id].text)}<br>Gem returns to Satchel.</p>` : ""}`;
+  return `<p>${ctx.text(d.text)}</p>${x.upgrade && d.upgrade ? `<p>Upgrade: ${ctx.text(d.upgrade.text)}</p>` : ""}${kind === "card" ? `<p>${d.element} · ${d.type} · ${d.focus} Focus · ${d.channel} Channel · ${d.limit < 0 ? "∞" : d.limit} activations${x.upgrade ? " · Upgraded" : ""}</p>` : ""}${gem ? `<p class="trade-gem">${items[gem.id].name}: ${ctx.text(items[gem.id].text)}<br>The socketed Gem is given away with this Setting.</p>` : ""}`;
 }
 function tradeChooser(ctx, index) {
   if (ctx.busy()) return;
@@ -26,8 +26,9 @@ function tradeChooser(ctx, index) {
     key = isItem ? "tradeItem" : "tradeCard";
   const assetMarkup = (x) => {
     const d = (isItem ? items : cards)[x.id],
-      eligible = actions.some((a) => a[key] === x.uid);
-    return `<article class="trade-asset ${eligible ? "" : "unavailable"}" data-trade-asset="${x.uid}"><button class="trade-select" data-trade-select="${x.uid}" draggable="${eligible}" ${eligible ? "" : "disabled"} aria-pressed="false">${ctx.img((isItem ? "item-" : "card-") + x.id)}<b>${d.name}${x.upgrade ? " +" : ""}</b><small>${x.equippedSlot ? slots[x.equippedSlot] : isItem ? "Satchel" : "Grimoire"}</small></button>${x.reason ? `<small>${ctx.esc(x.reason)}</small>` : ""}<details><summary>View details</summary>${details(ctx, x, trade.kind)}</details></article>`;
+      eligible = actions.some((a) => a[key] === x.uid),
+      gem = isItem && ctx.o.inventory.find((g) => g.uid === x.gem);
+    return `<article class="trade-asset ${eligible ? "" : "unavailable"}" data-trade-asset="${x.uid}"><button class="trade-select" data-trade-select="${x.uid}" draggable="${eligible}" ${eligible ? "" : "disabled"} aria-pressed="false"><span class="trade-asset-art">${ctx.img((isItem ? "item-" : "card-") + x.id)}${gem ? `<span class="fitted-gem" data-fitted-gem="${gem.uid}" aria-label="Includes socketed ${ctx.esc(items[gem.id].name)}" title="${ctx.esc(items[gem.id].name)} is given away with this Setting">${ctx.img("item-" + gem.id)}</span>` : ""}</span><b>${d.name}${x.upgrade ? " +" : ""}</b><small>${x.equippedSlot ? slots[x.equippedSlot] : isItem ? "Satchel" : "Grimoire"}</small>${isItem && x.gem ? `<small>Includes ${items[ctx.o.inventory.find((g) => g.uid === x.gem).id].name}</small>` : ""}</button>${x.reason ? `<small>${ctx.esc(x.reason)}</small>` : ""}<details><summary>View details</summary>${details(ctx, x, trade.kind)}</details></article>`;
   };
   const group = (title, list) =>
     list.length
@@ -69,7 +70,7 @@ function tradeChooser(ctx, index) {
     const x = assets.find((x) => x.uid === uid),
       d = (isItem ? items : cards)[x.id];
     ctx.modal.querySelector(".trade-selection").textContent =
-      `Offer ${d.name}${x.upgrade ? " +" : ""}${x.equippedSlot ? " · " + slots[x.equippedSlot] : ""}`;
+      `Offer ${d.name}${x.upgrade ? " +" : ""}${isItem && x.gem ? " with " + items[ctx.o.inventory.find((g) => g.uid === x.gem).id].name : ""}${x.equippedSlot ? " · " + slots[x.equippedSlot] : ""}`;
     confirm.disabled = false;
     zone.classList.add("has-offer");
   };

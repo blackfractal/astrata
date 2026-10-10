@@ -5,10 +5,12 @@ A local, replayable collection of Astrata puzzles and teaching positions. Preser
 | Situation | Seed | Entry points | Skills |
 |---|---:|---|---|
 | [Cinder Hart: The Last Spark](cinder-hart-last-spark/README.md) | 62551554 | Full battle; second Stampede; final turn | Resource planning, recalls, positional defense, elemental relay, recognizing lethal |
+| [Two Wings at the Crossroads](two-wings/README.md) | 303001354 | Opening map | Initiative, enemy movement, elemental equipment, HP versus travel, forecast interpretation |
+| [Between Two Eidolons](two-eidolons/README.md) | 303001354 | Round 11 map | Forced follow-up encounters, initiative, elemental equipment, Tavern routing |
 
 ## Open a situation
 
-Open its folder and double-click the relevant **Open ... .cmd** file, then click **Continue** in Astrata. Every launch starts a fresh copy. The preserved executable is used even if astrata_01 later changes.
+Open its folder and double-click the relevant **Open ... .cmd** file, then click **Continue** in Astrata. Every launch starts a fresh copy. The preserved executable is used even if the main game later changes.
 
 Your normal game need not be closed. Practice saves, Archives, achievements and attempt traces go into this catalog's `_sessions` folder, never the normal `%APPDATA%/astrata` profile. The game itself still calls the button Continue and the app Astrata; these are isolated copies, not a new game mode.
 
@@ -35,4 +37,3 @@ This catalog is a local preservation copy, not an off-device backup. Back up `_k
 ## Adding another situation
 
 Use this entry as the format. Extract states from the archived run rather than reconstructing from a screenshot. Copy the matching release ZIP once, checksum it, and reuse that build for later entries. Never overwrite a named snapshot to represent newer balance rules: create a new variant and record its parent. Validate legality, outcome and UI loading before listing it here.
-

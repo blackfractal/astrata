@@ -252,6 +252,20 @@ function normalizeEquipmentHealing(state) {
   }
   if (state.checkpoint) normalizeEquipmentHealing(state.checkpoint);
 }
+// Printed activation capability counts even when spent, frozen, conditional,
+// or still charging. Never recurse into a neighbor's calculated power.
+export function hasDirectDamageActivation(c) {
+  if (!c) return false;
+  const f = cardEffects(c);
+  return !!(f.damage || f.hpDamage || f.randomDamage);
+}
+export function damageBonusNeighbors(b, c, i) {
+  return gridNeighbors(b, i).filter(
+    (j) =>
+      !cardEffects(c).adjDamageOnly ||
+      hasDirectDamageActivation(top(b.grid[j])),
+  );
+}
 export function cardPower(b, c, i) {
   const d = cards[c.id],
     f = cardEffects(c);
@@ -273,7 +287,7 @@ export function cardPower(b, c, i) {
           : 0),
       0,
     );
-  if (f.adj) n += gridNeighbors(b, i).length * f.adj;
+  if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square && squarePattern(b, c, i).length) n *= 2;
   const level = b.grid[i].findIndex((x) => x.uid === c.uid) + 1;
@@ -426,7 +440,10 @@ export function tradeAssets(s, trade) {
       const d = defs[x.id],
         socketed = isItem && s.inventory.some((y) => y.gem === x.uid);
       const reason =
-        d.cursed || (!isItem && d.type === "Hex")
+        d.cursed ||
+        (isItem &&
+          items[s.inventory.find((g) => g.uid === x.gem)?.id]?.cursed) ||
+        (!isItem && d.type === "Hex")
           ? "Cannot trade a Curse or Hex"
           : socketed
             ? "Remove this Gem at a Tavern before trading it"
@@ -608,6 +625,8 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.11",
+          "2.1.10",
           "2.1.9",
           "2.1.8",
           "2.1.7",
@@ -3251,7 +3270,7 @@ export class Game {
             const key = isItem ? "tradeItem" : "tradeCard";
             add(
               "eventChoice",
-              `${c.label} · offer ${d.name}${asset.upgrade ? " +" : ""}`,
+              `${c.label} · offer ${d.name}${asset.upgrade ? " +" : ""}${isItem && asset.gem ? " with " + items[this.getItem(asset.gem).id].name : ""}`,
               { index, [key]: asset.uid },
               { ...c },
               { gold: c.cost || 0, [key]: asset.uid },
@@ -3826,10 +3845,12 @@ export class Game {
       case "eventChoice": {
         const c = events.find((e) => e.id === s.event).choices[a.index];
         if (a.tradeItem != null) {
-          const offered = this.getItem(a.tradeItem);
+          const offered = this.getItem(a.tradeItem),
+            gem = offered.gem ? this.getItem(offered.gem) : null;
           this.log(
-            `Traded ${items[offered.id].name} (item ${offered.uid})${offered.gem ? "; socketed Gem returned to Satchel" : ""}.`,
+            `Traded ${items[offered.id].name} (item ${offered.uid})${gem ? ` with socketed ${items[gem.id].name} (item ${gem.uid})` : ""}.`,
           );
+          if (gem) this.removeItem(gem.uid);
           this.removeItem(a.tradeItem);
         }
         if (a.tradeCard != null) {

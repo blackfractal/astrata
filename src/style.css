@@ -2510,6 +2510,20 @@ header {
   background: transparent;
   padding: 5px;
 }
+.trade-asset-art {
+  position: relative;
+  display: block;
+  width: 74px;
+  height: 74px;
+  pointer-events: none;
+}
+.trade-asset-art .fitted-gem {
+  width: 28px;
+  height: 28px;
+  right: -5px;
+  top: auto;
+  bottom: -3px;
+}
 .trade-select img {
   width: 100%;
   height: 74px;
@@ -3184,7 +3198,8 @@ header {
   overflow: hidden;
   border: 2px solid var(--corruption-color);
   border-radius: 50%;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--corruption-color) 45%, transparent);
+  box-shadow: 0 0 10px
+    color-mix(in srgb, var(--corruption-color) 45%, transparent);
   pointer-events: none;
   background: #0c1011;
   contain: paint;

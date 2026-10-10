@@ -20,8 +20,8 @@ test("live power follows neighbors, Sever, row elements, HP, upgrades and snapsh
     b = g.s.battle,
     c = put(g, "thorn", 8);
   assert.equal(cardPower(b, c, 8), 4);
-  put(g, "shield", 7);
-  put(g, "shield", 9);
+  put(g, "blast", 7);
+  put(g, "blast", 9);
   assert.equal(cardPower(b, c, 8), 8);
   b.grid[9][0].sever = true;
   assert.equal(cardPower(b, c, 8), 6);
@@ -56,7 +56,7 @@ test("target preview matches actual single-card hits without changing state, RNG
       c = put(g, "thorn", 8),
       e = b.enemies[0];
     Object.assign(e, config);
-    put(g, "shield", 7);
+    put(g, "blast", 7);
     const before = JSON.stringify(g.s),
       preview = attackPreview(b, c, 8, e);
     assert.equal(JSON.stringify(g.s), before);

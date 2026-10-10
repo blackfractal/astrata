@@ -8,6 +8,7 @@ import {
   attunementElements,
   attunementSourceElement,
   gridNeighbors,
+  damageBonusNeighbors,
   squarePattern,
   cardAllowance,
   corner,
@@ -103,7 +104,12 @@ export function boardConnections(b) {
       d.growth ||
       (active && (d.effects.adj || d.effects.adjHeal || d.effects.adjInsight))
     )
-      for (const j of m.neighbors)
+      for (const j of d.effects.adj &&
+      !d.growth &&
+      !d.effects.adjHeal &&
+      !d.effects.adjInsight
+        ? damageBonusNeighbors(b, c, i)
+        : m.neighbors)
         add(
           j,
           i,

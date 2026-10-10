@@ -1,6 +1,7 @@
 import { cards, items, enemies, VERSION } from "./content.mjs";
 import {
   activationGrowth,
+  hasDirectDamageActivation,
   defensiveElement,
   offense,
   defenseRate,
@@ -346,7 +347,14 @@ export class WeightedPolicy {
           !ns.some((i) => b.grid[i].at(-1).element === c.condition)
         )
           n -= 20;
-        if (e.adj) n += ns.length * 2;
+        if (e.adj)
+          n +=
+            ns.filter(
+              (i) =>
+                !b.grid[i].at(-1).sever &&
+                (!e.adjDamageOnly ||
+                  hasDirectDamageActivation(b.grid[i].at(-1))),
+            ).length * 2;
         if (e.adjInsight)
           n += ns.filter((i) => !b.grid[i].at(-1).sever).length * 2;
         if (e.matchingDamage || e.matchingShield)
@@ -381,7 +389,10 @@ export class WeightedPolicy {
       }
       case "recall":
         if (b.grid[a.slot].at(-1)?.mending)
-          return [-20, "Let the pending repair finish rather than canceling it."];
+          return [
+            -20,
+            "Let the pending repair finish rather than canceling it.",
+          ];
         return [
           f.spent && b.grid.filter((x) => x.length).length > 10 ? 3 : -15,
           "Clear exhausted cards only when grid space is scarce.",
@@ -645,7 +656,10 @@ export class WeightedPolicy {
           "Buy Archon information only with surplus Gold.",
         ];
       case "giveTraveler":
-        return [-5, "Keep Gold for survival; this gift offers no known material benefit."];
+        return [
+          -5,
+          "Keep Gold for survival; this gift offers no known material benefit.",
+        ];
       case "declineTraveler":
         return [0.1, "Politely decline the request before continuing."];
       case "leave":

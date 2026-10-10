@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "id": "two-eidolons",
+  "title": "Between Two Eidolons",
+  "owner": "Jonathan",
+  "capturedAt": "2026-10-06T16:59:52.803061+00:00",
+  "runId": "d44aafa5-930d-4fd2-a77e-198d19c5c134",
+  "seed": 303001354,
+  "defaultSnapshot": "decision",
+  "build": {
+    "package": "2.1.13",
+    "rules": "2.1.10",
+    "content": "2.1.10",
+    "archive": "../_builds/astrata-2.1.13.zip",
+    "sha256": "4563efbb0573178dca332ccbafcc996991475e135283c69612cd17793b7f0bfd",
+    "bytes": 444111541
+  },
+  "snapshots": {
+    "decision": {
+      "file": "snapshots/decision.json",
+      "sha256": "be166438cec199861e30f5dd2e3793bb4fbdf46c15cfdce58602f6b491d1810c",
+      "sourceEventIndex": 196,
+      "sourceEventIndexBasis": "zero-based JSONL line",
+      "recordedAt": "2026-10-06T16:54:49.046Z",
+      "hp": 53,
+      "round": 11,
+      "mode": "field"
+    }
+  },
+  "skills": [
+    "Enemy initiative",
+    "Guaranteed enemy movement",
+    "Elemental equipment",
+    "Route efficiency",
+    "Choosing the less costly ambush"
+  ],
+  "outcome": {
+    "status": "Position analysis, no full-fight optimality proof",
+    "preferredLine": "Pre-empt Shard-Walker; accept subsequent Dervish ambush"
+  },
+  "notes": "Exact archived pre-movement state recovered after Jonathan had begun the Shard-Walker fight. Trace truncated at decision. Shares frozen executable with Two Wings; actual ongoing run untouched."
+}

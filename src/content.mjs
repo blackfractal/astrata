@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.10",
-  content: "2.1.10",
+  rules: "2.1.12",
+  content: "2.1.12",
   observation: 2,
   actions: 7,
 };
@@ -408,13 +408,13 @@ card(
 );
 card(
   "thorn",
-  "Thorn Choir",
+  "Thorn Eruption",
   "Earth",
   "Spell",
   1,
   3,
-  { damage: 4, adj: 2 },
-  "Deal 4 damage, +2 per neighbor.",
+  { damage: 4, adj: 2, adjDamageOnly: true },
+  "Deal 4 damage, +2 per orthogonally adjacent card with a direct-damage activation. Spent cards and charged attacks count; utility, Guard-only and status-only cards do not.",
 );
 card(
   "bloom",
@@ -1581,7 +1581,7 @@ export const events = [
         cost: 25,
         card: "conduit",
       },
-      { label: "Accept a cutting · receive Thorn Choir", card: "thorn" },
+      { label: "Accept a cutting · receive Thorn Eruption", card: "thorn" },
     ],
   },
   {

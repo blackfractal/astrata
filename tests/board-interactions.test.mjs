@@ -245,7 +245,8 @@ test("Real effects connect: Keystone allowance, growth and adjacent damage, with
     ),
   );
   const snapshot = structuredClone(g.s);
-  assert.ok(boardConnections(b).some((l) => l.from === 1 && l.to === 8));
+  assert.ok(!boardConnections(b).some((l) => l.from === 1 && l.to === 8));
+  assert.ok(boardConnections(b).some((l) => l.from === 9 && l.to === 8));
   assert.deepEqual(g.s, snapshot);
   b.grid[1][0].sever = true;
   assert.ok(!boardConnections(b).some((l) => l.from === 1 || l.to === 1));

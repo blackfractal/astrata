@@ -31,10 +31,12 @@ for (const method of ["drag", "click"]) {
     JSON.stringify({ width: 1280, fast: true }),
   );
   const app = await electron.launch({
-    executablePath: path.resolve("release/Astrata/Astrata.exe"),
-    args: ["--user-data-dir=" + profile],
+    executablePath: path.resolve("node_modules/electron/dist/electron.exe"),
+    timeout: 30000,
+    args: [path.resolve("."), "--user-data-dir=" + profile],
   });
   const p = await app.firstWindow();
+  p.setDefaultTimeout(15000);
   p.on("pageerror", (e) => report.errors.push(e.message));
   try {
     await p.locator('[data-ui="continue"]').click();
@@ -50,6 +52,14 @@ for (const method of ["drag", "click"]) {
     );
     await p.locator('[data-event-trade="0"]').click();
     assert.equal(await p.locator(".trade-asset").count(), 3);
+    assert.equal(
+      await p
+        .locator(
+          `[data-trade-asset="${right}"] .fitted-gem[data-fitted-gem="${gem.uid}"] img`,
+        )
+        .count(),
+      1,
+    );
     assert.match(
       await p.locator(".trade-belongings").textContent(),
       /Equipped.*Right wrist.*Left wrist.*Satchel/s,
@@ -57,7 +67,7 @@ for (const method of ["drag", "click"]) {
     await p.locator('[data-trade-asset="' + right + '"] summary').click();
     assert.match(
       await p.locator('[data-trade-asset="' + right + '"]').textContent(),
-      /Sapphire.*Gem returns to Satchel/s,
+      /Sapphire.*socketed Gem is given away/s,
     );
     await p.locator(".trade-reward summary").click();
     assert.match(await p.locator(".trade-reward").textContent(), /Grove Titan/);
@@ -81,7 +91,10 @@ for (const method of ["drag", "click"]) {
     if (method === "drag")
       await p
         .locator('[data-trade-select="' + offered + '"]')
-        .dragTo(p.locator("[data-trade-drop]"));
+        .dragTo(p.locator("[data-trade-drop]"), {
+          sourcePosition: { x: 10, y: 10 },
+          targetPosition: { x: 15, y: 15 },
+        });
     else {
       await p.locator('[data-trade-select="' + offered + '"]').click();
       await p.locator("[data-trade-confirm]").click();
@@ -99,7 +112,7 @@ for (const method of ["drag", "click"]) {
     assert.equal(saved.deck.filter((x) => x.id === "grove").length, 1);
     if (method === "drag") {
       assert.equal(saved.equipment.wrist2, null);
-      assert.ok(saved.inventory.some((x) => x.uid === gem.uid));
+      assert.ok(!saved.inventory.some((x) => x.uid === gem.uid));
     } else assert.equal(saved.equipment.wrist2, right);
     const ids = await fs.readdir(path.join(profile, "runs"));
     const events = (
@@ -119,7 +132,7 @@ for (const method of ["drag", "click"]) {
       allBracelets: true,
       backAndEscapeFree: true,
       selectedCopyOnly: true,
-      socketedGemRetained: true,
+      socketedGemSurrenderedWithSelectedSetting: true,
     });
   } finally {
     await app.close();
