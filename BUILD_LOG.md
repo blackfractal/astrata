@@ -1539,3 +1539,40 @@ Discussed only, not implemented: Prismatic Core/Patient Seed and possibly Eclips
 ## Post-build polish — Object seeds/Core and Guardian names, round138
 
 2026-10-10. Jonathan approved Prismatic Core, Patient Seed and Eclipse Seed as Objects; Aqua Veil becomes Aqua Guardian and Ember Nest becomes Ember Guardian. Package2.1.23/content2.1.19/design4.176; rules2.1.15 unchanged. Updated live card definitions and main design references. Stable prism/seed/eclipse/aqua/ember IDs, art, costs and effects retained, preserving owned cards and saves. Existing Energy Guardian is Arcane/10HP, swallowing excess from its killing hit; Guardian remains a name rather than a new type/tag. Twenty-one charge/healing/interception tests and direct type/name checks pass. Portable app and ZIP refreshed for delivery. Additional time approximately4minutes.
+
+
+## Post-build polish — Preserve Shield attunement on confirmation, round139
+
+2026-10-10. Jonathan requested that double-click always activate Shield with the current pending choice, including Arcane, and that clicking Activate after selecting an element work directly. Package2.1.24/content2.1.20/design4.177; rules2.1.15 unchanged. Previously the selected card Activate click was swallowed and clicking its body canceled targeting. Targetless elemental activation now commits on the control's single click. Clicking the pending source card preserves preview; its double-click also commits targetless effects. Neutral selection retains the chooser on a single click; double-click commits Arcane. Confirmation strip names the element. Cancel/Escape/outside click discard preview only, without altering committed Guard/relays or Transmute. Channel/use spent once. Shared Attune chooser retains attack targeting and Familiar behavior. Design and glossary clarified.
+
+Ten isolated UI cases passed: selected single/double, neutral double, selected card-body double, cancel/click-away reset, explicit Unattune, fixed Transmute, no-neighbor default, and dragged selection. Actual run archive confirmed Guard element, relay and exactly one Channel/use; no renderer errors. Thirteen elemental/armor rule tests and eight existing packaged attack double-click UI cases pass. Water Guard screenshot reviewed. Portable app and CRC-checked ZIP refreshed; actual player profile untouched. Additional time approximately10minutes.
+
+
+## Post-build polish — Cinder Snap, Familiar and Sapling art, round140
+
+2026-10-10. Jonathan requested a snapping-finger flame for Cinder Snap, a four-legged animal spirit made of energy for Familiar, and a youthful male tree-being with an intelligent determined face for Sapling. Package2.1.25/content2.1.21; rules2.1.15/design4.177 unchanged. Built-in image_gen generated painterly square illustrations using local style references. Cinder Snap v4 depicts a hand snapping a flame, Familiar v3 a translucent four-legged fox/wolf spirit, Sapling v4 a rooted youthful tree with bark face and living leafy branches. Familiar v2 draft retained; v3 removes an unintended totem copied from its style reference. All previous artwork preserved. Selected paths, full prompts, references, source paths, timestamps and SHA256 hashes stored in reports/companion-snap-art-revisions.json and art manifest; asset selections updated. No underlying model identity inferred beyond image_gen.
+
+Isolated Electron UI verifies all three selected images load in full-art details with correct names and no renderer errors. Board and detail screenshots inspected; game rules unchanged. Portable app and CRC-checked ZIP rebuilt. Actual player profile untouched, no commit/push. Additional time approximately8minutes including image generation and revision.
+
+## Post-build balance — Spoolkeeper corruption pressure, round141
+
+2026-10-11. Jonathan requested increasing regular Spoolkeeper's hard cap from two Corruptions to ten after covering the initial pair stopped further casts. Package2.1.26/rules2.1.16/content2.1.22/design4.178. Cap is now10, still two Nauseas per cycle; covered spaces count until repaired. Updated enemy description and main design table. Saved fights adopt the new cap and description through normalization, preserving HP, cycle, existing Corruptions and RNG. Tutorial Patient Spoolkeeper unchanged.42 targeted tests pass, including full repeated cycles through ten covered spaces, repair freeing capacity, and old-save adoption. Portable app and CRC-checked ZIP refreshed. No direct player-profile edits. Additional time approximately5minutes.
+
+## Post-build fix — Continue compatibility, round142
+
+2026-10-11. Jonathan reported Continue stopped working after2.1.26. The rules bump omitted previous rules2.1.15 from the explicit save compatibility allowlist; loading rejected the intact save. Package2.1.27 restores compatibility, retaining rules2.1.16/content2.1.22/design4.178. Updated migration regression to use actual old-version metadata;42 targeted tests pass. Packaged Electron Continue verified using isolated copy of Jonathan's exact61HP Censer Engine battle save, comparing battle state and HP/gold/RNG/mode/stratum, with zero renderer errors and original save byte-for-byte unchanged. Evidence: reports/continue-save-ui-verification.json; reusable tools/continue-save-ui-test.mjs. Portable and ZIP rebuilt. Additional time approximately5minutes. Previous round's migration test covered old enemy data but not old version metadata; corrected here.
+
+
+## Post-build polish — Draw labels and Grimoire count, round143
+
+2026-10-11. Jonathan requested Draw, Discard and Destroyed at the bottom-left of battle, and an easily visible total deck count. Package2.1.28; rules/content/design unchanged. Footer and pile popup use the requested names. Header Grimoire (N) and Grimoire popup display full owned deck size, independent of remaining battle draw count. Syntax check and isolated packaged UI verified labels, both popups and29-card total with no renderer errors; screenshot reviewed. Normal game kept running and autosaving independently; no direct player-profile writes. Portable and ZIP refreshed. Additional time approximately4minutes.
+
+
+## Post-build polish — Jeweler two-row satchel, round144
+
+2026-10-11. Jonathan requested six items per row at the Jeweler so all12 satchel slots fit without scrolling. Package2.1.29; rules/content/design unchanged. Scoped six-column grid plus compact Jeweler headings, spacing and equipment tiles; ordinary Inventory keeps its four-column layout. Isolated full12-item Jeweler check confirms exactly6 columns/2 rows and service scrollHeight=clientHeight=430px, with no renderer errors. Screenshot reviewed. Portable app and ZIP rebuilt. No player-profile edits. Additional time approximately6minutes.
+
+
+## Post-build fix — Elemental Ward defense, round145
+
+2026-10-11. Jonathan reported Water Magnifier losing15 value to King Bombadier15Fire. Archive event1386 confirms16to1 while HP remained54. Updated Wards to shared Shield/Bracelet elemental protection, replacing the older neutral-Ward exception: +50% favorable capacity/-50% weak, effective protection rounded up and unused capacity converted back. The reported hit now spends10 Ward and leaves6. Overflow stays base damage; impact displays actual value lost. Defense action metadata, preview, AI evaluation, glossary and design4.179 updated. Package2.1.30/rules2.1.17/content2.1.23; prior2.1.16 explicitly retained in save compatibility.36 targeted tests pass, including147 Ward/element combinations and actual Water Magnifier+Lattice activation, save migration and impact amounts. Exact pre-hit archive replay verified headlessly and in isolated UI (16to6, HP54to54, no renderer errors); reports/elemental-ward-verification.json. Portable/ZIP rebuilt. Normal save not edited or healed retroactively. Additional time approximately8minutes.

@@ -277,7 +277,7 @@ function phaseBar(b, actions) {
   </nav>`;
 }
 function header(o) {
-  return `<header><span class="brand">ASTRATA</span><div class="row stats"><span><b class="hp">${o.hp}</b> / ${o.maxHp} HP</span><span><b class="gold">${o.gold}</b> Gold</span><span>Stratum <b>${o.stratum || 1}</b> · Round <b>${o.field.round || "—"}</b></span></div><div class="row"><button data-ui="grimoire">Grimoire</button><button data-ui="inventory">Inventory</button><button data-ui="pause">☰ Menu</button></div></header>`;
+  return `<header><span class="brand">ASTRATA</span><div class="row stats"><span><b class="hp">${o.hp}</b> / ${o.maxHp} HP</span><span><b class="gold">${o.gold}</b> Gold</span><span>Stratum <b>${o.stratum || 1}</b> · Round <b>${o.field.round || "—"}</b></span></div><div class="row"><button data-ui="grimoire">Grimoire (${o.deck.length})</button><button data-ui="inventory">Inventory</button><button data-ui="pause">☰ Menu</button></div></header>`;
 }
 function sidebar(o) {
   const selected =
@@ -518,7 +518,7 @@ function render(frame = null) {
       b.reaction
         ? `<div class="panel incoming-attack" style="margin-top:12px"><h4>${b.reaction.name} · ${incomingDamageText(b.reaction)}</h4></div>`
         : `<div class="hand">${b.hand.map((c) => card(c, { select: true })).join("")}</div>`
-    }<div class="row"><button data-ui="piles" class="quiet">Grimoire ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
+    }<div class="row"><button data-ui="piles" class="quiet">Draw ${b.deck.length} · Discard ${b.discard.length} · Destroyed ${b.destroyed.length}</button><small>${Object.entries(
       o.status,
     )
       .filter(([k, v]) => v)
@@ -916,7 +916,7 @@ async function ui(name) {
       break;
     case "grimoire":
       dialog(
-        `<h2>Your Grimoire</h2><p>Unordered. Every card returns after battle.</p><div class="catalog">${game.s.deck.map((c) => card(c)).join("")}</div>`,
+        `<h2>Your Grimoire · ${game.s.deck.length} cards</h2><p>Unordered. Every card returns after battle.</p><div class="catalog">${game.s.deck.map((c) => card(c)).join("")}</div>`,
       );
       await tutorialSignal("grimoire");
       break;
@@ -926,7 +926,7 @@ async function ui(name) {
         ["deck", "discard", "destroyed"]
           .map(
             (k) =>
-              `<h2>${k === "deck" ? "Grimoire" : k}</h2><div class="catalog" style="margin-bottom:25px">${b[k].map((c) => card(c)).join("") || "<p>Empty</p>"}</div>`,
+              `<h2>${{ deck: "Draw", discard: "Discard", destroyed: "Destroyed" }[k]}</h2><div class="catalog" style="margin-bottom:25px">${b[k].map((c) => card(c)).join("") || "<p>Empty</p>"}</div>`,
           )
           .join(""),
       );

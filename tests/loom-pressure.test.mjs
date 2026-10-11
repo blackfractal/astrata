@@ -135,6 +135,48 @@ test("Nausea selects empty spaces adjacent to the most cards", () => {
   assert.notEqual(e.corruptionPlan[1].slot, 8);
 });
 
+test("Spoolkeeper keeps casting after covered Nausea, caps at ten and replaces repaired spaces", () => {
+  const g = arena("spoolkeeper"), b = g.s.battle, e = b.enemies[0];
+  for (let cycle = 0; cycle < 6; cycle++) {
+    round(g); // Spindle marks two, until the cap is reached.
+    assert.equal(e.corruptionPlan.length, cycle < 5 ? 2 : 0);
+    round(g); // Sick stitch applies the warning.
+    assert.equal(Object.keys(b.corruptions).length, Math.min(10, (cycle + 1) * 2));
+    for (const slot of Object.keys(b.corruptions))
+      if (!b.grid[slot].length) b.grid[slot] = [g.instance(g.newCard("blast"))];
+    round(g);
+    round(g);
+  }
+  delete b.corruptions[Object.keys(b.corruptions)[0]];
+  round(g);
+  assert.equal(e.corruptionPlan.length, 1);
+  round(g);
+  assert.equal(Object.keys(b.corruptions).length, 10);
+});
+
+test("Saved Spoolkeeper adopts ten-space cap without changing combat progress", () => {
+  const g = arena("spoolkeeper"), b = g.s.battle, e = b.enemies[0];
+  g.s.version = { ...g.s.version, rules: "2.1.15", content: "2.1.21" };
+  e.corruptionCap = 2;
+  e.signature = "Maximum two active Corruptions.";
+  e.hp = 55;
+  e.cycle = 6;
+  b.corruptions[33] = { kind: "nausea", source: e.uid };
+  b.corruptions[38] = { kind: "nausea", source: e.uid };
+  b.grid[33] = [g.instance(g.newCard("blast"))];
+  b.grid[38] = [g.instance(g.newCard("blast"))];
+  const loaded = new Game(0, structuredClone(g.s)), le = loaded.s.battle.enemies[0];
+  assert.equal(le.corruptionCap, 10);
+  assert.equal(le.signature, enemies.spoolkeeper.signature);
+  assert.equal(le.hp, 55);
+  assert.equal(le.cycle, 6);
+  assert.equal(loaded.s.rng, g.s.rng);
+  assert.deepEqual(loaded.s.battle.corruptions, b.corruptions);
+  prepareCorruption(loaded, le, enemies.spoolkeeper.rotation[0]);
+  assert.equal(le.corruptionPlan.length, 2);
+  assert.equal(enemies.mendingWarden.corruptionCap, 5, "tutorial remains unchanged");
+});
+
 test("Old battle rotations migrate without changing committed targets or consuming randomness", () => {
   const g = arena("hollowScribe"),
     b = g.s.battle,

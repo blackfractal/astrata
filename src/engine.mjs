@@ -625,6 +625,7 @@ function normalizeLoomRotations(s) {
       e.rotation = clone(d.rotation);
     }
     e.corruptionCap = d.corruptionCap;
+    if (e.id === "spoolkeeper") e.signature = d.signature;
   }
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
   if (s.tutorial?.finalStart?.battle)
@@ -762,6 +763,8 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.16",
+          "2.1.15",
           "2.1.14",
           "2.1.13",
           "2.1.12",
@@ -3669,9 +3672,9 @@ export class Game {
         for (const { c, i } of choices.wards)
           add(
             "ward",
-            `${cards[c.id].name} · ${c.ward} ward`,
+            `${cards[c.id].name} · ${c.ward} ${defensiveElement(b, c)} Ward`,
             { uid: c.uid, slot: i },
-            { ward: c.ward, column: i % MIND_COLUMNS },
+            { ward: c.ward, element: defensiveElement(b, c), column: i % MIND_COLUMNS },
           );
         for (const p of choices.shields)
           add(
@@ -4381,15 +4384,17 @@ export class Game {
       case "ward": {
         const c = b.grid[a.slot].find((c) => c.uid === a.uid),
           h = b.reaction;
-        const loss = Math.min(c.ward, h.damage);
-        c.ward -= loss;
-        h.damage -= loss;
+        const result = blockHit(c.ward, defensiveElement(b, c), h.damage, h.element);
+        const stopped = h.damage - result.remaining;
+        const loss = c.ward - result.block;
+        c.ward = result.block;
+        h.damage = result.remaining;
         h.weaknessBonus = 0;
         h.weaknessElement = null;
         if (!c.ward) c.zeroWard = true;
         this.presentIncomingNode(
           "defend",
-          { slot: a.slot, amount: loss, loss, name: "Ward absorbs" },
+          { slot: a.slot, amount: stopped, loss, name: "Ward absorbs" },
           { kind: "card", slot: a.slot },
         );
         this.advanceHit();

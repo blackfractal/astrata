@@ -274,7 +274,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
     inspectLinks(ctx, slot);
     const c = ctx.o.battle.grid[slot].at(-1),
       hasTarget = filtered().some((a) => a.target != null);
-    bar.innerHTML = `<strong>${cards[c.id].name} · ${element}</strong><span>${hasTarget ? "Choose attunement or enemy · double-click to attack the top enemy" : "Choose attunement, then Activate"}</span><div class="target-elements"></div>${hasTarget ? "" : "<button data-target-activate>Activate</button>"}<button data-target-cancel>Cancel</button>`;
+    bar.innerHTML = `<strong>${cards[c.id].name} · ${element}</strong><span>${hasTarget ? "Choose attunement or enemy · double-click to attack the top enemy" : "Choose attunement or double-click to activate the current choice"}</span><div class="target-elements"></div>${hasTarget ? "" : `<button data-target-activate>Activate · ${element}</button>`}<button data-target-cancel>Cancel</button>`;
     bar.querySelector("[data-target-cancel]").onclick = clearTargeting;
     const activate = bar.querySelector("[data-target-activate]");
     if (activate) activate.onclick = () => commit();
@@ -312,6 +312,18 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
       if (e.target.closest(`[data-activate-slot="${slot}"]`)) {
         e.preventDefault();
         e.stopImmediatePropagation();
+        // A selected elemental, targetless activation is ready to commit.
+        // Neutral keeps the chooser open on a single click; double-click
+        // commits it without changing the current choice.
+        if (element !== "Arcane" && filtered().every((a) => a.target == null))
+          commit();
+        return;
+      }
+      if (source?.contains(e.target)) {
+        // Clicking the selected card is not clicking away. In particular,
+        // preserve its preview through the click events before dblclick.
+        e.preventDefault();
+        e.stopImmediatePropagation();
         return;
       }
       const option = options.get(choiceAt(e.target));
@@ -326,7 +338,12 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
   ctx.app.addEventListener(
     "dblclick",
     (e) => {
-      if (!e.target.closest(`[data-activate-slot="${slot}"]`)) return;
+      const activationControl = e.target.closest(
+        `[data-activate-slot="${slot}"]`,
+      );
+      const targetlessCard =
+        source?.contains(e.target) && filtered().every((a) => a.target == null);
+      if (!activationControl && !targetlessCard) return;
       e.preventDefault();
       e.stopImmediatePropagation();
       commit();
@@ -1052,6 +1069,7 @@ function tavern(ctx) {
             )}${o.gold < TRAVELER_DONATION ? `<button disabled title="Not enough Gold">Give ${TRAVELER_DONATION} Gold</button>` : ""}</div>`
     }`;
   } else if (service === "equipment") {
+    content.classList.add("jeweler-content");
     content.innerHTML = `<p class="jeweler-fees">Socket or unsocket: 20 Gold per Gem; Amber Thought, Storm Opal and Clear Quartz: 35 Gold. Unsocket first to replace a Gem. Fitted Settings sell together with their Gem.</p><h3>Equipped</h3>${equipmentBody(ctx)}`;
     bindEquipment(ctx, content);
   } else if (service === "market") {
@@ -1292,9 +1310,9 @@ function incomingDetails(ctx) {
   const choices = ctx.actions
     .map((a) => {
       let note = "";
-      if (["block", "bracelet"].includes(a.type)) {
+      if (["block", "bracelet", "ward"].includes(a.type)) {
         const result = blockHit(
-          a.effects.block,
+          a.effects.block ?? a.effects.ward,
           a.effects.element,
           h.damage,
           h.element,
@@ -1303,8 +1321,6 @@ function incomingDetails(ctx) {
       }
       if (a.type === "armor")
         note = ` → ${a.effects.reflect ? 0 : Math.max(0, h.damage - a.effects.armor)} damage continues`;
-      if (a.type === "ward")
-        note = ` → ${Math.max(0, h.damage - a.effects.ward)} damage continues`;
       if (a.type === "intercept") {
         const result = allyHit(
           h,

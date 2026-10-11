@@ -1,0 +1,2467 @@
+{
+  "startEvent": 1228,
+  "actions": [
+    {
+      "type": "equip",
+      "item": 117,
+      "slot": "torso",
+      "label": "Equip Water Armor · torso",
+      "effects": {
+        "gear": {
+          "armor": 2
+        }
+      },
+      "costs": {},
+      "key": "[\"equip\",{\"item\":117,\"slot\":\"torso\"}]"
+    },
+    {
+      "type": "move",
+      "x": 4,
+      "y": 4,
+      "label": "Move to 5, 5",
+      "effects": {
+        "movement": 1,
+        "occupants": [
+          "Item"
+        ]
+      },
+      "costs": {},
+      "key": "[\"move\",{\"x\":4,\"y\":4}]"
+    },
+    {
+      "type": "leaveItem",
+      "label": "Leave item",
+      "effects": {
+        "skip": true
+      },
+      "costs": {},
+      "key": "[\"leaveItem\",{}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 1 Guard",
+      "effects": {
+        "block": 1,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 3 protection",
+      "effects": {
+        "armor": 3,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "place",
+      "uid": 100,
+      "slot": 32,
+      "label": "Place Machine Elves · slot 33 · 1 Focus",
+      "effects": {
+        "card": "elves",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":100,\"slot\":32}]"
+    },
+    {
+      "type": "place",
+      "uid": 24,
+      "slot": 24,
+      "label": "Place Rain Lantern · slot 25 · 0 Focus",
+      "effects": {
+        "card": "rain",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 0
+      },
+      "key": "[\"place\",{\"uid\":24,\"slot\":24}]"
+    },
+    {
+      "type": "place",
+      "uid": 7,
+      "slot": 17,
+      "label": "Place Shield · slot 18 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":7,\"slot\":17}]"
+    },
+    {
+      "type": "place",
+      "uid": 5,
+      "slot": 16,
+      "label": "Place Shield · slot 17 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":5,\"slot\":16}]"
+    },
+    {
+      "type": "place",
+      "uid": 2,
+      "slot": 31,
+      "label": "Place Blast · slot 32 · 1 Focus",
+      "effects": {
+        "card": "blast",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":2,\"slot\":31}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 16,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 5,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 31,
+      "target": 180,
+      "element": "Water",
+      "label": "Blast · Water → Bellows Grub",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 4,
+        "matchingDamage": 1,
+        "card": "blast",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":31,\"target\":180,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 184,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":184,\"slot\":17}]"
+    },
+    {
+      "type": "block",
+      "uid": 184,
+      "slot": 17,
+      "label": "Water Shield · 3 Guard",
+      "effects": {
+        "block": 3,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":184,\"slot\":17}]"
+    },
+    {
+      "type": "block",
+      "uid": 185,
+      "slot": 16,
+      "label": "Water Shield · 5 Guard",
+      "effects": {
+        "block": 5,
+        "element": "Water",
+        "column": 2
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":185,\"slot\":16}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 1 Guard",
+      "effects": {
+        "block": 1,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 3 protection",
+      "effects": {
+        "armor": 3,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "place",
+      "uid": 12,
+      "slot": 1,
+      "label": "Place Sapling · slot 2 · 1 Focus",
+      "effects": {
+        "card": "sapling",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":12,\"slot\":1}]"
+    },
+    {
+      "type": "place",
+      "uid": 96,
+      "slot": 18,
+      "label": "Place Storm Canopy · slot 19 · 2 Focus",
+      "effects": {
+        "card": "storm",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 2
+      },
+      "key": "[\"place\",{\"uid\":96,\"slot\":18}]"
+    },
+    {
+      "type": "place",
+      "uid": 168,
+      "slot": 12,
+      "label": "Place Resonance · slot 13 · 1 Focus",
+      "effects": {
+        "card": "resonance",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":168,\"slot\":12}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 12,
+      "target": null,
+      "element": "Arcane",
+      "label": "Resonance · Arcane",
+      "effects": {
+        "heatBurn": 0,
+        "channel": 1,
+        "damage": 0,
+        "card": "resonance",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 0
+      },
+      "key": "[\"activate\",{\"slot\":12,\"target\":null,\"element\":\"Arcane\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 18,
+      "target": null,
+      "element": "Wind",
+      "label": "Storm Canopy · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 7,
+        "all": true,
+        "card": "storm",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":18,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 32,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 39,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 40",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":32,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":39,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 1,
+      "target": 180,
+      "element": "Earth",
+      "label": "Sapling · Earth → Bellows Grub",
+      "effects": {
+        "heatBurn": 0,
+        "hpDamage": true,
+        "growAfterAttack": 1,
+        "damage": 7,
+        "card": "sapling",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":1,\"target\":180,\"element\":\"Earth\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 190,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":190,\"slot\":17}]"
+    },
+    {
+      "type": "intercept",
+      "slot": 1,
+      "label": "Sapling intercepts · 7 HP",
+      "effects": {
+        "allyHp": 7,
+        "element": "Earth",
+        "swallow": false,
+        "column": 1
+      },
+      "costs": {},
+      "key": "[\"intercept\",{\"slot\":1}]"
+    },
+    {
+      "type": "place",
+      "uid": 156,
+      "slot": 30,
+      "label": "Place Machine Elves · slot 31 · 1 Focus",
+      "effects": {
+        "card": "elves",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":156,\"slot\":30}]"
+    },
+    {
+      "type": "place",
+      "uid": 42,
+      "slot": 17,
+      "label": "Place Undertow · slot 18 · 1 Focus",
+      "effects": {
+        "card": "undertow",
+        "returnHand": true,
+        "recallCost": 1,
+        "returned": 1,
+        "neighbors": 3,
+        "level": 2
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":42,\"slot\":17}]"
+    },
+    {
+      "type": "place",
+      "uid": 7,
+      "slot": 17,
+      "label": "Place Shield · slot 18 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":7,\"slot\":17}]"
+    },
+    {
+      "type": "place",
+      "uid": 81,
+      "slot": 9,
+      "label": "Place Thorn Eruption · slot 10 · 1 Focus",
+      "effects": {
+        "card": "thorn",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":81,\"slot\":9}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 18,
+      "target": null,
+      "element": "Wind",
+      "label": "Storm Canopy · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 7,
+        "all": true,
+        "card": "storm",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":18,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 31,
+      "target": 180,
+      "element": "Water",
+      "label": "Blast · Water → Bellows Grub",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 4,
+        "matchingDamage": 1,
+        "card": "blast",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":31,\"target\":180,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 191,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":191,\"slot\":17}]"
+    },
+    {
+      "type": "block",
+      "uid": 191,
+      "slot": 17,
+      "label": "Water Shield · 3 Guard",
+      "effects": {
+        "block": 3,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":191,\"slot\":17}]"
+    },
+    {
+      "type": "intercept",
+      "slot": 30,
+      "label": "Machine Elves intercepts · 8 HP",
+      "effects": {
+        "allyHp": 8,
+        "element": "Arcane",
+        "swallow": false,
+        "column": 2
+      },
+      "costs": {},
+      "key": "[\"intercept\",{\"slot\":30}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 2 protection",
+      "effects": {
+        "armor": 2,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "skipEquipment",
+      "label": "Take hit — save defenses",
+      "effects": {
+        "takeDamage": 12,
+        "preserveEquipmentBlock": true
+      },
+      "costs": {},
+      "key": "[\"skipEquipment\",{}]"
+    },
+    {
+      "type": "place",
+      "uid": 10,
+      "slot": 25,
+      "label": "Place Clear Mind · slot 26 · 0 Focus",
+      "effects": {
+        "card": "clear",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 0
+      },
+      "key": "[\"place\",{\"uid\":10,\"slot\":25}]"
+    },
+    {
+      "type": "place",
+      "uid": 99,
+      "slot": 39,
+      "label": "Place Wild Conduit · slot 40 · 1 Focus",
+      "effects": {
+        "card": "conduit",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":99,\"slot\":39}]"
+    },
+    {
+      "type": "place",
+      "uid": 56,
+      "slot": 35,
+      "label": "Place Ignis Spark · slot 36 · 1 Focus",
+      "effects": {
+        "card": "ignis",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":56,\"slot\":35}]"
+    },
+    {
+      "type": "place",
+      "uid": 6,
+      "slot": 15,
+      "label": "Place Shield · slot 16 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":6,\"slot\":15}]"
+    },
+    {
+      "type": "recall",
+      "slot": 31,
+      "label": "Recall slot 32 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":31}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 30,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 23,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 24",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":30,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":23,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 39,
+      "target": null,
+      "element": "Wind",
+      "label": "Wild Conduit · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "channel": 2,
+        "damage": 0,
+        "card": "conduit",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":39,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 16,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 6,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 25,
+      "target": null,
+      "element": "Arcane",
+      "label": "Clear Mind · Arcane",
+      "effects": {
+        "heatBurn": 0,
+        "insight": 2,
+        "damage": 0,
+        "card": "clear",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":25,\"target\":null,\"element\":\"Arcane\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 196,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":196,\"slot\":17}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "block",
+      "uid": 196,
+      "slot": 17,
+      "label": "Water Shield · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":196,\"slot\":17}]"
+    },
+    {
+      "type": "block",
+      "uid": 197,
+      "slot": 16,
+      "label": "Water Shield · 6 Guard",
+      "effects": {
+        "block": 6,
+        "element": "Water",
+        "column": 2
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":197,\"slot\":16}]"
+    },
+    {
+      "type": "place",
+      "uid": 135,
+      "slot": 23,
+      "label": "Place Fourfold Grove · slot 24 · 1 Focus",
+      "effects": {
+        "card": "square",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":135,\"slot\":23}]"
+    },
+    {
+      "type": "place",
+      "uid": 35,
+      "slot": 21,
+      "label": "Place Cinder Snap · slot 22 · 0 Focus",
+      "effects": {
+        "card": "cinder",
+        "neighbors": 0,
+        "level": 1
+      },
+      "costs": {
+        "focus": 0
+      },
+      "key": "[\"place\",{\"uid\":35,\"slot\":21}]"
+    },
+    {
+      "type": "recall",
+      "slot": 17,
+      "label": "Recall slot 18 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":17}]"
+    },
+    {
+      "type": "place",
+      "uid": 8,
+      "slot": 17,
+      "label": "Place Shield · slot 18 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":8,\"slot\":17}]"
+    },
+    {
+      "type": "recall",
+      "slot": 39,
+      "label": "Recall slot 40 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":39}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 35,
+      "target": 180,
+      "element": "Fire",
+      "label": "Ignis Spark · Fire → Bellows Grub",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 5,
+        "row": 2,
+        "card": "ignis",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":35,\"target\":180,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 21,
+      "target": 180,
+      "element": "Fire",
+      "label": "Cinder Snap · Fire → Bellows Grub",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 6,
+        "card": "cinder",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":21,\"target\":180,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 24,
+      "target": null,
+      "element": "Water",
+      "label": "Rain Lantern · Water",
+      "effects": {
+        "heatBurn": 0,
+        "focus": 2,
+        "damage": 0,
+        "card": "rain",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":24,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 198,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":198,\"slot\":17}]"
+    },
+    {
+      "type": "place",
+      "uid": 86,
+      "slot": 28,
+      "label": "Place Kiln · slot 29 · 2 Focus",
+      "effects": {
+        "card": "kiln",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 2
+      },
+      "key": "[\"place\",{\"uid\":86,\"slot\":28}]"
+    },
+    {
+      "type": "place",
+      "uid": 3,
+      "slot": 25,
+      "label": "Place Blast · slot 26 · 1 Focus",
+      "effects": {
+        "card": "blast",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":3,\"slot\":25}]"
+    },
+    {
+      "type": "place",
+      "uid": 61,
+      "slot": 11,
+      "label": "Place Water Blast · slot 12 · 1 Focus",
+      "effects": {
+        "card": "water",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":61,\"slot\":11}]"
+    },
+    {
+      "type": "place",
+      "uid": 74,
+      "slot": 12,
+      "placementElement": "Water",
+      "label": "Place Living Lattice · slot 13 · Water · 1 Focus",
+      "effects": {
+        "card": "lattice",
+        "latticeMeld": false,
+        "wardGain": 0,
+        "placementElement": "Water",
+        "revive": false,
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":74,\"slot\":12,\"placementElement\":\"Water\"}]"
+    },
+    {
+      "type": "place",
+      "uid": 66,
+      "slot": 22,
+      "label": "Place Transmute · slot 23 · 1 Focus",
+      "effects": {
+        "card": "transmute",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":66,\"slot\":22}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 22,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 23,
+      "newElement": "Water",
+      "label": "Transmute · Arcane · slot 24 → Water",
+      "effects": {
+        "heatBurn": 0,
+        "transmute": true,
+        "damage": 0,
+        "card": "transmute",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":22,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":23,\"newElement\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 32,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 31,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 32",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":32,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":31,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 23,
+      "target": 181,
+      "element": "Water",
+      "label": "Fourfold Grove · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 12,
+        "square": true,
+        "card": "square",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":23,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 2 protection",
+      "effects": {
+        "armor": 2,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "place",
+      "uid": 141,
+      "slot": 13,
+      "label": "Place Slow Rot · slot 14 · 1 Focus",
+      "effects": {
+        "card": "rot",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":141,\"slot\":13}]"
+    },
+    {
+      "type": "place",
+      "uid": 99,
+      "slot": 20,
+      "label": "Place Wild Conduit · slot 21 · 1 Focus",
+      "effects": {
+        "card": "conduit",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":99,\"slot\":20}]"
+    },
+    {
+      "type": "place",
+      "uid": 29,
+      "slot": 31,
+      "label": "Place Bloomcall · slot 32 · 1 Focus",
+      "effects": {
+        "card": "bloom",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":29,\"slot\":31}]"
+    },
+    {
+      "type": "place",
+      "uid": 7,
+      "slot": 4,
+      "label": "Place Shield · slot 5 · 1 Focus",
+      "effects": {
+        "card": "shield",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":7,\"slot\":4}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 20,
+      "target": null,
+      "element": "Wind",
+      "label": "Wild Conduit · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "channel": 2,
+        "damage": 0,
+        "card": "conduit",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":20,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 17,
+      "target": null,
+      "element": "Water",
+      "label": "Shield · Water",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 8,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":17,\"target\":null,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 4,
+      "target": null,
+      "element": "Arcane",
+      "label": "Shield · Arcane",
+      "effects": {
+        "heatBurn": 0,
+        "shield": 7,
+        "matchingShield": 1,
+        "damage": 0,
+        "card": "shield",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Arcane\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 13,
+      "target": 181,
+      "element": "Water",
+      "label": "Slow Rot · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "corrode": 1,
+        "damage": 0,
+        "card": "rot",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":13,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "block",
+      "uid": 203,
+      "slot": 17,
+      "label": "Water Shield · 8 Guard",
+      "effects": {
+        "block": 8,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":203,\"slot\":17}]"
+    },
+    {
+      "type": "block",
+      "uid": 204,
+      "slot": 4,
+      "label": "Arcane Shield · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": 4
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":204,\"slot\":4}]"
+    },
+    {
+      "type": "block",
+      "uid": 203,
+      "slot": 17,
+      "label": "Water Shield · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Water",
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"block\",{\"uid\":203,\"slot\":17}]"
+    },
+    {
+      "type": "intercept",
+      "slot": 30,
+      "label": "Machine Elves intercepts · 5 HP",
+      "effects": {
+        "allyHp": 5,
+        "element": "Arcane",
+        "swallow": false,
+        "column": 2
+      },
+      "costs": {},
+      "key": "[\"intercept\",{\"slot\":30}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 1 protection",
+      "effects": {
+        "armor": 1,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "place",
+      "uid": 11,
+      "slot": 29,
+      "label": "Place Focus Energy · slot 30 · 1 Focus",
+      "effects": {
+        "card": "focus",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":11,\"slot\":29}]"
+    },
+    {
+      "type": "place",
+      "uid": 42,
+      "slot": 20,
+      "label": "Place Undertow · slot 21 · 1 Focus",
+      "effects": {
+        "card": "undertow",
+        "returnHand": true,
+        "recallCost": 1,
+        "returned": 1,
+        "neighbors": 1,
+        "level": 2
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":42,\"slot\":20}]"
+    },
+    {
+      "type": "place",
+      "uid": 99,
+      "slot": 20,
+      "label": "Place Wild Conduit · slot 21 · 1 Focus",
+      "effects": {
+        "card": "conduit",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":99,\"slot\":20}]"
+    },
+    {
+      "type": "place",
+      "uid": 48,
+      "slot": 12,
+      "label": "Meld Magnifier Ward beneath Living Lattice · slot 13 · 1 Focus",
+      "effects": {
+        "card": "magnify",
+        "neighbors": 2,
+        "level": 1,
+        "reinforce": true,
+        "revive": false,
+        "host": 74,
+        "activationBonus": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":48,\"slot\":12}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 20,
+      "target": null,
+      "element": "Wind",
+      "label": "Wild Conduit · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "channel": 2,
+        "damage": 0,
+        "card": "conduit",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":20,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 32,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 25,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 26",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":32,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":25,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 23,
+      "target": 181,
+      "element": "Water",
+      "label": "Fourfold Grove · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 12,
+        "square": true,
+        "card": "square",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":23,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "ward",
+      "uid": 74,
+      "slot": 12,
+      "label": "Living Lattice · 11 ward",
+      "effects": {
+        "ward": 11,
+        "column": 5
+      },
+      "costs": {},
+      "key": "[\"ward\",{\"uid\":74,\"slot\":12}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "place",
+      "uid": 42,
+      "slot": 12,
+      "label": "Place Undertow · slot 13 · 1 Focus",
+      "effects": {
+        "card": "undertow",
+        "returnHand": true,
+        "recallCost": 1,
+        "returned": 2,
+        "neighbors": 2,
+        "level": 3
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":42,\"slot\":12}]"
+    },
+    {
+      "type": "place",
+      "uid": 48,
+      "slot": 12,
+      "label": "Place Magnifier Ward · slot 13 · 1 Focus",
+      "effects": {
+        "card": "magnify",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":48,\"slot\":12}]"
+    },
+    {
+      "type": "place",
+      "uid": 74,
+      "slot": 12,
+      "placementElement": "Water",
+      "label": "Meld Living Lattice beneath Magnifier Ward · slot 13 · Water · 1 Focus",
+      "effects": {
+        "card": "lattice",
+        "latticeMeld": true,
+        "wardGain": 5,
+        "placementElement": "Water",
+        "revive": false,
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":74,\"slot\":12,\"placementElement\":\"Water\"}]"
+    },
+    {
+      "type": "place",
+      "uid": 1,
+      "slot": 25,
+      "label": "Place Blast · slot 26 · 1 Focus",
+      "effects": {
+        "card": "blast",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":1,\"slot\":25}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 28,
+      "target": 181,
+      "element": "Fire",
+      "label": "Kiln · Release · Fire → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 20,
+        "burnAll": 2,
+        "card": "kiln",
+        "charge": 1,
+        "charges": 2,
+        "chargeRequired": 2
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":28,\"target\":181,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 11,
+      "target": 181,
+      "element": "Water",
+      "label": "Water Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 10,
+        "card": "water",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":11,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "recall",
+      "slot": 23,
+      "label": "Recall slot 24 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":23}]"
+    },
+    {
+      "type": "recall",
+      "slot": 20,
+      "label": "Recall slot 21 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":20}]"
+    },
+    {
+      "type": "place",
+      "uid": 100,
+      "slot": 3,
+      "label": "Place Machine Elves · slot 4 · 1 Focus",
+      "effects": {
+        "card": "elves",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":100,\"slot\":3}]"
+    },
+    {
+      "type": "place",
+      "uid": 9,
+      "slot": 32,
+      "label": "Place Familiar · slot 33 · 1 Focus",
+      "effects": {
+        "card": "familiar",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":9,\"slot\":32}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 11,
+      "target": 181,
+      "element": "Water",
+      "label": "Water Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 10,
+        "card": "water",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":11,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "ward",
+      "uid": 48,
+      "slot": 12,
+      "label": "Magnifier Ward · 16 ward",
+      "effects": {
+        "ward": 16,
+        "column": 5
+      },
+      "costs": {},
+      "key": "[\"ward\",{\"uid\":48,\"slot\":12}]"
+    },
+    {
+      "type": "place",
+      "uid": 135,
+      "slot": 23,
+      "label": "Place Fourfold Grove · slot 24 · 1 Focus",
+      "effects": {
+        "card": "square",
+        "neighbors": 4,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":135,\"slot\":23}]"
+    },
+    {
+      "type": "place",
+      "uid": 99,
+      "slot": 20,
+      "label": "Place Wild Conduit · slot 21 · 1 Focus",
+      "effects": {
+        "card": "conduit",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":99,\"slot\":20}]"
+    },
+    {
+      "type": "place",
+      "uid": 2,
+      "slot": 36,
+      "label": "Place Blast · slot 37 · 1 Focus",
+      "effects": {
+        "card": "blast",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":2,\"slot\":36}]"
+    },
+    {
+      "type": "recall",
+      "slot": 11,
+      "label": "Recall slot 12 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":11}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 20,
+      "target": null,
+      "element": "Wind",
+      "label": "Wild Conduit · Wind",
+      "effects": {
+        "heatBurn": 0,
+        "channel": 2,
+        "damage": 0,
+        "card": "conduit",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":20,\"target\":null,\"element\":\"Wind\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 13,
+      "target": 181,
+      "element": "Water",
+      "label": "Slow Rot · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "corrode": 1,
+        "damage": 0,
+        "card": "rot",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":13,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 22,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 23,
+      "newElement": "Water",
+      "label": "Transmute · Arcane · slot 24 → Water",
+      "effects": {
+        "heatBurn": 0,
+        "transmute": true,
+        "damage": 0,
+        "card": "transmute",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":22,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":23,\"newElement\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 23,
+      "target": 181,
+      "element": "Water",
+      "label": "Fourfold Grove · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 12,
+        "square": true,
+        "card": "square",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":23,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 30,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 29,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 30",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":30,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":29,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "ward",
+      "uid": 48,
+      "slot": 12,
+      "label": "Magnifier Ward · 1 ward",
+      "effects": {
+        "ward": 1,
+        "column": 5
+      },
+      "costs": {},
+      "key": "[\"ward\",{\"uid\":48,\"slot\":12}]"
+    },
+    {
+      "type": "intercept",
+      "slot": 32,
+      "label": "Familiar intercepts · 6 HP",
+      "effects": {
+        "allyHp": 6,
+        "element": "Arcane",
+        "swallow": false,
+        "column": 4
+      },
+      "costs": {},
+      "key": "[\"intercept\",{\"slot\":32}]"
+    },
+    {
+      "type": "intercept",
+      "slot": 3,
+      "label": "Machine Elves intercepts · 11 HP",
+      "effects": {
+        "allyHp": 11,
+        "element": "Arcane",
+        "swallow": false,
+        "column": 3
+      },
+      "costs": {},
+      "key": "[\"intercept\",{\"slot\":3}]"
+    },
+    {
+      "type": "place",
+      "uid": 61,
+      "slot": 11,
+      "label": "Place Water Blast · slot 12 · 1 Focus",
+      "effects": {
+        "card": "water",
+        "neighbors": 3,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":61,\"slot\":11}]"
+    },
+    {
+      "type": "place",
+      "uid": 42,
+      "slot": 28,
+      "label": "Place Undertow · slot 29 · 1 Focus",
+      "effects": {
+        "card": "undertow",
+        "returnHand": true,
+        "recallCost": 1,
+        "returned": 1,
+        "neighbors": 2,
+        "level": 2
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":42,\"slot\":28}]"
+    },
+    {
+      "type": "place",
+      "uid": 86,
+      "slot": 28,
+      "label": "Place Kiln · slot 29 · 2 Focus",
+      "effects": {
+        "card": "kiln",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 2
+      },
+      "key": "[\"place\",{\"uid\":86,\"slot\":28}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 28,
+      "target": 181,
+      "element": "Fire",
+      "label": "Kiln · Release · Fire → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 20,
+        "burnAll": 2,
+        "card": "kiln",
+        "charge": 1,
+        "charges": 2,
+        "chargeRequired": 2
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":28,\"target\":181,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 23,
+      "target": 181,
+      "element": "Water",
+      "label": "Fourfold Grove · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 12,
+        "square": true,
+        "card": "square",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":23,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 11,
+      "target": 181,
+      "element": "Water",
+      "label": "Water Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 10,
+        "card": "water",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":11,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 25,
+      "target": 181,
+      "element": "Water",
+      "label": "Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 4,
+        "matchingDamage": 1,
+        "card": "blast",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":25,\"target\":181,\"element\":\"Water\"}]"
+    },
+    {
+      "type": "endTurn",
+      "label": "End turn",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"endTurn\",{}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 177,
+      "label": "Gold Bracelet · Arcane · 7 Guard",
+      "effects": {
+        "block": 7,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":177}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 2 Guard",
+      "effects": {
+        "block": 2,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "bracelet",
+      "uid": 13,
+      "label": "Bronze Bracelet · Arcane · 1 Guard",
+      "effects": {
+        "block": 1,
+        "element": "Arcane",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"bracelet\",{\"uid\":13}]"
+    },
+    {
+      "type": "armor",
+      "uid": 117,
+      "label": "Water Armor · 2 protection",
+      "effects": {
+        "armor": 2,
+        "reflect": false,
+        "element": "Water",
+        "column": -1
+      },
+      "costs": {},
+      "key": "[\"armor\",{\"uid\":117}]"
+    },
+    {
+      "type": "skipEquipment",
+      "label": "Take hit — save defenses",
+      "effects": {
+        "takeDamage": 12,
+        "preserveEquipmentBlock": true
+      },
+      "costs": {},
+      "key": "[\"skipEquipment\",{}]"
+    },
+    {
+      "type": "place",
+      "uid": 42,
+      "slot": 28,
+      "label": "Place Undertow · slot 29 · 1 Focus",
+      "effects": {
+        "card": "undertow",
+        "returnHand": true,
+        "recallCost": 1,
+        "returned": 1,
+        "neighbors": 2,
+        "level": 2
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":42,\"slot\":28}]"
+    },
+    {
+      "type": "place",
+      "uid": 86,
+      "slot": 28,
+      "label": "Place Kiln · slot 29 · 2 Focus",
+      "effects": {
+        "card": "kiln",
+        "neighbors": 2,
+        "level": 1
+      },
+      "costs": {
+        "focus": 2
+      },
+      "key": "[\"place\",{\"uid\":86,\"slot\":28}]"
+    },
+    {
+      "type": "place",
+      "uid": 4,
+      "slot": 32,
+      "label": "Place Blast · slot 33 · 1 Focus",
+      "effects": {
+        "card": "blast",
+        "neighbors": 1,
+        "level": 1
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"place\",{\"uid\":4,\"slot\":32}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    },
+    {
+      "type": "activate",
+      "slot": 28,
+      "target": 181,
+      "element": "Fire",
+      "label": "Kiln · Release · Fire → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 20,
+        "burnAll": 2,
+        "card": "kiln",
+        "charge": 1,
+        "charges": 2,
+        "chargeRequired": 2
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":28,\"target\":181,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 11,
+      "target": 181,
+      "element": "Water",
+      "label": "Water Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 10,
+        "card": "water",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":11,\"target\":181,\"element\":\"Water\"}]"
+    }
+  ],
+  "result": {
+    "mode": "reward",
+    "hp": 40,
+    "turn": 13,
+    "armorUses": 6
+  }
+}

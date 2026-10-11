@@ -79,6 +79,52 @@ test("actual Shield activation and Ruby bracelet both use the favorable defensiv
   h.act(h.legal().find((a) => a.type === "bracelet"));
   assert.equal(h.s.hp, 63); // Bronze: 2 base -> 3 effective, 7 reaches player.
 });
+
+test("Wards use the same elemental Guard math, depletion and overflow as Shields", () => {
+  for (const id of ["ward", "magnify", "lattice"])
+    for (const element of ELEMENTS)
+      for (const attack of ELEMENTS) {
+        const g = game(), b = g.s.battle;
+        const c = g.instance(g.newCard(id));
+        Object.assign(c, { ward: 16, element, transmuted: true });
+        b.grid[6] = [c];
+        hit(g, attack, 15);
+        const a = g.legal().find(a => a.type === "ward");
+        assert.equal(a.effects.element, element);
+        const expected = blockHit(16, element, 15, attack);
+        g.act(a);
+        assert.equal(c.ward, expected.block, `${id} ${element} against ${attack}`);
+        assert.equal(g.s.hp, 70 - expected.remaining);
+        assert.equal(c.zeroWard, expected.block === 0);
+      }
+});
+
+test("Water Magnifier meld spends ten Ward on fifteen Fire and reports actual loss", () => {
+  const g = game(), b = g.s.battle;
+  b.phase = "place";
+  b.focus = 2;
+  for (const id of ["magnify", "lattice"]) {
+    const c = g.newCard(id);
+    b.hand.push(c);
+    g.act(g.legal().find(a => a.type === "place" && a.uid === c.uid &&
+      a.slot === 6 && (!a.placementElement || a.placementElement === "Water")));
+  }
+  g.act(g.legal().find(a => a.type === "activatePhase"));
+  g.act(g.legal().find(a => a.type === "activate" && a.slot === 6));
+  const c = b.grid[6].at(-1);
+  assert.equal(c.ward, 16);
+  const old = structuredClone(g.s);
+  old.version = { ...old.version, rules: "2.1.16", content: "2.1.22" };
+  const loaded = new Game(0, old);
+  loaded.capturePresentation = true;
+  hit(loaded, "Fire", 15);
+  loaded.act(loaded.legal().find(a => a.type === "ward"));
+  assert.equal(loaded.s.battle.grid[6].at(-1).ward, 6);
+  assert.equal(loaded.s.hp, 70);
+  const impact = loaded.presentation.find(f => f.kind === "defend" && f.name === "Ward absorbs");
+  assert.equal(impact.amount, 15);
+  assert.equal(impact.loss, 10);
+});
 test("each elemental Armor reduces attacks by 3 favorable, 1 weak, 2 neutral and does not amplify damage", () => {
   for (const element of ["Fire", "Earth", "Wind", "Water"])
     for (const incoming of ELEMENTS) {

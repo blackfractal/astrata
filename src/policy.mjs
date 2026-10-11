@@ -539,7 +539,7 @@ export class WeightedPolicy {
       }
       case "ward":
         return [
-          Math.min(f.ward, b.reaction.damage) * w.survival + (f.column + 1) * 2,
+          Math.min(Math.ceil(f.ward * defenseRate(f.element || "Arcane", b.reaction.element)), b.reaction.damage) * w.survival + (f.column + 1) * 2,
           "Absorb damage while preserving defenders closer to the player.",
         ];
       case "block":

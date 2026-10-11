@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "id": "dervish-tempo",
+  "title": "Dervish Hunter: Protecting the Damage Engine",
+  "owner": "Jonathan",
+  "seed": 655758646,
+  "runId": "ca4e323d-1d30-459f-93e6-202d49aa17d2",
+  "defaultSnapshot": "battle-start",
+  "build": {
+    "package": "2.1.25",
+    "rules": "2.1.15",
+    "content": "2.1.21",
+    "archive": "../_builds/astrata-2.1.25.zip",
+    "sha256": "5acba0d9ed243d7d2b1b990e2b56d0f0c042c27431bed7ee8d9a035dc0d9a3b9",
+    "bytes": 471897984
+  },
+  "snapshots": {
+    "battle-start": {
+      "file": "snapshots/battle-start.json",
+      "sha256": "271bfe1a06080bd0776d7c5ab57d2e56d64eed84040d8badb72a124782d5cee7",
+      "sourceEventIndex": 168,
+      "hp": 70,
+      "turn": 0,
+      "mode": "battle",
+      "description": "Exact opening ambush: 9 Wind Slice pending, before Bracelet choice and first Reveal."
+    }
+  },
+  "outcome": {
+    "jonathan": {
+      "turn": 8,
+      "hp": 29
+    },
+    "verifiedNoConsumable": {
+      "turn": 4,
+      "hp": 45
+    },
+    "verifiedFocusDraught": {
+      "turn": 4,
+      "hp": 53
+    },
+    "optimality": "Not proven optimal"
+  },
+  "notes": "Original normal Continue save preserved at card reward. Practice sessions use separate profiles. Verified actual action replay matches all archived HP/enemy HP values; alternatives use legal actions and identical seed/RNG/equipment."
+}

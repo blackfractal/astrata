@@ -1,0 +1,616 @@
+{
+  "actions": [
+    {
+      "before": {
+        "turn": 0,
+        "hp": 70,
+        "enemy": 53
+      },
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 Guard",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      },
+      "action": {
+        "type": "place",
+        "uid": 35,
+        "slot": 19,
+        "label": "Place Cinder Snap · slot 20 · 0 Focus",
+        "effects": {
+          "card": "cinder",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 0
+        },
+        "key": "[\"place\",{\"uid\":35,\"slot\":19}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      },
+      "action": {
+        "type": "place",
+        "uid": 56,
+        "slot": 17,
+        "label": "Place Ignis Spark · slot 18 · 1 Focus",
+        "effects": {
+          "card": "ignis",
+          "neighbors": 0,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":56,\"slot\":17}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      },
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 53
+      },
+      "action": {
+        "type": "activate",
+        "slot": 19,
+        "target": 49,
+        "element": "Fire",
+        "label": "Cinder Snap · Fire → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "damage": 6,
+          "card": "cinder",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":19,\"target\":49,\"element\":\"Fire\"}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 44
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 44
+      },
+      "action": {
+        "type": "activate",
+        "slot": 17,
+        "target": 49,
+        "element": "Fire",
+        "label": "Ignis Spark · Fire → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "damage": 7,
+          "row": 2,
+          "card": "ignis",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":17,\"target\":49,\"element\":\"Fire\"}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 37
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 37
+      },
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "after": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 37
+      }
+    },
+    {
+      "before": {
+        "turn": 1,
+        "hp": 63,
+        "enemy": 37
+      },
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 Guard",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      },
+      "action": {
+        "type": "place",
+        "uid": 12,
+        "slot": 18,
+        "label": "Place Sapling · slot 19 · 1 Focus",
+        "effects": {
+          "card": "sapling",
+          "neighbors": 2,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":12,\"slot\":18}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      },
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 37
+      },
+      "action": {
+        "type": "activate",
+        "slot": 19,
+        "target": 49,
+        "element": "Fire",
+        "label": "Cinder Snap · Fire → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "damage": 6,
+          "card": "cinder",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":19,\"target\":49,\"element\":\"Fire\"}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 28
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 28
+      },
+      "action": {
+        "type": "activate",
+        "slot": 18,
+        "target": 49,
+        "element": "Earth",
+        "label": "Sapling · Earth → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "hpDamage": true,
+          "growAfterAttack": 1,
+          "damage": 4,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":18,\"target\":49,\"element\":\"Earth\"}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 22
+      },
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 56,
+        "enemy": 22
+      },
+      "action": {
+        "type": "bracelet",
+        "uid": 13,
+        "label": "Bronze Bracelet · Arcane · 2 Guard",
+        "effects": {
+          "block": 2,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":13}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 52,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 52,
+        "enemy": 22
+      },
+      "action": {
+        "type": "skipEquipment",
+        "label": "Take hit — save defenses",
+        "effects": {
+          "takeDamage": 6,
+          "preserveEquipmentBlock": true
+        },
+        "costs": {},
+        "key": "[\"skipEquipment\",{}]"
+      },
+      "after": {
+        "turn": 2,
+        "hp": 46,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 2,
+        "hp": 46,
+        "enemy": 22
+      },
+      "action": {
+        "type": "skipEquipment",
+        "label": "Take hit — save defenses",
+        "effects": {
+          "takeDamage": 6,
+          "preserveEquipmentBlock": true
+        },
+        "costs": {},
+        "key": "[\"skipEquipment\",{}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      },
+      "action": {
+        "type": "place",
+        "uid": 29,
+        "slot": 11,
+        "label": "Place Bloomcall · slot 12 · 1 Focus",
+        "effects": {
+          "card": "bloom",
+          "neighbors": 1,
+          "level": 1
+        },
+        "costs": {
+          "focus": 1
+        },
+        "key": "[\"place\",{\"uid\":29,\"slot\":11}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      },
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 22
+      },
+      "action": {
+        "type": "activate",
+        "slot": 18,
+        "target": 49,
+        "element": "Earth",
+        "label": "Sapling · Earth → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "hpDamage": true,
+          "growAfterAttack": 1,
+          "damage": 6,
+          "card": "sapling",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":18,\"target\":49,\"element\":\"Earth\"}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 10
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 40,
+        "enemy": 10
+      },
+      "action": {
+        "type": "activate",
+        "slot": 11,
+        "target": null,
+        "element": "Light",
+        "label": "Bloomcall · Light",
+        "effects": {
+          "heatBurn": 0,
+          "heal": 3,
+          "adjHeal": 2,
+          "damage": 0,
+          "card": "bloom",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":11,\"target\":null,\"element\":\"Light\"}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 45,
+        "enemy": 10
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 45,
+        "enemy": 10
+      },
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 45,
+        "enemy": 10
+      }
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 45,
+        "enemy": 10
+      },
+      "action": {
+        "type": "intercept",
+        "slot": 18,
+        "label": "Sapling intercepts · 9 HP",
+        "effects": {
+          "allyHp": 9,
+          "element": "Earth",
+          "swallow": false,
+          "column": 4
+        },
+        "costs": {},
+        "key": "[\"intercept\",{\"slot\":18}]"
+      },
+      "after": {
+        "turn": 4,
+        "hp": 45,
+        "enemy": 10
+      }
+    },
+    {
+      "before": {
+        "turn": 4,
+        "hp": 45,
+        "enemy": 10
+      },
+      "action": {
+        "type": "activatePhase",
+        "label": "Begin activation",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"activatePhase\",{}]"
+      },
+      "after": {
+        "turn": 4,
+        "hp": 45,
+        "enemy": 10
+      }
+    },
+    {
+      "before": {
+        "turn": 4,
+        "hp": 45,
+        "enemy": 10
+      },
+      "action": {
+        "type": "activate",
+        "slot": 17,
+        "target": 49,
+        "element": "Fire",
+        "label": "Ignis Spark · Fire → Dervish Hunter",
+        "effects": {
+          "heatBurn": 0,
+          "damage": 7,
+          "row": 2,
+          "card": "ignis",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":17,\"target\":49,\"element\":\"Fire\"}]"
+      },
+      "after": {
+        "turn": 4,
+        "hp": 45,
+        "enemy": 0
+      }
+    }
+  ],
+  "result": {
+    "hp": 45,
+    "turn": 4,
+    "mode": "reward"
+  }
+}

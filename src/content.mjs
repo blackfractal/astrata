@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.15",
-  content: "2.1.19",
+  rules: "2.1.17",
+  content: "2.1.23",
   observation: 2,
   actions: 7,
 };
@@ -1657,7 +1657,7 @@ export const glossary = {
   Transmute:
     "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
+    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. Double-click keeps the current choice, including Arcane. For Shield, clicking Activate after choosing an element confirms it; Cancel or clicking away clears only the pending choice. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",
@@ -1669,7 +1669,7 @@ export const glossary = {
     "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
-  Ward: "Starts at 1; activate to add persistent defense. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1; Magnifier Ward or Living Lattice can also revive it. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
+  Ward: "Starts at 1; activate to add persistent defense. Its current element gives +50% protection against the element it beats, -50% against its weakness, rounded up; Arcane is neutral. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1; Magnifier Ward or Living Lattice can also revive it. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",
   Depleted:
     "Fully depleted wards cannot activate. Recall and replay reset them; Magnifier Ward or Living Lattice can revive them without resetting spent uses.",
   Shield:
@@ -1711,7 +1711,7 @@ export const glossary = {
   Tallest: "The stack with the most cards. Ties use grid order, from top left.",
   Weakest: "The eligible Ally with the lowest current HP.",
   Guard:
-    "Stored defense that absorbs damage before HP. Each defender keeps its own amount. Shield Guard expires after the enemy turn; Ward value persists; Bracelet and Armor Guard refill each enemy turn. Enemy Guard protects that enemy. Elemental Shield, Bracelet and Armor Guard gain +50% against the element they beat and lose 50% against their weakness, rounded up; same-element, unrelated and Arcane matchups are neutral. Wards remain neutral.",
+    "Stored defense that absorbs damage before HP. Each defender keeps its own amount. Shield Guard expires after the enemy turn; Ward value persists; Bracelet and Armor Guard refill each enemy turn. Enemy Guard protects that enemy. Elemental Ward, Shield, Bracelet and Armor defense gain +50% against the element they beat and lose 50% against their weakness, rounded up; same-element, unrelated and Arcane matchups are neutral.",
   Shift:
     "Move a whole placed stack to an eligible empty Mind Grid slot. Locked stacks cannot Shift.",
   Flicker:

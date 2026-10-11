@@ -1,0 +1,64 @@
+{
+  "startEvent": 1337,
+  "actions": [
+    {
+      "type": "activate",
+      "slot": 32,
+      "target": null,
+      "element": "Arcane",
+      "cardTarget": 31,
+      "repairKind": "mine",
+      "label": "Machine Elves · Arcane · slot 32",
+      "effects": {
+        "heatBurn": 0,
+        "mend": true,
+        "damage": 0,
+        "card": "elves",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":32,\"target\":null,\"element\":\"Arcane\",\"cardTarget\":31,\"repairKind\":\"mine\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 28,
+      "target": 181,
+      "element": "Fire",
+      "label": "Kiln · Release · Fire → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 20,
+        "burnAll": 2,
+        "card": "kiln",
+        "charge": 1,
+        "charges": 2,
+        "chargeRequired": 2
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":28,\"target\":181,\"element\":\"Fire\"}]"
+    },
+    {
+      "type": "activate",
+      "slot": 11,
+      "target": 181,
+      "element": "Water",
+      "label": "Water Blast · Water → King Bombadier",
+      "effects": {
+        "heatBurn": 0,
+        "damage": 10,
+        "card": "water",
+        "charge": 0
+      },
+      "costs": {
+        "channel": 1
+      },
+      "key": "[\"activate\",{\"slot\":11,\"target\":181,\"element\":\"Water\"}]"
+    }
+  ],
+  "damage": 38,
+  "enemyHp": 186
+}

@@ -282,9 +282,9 @@ export function registerStratum2(card, enemy, glossary) {
       hit("Double stitch", 7, "Arcane", { hits: 2 }),
       { ...hit("Wind the spool", 7, "Arcane"), guard: 6 },
     ],
-    "Two Nausea spaces disrupt formations. Maximum two active Corruptions.",
+    "Marks two Nausea spaces each cycle, up to ten on the grid. Covered Nausea still counts toward this limit.",
     "Spread your damage, or cover the sick spaces.",
-    { corruptionCap: 2 },
+    { corruptionCap: 10 },
   );
   add(
     "borrowedFace",
