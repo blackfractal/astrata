@@ -135,7 +135,7 @@ test("Hymn targets charged damage and banked Ward defense over expensive utility
   put(g, "magnify", 12);
   assert.deepEqual(gridTargets(b, g.tell(b.enemies[0])), [0, 4]);
   assert.equal(stackValue(b, 4).power, 20); // Charge does not hide eventual power.
-  kiln.used = 6;
+  kiln.used = 8;
   kiln.charge = 0; // Cannot reach the threshold with one use left.
   assert.deepEqual(gridTargets(b, g.tell(b.enemies[0])), [0, 8]);
   ward.ward = 0;
@@ -148,7 +148,7 @@ test("Hymn targets charged damage and banked Ward defense over expensive utility
     doomed,
   );
 });
-test("Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln two one-Channel activations from firing", () => {
+test("Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln three one-Channel activations from firing", () => {
   const g = setup("beetle"),
     b = g.s.battle;
   put(g, "ignis", 0);
@@ -157,7 +157,7 @@ test("Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln two one-C
   g.act(g.legal().find((a) => a.type === "place" && a.slot === 1));
   const kiln = b.grid[1][0];
   assert.equal(kiln.charge, 1);
-  assert.equal(g.allowance(kiln, 1), 7);
+  assert.equal(g.allowance(kiln, 1), 9);
   put(g, "conduit", 5);
   b.phase = "activate";
   b.channel = 2;
@@ -169,10 +169,13 @@ test("Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln two one-C
   assert.equal(kiln.charge, 2);
   assert.equal(b.channel, 2);
   b.turn++;
+  g.act(g.legal().find((a) => a.type === "activate" && a.slot === 1));
+  assert.equal(kiln.charge, 3);
+  b.turn++;
   const hp = b.enemies[0].hp;
   b.enemies[0].element = "Arcane";
   g.act(g.legal().find((a) => a.type === "activate" && a.slot === 1));
   assert.equal(b.enemies[0].hp, hp - 20);
   assert.equal(b.enemies[0].status.burn, 2);
-  assert.equal(kiln.used, 2);
+  assert.equal(kiln.used, 3);
 });

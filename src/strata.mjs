@@ -45,7 +45,7 @@ export const CORRUPTIONS = {
     name: "Hypnosis",
     symbol: "◎",
     advanced: true,
-    text: "At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Charging cards gain a charge instead. Once-per-turn activation still applies. Machine Elves and utility-only cards cannot be compelled. Displacement onto Hypnosis compels immediately, even after a normal activation, but never twice that enemy round. Mend takes two turns, or one when upgraded.",
+    text: "At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Only damage and Guard effects resolve; other effects, including charging, resources, healing and repairs, are wasted. Once-per-turn activation still applies. Utility cards and Machine Elves also spend their use without granting their benefit. Displacement onto Hypnosis compels immediately, even after a normal activation, but never twice that enemy round. Mend takes two turns, or one when upgraded.",
   },
 };
 

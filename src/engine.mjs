@@ -763,6 +763,8 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.18",
+          "2.1.17",
           "2.1.16",
           "2.1.15",
           "2.1.14",
@@ -3732,9 +3734,8 @@ export class Game {
           const d = cards[c.id];
           if (d.unplaceable) continue;
           for (let i = 0; i < b.grid.length; i++) {
-            const baseCost = d.recallPlacement
-              ? this.recallCost(b.grid[i])
-              : d.focus;
+            const recall = d.recallPlacement ? this.recallCost(b.grid[i]) : 0;
+            const baseCost = recall == null ? null : d.focus + recall;
             const cost =
               baseCost == null ? Infinity : baseCost + (b.milky ? 1 : 0);
             if (cost > b.focus) continue;

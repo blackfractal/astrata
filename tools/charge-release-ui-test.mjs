@@ -4,16 +4,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Game } from "../src/engine.mjs";
 import { VERSION } from "../src/content.mjs";
-const report = { package: "1.3.80", version: VERSION, checks: [], errors: [] };
+const report = { package: "2.1.32", version: VERSION, checks: [], errors: [] };
 await fs.mkdir("reports/screenshots/charge-release", { recursive: true });
 for (const [name, id, charge, water, used] of [
   ["kiln-empty", "kiln", 0, false, 0],
-  ["kiln-fill", "kiln", 1, false, 0],
-  ["kiln-release", "kiln", 2, false, 0],
+  ["kiln-fill", "kiln", 2, false, 0],
+  ["kiln-release", "kiln", 3, false, 0],
   ["seed-water", "seed", 0, true, 0],
   ["seed-cap", "seed", 2, true, 0],
   ["seed-release", "seed", 3, false, 0],
-  ["kiln-spent", "kiln", 2, false, 7],
+  ["kiln-spent", "kiln", 3, false, 9],
 ]) {
   const g = new Game(80);
   g.s.equipment = {};
@@ -60,7 +60,7 @@ for (const [name, id, charge, water, used] of [
     await p.locator('[data-ui="continue"]').click();
     const meter = p.locator('[data-slot="10"] .charge-meter'),
       button = p.locator('[data-activate-slot="10"]');
-    const required = id === "kiln" ? 2 : 3;
+    const required = 3;
     assert.match(
       await meter.textContent(),
       new RegExp(`Charge ${charge}/${required}`),
@@ -71,7 +71,7 @@ for (const [name, id, charge, water, used] of [
       new RegExp(`Charge ${charge}/${required}`),
     );
     await p.keyboard.press("Escape");
-    if (used === 7) {
+    if (name === "kiln-spent") {
       assert.match(await meter.textContent(), /Spent/);
       assert.equal(await button.getAttribute("aria-disabled"), "true");
     } else {

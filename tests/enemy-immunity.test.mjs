@@ -71,7 +71,7 @@ test("Kiln still damages a Water target but its area Burn skips only Water enemi
   const g = base("Water"),
     b = g.s.battle,
     c = put(g, "kiln");
-  c.charge = 2;
+  c.charge = 3;
   b.enemies[1].element = "Earth";
   activate(g);
   assert.equal(b.enemies[0].hp, 190);
@@ -159,7 +159,7 @@ test("Cinder Hart rejects Burn and Poison from cards and area effects; Corrode r
   activate(g, 1);
   assert.deepEqual(e.status, { burn: 0, poison: 0, corrode: 0 });
   const kiln = put(g, "kiln", 2);
-  kiln.charge = 2;
+  kiln.charge = 3;
   const hp = e.hp;
   activate(g, 2);
   assert.equal(e.hp, hp - 20);

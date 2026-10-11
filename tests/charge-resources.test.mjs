@@ -109,7 +109,7 @@ test("every charged card builds charge without an enemy target or premature effe
     assert.equal(action(g, 0).length, 0);
   }
 });
-test("Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its third activation", () => {
+test("Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its fourth activation", () => {
   const g = setup(),
     b = g.s.battle,
     c = put(g, "kiln", 0);
@@ -119,7 +119,7 @@ test("Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its
     e.hp = 100;
     e.element = "Arcane";
   }
-  for (let n = 0; n < 2; n++) {
+  for (let n = 0; n < 3; n++) {
     g.act(action(g, 0)[0]);
     b.turn++;
   }
@@ -136,19 +136,20 @@ test("Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its
     [2, 2],
   );
   assert.equal(c.charge, 0);
-  assert.equal(c.used, 3);
-  assert.equal(b.channel, 3);
+  assert.equal(c.used, 4);
+  assert.equal(b.channel, 2);
 });
 test("Kiln on-place Fire charges can make the first activation a targeted release; Burn still reaches others after a kill", () => {
   const g = setup(),
     b = g.s.battle;
   put(g, "ignis", 0);
   put(g, "heat", 2);
+  put(g, "ignis", 8);
   const c = g.newCard("kiln");
   b.hand = [c];
   b.focus = 2;
   g.act(g.legal().find((a) => a.type === "place" && a.slot === 1));
-  assert.equal(b.grid[1][0].charge, 2);
+  assert.equal(b.grid[1][0].charge, 3);
   b.enemies[0].hp = 10;
   g.act(g.legal().find((a) => a.type === "activatePhase"));
   g.act(action(g, 1).find((a) => a.target === 900));
@@ -159,7 +160,7 @@ test("Flicker blocks Kiln only for the negating enemy, including its secondary B
   const g = setup(),
     b = g.s.battle,
     c = put(g, "kiln", 0);
-  c.charge = 2;
+  c.charge = 3;
   b.phase = "activate";
   b.enemies[0].flicker = true;
   g.act(action(g, 0).find((a) => a.target === 900));

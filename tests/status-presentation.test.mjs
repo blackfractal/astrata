@@ -49,7 +49,7 @@ test("Kiln area Burn emits one impact per target; status ticks carry their type"
   const g = base(),
     b = g.s.battle,
     c = g.instance(g.newCard("kiln"));
-  c.charge = 2;
+  c.charge = 3;
   b.grid[6] = [c];
   g.act(
     g

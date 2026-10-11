@@ -83,11 +83,11 @@ try {
   await p.locator("[data-close]").click();
   assert.equal(
     await p.locator(`[data-hand="${under.uid}"] .cost`).textContent(),
-    "R",
+    "1+R",
   );
   await drag(under.uid, 8);
   state = await latest();
-  assert.equal(state.battle.focus, 4);
+  assert.equal(state.battle.focus, 3);
   assert.equal(state.battle.grid[8].length, 0);
   for (const c of [host, pal, lat])
     assert.equal(await p.locator(`[data-hand="${c.uid}"]`).count(), 1);
@@ -113,12 +113,12 @@ try {
   await p.screenshot({ path: dir + "/replayed-and-standalone.png" });
   assert.deepEqual(errors, []);
   const report = {
-    package: "2.1.19",
+    package: "2.1.31",
     checks: [
       "Palimpsest discounts displayed Recall to zero",
       "Lattice drag opens seven-element choice before spending; cancel preserves hand and Focus",
       "Meld revives host to5WaterWard without resetting used count",
-      "Undertow costs zero after discount; returns separated reset stack to hand and discards itself",
+      "Undertow displays 1+R and costs1 even after Recall discount to zero; returns separated reset stack to hand and discards itself",
       "Replayed Ward resets toArcane/1Ward/2uses",
       "Standalone FireLattice starts1 and activates to6",
       "No renderer errors",

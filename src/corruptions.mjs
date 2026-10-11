@@ -120,17 +120,9 @@ export function prepareCorruption(g, e, t) {
         )
       )
         return [];
-      const c = top(stack),
-        d = cards[c?.id],
-        f = d?.effects;
+      const c = top(stack);
       if (kind === "hole" && stack.length) return [];
-      if (
-        kind === "hypnosis" &&
-        (!c ||
-          g.allowance(c, i) <= 0 ||
-          !(f.damage || f.hpDamage || f.shield || f.ward || f.randomDamage))
-      )
-        return [];
+      if (kind === "hypnosis" && (!c || g.allowance(c, i) <= 0)) return [];
       return [i];
     });
     if (!candidates.length) continue;
@@ -215,13 +207,8 @@ export function retargetCoveredCorruptions(g, covered) {
       let candidates = b.grid.flatMap((stack, i) => {
         if (b.corruptions[i] || reserved.includes(i)) return [];
         if (mark.kind !== "hypnosis") return stack.length ? [] : [i];
-        const c = top(stack),
-          f = cards[c?.id]?.effects;
-        return c &&
-          g.allowance(c, i) > 0 &&
-          (f.damage || f.hpDamage || f.shield || f.ward || f.randomDamage)
-          ? [i]
-          : [];
+        const c = top(stack);
+        return c && g.allowance(c, i) > 0 ? [i] : [];
       });
       if (mark.kind !== "hypnosis" && candidates.length) {
         const score = (i) =>
@@ -387,17 +374,13 @@ export function compelCard(g, i, q, forced = false) {
   const d = cards[c.id],
     f = d.effects,
     source = b.enemies.find((e) => e.uid === q.source && e.hp > 0);
-  if (
-    !source ||
-    !(f.damage || f.hpDamage || f.randomDamage || f.shield || f.ward)
-  )
-    return;
+  if (!source) return;
   c.hypnosisTurn = b.turn;
   c.used++;
   c.lastActivatedTurn = b.turn;
   g.present("corruption", { slot: i, name: "Hypnosis · " + d.name });
   if (d.charge && c.charge < d.charge) {
-    c.charge = Math.min(d.charge, c.charge + 1);
+    g.log("Hypnosis wastes a use of " + d.name + "; no charge gained.");
     return;
   }
   if (d.charge) c.charge = 0;
@@ -417,5 +400,9 @@ export function compelCard(g, i, q, forced = false) {
     source.guard += f.shield
       ? g.shieldPower(c, i)
       : corruptionPower(b, i, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0));
+  if (!damage && !f.shield && !f.ward)
+    g.log(
+      "Hypnosis wastes a use of " + d.name + "; utility effects suppressed.",
+    );
   if (d.destroyAfterActivation) g.destroyCard(i, c.uid);
 }

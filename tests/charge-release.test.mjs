@@ -38,7 +38,7 @@ function activate(g) {
   g.act(a);
   return a;
 }
-test("Kiln placement caps at two charges and all seven-use schedules match the agreed releases", () => {
+test("Kiln placement caps at three charges and all nine-use schedules match the agreed releases", () => {
   for (const n of [0, 1, 2, 3, 4]) {
     const { g, b, e } = setup();
     b.grid[10] = [];
@@ -48,13 +48,13 @@ test("Kiln placement caps at two charges and all seven-use schedules match the a
     for (const i of [3, 9, 11, 17].slice(0, n)) put(g, "ignis", i);
     g.act(g.legal().find((a) => a.type === "place" && a.slot === 10));
     const c = b.grid[10][0];
-    assert.equal(c.charge, Math.min(n, 2));
+    assert.equal(c.charge, Math.min(n, 3));
     b.phase = "activate";
     const releases = [];
-    for (let k = 1; k <= 7; k++) {
+    for (let k = 1; k <= 9; k++) {
       const hp = e.hp,
         a = activate(g);
-      assert.equal(g.allowance(c, 10), 7 - k);
+      assert.equal(g.allowance(c, 10), 9 - k);
       if (e.hp < hp) {
         releases.push(k);
         assert.equal(hp - e.hp, 20);
@@ -67,11 +67,63 @@ test("Kiln placement caps at two charges and all seven-use schedules match the a
       assert.equal(actions(g).length, 0, "once per turn");
       b.turn++;
     }
-    assert.deepEqual(releases, n === 0 ? [3, 6] : n === 1 ? [2, 5] : [1, 4, 7]);
-    assert.equal(c.charge, n === 0 ? 1 : n === 1 ? 2 : 0);
+    assert.deepEqual(
+      releases,
+      [
+        [4, 8],
+        [3, 7],
+        [2, 6],
+        [1, 5, 9],
+      ][Math.min(n, 3)],
+    );
+    assert.equal(c.charge, [1, 2, 3, 0][Math.min(n, 3)]);
     assert.equal(actions(g).length, 0);
   }
 });
+test("Undertow replay grants current placement charges but only three Fire neighbors allow an immediate shot", () => {
+  for (const n of [2, 3, 4]) {
+    const { g, b, c } = setup();
+    c.used = 7;
+    c.charge = 0;
+    for (const i of [3, 9, 11, 17].slice(0, n)) put(g, "ignis", i);
+    b.phase = "place";
+    b.focus = 4;
+    const u = g.newCard("undertow");
+    b.hand = [u];
+    g.act(
+      g
+        .legal()
+        .find((a) => a.type === "place" && a.uid === u.uid && a.slot === 10),
+    );
+    g.act(
+      g
+        .legal()
+        .find((a) => a.type === "place" && a.uid === c.uid && a.slot === 10),
+    );
+    const replayed = b.grid[10][0];
+    assert.equal(b.focus, 0);
+    assert.equal(replayed.charge, Math.min(n, 3));
+    assert.equal(g.allowance(replayed, 10), 9);
+    b.phase = "activate";
+    assert.equal(!!actions(g)[0].effects.charging, n === 2);
+    assert.equal(actions(g)[0].target != null, n >= 3);
+  }
+});
+
+test("Prior-rules Kiln saves preserve stored charges and used allowance without retroactive placement bonuses", () => {
+  const { g, b, c } = setup();
+  c.used = 6;
+  c.charge = 2;
+  for (const i of [3, 9, 11]) put(g, "ignis", i);
+  g.s.version.rules = "2.1.18";
+  const h = new Game(0, structuredClone(g.s));
+  const hc = h.s.battle.grid[10][0];
+  assert.equal(hc.used, 6);
+  assert.equal(hc.charge, 2);
+  assert.equal(h.allowance(hc, 10), 3);
+  assert.equal(actions(h)[0].effects.charging, true);
+});
+
 test("Patient Seed gives one unwatered or two watered releases with no damage on filling", () => {
   for (const wet of [false, true]) {
     const { g, b, c, e } = setup("seed");
@@ -173,7 +225,7 @@ test("every Charge card has a separate release, costs Channel and preserves hist
   for (const [id, uses] of [
     ["surge", 2],
     ["eclipse", 3],
-    ["kiln", 3],
+    ["kiln", 4],
     ["seed", 4],
   ]) {
     const { g, b, c, e } = setup(id),
@@ -194,14 +246,14 @@ test("every Charge card has a separate release, costs Channel and preserves hist
 test("pending charge and spent allowance survive saves; legacy overcharge clamps and Recall resets", () => {
   const { g, b, c } = setup();
   c.charge = 4;
-  c.used = 6;
+  c.used = 8;
   g.s.version = { ...g.s.version, rules: "1.3.42" };
   const h = new Game(0, g.s),
     hc = h.s.battle.grid[10][0];
-  assert.equal(hc.charge, 2);
-  assert.equal(hc.used, 6);
+  assert.equal(hc.charge, 3);
+  assert.equal(hc.used, 8);
   activate(h);
-  assert.equal(hc.used, 7);
+  assert.equal(hc.used, 9);
   assert.equal(hc.charge, 0);
   const again = new Game(0, h.s);
   assert.equal(actions(again).length, 0);

@@ -75,7 +75,7 @@ test("attuned attack previews selected element; charging and random attacks make
   assert.equal(attackPreview(b, c, 0, e, "Wind").damage, 2);
   const kiln = put(g, "kiln", 1);
   assert.equal(attackPreview(b, kiln, 1, e), null);
-  kiln.charge = 2;
+  kiln.charge = 3;
   assert.equal(attackPreview(b, kiln, 1, e).damage, 30);
   assert.match(upgradeHelp(cards.blast), /Damage 4 → 7/);
   assert.match(upgradeHelp(cards.shield), /Shield 4 → 7/);

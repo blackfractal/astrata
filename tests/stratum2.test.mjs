@@ -11,6 +11,7 @@ import {
   startRepairs,
   angerChoice,
   triggerAnger,
+  compelCard,
 } from "../src/corruptions.mjs";
 import { startLoomTutorial, LOOM_STEPS } from "../src/loom-tutorial.mjs";
 const arena = (id = "mendingTutor") => {
@@ -335,7 +336,7 @@ test("Uncovered Mine queues 18 Arcane through ordinary defenses", () => {
   assert.equal(b.reaction.damage, 18);
   assert.equal(b.reaction.pierce, undefined);
 });
-test("Hypnosis spends normal allowance, obeys once per turn, charges without release, and can grant enemy Guard", () => {
+test("Hypnosis spends normal allowance, obeys once per turn, wastes charging, and can grant enemy Guard", () => {
   const g = arena(),
     b = g.s.battle,
     c = place(g, "blast", 8);
@@ -350,12 +351,108 @@ test("Hypnosis spends normal allowance, obeys once per turn, charges without rel
   const kiln = place(g, "kiln", 8);
   b.jobs = [];
   corruptionRound(g);
-  assert.equal(kiln.charge, 1);
+  assert.equal(kiln.charge, 0);
+  assert.equal(kiln.used, 1);
   assert.equal(b.jobs.length, 0);
   const shield = place(g, "shield", 8);
   corruptionRound(g);
   assert.equal(b.enemies[0].guard, 4);
 });
+test("Hypnosis wastes utility uses without resource, healing, repair or charge benefits", () => {
+  for (const id of [
+    "conduit",
+    "focus",
+    "clear",
+    "rain",
+    "elves",
+    "kiln",
+    "bloom",
+  ]) {
+    const g = arena(),
+      b = g.s.battle;
+    b.grid = b.grid.map(() => []);
+    const c = place(g, id, 8);
+    g.s.hp = 20;
+    q(g, 8, "hypnosis");
+    const before = structuredClone({
+      channel: b.channel,
+      next: b.next,
+      permanent: b.permanent,
+      hp: g.s.hp,
+    });
+    b.jobs = [];
+    corruptionRound(g);
+    assert.equal(c.used, 1, id);
+    assert.equal(c.lastActivatedTurn, b.turn, id);
+    assert.deepEqual(
+      { channel: b.channel, next: b.next, permanent: b.permanent, hp: g.s.hp },
+      before,
+      id,
+    );
+    assert.equal(b.jobs.length, 0, id);
+    assert.equal(c.mending, undefined, id);
+    assert.equal(c.charge || 0, 0, id);
+    assert.equal(b.corruptions[8].kind, "hypnosis", id);
+    corruptionRound(g);
+    assert.equal(c.used, 1, id + " once per enemy round");
+  }
+});
+
+test("Hypnosis can target utility cards and displacement wastes a fresh use after normal activation", () => {
+  const g = arena(),
+    b = g.s.battle,
+    e = b.enemies[0];
+  b.grid = b.grid.map(() => []);
+  const c = place(g, "conduit", 8);
+  prepareCorruption(g, e, { markCorruption: "hypnosis", count: 1 });
+  assert.equal(e.corruptionPlan[0].slot, 8);
+  q(g, 8, "hypnosis");
+  c.used = 1;
+  c.lastActivatedTurn = b.turn;
+  const channel = b.channel;
+  compelCard(g, 8, b.corruptions[8], true);
+  assert.equal(c.used, 2);
+  assert.equal(b.channel, channel);
+  compelCard(g, 8, b.corruptions[8], true);
+  assert.equal(c.used, 2);
+});
+
+test("Hypnosis releases a ready Kiln and suppresses Sapling growth while retaining damage", () => {
+  for (const id of ["kiln", "sapling"]) {
+    const g = arena(),
+      b = g.s.battle;
+    b.grid = b.grid.map(() => []);
+    const c = place(g, id, 8);
+    place(g, "shield", 9);
+    if (id === "kiln") c.charge = cards.kiln.charge;
+    const hp = c.hp,
+      damage = g.cardPower(c, 8);
+    q(g, 8, "hypnosis");
+    b.jobs = [];
+    corruptionRound(g);
+    assert.equal(b.jobs[0].damage, damage, id);
+    assert.equal(c.hp, hp, id);
+    assert.equal(c.charge || 0, 0, id);
+    assert.equal(c.used, 1, id);
+  }
+});
+
+test("Anger still grants Wild Conduit and Focus Energy benefits", () => {
+  for (const id of ["conduit", "focus"]) {
+    const g = arena(),
+      b = g.s.battle;
+    b.grid = b.grid.map(() => []);
+    const c = place(g, id, 15);
+    q(g, 16, "anger");
+    b.channel = 2;
+    const focus = b.permanent.focus;
+    triggerAnger(g, 16);
+    assert.equal(c.used, 1, id);
+    assert.equal(b.channel, id === "conduit" ? 3 : 1, id);
+    assert.equal(b.permanent.focus, focus + (id === "focus" ? 1 : 0), id);
+  }
+});
+
 test("Unchanged telegraphs persist across reload; resolution never silently retargets", () => {
   const g = arena("seamstress"),
     b = g.s.battle,

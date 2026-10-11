@@ -136,7 +136,7 @@ for (const mode of ["normal", "fast", "skip", "reduced"]) {
   b.phase = "activate";
   b.hand = [];
   b.grid[0] = [g.instance(g.newCard("kiln"))];
-  b.grid[0][0].charge = 2;
+  b.grid[0][0].charge = 3;
   for (const e of b.enemies) {
     e.hp = e.maxHp = 100;
     e.element = "Arcane";

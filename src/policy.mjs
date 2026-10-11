@@ -59,6 +59,8 @@ export class WeightedPolicy {
             (d?.effects.damage || d?.effects.shield || d?.effects.ward)
           )
             score -= 12;
+          else if (q?.kind === "hypnosis" && d && d.limit !== 0)
+            score -= 6; // Utility effects are suppressed, but the card loses a use.
           if (
             b.enemies.some((e) =>
               e.corruptionPlan?.some(

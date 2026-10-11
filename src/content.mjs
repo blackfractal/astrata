@@ -5,8 +5,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.17",
-  content: "2.1.23",
+  rules: "2.1.19",
+  content: "2.1.25",
   observation: 2,
   actions: 7,
 };
@@ -200,10 +200,10 @@ card(
   "Fire",
   "Object",
   2,
-  7,
+  9,
   { damage: 20, burnAll: 2 },
-  "Charge 2. When fully charged, spend a separate activation to deal 20 damage to one enemy and Burn 2 to all enemies, then reset to 0. On place: +1 Charge per adjacent Fire card, maximum 2.",
-  { charge: 2, onPlaceCharge: true },
+  "Charge 3. When fully charged, spend a separate activation to deal 20 damage to one enemy and Burn 2 to all enemies, then reset to 0. On place: +1 Charge per adjacent Fire card, maximum 3.",
+  { charge: 3, onPlaceCharge: true },
 );
 card(
   "cinder",
@@ -246,7 +246,7 @@ card(
   1,
   0,
   {},
-  "Play on a recallable card. Placement costs that stack's current Recall cost. Return the entire stack to your revealed hand as separate, reset cards, ready to place again at their normal Focus costs. Undertow goes to discard. Cannot bypass Locked or Cannot Recall.",
+  "Play on a recallable card. Costs 1 Focus plus that stack's current Recall cost. Return the entire stack to your revealed hand as separate, reset cards, ready to place again at their normal Focus costs. Undertow goes to discard. Cannot bypass Locked or Cannot Recall.",
   { stack: "returnHand", requiresHost: true, recallPlacement: true },
 );
 card(

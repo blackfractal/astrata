@@ -69,7 +69,7 @@ test("area batches preserve guard, Flicker, kills and single-target animations s
 test("Kiln fires its single hit before a simultaneous area Burn batch, including immune targets", () => {
   const g = setup("kiln");
   g.capturePresentation = true;
-  g.s.battle.grid[10][0].charge = 2;
+  g.s.battle.grid[10][0].charge = 3;
   g.s.battle.enemies[1].element = "Water";
   activate(g);
   const hits = g.presentation.filter((f) => f.kind === "hit"),

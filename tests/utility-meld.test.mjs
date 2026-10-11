@@ -63,7 +63,7 @@ test("Palimpsest needs a host and cannot bypass Cannot Recall or Locked", () => 
   host.lock = true;
   assert.equal(g.recallCost(b.grid[8]), null);
 });
-test("Undertow pays actual stack Recall, returns reset separate cards to hand and discards itself", () => {
+test("Undertow pays 1 Focus plus stack Recall, returns reset separate cards to hand and discards itself", () => {
   const { g, b } = setup();
   const host = place(g, "plasma");
   place(g, "plasma");
@@ -73,9 +73,9 @@ test("Undertow pays actual stack Recall, returns reset separate cards to hand an
   host.transmuted = true;
   const uid = g.newCard("undertow");
   b.hand.push(uid);
-  b.focus = 1;
+  b.focus = 2;
   const a = act(g, "place", (a) => a.uid === uid.uid && a.slot === 8);
-  assert.equal(a.costs.focus, 1);
+  assert.equal(a.costs.focus, 2);
   assert.equal(b.focus, 0);
   assert.equal(b.grid[8].length, 0);
   assert.equal(b.hand.length, 3);
@@ -97,13 +97,18 @@ test("Undertow pays actual stack Recall, returns reset separate cards to hand an
   assert.equal(b.grid[8][0].element, "Chaos");
   assert.equal(g.allowance(b.grid[8][0], 8), 2);
 });
-test("Zero-cost Undertow works at zero Focus; expensive and unrecallable targets remain illegal", () => {
+test("Undertow still costs 1 Focus for a free Recall; expensive and unrecallable targets remain illegal", () => {
   const { g, b } = setup();
   place(g, "ward");
   place(g, "palimpsest");
   const u = g.newCard("undertow");
   b.hand.push(u);
   b.focus = 0;
+  assert.equal(
+    g.legal().some((a) => a.type === "place"),
+    false,
+  );
+  b.focus = 1;
   act(g, "place", (a) => a.uid === u.uid && a.slot === 8);
   assert.equal(b.focus, 0);
   assert.equal(b.hand.length, 2);
@@ -116,7 +121,7 @@ test("Zero-cost Undertow works at zero Focus; expensive and unrecallable targets
     h.g.legal().some((a) => a.type === "place"),
     false,
   );
-  h.b.focus = 2;
+  h.b.focus = 3;
   assert.ok(h.g.legal().some((a) => a.type === "place"));
   h.b.grid[8].at(-1).lock = true;
   assert.equal(
@@ -124,6 +129,30 @@ test("Zero-cost Undertow works at zero Focus; expensive and unrecallable targets
     false,
   );
 });
+test("Undertow plus Kiln replay costs four Focus, with placement taxes added once", () => {
+  for (const tax of [0, 1]) {
+    const { g, b } = setup();
+    const kiln = place(g, "kiln");
+    const u = g.newCard("undertow");
+    b.hand = [u];
+    b.focus = 4 + tax;
+    b.milky = tax;
+    const a = act(g, "place", (a) => a.uid === u.uid && a.slot === 8);
+    assert.equal(a.costs.focus, 2 + tax);
+    assert.equal(b.focus, 2);
+    act(g, "place", (a) => a.uid === kiln.uid && a.slot === 8);
+    assert.equal(b.focus, 0);
+  }
+});
+
+test("Previous rules saves remain loadable after the balance update", () => {
+  const { g } = setup();
+  const saved = structuredClone(g.s);
+  saved.version.rules = "2.1.17";
+  const loaded = new Game(0, saved);
+  assert.equal(loaded.s.hp, g.s.hp);
+});
+
 test("Lattice offers every element before placement; standalone stores1 and adds5 twice with persistent choice", () => {
   const { g, b } = setup();
   const c = g.newCard("lattice");
