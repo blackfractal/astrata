@@ -1588,3 +1588,83 @@ All494rules tests pass, including suppressed utility/charges, ready releases, un
 2026-10-11. Jonathan approved three required charges, nine total activations, and starting charges equal to adjacent Fire cards capped at three. No surplus from a fourth neighbor; normal placement bonuses still apply after Undertow. Damage20, Burn2all, Focus2, Channel1 and Recall1 unchanged. Release remains separate and resets charges to zero. Zero/one/two/three-or-more Fire neighbors yield releases4,8 /3,7 /2,6 /1,5,9. Noted that two-neighbor formation can still finish fully charged and spent; retained requested nine-use limit. Existing saves retain stored charge/used counts without retroactive adjacency grants. Package2.1.32/rules2.1.19/content2.1.25/design4.181, previous2.1.18 save compatibility retained.
 
 496rules tests pass, covering every adjacency count, Undertow's four-Focus replay with partial/full charges, legacy saves, separate release, area Burn and elemental effects. Seven isolated packaged UI cases verify0/3 through3/3, charging without targeting/damage, targeted release, nine-use allowance and Spent; Patient Seed unchanged, no renderer errors. Screenshot inspected. Portable app and ZIP rebuilt. No normal player-profile edits or commit/push. Additional implementation, tests, UI verification and packaging approximately6minutes.
+
+## Stratum 3 planning — Corruption, Hex and Ideon definitions, round148
+
+2026-10-11. Jonathan clarified ownership and scope: Corruptions affect spaces/cards/player; Hexes are player-controlled negative cards; Ideon is a distinct enemy-controlled card type, not Ally or Spell. Enemy move lists schedule direct actions, chosen Ideons, or both. Defeated Ideons return to a theoretical enemy deck with recurrence determined by that enemy. Primary S3 focus is disruption of established S2 engines. Main design4.182 and S3 draft0.3 updated; removed contradictory Ally/Spell roles, clarified older hybrid-Hex idea, recorded leeches, guardians, Recall-locking intruders, crawlers, Ally hunters and formation/stat/element disruption as candidates. Specific values and unresolved interaction rules remain proposals. Documentation only; executable2.1.32 unchanged. Reviewed terminology consistency, no gameplay tests or rebuild needed. Additional time approximately4minutes.
+
+## Stratum 3 planning — Arcane-vulnerable guardian, round149
+
+2026-10-11. Jonathan replaced the Arcane-only guardian with resistance to all elemental attacks and weakness to Arcane, preserving brute-force elemental answers. S3 draft0.4 records the revised direction and proposes half elemental/one-and-a-half Arcane attack damage, rounded up, as a local defensive override; numerical values remain unapproved. Main design4.182 and executable2.1.32 unchanged. Documentation reviewed; no runtime changes, tests or rebuild. Additional time approximately2minutes.
+
+## Stratum 3 planning — reusable enemies and Mind Hive survival boss, round150
+
+2026-10-11. Jonathan requested retaining prior enemy concepts for possible Motes/Eidolons as well as bosses. S3 draft0.5 preserves Kindly Hunger, Knotkeeper, Procession, Borrowed Face and Ally-hunter roles. Added Mind Hive/Endless Swarm proposal:100HP invulnerable owner drains itself creating insect Ideons, milestone swarms and every-turn final10HP swarm pressure, all insects die at owner0. Recorded unresolved per-insect versus per-turn countdown interpretation and requested clarification; no silent timing choice. Duration, threshold crossings, full-grid spawning, non-attack HP effects and death ordering remain open. Documentation only; no runtime changes or rebuild. Reviewed document structure and proposal/decision distinctions. Additional time approximately4minutes.
+
+## Stratum 3 planning — fixed shorter Mind Hive countdown, round151
+
+2026-10-11. Jonathan clarified one HP lost per turn regardless of insect count, and rejected100turns in favor of a fixed shorter encounter with dramatically worse final turns. S3 draft0.6 replaces per-insect depletion and obsolete100HP milestone thresholds.15turns proposed for testing (five setup, six rising, four finale), not approved duration; precise decrement/action ordering and wave sizes remain open. Documentation only, executable unchanged. Additional time approximately2minutes.
+
+## Stratum 3 planning — Cnidarian and escalating tentacle replacements, round152
+
+2026-10-11. Recorded Jonathan's Cnidarian Archon candidate in S3 draft0.7: jellyfish-like owner, tentacles grow with age and target Allies; without Allies drift toward player and inflict Poison at player-side edge. First3 tentacle deaths replaced1for1, next3 replaced2for1, then3for1 and continuing tiers. Explicitly separated unapproved recommendations (newborn base strength, visible delayed replacement commands, damageable owner) from user concept. Values, targeting/interception, movement, capacity and lifecycle remain open. Documentation only; main design4.182/executable2.1.32 unchanged. Additional time approximately3minutes.
+
+## Stratum 3 planning — cannon projectiles and moving fields, round153
+
+2026-10-11. Added Jonathan's giant-cannon Archon proposal to S3 draft0.8: attackable projectiles cross the grid, suggested2spaces/turn, cover cards and carry colored activation restrictions; unopposed arrival damages player. Confirmed direct coverage blocks activation, defense and Recall; elemental fields accept chosen Attunement. Recorded shared-use, player-damage and self-destruction field variants. Projectile-as-Ideon/attached-field classification recommended; kept unresolved overlap, timing, layers, radius and caps explicit. No runtime changes or rebuild; main design4.182/executable2.1.32 unchanged. Documentation verified. Additional time approximately4minutes.
+
+## Stratum 3 planning — Transmute source element under fields, round154
+
+2026-10-11. Jonathan clarified that Arcane Transmute cannot activate inside a field requiring a different element, even if its target would become that element. S3 draft0.9 explicitly checks the source activation element, with legitimate Attunement only for cards supporting it. No gameplay changes or rebuild. Documentation reviewed; approximately1minute additional time.
+
+## Stratum 3 planning — cannon cycle and separate launch/arrival attacks, round155
+
+2026-10-11. S3 draft0.10 records Jonathan's repeated2or3elementalshots then destructionfield shot. Counter-element targets strongest elemental player card (including GroveTitan); shared-use/Arcane fallback without elemental cards. Bullets cross target row righttoleft, cover target for a playerturn, continue toward player. Each launch also causes a normally defended matching attack; surviving arrival deals equipment-only Pierce, consistent with current definition. Recommended committed paths and target-column alignment, with exact valuations, counters, timing and magnitudes left open. Painfield retained outside proposed cycle. Documentation only; no runtime changes. Additional time approximately4minutes.
+
+## Stratum 3 planning — cannon entry parity, round156
+
+2026-10-11. Jonathan chose fixed two-space movement with starting column selected by target parity: odd targets spawncolumn7, even targets spawncolumn6, on the target row. S3 draft0.11 records both paths and preserves one player-turn coverage, including targets at entrycolumns6/7. Exact first movement and exit-impact ordering remain open. Documentation only; no game rebuild. Additional time approximately1minute.
+
+## Stratum 3 planning — developed-engine difficulty and companion options, round157
+
+2026-10-11. Jonathan emphasized strong S3 enemies against3–4Focus/Channel, established elemental combinations, two Bracelets/two Rings and S3 Ideon answers. Main design4.183/S3 draft0.12 reconcile this reference with earlier aspirational7Focus/5Channel, neither guaranteed. Recorded S3 companion as undecided, with shared supportive anti-Ideon ally proposal explicitly unapproved. Recommended testing combined attack/disruption/resource pressure rather than starter resources or HP inflation alone. Documentation only, no gameplay changes or build. Additional time approximately3minutes.
+
+## Stratum 3 planning — mobile Lucid Guide companion, round158
+
+2026-10-11. Jonathan accepted Lucid Guide concept and suggested many activations, each allowing up to one-space movement followed by adjacent Ideon mark/attack. S3 draft0.13 records direction and separates proposed1Focus/1Channel/12uses, combined action, orthogonal movement and mark follow-up from approved specifics. HP, damage, element, mark details and acquisition remain open. Preserved field restrictions and Sorcerer general movement identity. Documentation only; no runtime changes/build. Additional time approximately3minutes.
+
+## Stratum 3 planning — Lucid Guide and Familiar art direction, round159
+
+2026-10-11. Jonathan likes current Familiar art but finds it too majestic for S1 and wants an upright related spirit for Lucid Guide. Inspected selected Familiarv3; S3 draft0.14 records reference, Guide visual direction and a simpler future Familiar recommendation. Exact upright posture remains open. Existing art retained; no generation, replacement, asset switch or rebuild. Documentation verified. Additional time approximately2minutes.
+
+## Stratum 3 planning — Ideon answers and costly legendary proposals, round160
+
+2026-10-11. Jonathan requested practical anti-Ideon cards plus demanding legendary placement/Channel conditions. S3 draft0.15 records this direction and four explicitly unapproved card suggestions: Lucid Needle, Scouring Gale, Concord of Seasons, Second Spring. Reviewed existing legendary definitions; separated formation burst from Eclipse Seed and limited allowance recovery to spent offense/defense rather than resource engines or Destroyed cards. No gameplay changes or approved numerical balance. Documentation reviewed; no rebuild. Additional time approximately4minutes.
+
+## Stratum 3 planning — positional Gale and complete Recall specifications, round161
+
+2026-10-11. Jonathan liked Lucid Needle, rejected the original full-grid Gale as too powerful, and suggested 1 Channel with radius or a horizontal beam. S3 draft0.16 records Needle acceptance in principle and recommends a lane-based 8-Wind Ideon / 4-Wind enemy beam, explicitly unapproved. Added Recall/lifecycle to all five current card/companion drafts: Needle/Gale Recall1, Concord Recall2, Guide non-recallable, Second Spring non-recallable and destroyed after use. These new values remain proposals. Recorded requirement for explicit Recall/lifecycle in future card specs. Preserved radius alternative and guardian restrictions. No runtime changes or rebuild. Documentation diff checked; additional time approximately4minutes.
+
+## Stratum 3 planning — card revision approval, round162
+
+2026-10-12. Jonathan approved the preceding card revisions. S3 draft0.17 marks Lucid Needle, the 1-Channel 8/4 Wind horizontal-beam Scouring Gale, and the listed Recall/lifecycle decisions as approved. Retained proposal status for other unresolved legendary/companion details. Updated handoff; documentation only, no runtime changes or rebuild. Diff checked. Additional time approximately2minutes.
+
+## Stratum 3 planning — default Ideon interactions, round163
+
+2026-10-12. Recorded Jonathan's occupancy/failed-spawn, target scope, owner-only guardian, positional defense, status/element, no-friendly-synergy and owner-death rules in main design4.184 and S3 draft0.18. Added ownership indicator direction; removed settled questions from remaining work and reconciled boss full-grid/cleanup notes. Kept unresolved simultaneous guardian/AoE and Ally interception details explicit. Updated handoff. Documentation only; executable unchanged, no rebuild. Diff checked; additional time approximately4minutes.
+
+## Stratum 3 planning — encounters first, alien setting and barriers, round164
+
+2026-10-12. S3 draft0.19 records Jonathan's encounter-before-tutorial development order, ordinary encounters from unused concepts, continued Corruption use, normally non-overlapping cannon shots and possible immobilization-induced overlap. Added player/enemy-blocking overworld barriers with possible flying exceptions. Saved distinct subterranean setting and cannon naming suggestions as unapproved; no chosen setting/name inferred. Updated handoff, diff checked. No runtime changes, images or rebuild. Additional time approximately3minutes.
+
+## Stratum 3 planning — Lucent Depths and weapon naming, round165
+
+2026-10-12. Recorded Jonathan's selection of The Lucent Depths in S3 draft0.20 and replaced open-name wording. Revised cannon name proposals toward explicit weapon identity, avoiding another Engine name after Censer Engine. Boss name remains undecided; no gameplay/art changes. Updated handoff and checked diff. Additional time approximately1minute.
+
+## Stratum 3 planning — unified eldritch enemy theme, round166
+
+2026-10-12. Recorded Jonathan's S1 forest / S2 steampunk / S3 eldritch-alien thematic direction in S3 draft0.21. Added proposed creature treatments, owner-linked Ideon art and continuity with Astrata's painterly style, elemental language and meditation space. Kept suggestions distinct from chosen designs; no new origin lore, images or gameplay changes. Updated handoff; diff checked. Additional time approximately2minutes.
+
+## Stratum 3 planning — Refraction Cannon name approved, round167
+
+2026-10-12. Jonathan selected The Refraction Cannon and reiterated outer-horror/alienlike theme. Updated S3 draft0.22 heading, name status and art direction; updated handoff. Documentation only, no images or runtime changes. Diff checked; additional time approximately1minute.

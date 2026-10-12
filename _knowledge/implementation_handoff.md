@@ -1,3 +1,83 @@
+## Latest: The Refraction Cannon name approved — 2026-10-12
+
+S3 draft 0.22 / BUILD_LOG 167. Jonathan selected The Refraction Cannon and explicitly reinforced outer-horror/alienlike art. Preserve clear weapon silhouette within Astrata's painterly style; organic/mineral lens anatomy suggested, not steampunk. Supersedes previous open-name notes. No images or runtime changes.
+
+## Latest: S3 eldritch/alien enemy theme — 2026-10-12
+
+S3 draft 0.21 / BUILD_LOG 166. Jonathan wants S3 enemies themed eldritch horror/alien, contrasting S1 forest and S2 steampunk while unified within Astrata. Added suggested shared painterly style/materials/elemental cues, distinct alien silhouettes and owner-linked Ideon designs. Specific membrane/chitin/crystal creature treatments are proposals. Cannon should remain visibly a weapon with possible grown lenses/chitin, not another brass/steam Engine. No final boss name, art generation, runtime changes or new origin lore.
+
+## Latest: The Lucent Depths name approved — 2026-10-12
+
+S3 draft 0.20 / BUILD_LOG 165. Jonathan selected The Lucent Depths. Detailed art direction remains a recommendation. Cannon boss needs a clearly weapon-like name; Refraction Engine is too similar to Censer Engine. Proposed The Prismatic Cannon (recommended), The Refraction Cannon, The Thoughtlance; none selected. Documentation only, no runtime/assets change.
+
+## Latest: S3 encounters before tutorial, setting and barriers — 2026-10-12
+
+S3 draft 0.19 / BUILD_LOG 164. Jonathan wants actual encounter gameplay developed before committing tutorial; provisional outline retained/deferred. Ordinary encounters can use leftover boss concepts; some enemies MUST retain Corruptions. Cannon needs name, normal bullet schedules should avoid overlaps; possible future immobilization may cause dangerous overlap, not resolved. Recommended name The Refraction Engine (unapproved), distinguish centers vs field footprints in scheduling. Setting candidates alien underground/crystal/ice cave, distinct palette; proposed The Lucent Depths with indigo/cyan/violet caverns, not selected. Block-like overworld barriers stop player AND enemies. Flight crossing possible but not yet approved; no combat altitude system. Remaining barrier edges: diagonals, flight landing, hunter/teleport handling. Documentation only; no tutorial commitment or runtime change. Main design 4.184 / executable 2.1.32 unchanged.
+
+## Latest: Core Ideon interaction rules approved — 2026-10-12
+
+Main design 4.184 / S3 draft 0.18 / BUILD_LOG 163. Jonathan settled: empty-space occupancy by default, cover/under-card only by explicit ability, no legal spawn = no spawn. Ordinary attacks can target any Ideon; all-enemy damage includes all Ideons. Guardians protect owner only unless specified. Same-column or toward-target defenses allowed, no backward attack traversal. Ordinary elemental/status rules apply (Burn/Poison/Corrode); no friendly adjacency or attunement contributions. Owner death removes all its Ideons. Owner identification required; corner icon suggested, per-instance badge/hover linkage recommended. Remaining edge cases include guardian/AoE simultaneous ordering, Ally-target interception, Corruption interactions and cleanup triggers. Do not silently convert full-board failed spawns into damage or destroyed cards. Docs only, executable 2.1.32 unchanged.
+
+## Latest: S3 card revisions approved — 2026-10-12
+
+S3 draft 0.17 / BUILD_LOG 162. Jonathan approved the preceding proposals: Lucid Needle 0 Focus / 1 Channel / 2 uses / Recall 1, 6 Arcane doubled against Ideons; Scouring Gale 1 Focus / 1 Channel / 2 uses / Recall 1, rightward same-row beam dealing 8 Wind to each legal Ideon then 4 Wind to one selected legal enemy, friendly cards unaffected, guardian protection applies. Also approved Concord Recall 2, Guide non-recallable, Second Spring non-recallable and destroyed after activation. Other previously proposed legendary effects/stats and unresolved Guide details remain drafts. Documentation only; no authorization to implement S3 inferred. Main design 4.183 / executable 2.1.32 unchanged.
+
+## Latest: Lucid Needle accepted; Gale beam and explicit Recall proposals — 2026-10-11
+
+S3 draft 0.16 / BUILD_LOG 161, documentation only. Jonathan likes Lucid Needle; record its prior 0 Focus / 1 Channel / 2 uses / 6 Arcane (12 vs Ideons) design as accepted in principle. New Recall 1 Focus is proposed. Original global Scouring Gale rejected as too strong; user suggests 1 Channel with radius or horizontal beam plus enemy hit. Recommended, NOT approved: 1 Focus / 1 Channel / 2 uses / Recall 1; 8 Wind to each legal Ideon rightward in its row, then 4 to one legal off-grid enemy, no friendly damage or guardian bypass. Radius remains alternative, not decided. All card proposals must explicitly state Recall/lifecycle. Added proposed Concord Recall 2, Second Spring non-recallable/destroy after activation, Lucid Guide non-recallable (normal Ally rule). No implementation or new balance approval for these choices. Main design 4.183 / executable 2.1.32 unchanged.
+
+## Latest: S3 anti-Ideon cards and demanding legendaries — 2026-10-11
+
+S3 draft0.15/BUILD_LOG160, docs only. Jonathan requestscoupleIdeonanswers andlegendarieswithhighFocus/Channel/toughconditions. Saved4UNAPPROVEDdrafts: LucidNeedle0F/1C/2uses6Arcane doubled12Ideon; ScouringGale1F/2C/2uses16WindIdeons+6othertargetableenemies; ConcordofSeasons4F/3C/2usesrequires3distinctadjacentfriendlynonArcaneelements,10AoEperelement(max4), Arcaneactivationsource; SecondSpring3F/3C/1use gives2extrauses toup-to4spentexposeddamage/Shield/Wardcards, noHP/charge/Wardvalue/turnreset/destroyedrecovery/utilityresourcecards. Names/numbers/effectsnotapproved, taggedproposals. Needproc/order/recall/singleUseinteractionbalancebeforebuild. ExistingEclipseSeed30Chaoscharge2, soConcordimmediateexpensiveformationdistinct. Main design4.183/executable2.1.32 unchanged, nocode.
+
+## Latest: Lucid Guide/Familiar visual distinction — 2026-10-11
+
+S3 draft0.14/BUILD_LOG159, docs only. Jonathan wantsLucidGuide uprightversionofcurrentFamiliar; likesFamiliarv3 buttoo majesticforS1basic. Inspected actualselectedassets/card-familiar-v3.png(white/teal glowingfourleggedfox/wolf,flowingmane/tail). Guideinheritsmajesticspiritlook+talluprightsilhouette; exactpose/bipedalitynotsettled. ProposedfutureFamiliar smaller/simpler/curiousfourleggedenergyspirit, notordinaryanimal. Preservev3/alloldart. NOimagegeneration/replacement/assetselection/runtimechange thisturn. Main design4.183/executable2.1.32 unchanged.
+
+## Latest: Mobile Lucid Guide direction — 2026-10-11
+
+S3 draft0.13/BUILD_LOG158, docs only. Jonathan acceptsLucidGuideconcept and proposesmanyuses, activationmovesitup-to1space thenmarks/attacksadjacentIdeon. Recommended1Focus/1Channel/12uses/onceperturn, combinedmove+attack+mark, NESWemptyspace, movement-onlyallowed, bonusfromnextdifferentplayercardattack; allspecificnumbers/HP/element/markexpiry/acquisition/sharedpolicy remainunapproved. NoautoRecall/refresh/fieldimmunity. SelfmovementdoesnotgiveDruidgeneralcardmovementrole. CoveredGuidecannotactivateitselfout; fieldcrossing timing stillopen. Main design4.183/executable2.1.32 unchanged, noimplementation.
+
+## Latest: S3 strength reference and companion discussion — 2026-10-11
+
+Main design4.183/S3 draft0.12/BUILD_LOG157, docs only. Jonathan insists strongS3enemies calibratedto3–4Focus/Channel, strongelementcombos,2bracelets/2rings,S3antiIdeoncards. Earlier7Focus/5Channel retainedasstrongeraspirationalengine, NOTentryminimum/grant. S3uniqueally undecided(includingwhetherIdeonspecialist/shared); S1SaplingDruid-only,S2Elvesallclasses. Suggestedsharedsupportnotuniversalremoval: provisionalLucidGuide attackIdeon+markfornextplayercardattackbonus, allstats/name/costs unapproved; delay/protectalternativeproposals. Testcompleteenemyturnvsgear andresourceallocation, notjusthighHP. No gameplayimplementation; executable2.1.32.
+
+## Latest: Cannon bullet entry parity — 2026-10-11
+
+S3 draft0.11/BUILD_LOG156, docs only. Jonathan fixes two-space-left movement by target parity: same row, odd targetcolumns1/3/5/7 spawncol7 =>7,5,3,1,exit; even2/4/6 spawncol6 =>6,4,2,exit. One-based columns, not rows. No shortenedstep. Spawnposition mustpersistforplayerresponse iftarget6/7; exact launch/firstmove and edgeimpactordering remainopen. No runtime changes; executable2.1.32/main design4.182 unchanged.
+
+## Latest: Cannon firing cycle and Pierce arrivals — 2026-10-11
+
+S3 draft0.10/BUILD_LOG155, docs only. Jonathan:2or3elementalbullets then1destructionbullet endlessly. Aim strongestelementalcard includingGroveTitanAlly withcounterelement(Earth->Fireetc); ifnoelementals use shared-usefield/Arcane. Righttoleftlane eventuallycovers targetspaceforoneplayerturnthencontinues. Everyshot also includes separate normal-defense elemental/Arcaneattack; survivingbullet arrivalPierce equipmentonly (matchesexistingPierce). Three-before-destruction proposed, notfinal. Fixedlane/elementafterfiring recommended; stride2mustlandontargetcolumn, notskip. Exactstrongestranking/temporaryattunement/shotversusimpactdamagevalues/fieldradius/caps/orderremainopen. Painfield retainedaside, notcurrentcycle. No gameimplementation; executable2.1.32/main design4.182 unchanged.
+
+## Latest: Transmute under elemental fields — 2026-10-11
+
+S3 draft0.9/BUILD_LOG154, docs only. Jonathan explicitly notes Transmute itself is Arcane: inside a non-Arcane elemental restriction it cannot activate even to change a target to that required element. Field checks source activation element, not resulting target element. Chosen Attunement qualifies only for cards actually able to Attune. An unrestricted outside Transmute can still affect an inside target under normal targeting; direct coverage still prevents activation. No runtime changes; executable2.1.32/main design4.182 unchanged.
+
+## Latest: Cannon and moving restriction fields — 2026-10-11
+
+S3 draft0.8/BUILD_LOG153, docs only. Jonathan proposes giantcannon firing attackable diamondlikeenergyballs, moving~2spaces/turn throughMindGrid and emittingcoloredfields. Arrivalplayer=moderateelementaldamage. Confirmedanswers: directlycoveredplayercard cannotactivate/defend/Recall; elementalfieldqualifieschosenactivationelement includingAttunement. Otherfields: onecardfromgroupcanactivate/turn; activationhurtsplayer; activationdestroyscard. Proposedclassification projectile=Ideon/fieldcarriedbyit, notpersistentspaceCorruption. Destruction-after-effect timing is recommendation only. Numbers/fieldradius/overlap/Blink/counteridentity/penaltysnapshot/movement/coveragepassives/Meldlayers/impactorder stillopen. Preservedfullconcept; no runtime implementation or build. Executable2.1.32/main design4.182 unchanged.
+
+## Latest: Cnidarian Archon candidate — 2026-10-11
+
+S3 draft0.7/BUILD_LOG152, docs only. Jonathan proposes jellyfish-like Cnidarian spawning Tentacle Ideons: stronger eachturnalive, prefer playerAllies whileanyalive; withnone driftplayerward, inflictPoisonatbackedge(column1currentlayout). Replacement ratio cumulativekills1–3=>1each,4–6=>2each,7–9=>3each,etc; cadence not separately specified. Recommendations clearly unapproved: newbornbasegrowth, delayedvisibleownerreplacementcommand, damageablebossdistinctHive. NeedHP/growth/targetinterception/timing/caps/fullgrid/poison/ownerdeathrules; no runtime implementation. Main design4.182/executable2.1.32 unchanged.
+
+## Latest: Mind Hive countdown clarified — 2026-10-11
+
+S3 draft0.6/BUILD_LOG151, docs only. Jonathan clarified1HP lost PER TURN regardless of insect count, not per insect.100turns explicitly rejected; fixed shorter duration with lastfewturns dramatically harder. Exact duration not chosen. Recommended15turns/15HP (5setup+6risingpressure+4finale) recorded as proposal only. Old90/80/etc and10through1 thresholds withdrawn with100HP scheme. Countdown must advance despite blockedspawns, precise decrement/death/firstactivation timing stillopen. No clarification about per-insect loss remains pending. InvulnerableHive/allinsects die at0 retained. Executable2.1.32/main design4.182 unchanged.
+
+## Latest: Mind Hive survival proposal and reusable enemy bank — 2026-10-11
+
+S3 draft0.5/BUILD_LOG150; documentation only, executable2.1.32/main design4.182 unchanged. Retained Kindly Hunger, Knotkeeper, Endless Procession (Runner/Burrower), Borrowed Face (Dyer/Mirrorling), Ally-hunter suggestions; may become Motes/Eidolons/bosses, none finalized. Jonathan likes Mind Hive/Endless Swarm naming: invulnerable100HPowner, each insectcreated drains1HP, smallswarm at90/80/etc, swarms everyturn10through1, lateoverwhelm/acceptdamage, allinsects die whenowner0. Asynchronous clarification pending: per-insect drain means swarms shorten countdown/skipHP; per-spawning-turn drain gives10turnfinale but changes proposed rule. Record ambiguity, noimplementation. Concern initial100HP/onespawnturn yields manydozensturns; duration/thresholdcrossing/fullboardspawning/deathorder/statusimmunity remainopen. User intent strongsurvivaltest; recommendation visiblepressure, nohiddenadaptiveforceddamage. Earlier proposal names/cycles retained as reusable suggestions, not approvals.
+
+## Latest: Guardian resists elements, weak to Arcane — 2026-10-11
+
+S3 draft0.4/BUILD_LOG149, documentation only. Jonathan replaced Arcane-only guardian immunity with resistance to all six elements and weakness to Arcane, permitting elemental brute force while rewarding Arcane. Proposed (not yet approved numbers) ×0.5 elemental / ×1.5 Arcane, rounded up, as explicit local defensive override rather than compounded normal matchup or global Arcane-cycle change. HP/status interactions/respawn remain open. Main design4.182/executable2.1.32 unchanged; earlier Arcane-only references in historical notes superseded.
+
+## Latest: Stratum 3 ownership/type clarification — 2026-10-11
+
+Documentation only: main design4.182, S3 planningdraft0.3, BUILD_LOG148; executable still2.1.32. Jonathan distinguishes Corruption(space status influencing cards/player, sometimes coverable/neutralizable), Hex(player-controlled negative card based on choices), and Ideon(distinct enemy-controlled card TYPE, never Ally/Spell). Owner move list explicitly schedules direct actions and/or selected Ideon activations. Defeated Ideons return to theoretical enemy deck, recurrence only per programmed behavior. Primary focus disrupt S2 engines via movement/swaps/stat/element changes. Guardian protects owner from targeting until defeated. Candidates recorded, not implementation-approved: Ward leech drains on player placements/activations and stores reserve to heal owner when commanded; Arcane-only guardian; adjacent Recall-lock sticky Ideon; cross-grid insect with major arrival damage; Ally hunter; swappers/element meddlers. Numbers/occupancy/targeting/interception/owner-death/reserve rules remain open. Prior Ideon Hex term no longer implies hybrid type; explicit future control transition required. Prior assistant boss names/cycles were proposals, NOT approved. No runtime edits or package rebuild for this clarification.
+
 ## Latest: Kiln Charge 3 / nine activations — 2026-10-11
 
 Package2.1.32/rules2.1.19/content2.1.25/design4.181; BUILD_LOG147. Jonathan approved Charge3 and nine total uses, starting1charge per orthogonal Fire neighbor capped3, including after Undertow. No fourth-neighbor surplus and no special discard/Undertow charge exception. Release still separate1Channel/20damage+Burn2all/reset0. Release indices for0/1/2/3+Fire:4,8 /3,7 /2,6 /1,5,9. Two-neighbor formation still ends fully charged/spent after ninth use; explicitly noted to user, requested nine-use limit retained. Existing saves preserve charge and used counts, adopting new threshold/allowance without recalculating placement bonus. Prior2.1.18 allowed.496rules tests pass, including all five neighbor counts, Undertow replays, save preservation and unchanged other Charge cards; seven isolated packaged UI cases pass, screenshot reviewed. Source/design/card text updated; portable/ZIP refreshed. No normal-profile writes/commit/push.
