@@ -1,0 +1,2608 @@
+{
+  "result": {
+    "scenario": "mindHive",
+    "seed": 73001,
+    "version": {
+      "rules": "3.0.0",
+      "content": "3.0.0",
+      "observation": 2,
+      "actions": 8
+    },
+    "fixture": "stratum3-developed-foundation-v1",
+    "policy": "weighted-druid-v3",
+    "outcome": "victory",
+    "mode": "reward",
+    "hp": 32,
+    "steps": 157,
+    "turn": 15,
+    "round": 1,
+    "maxIdeons": 8,
+    "damageTaken": 38,
+    "replayVerified": true,
+    "runId": "depths-mindHive-1791787857692"
+  },
+  "initial": {
+    "version": {
+      "rules": "3.0.0",
+      "content": "3.0.0",
+      "observation": 2,
+      "actions": 8
+    },
+    "stratum": 3,
+    "seed": 73001,
+    "rng": 2917913402,
+    "uid": 56,
+    "mode": "battle",
+    "classId": "druid",
+    "hp": 70,
+    "maxHp": 70,
+    "gold": 160,
+    "deck": [
+      {
+        "uid": 16,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 17,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 18,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 19,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 20,
+        "id": "focus",
+        "upgrade": false
+      },
+      {
+        "uid": 21,
+        "id": "focus",
+        "upgrade": false
+      },
+      {
+        "uid": 22,
+        "id": "clear",
+        "upgrade": false
+      },
+      {
+        "uid": 23,
+        "id": "rain",
+        "upgrade": false
+      },
+      {
+        "uid": 24,
+        "id": "ward",
+        "upgrade": false
+      },
+      {
+        "uid": 25,
+        "id": "ward",
+        "upgrade": false
+      },
+      {
+        "uid": 26,
+        "id": "magnify",
+        "upgrade": false
+      },
+      {
+        "uid": 27,
+        "id": "lattice",
+        "upgrade": false
+      },
+      {
+        "uid": 28,
+        "id": "sapling",
+        "upgrade": false
+      },
+      {
+        "uid": 29,
+        "id": "familiar",
+        "upgrade": false
+      },
+      {
+        "uid": 30,
+        "id": "elves",
+        "upgrade": false
+      },
+      {
+        "uid": 31,
+        "id": "transmute",
+        "upgrade": false
+      },
+      {
+        "uid": 32,
+        "id": "water",
+        "upgrade": false
+      },
+      {
+        "uid": 33,
+        "id": "cinder",
+        "upgrade": false
+      },
+      {
+        "uid": 34,
+        "id": "grove",
+        "upgrade": false
+      },
+      {
+        "uid": 35,
+        "id": "storm",
+        "upgrade": false
+      },
+      {
+        "uid": 36,
+        "id": "solitude",
+        "upgrade": false
+      },
+      {
+        "uid": 37,
+        "id": "plasma",
+        "upgrade": false
+      },
+      {
+        "uid": 38,
+        "id": "lucidNeedle",
+        "upgrade": false
+      },
+      {
+        "uid": 39,
+        "id": "scouringGale",
+        "upgrade": false
+      },
+      {
+        "uid": 50,
+        "id": "lucidGuide",
+        "upgrade": false
+      }
+    ],
+    "inventory": [
+      {
+        "uid": 40,
+        "id": "gold",
+        "gem": 41
+      },
+      {
+        "uid": 41,
+        "id": "sapphire",
+        "gem": null
+      },
+      {
+        "uid": 42,
+        "id": "silver",
+        "gem": 43
+      },
+      {
+        "uid": 43,
+        "id": "ruby",
+        "gem": null
+      },
+      {
+        "uid": 44,
+        "id": "focusRing",
+        "gem": 45
+      },
+      {
+        "uid": 45,
+        "id": "focusGem",
+        "gem": null
+      },
+      {
+        "uid": 46,
+        "id": "channelRing",
+        "gem": 47
+      },
+      {
+        "uid": 47,
+        "id": "channelGem",
+        "gem": null
+      },
+      {
+        "uid": 48,
+        "id": "stoneArmor",
+        "gem": null
+      },
+      {
+        "uid": 49,
+        "id": "crown",
+        "gem": null
+      }
+    ],
+    "equipment": {
+      "wrist1": 40,
+      "wrist2": 42,
+      "finger1": 44,
+      "finger2": 46,
+      "torso": 48,
+      "head": 49
+    },
+    "field": {
+      "round": 1,
+      "spawned": 2,
+      "spawnWidth": 2,
+      "queue": [
+        "Mote",
+        "Mote",
+        "Item",
+        "Gold",
+        "Mote",
+        "Event",
+        "Mote",
+        "Mote"
+      ],
+      "entities": [],
+      "x": 5,
+      "y": 5,
+      "moves": 2,
+      "stage": "player",
+      "barriers": [
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 2
+        },
+        {
+          "x": 2,
+          "y": 3
+        },
+        {
+          "x": 8,
+          "y": 7
+        },
+        {
+          "x": 8,
+          "y": 8
+        },
+        {
+          "x": 8,
+          "y": 9
+        },
+        {
+          "x": 5,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 9
+        },
+        {
+          "x": 5,
+          "y": 9
+        }
+      ],
+      "suppliesScattered": true
+    },
+    "status": {
+      "burn": 0,
+      "poison": 0,
+      "corrode": 0
+    },
+    "log": [
+      "Gained Blast",
+      "Gained Blast",
+      "Gained Shield",
+      "Gained Shield",
+      "Gained Focus Energy",
+      "Gained Focus Energy",
+      "Gained Clear Mind",
+      "Gained Rain Lantern",
+      "Gained Ward",
+      "Gained Ward",
+      "Gained Magnifier Ward",
+      "Gained Living Lattice",
+      "Gained Sapling",
+      "Gained Familiar",
+      "Gained Machine Elves",
+      "Gained Transmute",
+      "Gained Water Blast",
+      "Gained Cinder Snap",
+      "Gained Grove Titan",
+      "Gained Storm Canopy",
+      "Gained Solitude",
+      "Gained Plasma Ball",
+      "Gained Lucid Needle",
+      "Gained Scouring Gale",
+      "A Tavern welcomes you before The Lucent Depths.",
+      "Gained Lucid Guide",
+      "Glass Brood appears at 6, 4.",
+      "Pale Grazer appears at 7, 4.",
+      "Channel Draught lies at 3, 5.",
+      "Focus Draught lies at 8, 2.",
+      "Healing Sap lies at 10, 8.",
+      "Battle: The Mind Hive",
+      "Turn 1: 4 Insight · 3 Focus · 4 Channel."
+    ],
+    "history": [
+      "[\"enterDepths\",{}]"
+    ],
+    "stats": {
+      "damageDealt": 0,
+      "damageTaken": 0,
+      "goldEarned": 0,
+      "goldSpent": 0,
+      "cardsGained": [
+        "Blast",
+        "Blast",
+        "Shield",
+        "Shield",
+        "Focus Energy",
+        "Focus Energy",
+        "Clear Mind",
+        "Rain Lantern",
+        "Ward",
+        "Ward",
+        "Magnifier Ward",
+        "Living Lattice",
+        "Sapling",
+        "Familiar",
+        "Machine Elves",
+        "Transmute",
+        "Water Blast",
+        "Cinder Snap",
+        "Grove Titan",
+        "Storm Canopy",
+        "Solitude",
+        "Plasma Ball",
+        "Lucid Needle",
+        "Scouring Gale",
+        "Lucid Guide"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Emerald",
+        "Gold Bracelet",
+        "Sapphire",
+        "Silver Bracelet",
+        "Ruby",
+        "Ring of Patience",
+        "Amber Thought",
+        "Ring of Embers",
+        "Storm Opal",
+        "Stone Armor",
+        "Sturdy Metal Helmet"
+      ],
+      "purchases": [],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 3,
+          "round": 1,
+          "enemies": [
+            "The Mind Hive"
+          ],
+          "outcome": "in progress",
+          "hpStart": 70
+        }
+      ],
+      "strataCompleted": [
+        2
+      ],
+      "fieldSupplies": [
+        {
+          "uid": 53,
+          "item": "channelDraught",
+          "x": 2,
+          "y": 4,
+          "round": 1
+        },
+        {
+          "uid": 54,
+          "item": "focusDraught",
+          "x": 7,
+          "y": 1,
+          "round": 1
+        },
+        {
+          "uid": 55,
+          "item": "healingSap",
+          "x": 9,
+          "y": 7,
+          "round": 1
+        }
+      ]
+    },
+    "steps": 1,
+    "archon": "mindHive",
+    "enemyDecks": {
+      "EarlyMote": [
+        "echoPolyp",
+        "nerveWeaver"
+      ]
+    },
+    "eventDeck": [],
+    "itemDeck": [
+      "strideGem",
+      "card:square",
+      "focusDraught",
+      "card:tide",
+      "card:discord",
+      "fireArmor",
+      "card:focus",
+      "card:moth",
+      "card:root",
+      "starFlask",
+      "card:kiln",
+      "card:thorn",
+      "card:resonance",
+      "recallGem",
+      "card:lucidNeedle",
+      "insightDew",
+      "sapphire",
+      "card:water",
+      "card:guardian",
+      "card:heat",
+      "curseArmor",
+      "card:palimpsest",
+      "emerald",
+      "necklace",
+      "card:ember",
+      "quickArmor",
+      "focusGem",
+      "mirrorArmor",
+      "card:keystone",
+      "holyArmor",
+      "card:magnify",
+      "card:sun",
+      "dewNeck",
+      "card:quietStitch",
+      "card:clear",
+      "card:terra",
+      "card:rot",
+      "channelRing",
+      "earthArmor",
+      "channelGem",
+      "card:golem",
+      "card:quicksilver",
+      "card:bloom",
+      "card:undertow",
+      "card:familiar",
+      "topaz",
+      "card:corner",
+      "card:conduit",
+      "card:prism",
+      "channelDraught",
+      "card:solitude",
+      "card:plasma",
+      "card:seed",
+      "curseGem",
+      "card:spore",
+      "card:ward",
+      "card:storm",
+      "healingSap",
+      "card:aqua",
+      "thornCrown",
+      "stoneArmor",
+      "focusRing",
+      "card:rite",
+      "bronze",
+      "curseNeck",
+      "crown",
+      "card:transmute",
+      "card:scouringGale",
+      "card:ignis",
+      "silver",
+      "ruby",
+      "card:blast",
+      "card:lattice",
+      "sightCrown",
+      "insightGem",
+      "curseRing",
+      "ring",
+      "gold",
+      "card:gust",
+      "windArmor",
+      "card:sapling",
+      "waterArmor",
+      "card:rain",
+      "card:soothe",
+      "card:cinder",
+      "card:shield",
+      "card:clean"
+    ],
+    "startGem": "emerald",
+    "shop": {
+      "afterStratum": 2,
+      "stock": [
+        "card:scouringGale",
+        "card:lucidNeedle",
+        "card:transmute",
+        "card:magnify",
+        "channelGem",
+        "silver",
+        "insightGem",
+        "fireArmor",
+        "holyArmor",
+        "channelRing",
+        "starFlask",
+        "healingSap"
+      ],
+      "healer": true,
+      "healerPrice": 50,
+      "healUsed": false,
+      "removeUsed": false,
+      "hexPrice": {
+        "kind": "allyGold",
+        "gold": 25,
+        "hp": 0
+      }
+    },
+    "evaluationFixture": "stratum3-developed-foundation-v1",
+    "battle": {
+      "turn": 1,
+      "enemyFirst": false,
+      "phase": "place",
+      "columns": 7,
+      "rows": 6,
+      "grid": [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "corruptions": {},
+      "ideons": [],
+      "deck": [
+        {
+          "uid": 16,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 18,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 19,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 20,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 21,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 22,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 23,
+          "id": "rain",
+          "upgrade": false
+        },
+        {
+          "uid": 24,
+          "id": "ward",
+          "upgrade": false
+        },
+        {
+          "uid": 25,
+          "id": "ward",
+          "upgrade": false
+        },
+        {
+          "uid": 27,
+          "id": "lattice",
+          "upgrade": false
+        },
+        {
+          "uid": 28,
+          "id": "sapling",
+          "upgrade": false
+        },
+        {
+          "uid": 29,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 30,
+          "id": "elves",
+          "upgrade": false
+        },
+        {
+          "uid": 31,
+          "id": "transmute",
+          "upgrade": false
+        },
+        {
+          "uid": 33,
+          "id": "cinder",
+          "upgrade": false
+        },
+        {
+          "uid": 35,
+          "id": "storm",
+          "upgrade": false
+        },
+        {
+          "uid": 36,
+          "id": "solitude",
+          "upgrade": false
+        },
+        {
+          "uid": 37,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 38,
+          "id": "lucidNeedle",
+          "upgrade": false
+        },
+        {
+          "uid": 39,
+          "id": "scouringGale",
+          "upgrade": false
+        },
+        {
+          "uid": 50,
+          "id": "lucidGuide",
+          "upgrade": false
+        }
+      ],
+      "hand": [
+        {
+          "uid": 26,
+          "id": "magnify",
+          "upgrade": false
+        },
+        {
+          "uid": 17,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 34,
+          "id": "grove",
+          "upgrade": false
+        },
+        {
+          "uid": 32,
+          "id": "water",
+          "upgrade": false
+        }
+      ],
+      "discard": [],
+      "destroyed": [],
+      "enemies": [
+        {
+          "uid": 56,
+          "enemy": "mindHive",
+          "restless": 0,
+          "id": "mindHive",
+          "name": "The Mind Hive",
+          "tier": "Archon",
+          "element": "Earth",
+          "hp": 15,
+          "movement": "Archon",
+          "rotation": [
+            {
+              "name": "The procession",
+              "damage": 0,
+              "element": "Earth",
+              "commandIdeons": true,
+              "hiveWave": true,
+              "fixedDamage": true
+            }
+          ],
+          "signature": "Invulnerable. Loses 1 life after each complete enemy round: survive 15 rounds. Creates increasingly large insect waves. Later waves emerge closer: the final four spawning waves attempt 4, 6, 8 and 10 Burrowers in columns 1–4, 1–3, 1–2 and 1. Each acts starting next round. The last round only commands survivors. All insects vanish at 0. At the end of each full move cycle, if afflicted by Burn, Poison or Corrode, spends its next move on Purify to clear all three, then resumes its cycle.",
+          "counter": "Area attacks thin the swarm; filling spaces denies ordinary spawns. Save defenses for insects already behind your front line.",
+          "nemesis": "Slow decks",
+          "grouped": false,
+          "stratum": 3,
+          "hive": true,
+          "bossMode": "stalker",
+          "statusImmunities": [
+            "burn",
+            "poison",
+            "corrode"
+          ],
+          "entityUid": 56,
+          "maxHp": 15,
+          "cycle": 0,
+          "buff": 0,
+          "guard": 0,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          }
+        }
+      ],
+      "order": 0,
+      "firstAttackTurn": 0,
+      "permanent": {
+        "focus": 0
+      },
+      "next": {
+        "focus": 0,
+        "insight": 0
+      },
+      "shields": [],
+      "bracelets": [],
+      "armorBlock": 1,
+      "jobs": [],
+      "reaction": null,
+      "relief": 0,
+      "mirror": false,
+      "healUses": {},
+      "huskConverted": false,
+      "focus": 3,
+      "channel": 4,
+      "insight": 0,
+      "revealInsight": 4,
+      "milky": false
+    }
+  },
+  "decisions": [
+    "[\"place\",{\"uid\":34,\"slot\":0}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":0,\"target\":56,\"element\":\"Earth\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":20,\"slot\":1}]",
+    "[\"place\",{\"uid\":21,\"slot\":7}]",
+    "[\"place\",{\"uid\":38,\"slot\":2}]",
+    "[\"place\",{\"uid\":16,\"slot\":3}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":0,\"target\":57,\"element\":\"Earth\"}]",
+    "[\"activate\",{\"slot\":1,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":7,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":2,\"target\":56,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":28,\"slot\":8}]",
+    "[\"place\",{\"uid\":37,\"slot\":9}]",
+    "[\"place\",{\"uid\":18,\"slot\":15}]",
+    "[\"place\",{\"uid\":27,\"slot\":4,\"placementElement\":\"Arcane\"}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":0,\"target\":58,\"element\":\"Earth\"}]",
+    "[\"activate\",{\"slot\":9,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":8,\"target\":56,\"element\":\"Earth\"}]",
+    "[\"activate\",{\"slot\":2,\"target\":56,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":36,\"slot\":12}]",
+    "[\"place\",{\"uid\":33,\"slot\":5}]",
+    "[\"place\",{\"uid\":39,\"slot\":10}]",
+    "[\"recall\",{\"slot\":2}]",
+    "[\"place\",{\"uid\":31,\"slot\":2}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":8,\"target\":59,\"element\":\"Earth\"}]",
+    "[\"activate\",{\"slot\":9,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":3,\"target\":56,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":22,\"slot\":11}]",
+    "[\"place\",{\"uid\":35,\"slot\":13}]",
+    "[\"place\",{\"uid\":23,\"slot\":14}]",
+    "[\"recall\",{\"slot\":9}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":5,\"target\":60,\"element\":\"Fire\"}]",
+    "[\"activate\",{\"slot\":3,\"target\":60,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":13,\"target\":null,\"element\":\"Wind\"}]",
+    "[\"activate\",{\"slot\":14,\"target\":null,\"element\":\"Water\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":24,\"slot\":23}]",
+    "[\"place\",{\"uid\":50,\"slot\":9}]",
+    "[\"place\",{\"uid\":29,\"slot\":16}]",
+    "[\"recall\",{\"slot\":3}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":5,\"target\":61,\"element\":\"Fire\"}]",
+    "[\"activate\",{\"slot\":13,\"target\":null,\"element\":\"Wind\"}]",
+    "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":14,\"target\":null,\"element\":\"Water\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":26,\"slot\":23}]",
+    "[\"place\",{\"uid\":25,\"slot\":25}]",
+    "[\"place\",{\"uid\":32,\"slot\":3}]",
+    "[\"place\",{\"uid\":16,\"slot\":17}]",
+    "[\"recall\",{\"slot\":5}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":3,\"target\":62,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":62,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":11,\"target\":null,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":37,\"slot\":6}]",
+    "[\"place\",{\"uid\":38,\"slot\":19}]",
+    "[\"place\",{\"uid\":33,\"slot\":20}]",
+    "[\"place\",{\"uid\":17,\"slot\":24}]",
+    "[\"recall\",{\"slot\":13}]",
+    "[\"recall\",{\"slot\":14}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":3,\"target\":62,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":19,\"target\":63,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":63,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":35,\"slot\":5}]",
+    "[\"place\",{\"uid\":23,\"slot\":13}]",
+    "[\"recall\",{\"slot\":3}]",
+    "[\"recall\",{\"slot\":17}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":19,\"target\":65,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":20,\"target\":65,\"element\":\"Fire\"}]",
+    "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":24,\"target\":66,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":16,\"slot\":17}]",
+    "[\"place\",{\"uid\":32,\"slot\":3}]",
+    "[\"recall\",{\"slot\":6}]",
+    "[\"recall\",{\"slot\":19}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Wind\"}]",
+    "[\"activate\",{\"slot\":20,\"target\":66,\"element\":\"Fire\"}]",
+    "[\"activate\",{\"slot\":3,\"target\":67,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":67,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":37,\"slot\":6}]",
+    "[\"place\",{\"uid\":38,\"slot\":14}]",
+    "[\"recall\",{\"slot\":20}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":14,\"target\":68,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":3,\"target\":70,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":70,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":33,\"slot\":18}]",
+    "[\"recall\",{\"slot\":3}]",
+    "[\"recall\",{\"slot\":17}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Wind\"}]",
+    "[\"activate\",{\"slot\":14,\"target\":71,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":18,\"target\":72,\"element\":\"Fire\"}]",
+    "[\"endTurn\",{}]",
+    "[\"place\",{\"uid\":16,\"slot\":17}]",
+    "[\"place\",{\"uid\":32,\"slot\":3}]",
+    "[\"recall\",{\"slot\":5}]",
+    "[\"recall\",{\"slot\":6}]",
+    "[\"recall\",{\"slot\":14}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":3,\"target\":72,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":18,\"target\":73,\"element\":\"Fire\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":73,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":24,\"target\":74,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"intercept\",{\"slot\":0}]",
+    "[\"intercept\",{\"slot\":0}]",
+    "[\"intercept\",{\"slot\":0}]",
+    "[\"place\",{\"uid\":37,\"slot\":5}]",
+    "[\"place\",{\"uid\":38,\"slot\":6}]",
+    "[\"recall\",{\"slot\":18}]",
+    "[\"recall\",{\"slot\":24}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":6,\"target\":75,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":3,\"target\":75,\"element\":\"Water\"}]",
+    "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":17,\"target\":76,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"bracelet\",{\"uid\":40}]",
+    "[\"bracelet\",{\"uid\":42}]",
+    "[\"intercept\",{\"slot\":0}]",
+    "[\"armor\",{\"uid\":48}]",
+    "[\"place\",{\"uid\":17,\"slot\":18}]",
+    "[\"place\",{\"uid\":35,\"slot\":19}]",
+    "[\"recall\",{\"slot\":3}]",
+    "[\"recall\",{\"slot\":17}]",
+    "[\"activatePhase\",{}]",
+    "[\"activate\",{\"slot\":19,\"target\":null,\"element\":\"Wind\"}]",
+    "[\"activate\",{\"slot\":6,\"target\":80,\"element\":\"Arcane\"}]",
+    "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Chaos\"}]",
+    "[\"activate\",{\"slot\":18,\"target\":76,\"element\":\"Arcane\"}]",
+    "[\"endTurn\",{}]",
+    "[\"bracelet\",{\"uid\":40}]",
+    "[\"bracelet\",{\"uid\":42}]",
+    "[\"armor\",{\"uid\":48}]"
+  ],
+  "rounds": [
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 1,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 15
+        }
+      ],
+      "ideons": 0
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 2,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 14
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 3,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 13
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 4,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 12
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 5,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 11
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 6,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 10
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 7,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 9
+        }
+      ],
+      "ideons": 1
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 8,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 8
+        }
+      ],
+      "ideons": 3
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 9,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 7
+        }
+      ],
+      "ideons": 2
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 10,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 6
+        }
+      ],
+      "ideons": 3
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 11,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 5
+        }
+      ],
+      "ideons": 3
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 12,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 4
+        }
+      ],
+      "ideons": 5
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 13,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 3
+        }
+      ],
+      "ideons": 8
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 14,
+      "hp": 70,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 2
+        }
+      ],
+      "ideons": 7
+    },
+    {
+      "mode": "battle",
+      "round": 1,
+      "turn": 15,
+      "hp": 55,
+      "enemies": [
+        {
+          "id": "mindHive",
+          "hp": 1
+        }
+      ],
+      "ideons": 6
+    }
+  ],
+  "final": {
+    "version": {
+      "rules": "3.0.0",
+      "content": "3.0.0",
+      "observation": 2,
+      "actions": 8
+    },
+    "stratum": 3,
+    "seed": 73001,
+    "rng": 453641142,
+    "uid": 87,
+    "mode": "reward",
+    "classId": "druid",
+    "hp": 32,
+    "maxHp": 70,
+    "gold": 280,
+    "deck": [
+      {
+        "uid": 16,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 17,
+        "id": "blast",
+        "upgrade": false
+      },
+      {
+        "uid": 18,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 19,
+        "id": "shield",
+        "upgrade": false
+      },
+      {
+        "uid": 20,
+        "id": "focus",
+        "upgrade": false
+      },
+      {
+        "uid": 21,
+        "id": "focus",
+        "upgrade": false
+      },
+      {
+        "uid": 22,
+        "id": "clear",
+        "upgrade": false
+      },
+      {
+        "uid": 23,
+        "id": "rain",
+        "upgrade": false
+      },
+      {
+        "uid": 24,
+        "id": "ward",
+        "upgrade": false
+      },
+      {
+        "uid": 25,
+        "id": "ward",
+        "upgrade": false
+      },
+      {
+        "uid": 26,
+        "id": "magnify",
+        "upgrade": false
+      },
+      {
+        "uid": 27,
+        "id": "lattice",
+        "upgrade": false
+      },
+      {
+        "uid": 28,
+        "id": "sapling",
+        "upgrade": false
+      },
+      {
+        "uid": 29,
+        "id": "familiar",
+        "upgrade": false
+      },
+      {
+        "uid": 30,
+        "id": "elves",
+        "upgrade": false
+      },
+      {
+        "uid": 31,
+        "id": "transmute",
+        "upgrade": false
+      },
+      {
+        "uid": 32,
+        "id": "water",
+        "upgrade": false
+      },
+      {
+        "uid": 33,
+        "id": "cinder",
+        "upgrade": false
+      },
+      {
+        "uid": 34,
+        "id": "grove",
+        "upgrade": false
+      },
+      {
+        "uid": 35,
+        "id": "storm",
+        "upgrade": false
+      },
+      {
+        "uid": 36,
+        "id": "solitude",
+        "upgrade": false
+      },
+      {
+        "uid": 37,
+        "id": "plasma",
+        "upgrade": false
+      },
+      {
+        "uid": 38,
+        "id": "lucidNeedle",
+        "upgrade": false
+      },
+      {
+        "uid": 39,
+        "id": "scouringGale",
+        "upgrade": false
+      },
+      {
+        "uid": 50,
+        "id": "lucidGuide",
+        "upgrade": false
+      }
+    ],
+    "inventory": [
+      {
+        "uid": 40,
+        "id": "gold",
+        "gem": 41
+      },
+      {
+        "uid": 41,
+        "id": "sapphire",
+        "gem": null
+      },
+      {
+        "uid": 42,
+        "id": "silver",
+        "gem": 43
+      },
+      {
+        "uid": 43,
+        "id": "ruby",
+        "gem": null
+      },
+      {
+        "uid": 44,
+        "id": "focusRing",
+        "gem": 45
+      },
+      {
+        "uid": 45,
+        "id": "focusGem",
+        "gem": null
+      },
+      {
+        "uid": 46,
+        "id": "channelRing",
+        "gem": 47
+      },
+      {
+        "uid": 47,
+        "id": "channelGem",
+        "gem": null
+      },
+      {
+        "uid": 48,
+        "id": "stoneArmor",
+        "gem": null
+      },
+      {
+        "uid": 49,
+        "id": "crown",
+        "gem": null
+      }
+    ],
+    "equipment": {
+      "wrist1": 40,
+      "wrist2": 42,
+      "finger1": 44,
+      "finger2": 46,
+      "torso": 48,
+      "head": 49
+    },
+    "field": {
+      "round": 1,
+      "spawned": 2,
+      "spawnWidth": 2,
+      "queue": [
+        "Mote",
+        "Mote",
+        "Item",
+        "Gold",
+        "Mote",
+        "Event",
+        "Mote",
+        "Mote"
+      ],
+      "entities": [],
+      "x": 5,
+      "y": 5,
+      "moves": 2,
+      "stage": "player",
+      "barriers": [
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 2
+        },
+        {
+          "x": 2,
+          "y": 3
+        },
+        {
+          "x": 8,
+          "y": 7
+        },
+        {
+          "x": 8,
+          "y": 8
+        },
+        {
+          "x": 8,
+          "y": 9
+        },
+        {
+          "x": 5,
+          "y": 1
+        },
+        {
+          "x": 6,
+          "y": 1
+        },
+        {
+          "x": 4,
+          "y": 9
+        },
+        {
+          "x": 5,
+          "y": 9
+        }
+      ],
+      "suppliesScattered": true
+    },
+    "status": {
+      "burn": 0,
+      "poison": 0,
+      "corrode": 0
+    },
+    "log": [
+      "Magnifier Ward reinforces Ward: +1 activation allowance.",
+      "Activated Water Blast.",
+      "Activated Blast.",
+      "Activated Familiar.",
+      "Activated Clear Mind.",
+      "The Mind Hive: Swarm 2 · columns 1–5 · 9 rounds remain",
+      "The Mind Hive places Thought Burrower in column 5, row 3.",
+      "The Mind Hive places Thought Burrower in column 5, row 5.",
+      "Mind Hive: 8 rounds remain.",
+      "Turn 8: 6 Insight · 5 Focus · 4 Channel.",
+      "Activated Water Blast.",
+      "Glass Skitter is defeated.",
+      "Activated Lucid Needle.",
+      "Activated Blast.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Thought Burrower is defeated.",
+      "The Mind Hive: Swarm 2 · columns 1–5 · 8 rounds remain",
+      "The Mind Hive places Thought Burrower in column 5, row 3.",
+      "The Mind Hive places Thought Burrower in column 5, row 5.",
+      "Mind Hive: 7 rounds remain.",
+      "Turn 9: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Lucid Needle.",
+      "Activated Cinder Snap.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Activated Blast.",
+      "The Mind Hive: Swarm 2 · columns 1–5 · 7 rounds remain",
+      "The Mind Hive places Thought Burrower in column 5, row 3.",
+      "The Mind Hive places Thought Burrower in column 5, row 5.",
+      "Mind Hive: 6 rounds remain.",
+      "Turn 10: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Storm Canopy.",
+      "Activated Cinder Snap.",
+      "Thought Burrower is defeated.",
+      "Activated Water Blast.",
+      "Activated Blast.",
+      "Thought Burrower is defeated.",
+      "The Mind Hive: Swarm 2 · columns 1–5 · 6 rounds remain",
+      "The Mind Hive places Thought Burrower in column 5, row 3.",
+      "The Mind Hive places Thought Burrower in column 5, row 5.",
+      "Mind Hive: 5 rounds remain.",
+      "Turn 11: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Lucid Needle.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Thought Burrower is defeated.",
+      "Activated Water Blast.",
+      "Activated Blast.",
+      "The Mind Hive: Swarm 4 · columns 1–4 · 5 rounds remain",
+      "The Mind Hive places Thought Burrower in column 4, row 6.",
+      "The Mind Hive places Thought Burrower in column 3, row 5.",
+      "The Mind Hive places Thought Burrower in column 3, row 6.",
+      "The Mind Hive places Thought Burrower in column 2, row 4.",
+      "Mind Hive: 4 rounds remain.",
+      "Turn 12: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Storm Canopy.",
+      "Thought Burrower is defeated.",
+      "Activated Lucid Needle.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Activated Cinder Snap.",
+      "The Mind Hive: Swarm 6 · columns 1–3 · 4 rounds remain",
+      "The Mind Hive places Thought Burrower in column 3, row 5.",
+      "The Mind Hive places Thought Burrower in column 3, row 6.",
+      "The Mind Hive places Thought Burrower in column 2, row 4.",
+      "The Mind Hive places Thought Burrower in column 1, row 5.",
+      "The Mind Hive places Thought Burrower in column 1, row 6.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "Mind Hive: 3 rounds remain.",
+      "Turn 13: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Water Blast.",
+      "Thought Burrower is defeated.",
+      "Activated Cinder Snap.",
+      "Activated Blast.",
+      "Thought Burrower is defeated.",
+      "Activated Blast.",
+      "The Mind Hive: Swarm 8 · columns 1–2 · 3 rounds remain",
+      "The Mind Hive places Thought Burrower in column 2, row 4.",
+      "The Mind Hive places Thought Burrower in column 1, row 3.",
+      "The Mind Hive places Thought Burrower in column 1, row 5.",
+      "The Mind Hive places Thought Burrower in column 1, row 6.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "Mind Hive: 2 rounds remain.",
+      "Turn 14: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Lucid Needle.",
+      "Activated Water Blast.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Thought Burrower is defeated.",
+      "Activated Blast.",
+      "The Mind Hive: Swarm 10 · columns 1–1 · 2 rounds remain",
+      "Thought Burrower: you take 3 damage.",
+      "Thought Burrower: you take 12 damage.",
+      "The Mind Hive places Thought Burrower in column 1, row 1.",
+      "The Mind Hive places Thought Burrower in column 1, row 3.",
+      "The Mind Hive places Thought Burrower in column 1, row 5.",
+      "The Mind Hive places Thought Burrower in column 1, row 6.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "The Mind Hive: no legal space for Thought Burrower.",
+      "Mind Hive: 1 rounds remain.",
+      "Turn 15: 4 Insight · 5 Focus · 4 Channel.",
+      "Activated Storm Canopy.",
+      "Activated Lucid Needle.",
+      "Thought Burrower is defeated.",
+      "Activated Plasma Ball.",
+      "Thought Burrower is defeated.",
+      "Activated Blast.",
+      "The Mind Hive: Final command · Hive dies afterward",
+      "Thought Burrower: you take 11 damage.",
+      "Thought Burrower: you take 12 damage.",
+      "Mind Hive: 0 rounds remain.",
+      "Victory. Choose one card: one Legendary or either of two Rares."
+    ],
+    "history": [
+      "[\"enterDepths\",{}]",
+      "[\"place\",{\"uid\":34,\"slot\":0}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":0,\"target\":56,\"element\":\"Earth\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":20,\"slot\":1}]",
+      "[\"place\",{\"uid\":21,\"slot\":7}]",
+      "[\"place\",{\"uid\":38,\"slot\":2}]",
+      "[\"place\",{\"uid\":16,\"slot\":3}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":0,\"target\":57,\"element\":\"Earth\"}]",
+      "[\"activate\",{\"slot\":1,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":7,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":2,\"target\":56,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":28,\"slot\":8}]",
+      "[\"place\",{\"uid\":37,\"slot\":9}]",
+      "[\"place\",{\"uid\":18,\"slot\":15}]",
+      "[\"place\",{\"uid\":27,\"slot\":4,\"placementElement\":\"Arcane\"}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":0,\"target\":58,\"element\":\"Earth\"}]",
+      "[\"activate\",{\"slot\":9,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":8,\"target\":56,\"element\":\"Earth\"}]",
+      "[\"activate\",{\"slot\":2,\"target\":56,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":36,\"slot\":12}]",
+      "[\"place\",{\"uid\":33,\"slot\":5}]",
+      "[\"place\",{\"uid\":39,\"slot\":10}]",
+      "[\"recall\",{\"slot\":2}]",
+      "[\"place\",{\"uid\":31,\"slot\":2}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":8,\"target\":59,\"element\":\"Earth\"}]",
+      "[\"activate\",{\"slot\":9,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":3,\"target\":56,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":4,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":22,\"slot\":11}]",
+      "[\"place\",{\"uid\":35,\"slot\":13}]",
+      "[\"place\",{\"uid\":23,\"slot\":14}]",
+      "[\"recall\",{\"slot\":9}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":5,\"target\":60,\"element\":\"Fire\"}]",
+      "[\"activate\",{\"slot\":3,\"target\":60,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":13,\"target\":null,\"element\":\"Wind\"}]",
+      "[\"activate\",{\"slot\":14,\"target\":null,\"element\":\"Water\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":24,\"slot\":23}]",
+      "[\"place\",{\"uid\":50,\"slot\":9}]",
+      "[\"place\",{\"uid\":29,\"slot\":16}]",
+      "[\"recall\",{\"slot\":3}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":5,\"target\":61,\"element\":\"Fire\"}]",
+      "[\"activate\",{\"slot\":13,\"target\":null,\"element\":\"Wind\"}]",
+      "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":14,\"target\":null,\"element\":\"Water\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":26,\"slot\":23}]",
+      "[\"place\",{\"uid\":25,\"slot\":25}]",
+      "[\"place\",{\"uid\":32,\"slot\":3}]",
+      "[\"place\",{\"uid\":16,\"slot\":17}]",
+      "[\"recall\",{\"slot\":5}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":3,\"target\":62,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":62,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":16,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":11,\"target\":null,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":37,\"slot\":6}]",
+      "[\"place\",{\"uid\":38,\"slot\":19}]",
+      "[\"place\",{\"uid\":33,\"slot\":20}]",
+      "[\"place\",{\"uid\":17,\"slot\":24}]",
+      "[\"recall\",{\"slot\":13}]",
+      "[\"recall\",{\"slot\":14}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":3,\"target\":62,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":19,\"target\":63,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":63,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":35,\"slot\":5}]",
+      "[\"place\",{\"uid\":23,\"slot\":13}]",
+      "[\"recall\",{\"slot\":3}]",
+      "[\"recall\",{\"slot\":17}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":19,\"target\":65,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":20,\"target\":65,\"element\":\"Fire\"}]",
+      "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":24,\"target\":66,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":16,\"slot\":17}]",
+      "[\"place\",{\"uid\":32,\"slot\":3}]",
+      "[\"recall\",{\"slot\":6}]",
+      "[\"recall\",{\"slot\":19}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Wind\"}]",
+      "[\"activate\",{\"slot\":20,\"target\":66,\"element\":\"Fire\"}]",
+      "[\"activate\",{\"slot\":3,\"target\":67,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":67,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":37,\"slot\":6}]",
+      "[\"place\",{\"uid\":38,\"slot\":14}]",
+      "[\"recall\",{\"slot\":20}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":14,\"target\":68,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":3,\"target\":70,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":70,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":33,\"slot\":18}]",
+      "[\"recall\",{\"slot\":3}]",
+      "[\"recall\",{\"slot\":17}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Wind\"}]",
+      "[\"activate\",{\"slot\":14,\"target\":71,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":6,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":18,\"target\":72,\"element\":\"Fire\"}]",
+      "[\"endTurn\",{}]",
+      "[\"place\",{\"uid\":16,\"slot\":17}]",
+      "[\"place\",{\"uid\":32,\"slot\":3}]",
+      "[\"recall\",{\"slot\":5}]",
+      "[\"recall\",{\"slot\":6}]",
+      "[\"recall\",{\"slot\":14}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":3,\"target\":72,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":18,\"target\":73,\"element\":\"Fire\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":73,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":24,\"target\":74,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"intercept\",{\"slot\":0}]",
+      "[\"intercept\",{\"slot\":0}]",
+      "[\"intercept\",{\"slot\":0}]",
+      "[\"place\",{\"uid\":37,\"slot\":5}]",
+      "[\"place\",{\"uid\":38,\"slot\":6}]",
+      "[\"recall\",{\"slot\":18}]",
+      "[\"recall\",{\"slot\":24}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":6,\"target\":75,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":3,\"target\":75,\"element\":\"Water\"}]",
+      "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":17,\"target\":76,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"bracelet\",{\"uid\":40}]",
+      "[\"bracelet\",{\"uid\":42}]",
+      "[\"intercept\",{\"slot\":0}]",
+      "[\"armor\",{\"uid\":48}]",
+      "[\"place\",{\"uid\":17,\"slot\":18}]",
+      "[\"place\",{\"uid\":35,\"slot\":19}]",
+      "[\"recall\",{\"slot\":3}]",
+      "[\"recall\",{\"slot\":17}]",
+      "[\"activatePhase\",{}]",
+      "[\"activate\",{\"slot\":19,\"target\":null,\"element\":\"Wind\"}]",
+      "[\"activate\",{\"slot\":6,\"target\":80,\"element\":\"Arcane\"}]",
+      "[\"activate\",{\"slot\":5,\"target\":null,\"element\":\"Chaos\"}]",
+      "[\"activate\",{\"slot\":18,\"target\":76,\"element\":\"Arcane\"}]",
+      "[\"endTurn\",{}]",
+      "[\"bracelet\",{\"uid\":40}]",
+      "[\"bracelet\",{\"uid\":42}]",
+      "[\"armor\",{\"uid\":48}]"
+    ],
+    "stats": {
+      "damageDealt": 345,
+      "damageTaken": 38,
+      "goldEarned": 120,
+      "goldSpent": 0,
+      "cardsGained": [
+        "Blast",
+        "Blast",
+        "Shield",
+        "Shield",
+        "Focus Energy",
+        "Focus Energy",
+        "Clear Mind",
+        "Rain Lantern",
+        "Ward",
+        "Ward",
+        "Magnifier Ward",
+        "Living Lattice",
+        "Sapling",
+        "Familiar",
+        "Machine Elves",
+        "Transmute",
+        "Water Blast",
+        "Cinder Snap",
+        "Grove Titan",
+        "Storm Canopy",
+        "Solitude",
+        "Plasma Ball",
+        "Lucid Needle",
+        "Scouring Gale",
+        "Lucid Guide"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Emerald",
+        "Gold Bracelet",
+        "Sapphire",
+        "Silver Bracelet",
+        "Ruby",
+        "Ring of Patience",
+        "Amber Thought",
+        "Ring of Embers",
+        "Storm Opal",
+        "Stone Armor",
+        "Sturdy Metal Helmet"
+      ],
+      "purchases": [],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 3,
+          "round": 1,
+          "enemies": [
+            "The Mind Hive"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 15,
+          "hpEnd": 32
+        }
+      ],
+      "strataCompleted": [
+        2
+      ],
+      "fieldSupplies": [
+        {
+          "uid": 53,
+          "item": "channelDraught",
+          "x": 2,
+          "y": 4,
+          "round": 1
+        },
+        {
+          "uid": 54,
+          "item": "focusDraught",
+          "x": 7,
+          "y": 1,
+          "round": 1
+        },
+        {
+          "uid": 55,
+          "item": "healingSap",
+          "x": 9,
+          "y": 7,
+          "round": 1
+        }
+      ]
+    },
+    "steps": 158,
+    "archon": "mindHive",
+    "enemyDecks": {
+      "EarlyMote": [
+        "echoPolyp",
+        "nerveWeaver"
+      ]
+    },
+    "eventDeck": [],
+    "itemDeck": [
+      "strideGem",
+      "card:square",
+      "focusDraught",
+      "card:tide",
+      "card:discord",
+      "fireArmor",
+      "card:focus",
+      "card:moth",
+      "card:root",
+      "starFlask",
+      "card:kiln",
+      "card:thorn",
+      "card:resonance",
+      "recallGem",
+      "card:lucidNeedle",
+      "insightDew",
+      "sapphire",
+      "card:water",
+      "card:guardian",
+      "card:heat",
+      "curseArmor",
+      "card:palimpsest",
+      "emerald",
+      "necklace",
+      "card:ember",
+      "quickArmor",
+      "focusGem",
+      "mirrorArmor",
+      "card:keystone",
+      "holyArmor",
+      "card:magnify",
+      "card:sun",
+      "dewNeck",
+      "card:quietStitch",
+      "card:clear",
+      "card:terra",
+      "card:rot",
+      "channelRing",
+      "earthArmor",
+      "channelGem",
+      "card:golem",
+      "card:quicksilver",
+      "card:bloom",
+      "card:undertow",
+      "card:familiar",
+      "topaz",
+      "card:corner",
+      "card:conduit",
+      "card:prism",
+      "channelDraught",
+      "card:solitude",
+      "card:plasma",
+      "card:seed",
+      "curseGem",
+      "card:spore",
+      "card:ward",
+      "card:storm",
+      "healingSap",
+      "card:aqua",
+      "thornCrown",
+      "stoneArmor",
+      "focusRing",
+      "card:rite",
+      "bronze",
+      "curseNeck",
+      "crown",
+      "card:transmute",
+      "card:scouringGale",
+      "card:ignis",
+      "silver",
+      "ruby",
+      "card:blast",
+      "card:lattice",
+      "sightCrown",
+      "insightGem",
+      "curseRing",
+      "ring",
+      "gold",
+      "card:gust",
+      "windArmor",
+      "card:sapling",
+      "waterArmor",
+      "card:rain",
+      "card:soothe",
+      "card:cinder",
+      "card:shield",
+      "card:clean"
+    ],
+    "startGem": "emerald",
+    "shop": {
+      "afterStratum": 2,
+      "stock": [
+        "card:scouringGale",
+        "card:lucidNeedle",
+        "card:transmute",
+        "card:magnify",
+        "channelGem",
+        "silver",
+        "insightGem",
+        "fireArmor",
+        "holyArmor",
+        "channelRing",
+        "starFlask",
+        "healingSap"
+      ],
+      "healer": true,
+      "healerPrice": 50,
+      "healUsed": false,
+      "removeUsed": false,
+      "hexPrice": {
+        "kind": "allyGold",
+        "gold": 25,
+        "hp": 0
+      }
+    },
+    "evaluationFixture": "stratum3-developed-foundation-v1",
+    "battle": {
+      "turn": 15,
+      "enemyFirst": false,
+      "phase": "enemy",
+      "columns": 7,
+      "rows": 6,
+      "grid": [
+        [],
+        [
+          {
+            "uid": 20,
+            "id": "focus",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 2,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 2,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 31,
+            "id": "transmute",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 13,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [
+          {
+            "uid": 27,
+            "id": "lattice",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 4,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 6,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 9,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            },
+            "chosenElement": true
+          }
+        ],
+        [
+          {
+            "uid": 37,
+            "id": "plasma",
+            "upgrade": false,
+            "used": 2,
+            "lastActivatedTurn": 15,
+            "lastActivationElement": "Chaos",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Chaos",
+            "transmuted": false,
+            "placed": 37,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 38,
+            "id": "lucidNeedle",
+            "upgrade": false,
+            "used": 2,
+            "lastActivatedTurn": 15,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 38,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 21,
+            "id": "focus",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 2,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 3,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 28,
+            "id": "sapling",
+            "upgrade": false,
+            "used": 2,
+            "lastActivatedTurn": 4,
+            "lastActivationElement": "Earth",
+            "charge": 0,
+            "hp": 10,
+            "maxHp": 10,
+            "ward": 0,
+            "element": "Earth",
+            "transmuted": false,
+            "placed": 6,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 50,
+            "id": "lucidGuide",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 12,
+            "maxHp": 12,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 18,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 39,
+            "id": "scouringGale",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Wind",
+            "transmuted": false,
+            "placed": 12,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 22,
+            "id": "clear",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 7,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 14,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 36,
+            "id": "solitude",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Light",
+            "transmuted": false,
+            "placed": 10,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 23,
+            "id": "rain",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Water",
+            "transmuted": false,
+            "placed": 29,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [
+          {
+            "uid": 18,
+            "id": "shield",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 8,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 29,
+            "id": "familiar",
+            "upgrade": false,
+            "used": 2,
+            "lastActivatedTurn": 7,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 6,
+            "maxHp": 6,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 19,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [
+          {
+            "uid": 17,
+            "id": "blast",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 15,
+            "lastActivationElement": "Arcane",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 39,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [
+          {
+            "uid": 35,
+            "id": "storm",
+            "upgrade": false,
+            "used": 1,
+            "lastActivatedTurn": 15,
+            "lastActivationElement": "Wind",
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Wind",
+            "transmuted": false,
+            "placed": 40,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [],
+        [],
+        [
+          {
+            "uid": 26,
+            "id": "magnify",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 0,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 20,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            },
+            "attachedTo": 24
+          },
+          {
+            "uid": 24,
+            "id": "ward",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 1,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 17,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [
+          {
+            "uid": 25,
+            "id": "ward",
+            "upgrade": false,
+            "used": 0,
+            "lastActivatedTurn": 0,
+            "lastActivationElement": null,
+            "charge": 0,
+            "hp": 0,
+            "maxHp": 0,
+            "ward": 1,
+            "element": "Arcane",
+            "transmuted": false,
+            "placed": 21,
+            "lock": false,
+            "sever": false,
+            "freeze": 0,
+            "zeroWard": false,
+            "status": {
+              "burn": 0,
+              "poison": 0,
+              "corrode": 0
+            }
+          }
+        ],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      "corruptions": {},
+      "ideons": [],
+      "deck": [
+        {
+          "uid": 33,
+          "id": "cinder",
+          "upgrade": false
+        }
+      ],
+      "hand": [],
+      "discard": [
+        {
+          "uid": 32,
+          "id": "water",
+          "upgrade": false
+        },
+        {
+          "uid": 16,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 30,
+          "id": "elves",
+          "upgrade": false
+        },
+        {
+          "uid": 19,
+          "id": "shield",
+          "upgrade": false
+        }
+      ],
+      "destroyed": [
+        {
+          "uid": 34,
+          "id": "grove",
+          "upgrade": false,
+          "used": 3,
+          "lastActivatedTurn": 3,
+          "lastActivationElement": "Earth",
+          "charge": 0,
+          "hp": 0,
+          "maxHp": 42,
+          "ward": 0,
+          "element": "Earth",
+          "transmuted": false,
+          "placed": 1,
+          "lock": false,
+          "sever": false,
+          "freeze": 0,
+          "zeroWard": false,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          }
+        }
+      ],
+      "enemies": [
+        {
+          "uid": 56,
+          "enemy": "mindHive",
+          "restless": 0,
+          "id": "mindHive",
+          "name": "The Mind Hive",
+          "tier": "Archon",
+          "element": "Earth",
+          "hp": 0,
+          "movement": "Archon",
+          "rotation": [
+            {
+              "name": "The procession",
+              "damage": 0,
+              "element": "Earth",
+              "commandIdeons": true,
+              "hiveWave": true,
+              "fixedDamage": true
+            }
+          ],
+          "signature": "Invulnerable. Loses 1 life after each complete enemy round: survive 15 rounds. Creates increasingly large insect waves. Later waves emerge closer: the final four spawning waves attempt 4, 6, 8 and 10 Burrowers in columns 1–4, 1–3, 1–2 and 1. Each acts starting next round. The last round only commands survivors. All insects vanish at 0. At the end of each full move cycle, if afflicted by Burn, Poison or Corrode, spends its next move on Purify to clear all three, then resumes its cycle.",
+          "counter": "Area attacks thin the swarm; filling spaces denies ordinary spawns. Save defenses for insects already behind your front line.",
+          "nemesis": "Slow decks",
+          "grouped": false,
+          "stratum": 3,
+          "hive": true,
+          "bossMode": "stalker",
+          "statusImmunities": [
+            "burn",
+            "poison",
+            "corrode"
+          ],
+          "entityUid": 56,
+          "maxHp": 15,
+          "cycle": 15,
+          "buff": 0,
+          "guard": 0,
+          "status": {
+            "burn": 0,
+            "poison": 0,
+            "corrode": 0
+          },
+          "purifyPending": false
+        }
+      ],
+      "order": 40,
+      "firstAttackTurn": 15,
+      "permanent": {
+        "focus": 2
+      },
+      "next": {
+        "focus": 0,
+        "insight": 0
+      },
+      "shields": [],
+      "bracelets": [
+        {
+          "uid": 40,
+          "block": 0,
+          "element": "Water",
+          "name": "Gold Bracelet"
+        },
+        {
+          "uid": 42,
+          "block": 0,
+          "element": "Fire",
+          "name": "Silver Bracelet"
+        }
+      ],
+      "armorBlock": 0,
+      "jobs": [
+        {
+          "kind": "corruptionRound"
+        },
+        {
+          "kind": "nextTurn"
+        }
+      ],
+      "reaction": null,
+      "relief": 0,
+      "mirror": false,
+      "healUses": {},
+      "huskConverted": false,
+      "focus": 5,
+      "channel": 4,
+      "insight": 4,
+      "revealInsight": 4,
+      "milky": false
+    },
+    "reward": {
+      "cards": [
+        "eclipse",
+        "storm",
+        "clean"
+      ],
+      "boss": true,
+      "gem": "topaz",
+      "setting": "silver"
+    }
+  }
+}

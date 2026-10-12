@@ -1,3 +1,23 @@
+# Lucent Depths first playable evaluation — package 3.0.0
+
+Rules/content3.0.0, actions8, weighted-druid-v3. The shared legal-action interface now includes Ideon targeting, guardians, projectile fields, positional interception and Lucid Guide movement/attacks. Policy changes are heuristics, not learned training. Exact sources and replayable action traces are retained in `reports/depths-evaluation`.
+
+Five complete **S3 carry-in runs** used the authored `stratum3-developed-foundation-v1` fixture: 70 HP, 160 Gold, a developed foundation deck, Guide on entry, 3 Focus/4 Channel and strong elemental equipment. These are not S1-through-S3 runs.
+
+| Seed | Outcome | HP | Map round | Decisions |
+| --- | --- | ---: | ---: | ---: |
+| 73001 | Win | 30 | 17 | 668 |
+| 73002 | Loss | 0 | 18 | 888 |
+| 73003 | Win | 70 | 18 | 813 |
+| 73004 | Loss | 0 | 13 | 580 |
+| 73005 | Win | 57 | 20 | 1071 |
+
+All twelve individual encounter checks also terminated without stalls. Mind Hive: victory at32HP/turn15; Cnidarian: loss atturn12; Refraction Cannon: loss atturn33. Six isolated Motes caused no HP loss against this strong fixture; Eidolons cost2–7HP. All17 scenarios replayed to identical final saved states. Early Hive waves were revised because distant late insects could not reach the player before its clock expired.
+
+515 rules tests pass; art audit covers200required assets with no gaps. Electron checks cover entry, Guide/Ideon interaction, Cannon movement/coverage, barriers and victory using disposable profiles. See [build report](reports/stratum3-build-report.md) for exact choices and limitations. Cnidarian replacement escalation and the ordinary-enemy/Archon difficulty gap need human review; this small batch does not establish final balance. S3 tutorial remains deferred under the agreed encounters-first plan.
+
+---
+
 # Spoolkeeper and Tools verification — package 2.1.7
 
 Rules2.1.6/content2.1.5/actions7. The continuous 100-HP tutorial encounter completes headlessly with reloads after every decision and through the full mouse UI. The shared legal-action interface enforces Tools plus 100 Gold for each Elves upgrade; additional Elves enter Stratum2 reward choices. Tools pickup/Scribe GUI checks pass. No new full-run balance batch, policy tuning or learned training; tutorial success is not a claim about normal Stratum2 balance.

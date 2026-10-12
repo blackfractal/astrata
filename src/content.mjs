@@ -1,3 +1,4 @@
+import { registerDepths, ideonDefs } from "./depths-content.mjs";
 import { registerStratum2 } from "./strata.mjs";
 export const DRUID_COMPANION_STORY =
   "At the forest’s edge, a sapling lifts its roots from the earth and falls into step beside you. It pauses when you pause. When you turn toward the darker trees, it shakes the dew from its leaves and follows. You make room in your grimoire. Neither of you has to enter the Weald alone.";
@@ -5,10 +6,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "2.1.19",
-  content: "2.1.25",
+  rules: "3.0.0",
+  content: "3.0.0",
   observation: 2,
-  actions: 7,
+  actions: 8,
 };
 export const TRAVELER_DONATION = 15;
 export const TRAVELER_STORIES = [
@@ -542,7 +543,12 @@ card(
   2,
   { ward: 5 },
   "Choose an element on placement; retain it until Recall or destruction. Starts with 1 Ward. Activate: +5 Ward, twice. May instead meld beneath a Ward: immediately add 5 Ward, revive it if depleted, and choose its element. No extra activation allowance or independent Guard pool while melded; Recall resets both cards separately.",
-  { construct: true, stack: "latticeMeld", choosePlacementElement: true, meld: {} },
+  {
+    construct: true,
+    stack: "latticeMeld",
+    choosePlacementElement: true,
+    meld: {},
+  },
 );
 card(
   "conduit",
@@ -1699,7 +1705,8 @@ export const glossary = {
   Isolated: "No orthogonal neighbors; Sever also satisfies this.",
   Cornerstone: "Only functions in a grid corner.",
   Bonded: "Requires a neighbor of the printed element.",
-  Construct: "A structural card category. Some effects apply only to Constructs. Melded cards do not automatically make a Construct; this keyword does not grant permission to Meld or imply height.",
+  Construct:
+    "A structural card category. Some effects apply only to Constructs. Melded cards do not automatically make a Construct; this keyword does not grant permission to Meld or imply height.",
   Siphon:
     "Consumes one remaining activation allowance from the affected card. It does not activate that card or spend your Channel.",
   Newest:
@@ -1807,6 +1814,12 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  kindlyHunger: "It asked for so little, until nothing remained.",
+  knotkeeper: "The knot held. You did not.",
+  borrowedOracle: "It saw your ending through borrowed eyes.",
+  mindHive: "A thousand thoughts, and none of them were yours.",
+  cnidarian: "Something in the dark learned the shape of your mind.",
+  refractionCannon: "The light found a path through you.",
   blackBile: "The forest swallowed its sickness. You could not.",
   bombadier: "His Majesty announced the finale. The fuses applauded.",
   trickster: "The last place you expected was where you stood.",
@@ -1832,3 +1845,17 @@ export const enemyDeathLines = {
 };
 
 registerStratum2(card, enemy, glossary);
+
+registerDepths(card, enemy, glossary, events);
+for (const [kind, d] of Object.entries(ideonDefs))
+  enemies["ideon_" + kind] = {
+    ...d,
+    id: "ideon_" + kind,
+    tier: "Ideon",
+    stratum: 3,
+    summonOnly: true,
+    rotation: [],
+    signature: d.text,
+    counter: "Attack this Ideon, or defeat its owner.",
+    movement: "Sentinel",
+  };

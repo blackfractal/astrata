@@ -26,7 +26,7 @@ function mixedOffer(offer) {
   );
 }
 
-test("all six Archons offer one Legendary and two Rares; either rarity may be selected", () => {
+test("all nine Archons offer one Legendary and two Rares; either rarity may be selected", () => {
   for (const boss of [
     "hart",
     "colossus",
@@ -34,6 +34,9 @@ test("all six Archons offer one Legendary and two Rares; either rarity may be se
     "blackBile",
     "bombadier",
     "trickster",
+    "mindHive",
+    "cnidarian",
+    "refractionCannon",
   ]) {
     for (const choice of [0, 1, 2]) {
       const g = victory(boss);
@@ -50,8 +53,8 @@ test("all six Archons offer one Legendary and two Rares; either rarity may be se
       g.act(g.legal().find((a) => a.type === "rewardGem"));
       g.act(g.legal().find((a) => a.type === "rewardSetting"));
       g.act(g.legal().find((a) => a.type === "continueReward"));
-      assert.equal(g.s.stratum, 2);
-      if (enemies[boss].stratum === 2) assert.equal(g.s.mode, "result");
+      assert.equal(g.s.stratum, Math.min(3, (enemies[boss].stratum || 1) + 1));
+      if (enemies[boss].stratum === 3) assert.equal(g.s.mode, "result");
       else {
         assert.equal(g.s.mode, "tavern");
         assert.ok(g.s.shop.healer);

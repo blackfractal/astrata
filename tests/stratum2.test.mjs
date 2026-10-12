@@ -869,7 +869,7 @@ test("Companion challenge disqualification persists after use and replacement", 
   const loaded = new Game(0, g.save());
   assert.ok(loaded.s.stats.withoutMenders.disqualified);
 });
-test("Second Archon reward resolves to Stratum 2 victory after legendary, Gem and Setting", () => {
+test("Second Archon reward opens the transition Tavern after card, Gem and Setting", () => {
   const g = arena("bombadier");
   g.s.battle.enemies[0].hp = 0;
   g.checkBattle();
@@ -880,7 +880,7 @@ test("Second Archon reward resolves to Stratum 2 victory after legendary, Gem an
     "continueReward",
   ])
     action(g, type);
-  assert.equal(g.s.mode, "result");
-  assert.equal(g.s.outcome, "win");
+  assert.equal(g.s.mode, "tavern");
+  assert.equal(g.s.stratum, 3);
   assert.ok(g.s.stats.strataCompleted.includes(2));
 });

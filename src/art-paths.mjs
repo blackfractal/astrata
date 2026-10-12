@@ -1,3 +1,4 @@
+import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
   "item-tools": "assets/item-tools.png",
   "enemy-blackBile": "assets/enemy-blackBile.png",
@@ -161,6 +162,7 @@ export const artPaths = {
   "location-tavern-interior": "assets/location-tavern-interior.png",
 };
 
+Object.assign(artPaths, depthsArt);
 // Dedicated tutorial enemy illustrations.
 Object.assign(
   artPaths,
@@ -178,3 +180,15 @@ Object.assign(artPaths, {
   "enemy-tutorialEmber": "assets/enemy-tutorialEmber.png",
   "enemy-tutorialWarden": "assets/enemy-tutorialWarden.png",
 });
+
+for (const kind of [
+  "runner",
+  "burrower",
+  "guardian",
+  "binder",
+  "leech",
+  "shuttle",
+  "tentacle",
+  "bullet",
+])
+  artPaths["enemy-ideon_" + kind] = "assets/ideon-" + kind + ".png";

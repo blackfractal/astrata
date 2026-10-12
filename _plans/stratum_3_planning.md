@@ -1,8 +1,17 @@
 # Stratum 3 planning — The Lucent Depths / Ideons
 
-Discussion draft 0.22 · 2026-10-12 · Jonathan / Codex
+Playable draft 0.23 · 2026-10-12 · Jonathan / Codex
 
-Companion to [the main design](astrata_design.md) and [Stratum 2 planning](stratum_2_planning.md). Jonathan selected **The Lucent Depths** as the Stratum name on 2026-10-12. This document collects prior decisions and new proposals; it does not authorize implementation or change the current game's rules. Explicitly identified proposals and open questions are not settled requirements. Where these future rules differ from the current main design or executable, reconcile them when implementation is authorized.
+Companion to [the main design](astrata_design.md) and [Stratum 2 planning](stratum_2_planning.md). Jonathan selected **The Lucent Depths** as the Stratum name on 2026-10-12. Jonathan authorized implementation on 2026-10-12. Package 3.0.0 now implements the first playable S3 encounters. The implementation snapshot below takes precedence for this build; the later discussion sections preserve earlier proposals and open alternatives for review. The deterministic S3 tutorial remains deferred under the encounters-first development order.
+
+
+## Implemented snapshot — 3.0.0
+
+The Lucent Depths now follows the second transition Tavern. Lucid Guide is granted explicitly on entry, with its story. There are six Motes, three Eidolons, three Archons, eight Ideon kinds, five player cards, three events and thirty new illustrations. Art uses indigo/teal alien crystal caverns, organic ivory/chitin enemies and a candlelit meditation field. No altitude viewer, Tower rules or general Druid movement cards were added.
+
+See [the implementation report](../reports/stratum3-build-report.md) for exact choices made from the open proposals, limitations and validation. Runtime definitions are in `src/depths-content.mjs`. Main design §10.13 is the current rules summary. All first-pass numbers are balance candidates rather than claims of final tuning.
+
+The initial Mind Hive test was too easy because late insects could not cross the grid before the timer expired. Its last spawning waves now emerge in progressively nearer columns, with a full player response before their first command. Failed spawns still do nothing; a full legal board remains legitimate spawn denial.
 
 ## Purpose and progression
 

@@ -641,6 +641,29 @@ export async function playFrames(before, frames, after, render, isFast) {
               (frame.focus ? " Focus" : " Channel"),
           );
         render(frame.state);
+      } else if (frame.kind === "ideonSpawn") {
+        render(frame.state);
+        await flash(enemy(frame.uid), frame.name, false, null, frame.element);
+      } else if (frame.kind === "ideonMove" || frame.kind === "guideMove") {
+        const from = card(frame.fromSlot)?.getBoundingClientRect();
+        render(frame.state);
+        const el =
+            frame.kind === "guideMove" ? card(frame.slot) : enemy(frame.uid),
+          to = el?.getBoundingClientRect();
+        if (frame.kind === "guideMove")
+          source = { slot: frame.slot, element: "Arcane" };
+        if (el && from && to && !reduced) {
+          const animation = el.animate(
+            [
+              {
+                transform: `translate(${from.left + from.width / 2 - to.left - to.width / 2}px,${from.top + from.height / 2 - to.top - to.height / 2}px)`,
+              },
+              { transform: "translate(0,0)" },
+            ],
+            { duration: ms(420), easing: "ease-in-out" },
+          );
+          await animation.finished;
+        } else await pause(120);
       } else if (frame.kind === "activate") {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);
@@ -688,11 +711,13 @@ export async function playFrames(before, frames, after, render, isFast) {
               ? find(
                   `[data-consumable-uid="${frame.sourceItem}"], .battle-player .gear-item[data-item-uid="${frame.sourceItem}"]`,
                 ) || player()
-              : source?.slot != null
-                ? card(source.slot)
-                : source?.enemy
-                  ? enemy(source.enemy)
-                  : null;
+              : frame.gridSourceSlot != null
+                ? card(frame.gridSourceSlot)
+                : source?.slot != null
+                  ? card(source.slot)
+                  : source?.enemy
+                    ? enemy(source.enemy)
+                    : null;
         if (frame.armor)
           find(`[data-item-detail="${frame.armor}"]`)?.classList.add(
             "defense-ready",

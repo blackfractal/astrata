@@ -17,6 +17,9 @@ function archive() {
     sources: Object.fromEntries(
       [
         "engine.mjs",
+        "depths-content.mjs",
+        "ideons.mjs",
+        "depths-field.mjs",
         "strata.mjs",
         "corruptions.mjs",
         "loom-bosses.mjs",

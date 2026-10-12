@@ -1,10 +1,10 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 2.1.13** contains two playable Strata: **The Whispering Weald** and **The Unfinished Loom**. Every normal Loom enemy has a mixed-element attack or opening Corruption warnings; Hollow Scribe threatens fourteen Memory Holes. Corruptions have dedicated art and animated effects, including the new Anger.
+A spatial deckbuilding roguelike by Jonathan. **Version 3.0.0** contains three playable Strata: **The Whispering Weald**, **The Unfinished Loom**, and **The Lucent Depths**. S3 introduces enemy-owned Ideons inside your Mind Grid, a crystal-cavern overworld with barriers, five new cards, and three new Archons: Mind Hive, Cnidarian, and the Refraction Cannon.
 
-Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v2.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
+Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v3.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
-Defeat Stratum 1's Archon, choose a legendary reward, then visit the automatic Tavern before entering Stratum 2. Your deck, equipment, Gold and remaining HP travel with you. Machine Elves join your Grimoire when you click **Enter the Unfinished Loom** after leaving the transition Tavern and reading their introduction. The first Loom entry starts its separate tutorial; Continue preserves your normal journey. Defeat the second Archon to complete this build.
+Defeat Stratum 1's Archon, choose one of a Legendary and two Rare rewards, then visit the automatic Tavern before entering Stratum 2. Your deck, equipment, Gold and remaining HP travel with you. Machine Elves join your Grimoire when you click **Enter the Unfinished Loom** after leaving the transition Tavern and reading their introduction. The first Loom entry starts its separate tutorial; Continue preserves your normal journey. After the second Archon, another transition Tavern leads to the Lucent Depths. The Lucid Guide joins when you choose **Enter the Lucent Depths**. Defeat its Archon to complete this build. The S3 tutorial is deferred until the playable encounters have been reviewed; S1/S2 tutorials remain available.
 
 Corruptions belong to **spaces**, not cards. Cover Nausea or Insanity, sacrifice a card over a Mind Mine, deny Hypnosis its activation, or send Machine Elves to Mend. Machine Elves can enter Memory Holes and repair their own or adjacent spaces. Ordinary repairs are immediate; Hole/Hypnosis take two player-turn starts, or one with upgraded Elves. The revised Mending Ground tutorial demonstrates Nausea, Anger, Memory Hole and repair, then ends with a gentle independent fight. Hover persistent space seals and marked targets for their rules.
 
@@ -12,6 +12,7 @@ The original First Clearing tutorial remains available. Archives retains discove
 
 - [Main design](_plans/astrata_design.md), especially §10.12 for implemented Stratum 2 rules.
 - [Stratum 2 planning](_plans/stratum_2_planning.md).
+- [Stratum 3 rules and implementation decisions](_plans/stratum_3_planning.md), [S3 build report](reports/stratum3-build-report.md), and [new art/prompts](reports/s3-art-provenance.json).
 - [Build log](BUILD_LOG.md) and [AI reports](AI_REPORT.md).
 - [Interesting situations and replayable puzzles](_knowledge/situations/README.md).
 - [New art and exact prompts](reports/loom-art-provenance.json).

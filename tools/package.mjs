@@ -53,6 +53,11 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "stratum3-build-report.md",
+  "s3-tests.txt",
+  "s3-art-provenance.json",
+  "depths-ui-verification.json",
+  "depths-evaluation",
   "continue-save-ui-verification.json",
   "companion-snap-art-revisions.json",
   "companion-snap-art-ui-verification.json",

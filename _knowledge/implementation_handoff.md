@@ -1,3 +1,13 @@
+## Latest: Stratum 3 first playable implemented — 2026-10-12
+
+Jonathan explicitly authorized building S3. Package/rules/content3.0.0, action schema8, main design4.185 §10.13, S3 planning draft0.23, BUILD_LOG168. Earlier proposals below are historical; current snapshot and `reports/stratum3-build-report.md` take precedence.
+
+Normal S2 Archon reward now leads to transition Tavern, Guide story, explicit Enter Lucent Depths/grant Guide, S3 map and final S3 victory. Six Motes, three Eidolons, three Archons, eight Ideon kinds, five cards, three events, ten barriers and30new illustrations. Core new modules: depths-content.mjs, ideons.mjs, depths-field.mjs, ideons-ui.mjs, depths.css. No tutorial yet: Jonathan requested actual encounters before committing S3 tutorial. No altitude viewer or S4.
+
+515 tests pass. Thirty built-in image_gen assets recorded with exact prompts/original paths/hash/provenance;200required-art audit passes. No exposed image model identifier, no Spark used. GUI QA uses `.tmp/depths-ui-*` isolated profiles, never Jonathan's save. Tools: depths-ui-test.mjs (`--packaged`), depths-evaluate.mjs (12 encounters +5carry-in runs), depths-fixture.mjs. Five S3 fixture runs seeds73001–73005: win30HP/loss/win70HP/loss/win57HP; all17scenarios deterministic replay verified. Strong authored carry-in fixture, NOT earned S1/S2 progression; no learned training. Review Cnidarian replacement pressure, Cannon field usability, Hive spawn denial and easy isolated Motes. Heuristic policy still loses Cnidarian/Cannon isolated fixtures.
+
+Ideons have separate `battle.ideons`; hostiles/guardian filtering shared by attacks/AI/UI. No friendly adjacency or attunement. Ordinary spawn onlyempty/nonHole; ownerdeathcleanup; directactions→commands(existing creationorder)→spawns. Guard samecolumnorleftoforigin; Cannon exit Pierce equipmentonly. Area targets snapshot excludesguardianownerforwholeactivation. Cannonsharedfield tracks cardUID. Guide mark onlynextdifferentcard, notequipment. Moving playerstacks carriesintoHypnosis/Hole; Corruptions stay. Source archives include allnewmechanics modules. Current frontend and source packaged through tools/package.mjs, v3zip uses tools/make-zip.py; preserve olderarchives.
+
 ## Latest: The Refraction Cannon name approved — 2026-10-12
 
 S3 draft 0.22 / BUILD_LOG 167. Jonathan selected The Refraction Cannon and explicitly reinforced outer-horror/alienlike art. Preserve clear weapon silhouette within Astrata's painterly style; organic/mineral lens anatomy suggested, not steampunk. Supersedes previous open-name notes. No images or runtime changes.

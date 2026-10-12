@@ -9,6 +9,7 @@ import {
   allyHit,
   corner,
   enemyImmuneTo,
+  enemyDamage,
 } from "./engine.mjs";
 export const defaultWeights = {
   damage: 1,
@@ -21,7 +22,7 @@ const dist = (a, b) => Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
 export class WeightedPolicy {
   constructor(weights = {}) {
     this.weights = { ...defaultWeights, ...weights };
-    this.id = "weighted-druid-v2.1";
+    this.id = "weighted-druid-v3";
   }
   choose(o, actions) {
     if (!actions.length) return null;
@@ -59,8 +60,7 @@ export class WeightedPolicy {
             (d?.effects.damage || d?.effects.shield || d?.effects.ward)
           )
             score -= 12;
-          else if (q?.kind === "hypnosis" && d && d.limit !== 0)
-            score -= 6; // Utility effects are suppressed, but the card loses a use.
+          else if (q?.kind === "hypnosis" && d && d.limit !== 0) score -= 6; // Utility effects are suppressed, but the card loses a use.
           if (
             b.enemies.some((e) =>
               e.corruptionPlan?.some(
@@ -222,7 +222,9 @@ export class WeightedPolicy {
             "Draw a card when placement resources would otherwise go unused.",
           ];
         if (f.damage) {
-          const enemy = b.enemies.find((e) => e.uid === a.target);
+          const enemy = [...b.enemies, ...(b.ideons || [])].find(
+            (e) => e.uid === a.target,
+          );
           const damage = offense(f.damage, f.element, enemy.element);
           return [
             Math.min(damage, enemy.hp) * w.damage +
@@ -447,7 +449,9 @@ export class WeightedPolicy {
             -2,
             "Preserve Channel: this card lacks enough uses to release.",
           ];
-        const target = b.enemies.find((e) => e.uid === a.target);
+        const target = [...b.enemies, ...(b.ideons || [])].find(
+          (e) => e.uid === a.target,
+        );
         const threat = b.enemies.reduce(
           (sum, e) =>
             sum +
@@ -463,16 +467,48 @@ export class WeightedPolicy {
         let damage =
           f.damage || f.chargedDamage || (f.randomDamage && 6.5) || 0;
         if (f.charge > 1) damage /= f.charge;
+        if (f.ideonDouble && target?.ideon) damage *= 2;
+        if (f.guide) {
+          damage = target ? 5 : 0;
+          n += target ? 7 : 0;
+          if (!target && b.ideons?.length) {
+            const distance = (i) =>
+              Math.min(
+                ...b.ideons.map(
+                  (e) =>
+                    Math.abs((i % 7) - (e.slot % 7)) +
+                    Math.abs(Math.floor(i / 7) - Math.floor(e.slot / 7)),
+                ),
+              );
+            n += distance(a.slot) - distance(a.destination);
+          }
+        }
+        if (f.secondSpring) n += 25;
+        if (f.beam)
+          n +=
+            (b.ideons || []).filter(
+              (e) =>
+                Math.floor(e.slot / 7) === Math.floor(a.slot / 7) &&
+                e.slot % 7 > a.slot % 7,
+            ).length * 8;
         if (target) {
-          damage = offense(damage, a.element, target.element);
-          if (target.resist === a.element) damage = Math.ceil(damage / 2);
-          if (target.wisp) damage *= a.element === "Arcane" ? 0.5 : 2;
+          if (target.hive) damage = 0;
+          if (target.ideon)
+            n += target.guardian ? 12 : target.behavior === "bullet" ? 10 : 6;
+          // Cnidarian replaces killed tendrils in growing waves: prefer the owner,
+          // saving targeted cuts for tendrils that have grown dangerous.
+          if (target.kind === "tentacle") n -= (target.age || 0) < 6 ? 18 : 5;
+          if (target.id === "cnidarian") n += 10;
+          damage = enemyDamage(damage, a.element, target);
           if (target.flicker) damage = 0.5;
           if (damage >= target.hp) n += 15;
           damage = Math.min(damage, target.hp);
           if (target.id === "colossus" && a.element === "Chaos") n -= 8;
         }
-        if (f.all) damage *= b.enemies.length;
+        if (f.all)
+          damage *=
+            b.enemies.filter((e) => !e.hive).length + (b.ideons || []).length;
+        if (f.concord) damage *= 3;
         n +=
           damage * w.damage +
           (target && enemyImmuneTo(target, "burn")
@@ -541,7 +577,14 @@ export class WeightedPolicy {
       }
       case "ward":
         return [
-          Math.min(Math.ceil(f.ward * defenseRate(f.element || "Arcane", b.reaction.element)), b.reaction.damage) * w.survival + (f.column + 1) * 2,
+          Math.min(
+            Math.ceil(
+              f.ward * defenseRate(f.element || "Arcane", b.reaction.element),
+            ),
+            b.reaction.damage,
+          ) *
+            w.survival +
+            (f.column + 1) * 2,
           "Absorb damage while preserving defenders closer to the player.",
         ];
       case "block":

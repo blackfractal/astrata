@@ -1,6 +1,13 @@
 import { cards, enemies, items, events } from "./content.mjs";
 
 export const achievements = [
+  { id: "defeat-mindHive", name: "Defeat the Mind Hive", enemy: "mindHive" },
+  { id: "defeat-cnidarian", name: "Defeat the Cnidarian", enemy: "cnidarian" },
+  {
+    id: "defeat-refractionCannon",
+    name: "Defeat the Refraction Cannon",
+    enemy: "refractionCannon",
+  },
   { id: "defeat-blackBile", name: "Defeat The Black Bile", enemy: "blackBile" },
   { id: "defeat-bombadier", name: "Defeat King Bombadier", enemy: "bombadier" },
   { id: "defeat-trickster", name: "Defeat The Trickster", enemy: "trickster" },
@@ -53,7 +60,11 @@ export function discover(collection, state, at = new Date().toISOString()) {
     seen("enemies", e.enemy);
     if (items[e.item]?.consumable) seen("equipment", e.item);
   }
-  for (const e of state.battle?.enemies || []) seen("enemies", e.id);
+  for (const e of [
+    ...(state.battle?.enemies || []),
+    ...(state.battle?.ideons || []),
+  ])
+    seen("enemies", e.id);
   if (state.mode === "reward")
     for (const id of state.reward?.cards || []) seen("cards", id);
   if (state.mode === "item") for (const id of state.itemOffer || []) offer(id);

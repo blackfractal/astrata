@@ -4,7 +4,7 @@ import { attackElements, attackPreview } from "./combat-preview.mjs";
 import { cardPower } from "./engine.mjs";
 import { corruptionPower } from "./corruptions.mjs";
 export function damageMarkup(b, c, slot) {
-  return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×4" : ""}</b>`;
+  return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×" + attackElements(b, c, slot).length : ""}</b>`;
 }
 export function targetPreview(ctx, source, slot, actionFor) {
   const number = source?.querySelector(".damage-value");
@@ -33,7 +33,9 @@ export function targetPreview(ctx, source, slot, actionFor) {
     clear();
     const b = ctx.o.battle,
       c = b.grid[slot].at(-1);
-    const enemy = b.enemies.find((e) => e.uid === action.target);
+    const enemy = [...b.enemies, ...(b.ideons || [])].find(
+      (e) => e.uid === action.target,
+    );
     if (!enemy) return;
     const v = attackPreview(b, c, slot, enemy, action.element);
     if (!v) return;

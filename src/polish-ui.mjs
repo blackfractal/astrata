@@ -1,3 +1,5 @@
+import { enhanceIdeons } from "./ideons-ui.mjs";
+import { coveredByIdeon, fieldIdeons } from "./ideons.mjs";
 import { corruptionPower } from "./corruptions.mjs";
 import { enhanceConsumables } from "./consumables-ui.mjs";
 import { upgradeBadge, statBreakdowns, statHelp } from "./card-upgrade-ui.mjs";
@@ -163,6 +165,8 @@ function remaining(ctx, c, i) {
 function whyDisabled(ctx, c, i) {
   const b = ctx.o.battle,
     d = cards[c.id];
+  if (coveredByIdeon(b, i))
+    return "Covered by an Ideon: activation, defense and Recall are disabled until it moves or is defeated.";
   if (c.zeroWard) return DEPLETED_WARD_TEXT;
   if (c.mending)
     return (
@@ -176,6 +180,8 @@ function whyDisabled(ctx, c, i) {
   if (b.phase !== "activate") return "Available during activation";
   if (d.channel > b.channel)
     return `Needs ${d.channel} Channel; ${b.channel} remaining`;
+  if (fieldIdeons(b, i).length)
+    return "Refraction field: choose a matching activation element, or defeat the projectile. Shared-use fields allow only their first chosen card this turn.";
   return "Card condition or target unavailable";
 }
 let targetingCleanup = null;
@@ -242,6 +248,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
       if (target == null) {
         const top = [
           ...ctx.app.querySelectorAll(".enemy[data-enemy-uid]"),
+          ...ctx.app.querySelectorAll(".ideon[data-enemy-uid]"),
         ].find((el) =>
           candidates.some((a) => a.target === Number(el.dataset.enemyUid)),
         );
@@ -580,7 +587,9 @@ function activationChooser(ctx, slot, dragging = false) {
         ? "Choose a Corruption on this or an adjacent space"
         : "Choose a card",
       repairKind: "Choose which Corruption to repair",
-      destination: "Choose an empty slot",
+      destination: cards[ctx.o.battle.grid[slot].at(-1).id]?.effects.guide
+        ? "Move one space, or choose the Guide’s current space to stay"
+        : "Choose an empty slot",
       newElement: "Choose an element",
     }[stage];
     const c = ctx.o.battle.grid[slot].at(-1);
@@ -653,6 +662,7 @@ function activationChooser(ctx, slot, dragging = false) {
         // attunement, friendly-card targets and destinations stay explicit.
         const topEnemy = [
           ...ctx.app.querySelectorAll(".enemy[data-enemy-uid]"),
+          ...ctx.app.querySelectorAll(".ideon[data-enemy-uid]"),
         ].find((el) =>
           filtered.some((a) => a.target === Number(el.dataset.enemyUid)),
         );
@@ -1741,6 +1751,7 @@ export function enhance(ctx) {
   bindEquipment(ctx, app);
   if (o.mode === "battle") {
     arrangeBattle(ctx);
+    enhanceIdeons(ctx);
     boardInteractions(ctx);
     gridTelegraphs(ctx);
     if (o.battle.reaction) {

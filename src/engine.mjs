@@ -1,3 +1,26 @@
+import {
+  livingIdeons,
+  hostiles,
+  legalHostiles,
+  protectedOwner,
+  ideonsAt,
+  coveredByIdeon,
+  stickyAt,
+  fieldIdeons,
+  ideonActivationReason,
+  drainLeeches,
+  settleIdeons,
+  initializeIdeons,
+  depthsTell,
+  scheduleDepths,
+  depthsJob,
+} from "./ideons.mjs";
+import {
+  barrierAt,
+  fieldStep,
+  makeBarriers,
+  enemyStep,
+} from "./depths-field.mjs";
 import { startLoomTutorial, LOOM_TUTORIAL } from "./loom-tutorial.mjs";
 import {
   refreshBossPlans,
@@ -190,7 +213,10 @@ function normalizeCardCaps(state) {
   if (state.checkpoint) normalizeCardCaps(state.checkpoint);
 }
 export function enemyDamage(n, element, enemy) {
-  let damage = offense(n, element, enemy.element);
+  if (enemy.hive) return 0;
+  let damage = enemy.arcaneWeak
+    ? Math.ceil(n * (element === "Arcane" ? 1.5 : 0.5))
+    : offense(n, element, enemy.element);
   if (enemy.resist === element) damage = Math.ceil(damage / 2);
   if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
   return damage;
@@ -407,7 +433,11 @@ export function cardAllowance(b, c, i) {
     : 0;
   return Math.max(
     0,
-    d.limit + plus + meldModifiers(b, c, i).activations - c.used,
+    d.limit +
+      plus +
+      (c.extraUses || 0) +
+      meldModifiers(b, c, i).activations -
+      c.used,
   );
 }
 // Value recoverable damage/defense across the whole stack, including covered cards.
@@ -763,6 +793,7 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "2.1.19",
           "2.1.18",
           "2.1.17",
           "2.1.16",
@@ -1344,6 +1375,7 @@ export class Game {
         : `Archon · ${spaces} spaces this enemy movement`;
     } else
       movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
+    if (d.flying) movement += " · Flying: crosses barriers";
     return {
       age,
       born: e.born ?? null,
@@ -1392,7 +1424,11 @@ export class Game {
           const dx = x - f.x,
             dy = y - f.y,
             distance = Math.max(Math.abs(dx), Math.abs(dy));
-          if (!distance || f.entities.some((e) => e.x === x && e.y === y))
+          if (
+            !distance ||
+            barrierAt(f, x, y) ||
+            f.entities.some((e) => e.x === x && e.y === y)
+          )
             continue;
           const angle =
             (Math.round(Math.atan2(dy, dx) / (Math.PI / 4)) + 8) % 8;
@@ -1470,7 +1506,10 @@ export class Game {
             };
         // Reserve the True Center (displayed as 6,6) for the Archon's arrival.
         // Reroll all four Location dice, retaining their distribution elsewhere.
-        while (type === "Tavern" && location.x === 5 && location.y === 5) {
+        while (
+          barrierAt(f, location.x, location.y) ||
+          (type === "Tavern" && location.x === 5 && location.y === 5)
+        ) {
           location.x = die() + die();
           location.y = die() + die();
         }
@@ -1562,7 +1601,15 @@ export class Game {
           ? "shrine"
           : this.drawDeck(
               "eventDeck",
-              events.filter((x) => x.id !== "shrine").map((x) => x.id),
+              events
+                .filter(
+                  (x) =>
+                    x.id !== "shrine" &&
+                    (s.stratum >= 3
+                      ? x.stratum === 3
+                      : !x.stratum || x.stratum === s.stratum),
+                )
+                .map((x) => x.id),
             );
         s.quest = false;
         s.mode = "event";
@@ -1605,8 +1652,16 @@ export class Game {
       for (let k = 0; k < n; k++) {
         if (e.x === f.x && e.y === f.y) break;
         const from = { x: e.x, y: e.y };
-        e.x = clamp(e.x + dx(e), 0, 10);
-        e.y = clamp(e.y + dy(e), 0, 10);
+        const step = enemyStep(
+          f,
+          e,
+          clamp(e.x + dx(e), 0, 10),
+          clamp(e.y + dy(e), 0, 10),
+          enemies[e.enemy],
+        );
+        if (!step) break;
+        e.x = step.x;
+        e.y = step.y;
         if (e.x !== from.x || e.y !== from.y)
           this.present("move", {
             uid: e.uid,
@@ -1636,8 +1691,17 @@ export class Game {
         // Hunter traversal is visual only; arrival effects occur at its destination.
         while (e.x !== f.x || e.y !== f.y) {
           const from = { x: e.x, y: e.y };
-          e.x += Math.sign(f.x - e.x);
-          e.y += Math.sign(f.y - e.y);
+          const step = enemyStep(
+            f,
+            e,
+            e.x + Math.sign(f.x - e.x),
+            e.y + Math.sign(f.y - e.y),
+            d,
+            true,
+          );
+          if (!step) break;
+          e.x = step.x;
+          e.y = step.y;
           this.present("move", {
             uid: e.uid,
             enemy: e.enemy,
@@ -1705,6 +1769,7 @@ export class Game {
       rows: MIND_ROWS,
       grid: Array.from({ length: MIND_SIZE }, () => []),
       corruptions: {},
+      ideons: [],
       deck: clone(s.deck),
       hand: [],
       discard: [],
@@ -1779,6 +1844,7 @@ export class Game {
         b.grid[slot].push(this.instance(c));
         b.next.focus++;
       }
+    initializeIdeons(this);
     this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));
     for (const e of b.enemies)
       if (enemies[e.id].openingCorruption)
@@ -1810,6 +1876,7 @@ export class Game {
   activationAvailable(c, i) {
     return (
       !!c &&
+      !coveredByIdeon(this.s.battle, i) &&
       this.allowance(c, i) > 0 &&
       !c.zeroWard &&
       c.freeze < this.s.battle.turn &&
@@ -1817,6 +1884,12 @@ export class Game {
     );
   }
   recallCost(slot) {
+    const index = this.s.battle?.grid.indexOf(slot);
+    if (
+      index >= 0 &&
+      (coveredByIdeon(this.s.battle, index) || stickyAt(this.s.battle, index))
+    )
+      return null;
     const d = cards[top(slot)?.id];
     if (
       !d ||
@@ -1843,7 +1916,18 @@ export class Game {
     const d = cards[c.id],
       ns = this.neighbors(i);
     return (
-      !d.condition ||
+      (d.effects.concord
+        ? new Set(
+            ns
+              .map((j) =>
+                attunementSourceElement(
+                  this.s.battle,
+                  top(this.s.battle.grid[j]),
+                ),
+              )
+              .filter((el) => el !== "Arcane"),
+          ).size >= 3
+        : !d.condition) ||
       (d.condition === "isolated"
         ? ns.length === 0
         : d.condition === "corner"
@@ -2092,7 +2176,7 @@ export class Game {
         damage: hit.damage + bonus,
       }));
     }
-    return t;
+    return depthsTell(this, e, t);
   }
   armorCapacity() {
     return (
@@ -2127,7 +2211,7 @@ export class Game {
         name: x.definition.name,
       }));
     b.jobs = [];
-    for (const e of b.enemies) {
+    for (const e of hostiles(b)) {
       clearImmuneStatus(e);
       for (const k of ["burn", "poison", "corrode"])
         if (e.status[k]) {
@@ -2144,7 +2228,7 @@ export class Game {
                 ? e.status[k] + 1
                 : e.status[k];
         }
-      b.jobs.push({ kind: "enemyAction", uid: e.uid });
+      if (!e.ideon) b.jobs.push({ kind: "enemyAction", uid: e.uid });
     }
     b.jobs.push({ kind: "corruptionRound" }, { kind: "nextTurn" });
     this.pump();
@@ -2154,6 +2238,7 @@ export class Game {
       b = s.battle;
     while (s.mode === "battle" && !b.reaction && b.jobs.length) {
       const j = b.jobs.shift();
+      if (depthsJob(this, j)) continue;
       if (j.kind === "anger") {
         triggerAnger(this, j.slot);
         continue;
@@ -2172,12 +2257,13 @@ export class Game {
         return;
       }
       if (j.kind === "enemyStatus") {
-        const e = b.enemies.find((x) => x.uid === j.uid);
+        const e = hostiles(b).find((x) => x.uid === j.uid);
         if (e && j.status && enemyImmuneTo(e, j.status)) {
           clearImmuneStatus(e);
           continue;
         }
         if (e) {
+          if (e.hive) continue;
           e.hp -= j.damage;
           this.present("hit", {
             target: "enemy",
@@ -2291,6 +2377,7 @@ export class Game {
                 t.allyStatus && allies.length ? allies[0].i : null,
               );
             }
+        scheduleDepths(this, e, t);
         if (t.sequence)
           b.jobs.unshift(
             ...t.sequence.map((hit) => ({
@@ -2378,7 +2465,8 @@ export class Game {
     // Collapse starts inside the grid. Also constrain already-saved reactions
     // from older builds, without resetting progress after an interception.
     const frontier = Math.min(column, h.collapsedColumn ?? MIND_COLUMNS - 1);
-    const reachable = (i) => !h.pierce && i % MIND_COLUMNS <= frontier;
+    const reachable = (i) =>
+      !h.pierce && !coveredByIdeon(b, i) && i % MIND_COLUMNS <= frontier;
     return {
       wards: h.cull ? [] : this.activeWards().filter((x) => reachable(x.i)),
       shields: h.cull
@@ -2661,6 +2749,8 @@ export class Game {
       });
   }
   applyEnemyStatus(e, status, value, sourceSlot = null) {
+    if (!e.ideon && (e.hive || protectedOwner(this.s.battle, e.uid)))
+      return false;
     if (enemyImmuneTo(e, status)) {
       clearImmuneStatus(e);
       this.log(`${e.name} is immune to ${statusName(status)} (${e.element}).`);
@@ -2696,6 +2786,19 @@ export class Game {
     if (!e || e.hp <= 0 || activation.blocked?.has(e.uid)) return;
     const s = this.s,
       b = s.battle;
+    if (!e.ideon && protectedOwner(b, e.uid)) return;
+    const marked =
+      e.mark &&
+      activation.card != null &&
+      sourceItem == null &&
+      e.mark.card !== activation.card &&
+      !activation.marked?.has(e.uid);
+    if (marked) {
+      n += e.mark.bonus;
+      activation.marked ??= new Set();
+      activation.marked.add(e.uid);
+      delete e.mark;
+    }
     let d = enemyDamage(n, element, e);
     const guard = Math.min(d, e.guard);
     e.guard -= guard;
@@ -2757,6 +2860,19 @@ export class Game {
     c.lastActivatedTurn = b.turn;
     c.lastActivationElement = element || c.element;
     c.used++;
+    if (f.guide && a.destination != null && a.destination !== i) {
+      const from = i;
+      b.grid[a.destination] = b.grid[i];
+      b.grid[i] = [];
+      for (const shield of b.shields)
+        if (shield.slot === i) shield.slot = a.destination;
+      i = a.destination;
+      this.present("guideMove", {
+        fromSlot: from,
+        slot: i,
+        name: "Lucid Guide moves",
+      });
+    }
     if (d.charge) {
       if (c.charge < d.charge) {
         c.charge += chargeGain(b, c, i);
@@ -2855,12 +2971,20 @@ export class Game {
       f.corrode
     ) {
       const targets = f.all
-        ? b.enemies.filter((x) => x.hp > 0)
+        ? legalHostiles(b)
         : [
             f.randomDamage || d.stack === "plasmaMeld"
-              ? this.pick(b.enemies.filter((x) => x.hp > 0))
-              : b.enemies.find((x) => x.uid === target),
+              ? this.pick(legalHostiles(b))
+              : hostiles(b).find((x) => x.uid === target),
           ];
+      if (f.beam)
+        targets.unshift(
+          ...livingIdeons(b).filter(
+            (e) =>
+              Math.floor(e.slot / 7) === Math.floor(i / 7) &&
+              e.slot % 7 > i % 7,
+          ),
+        );
       const firstTarget = targets.find((e) => e?.hp > 0);
       const damaging = !!(f.damage || f.hpDamage || f.randomDamage);
       const heats = damaging && firstTarget ? attachedHeat(b, c, i) : [];
@@ -2894,15 +3018,25 @@ export class Game {
         let n = f.randomDamage
           ? 1 + Math.floor(this.rand() * f.randomDamage)
           : this.cardPower(c, i);
+        if (f.ideonDouble && e.ideon) n *= 2;
+        if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus);
         if (n) {
           const prism =
             f.prism &&
             ["Fire", "Earth", "Wind", "Water"].every((el) =>
               this.neighbors(i).some((j) => top(b.grid[j]).element === el),
             );
-          for (const el of prism
-            ? ["Fire", "Earth", "Wind", "Water"]
-            : [element])
+          for (const el of f.concord
+            ? [
+                ...new Set(
+                  this.neighbors(i)
+                    .map((j) => attunementSourceElement(b, top(b.grid[j])))
+                    .filter((el) => el !== "Arcane"),
+                ),
+              ].slice(0, 4)
+            : prism
+              ? ["Fire", "Earth", "Wind", "Water"]
+              : [element])
             this.damageEnemy(
               e,
               n,
@@ -2950,7 +3084,7 @@ export class Game {
     }
     if (f.burnAll) {
       const areaStart = this.presentation?.length || 0;
-      for (const e of b.enemies.filter((e) => e.hp > 0)) {
+      for (const e of legalHostiles(b)) {
         if (context.blocked?.has(e.uid)) continue;
         if (e.flicker) {
           e.flicker = false;
@@ -2962,6 +3096,35 @@ export class Game {
         this.applyEnemyStatus(e, "burn", f.burnAll + bonus, i);
       }
       this.markAreaPresentation(areaStart, i);
+    }
+    if (f.secondSpring) {
+      const eligible = b.grid
+        .flatMap((slot, j) => {
+          const x = top(slot),
+            def = cards[x?.id];
+          return x &&
+            !def.singleUse &&
+            !def.destroyAfterActivation &&
+            this.allowance(x, j) === 0 &&
+            (hasDirectDamageActivation(x) ||
+              def.effects.shield ||
+              def.effects.ward)
+            ? [{ x, j }]
+            : [];
+        })
+        .sort(
+          (a, z) =>
+            stackValue(b, z.j).power - stackValue(b, a.j).power || a.j - z.j,
+        )
+        .slice(0, 4);
+      for (const { x, j } of eligible) {
+        x.extraUses = (x.extraUses || 0) + 2;
+        this.present("activate", { slot: j, name: "Second Spring +2 uses" });
+      }
+    }
+    if (f.guide) {
+      const victim = livingIdeons(b).find((e) => e.uid === target);
+      if (victim?.hp > 0) victim.mark = { card: c.uid, bonus: 3 };
     }
     if (d.destroyAfterActivation) {
       this.present("activate", { slot: i, name: d.name + " is Destroyed" });
@@ -2985,8 +3148,24 @@ export class Game {
           : d.name,
     });
     b.channel -= channelCost ?? activationCost(b, c, a.slot);
-    const ctx = {};
+    const ctx = { card: c.uid };
+    const fields = fieldIdeons(b, a.slot).map((e) => ({
+      uid: e.uid,
+      field: e.field,
+    }));
     this.applyCard(c, a.slot, a.target, a.element, a, ctx);
+    for (const field of fields) {
+      const e = livingIdeons(b).find((x) => x.uid === field.uid);
+      if (e && field.field === "shared") {
+        e.fieldUsedTurn = b.turn;
+        e.fieldUsedCard = c.uid;
+      }
+      if (field.field === "destroy") {
+        const j = b.grid.findIndex((s) => s.some((x) => x.uid === c.uid));
+        if (j >= 0) this.destroyCard(j, c.uid);
+      }
+    }
+    drainLeeches(this);
     this.log("Activated " + d.name + ".");
     this.checkBattle();
     if (this.s.mode === "battle" && !deferPump) this.pump();
@@ -2995,6 +3174,7 @@ export class Game {
     const s = this.s,
       b = s.battle;
     if (s.mode !== "battle") return;
+    settleIdeons(this);
     if (s.hp <= 0) {
       this.finish(false, "Battle damage");
       return;
@@ -3085,11 +3265,11 @@ export class Game {
         : "You Died: " + cause,
     );
   }
-  enterStratum2() {
+  enterStratum2(next = 2) {
     const s = this.s;
-    s.stratum = 2;
+    s.stratum = next;
     s.stats.strataCompleted = [
-      ...new Set([...(s.stats.strataCompleted || []), 1]),
+      ...new Set([...(s.stats.strataCompleted || []), next - 1]),
     ];
     s.field = {
       round: 0,
@@ -3109,7 +3289,7 @@ export class Game {
     delete s.itemSource;
     s.archon = this.pick(
       Object.values(enemies)
-        .filter((e) => e.stratum === 2 && e.tier === "Archon")
+        .filter((e) => e.stratum === next && e.tier === "Archon")
         .map((e) => e.id),
     );
     s.enemyDecks = {};
@@ -3119,12 +3299,14 @@ export class Game {
       ...this.pool("rare").map((c) => "card:" + c.id),
     ]);
     s.status = blankStatus();
-    s.loomIntro = true;
-    this.openTavern({ afterStratum: 1 });
+    if (next === 3) {
+      s.depthsIntro = true;
+      s.field.barriers = makeBarriers();
+    } else s.loomIntro = true;
+    s.eventDeck = [];
+    this.openTavern({ afterStratum: next - 1 });
     s.shop.healer = true;
-    this.log(
-      "The Whispering Weald is behind you. A Tavern welcomes you before the Unfinished Loom.",
-    );
+    this.log("A Tavern welcomes you before " + STRATA[next].name + ".");
   }
   openTavern({ afterStratum = null } = {}) {
     this.s.mode = "tavern";
@@ -3149,6 +3331,16 @@ export class Game {
       healUsed: false,
       removeUsed: false,
     };
+    if (this.s.stratum >= 3) {
+      const pool = [
+        ...this.pool("common", true),
+        ...this.pool("rare", true),
+      ].filter((c) => c.stratum === 3 && !c.companion);
+      const chosen = this.shuffle(pool)
+        .slice(0, 2)
+        .map((c) => "card:" + c.id);
+      this.s.shop.stock = [...new Set([...chosen, ...this.s.shop.stock])];
+    }
     const kind = this.pick(["gold", "hp", "hpGold", "allyGold", "item"]);
     this.s.shop.hexPrice = {
       kind,
@@ -3170,7 +3362,7 @@ export class Game {
     for (const item of s.inventory) {
       const f = items[item.id].consumable;
       if (!f || consumableReason(s, item)) continue;
-      const targets = f.damage ? b.enemies.filter((e) => e.hp > 0) : [null];
+      const targets = f.damage ? legalHostiles(b) : [null];
       for (const target of targets)
         add(
           "consume",
@@ -3230,7 +3422,7 @@ export class Game {
     }
     if (f.damage) {
       this.damageEnemy(
-        b.enemies.find((e) => e.uid === a.target),
+        hostiles(b).find((e) => e.uid === a.target),
         f.damage,
         f.element,
         {},
@@ -3345,6 +3537,10 @@ export class Game {
         );
       return actions;
     }
+    if (s.mode === "depthsIntro") {
+      add("enterDepths", "Enter the Lucent Depths", {}, { progress: 1 });
+      return actions;
+    }
     if (s.mode === "loomIntro") {
       add("enterLoom", "Enter the Unfinished Loom", {}, { progress: 1 });
       return actions;
@@ -3362,7 +3558,14 @@ export class Game {
               s.field.x + dx >= 0 &&
               s.field.x + dx <= 10 &&
               s.field.y + dy >= 0 &&
-              s.field.y + dy <= 10
+              s.field.y + dy <= 10 &&
+              fieldStep(
+                s.field,
+                s.field.x,
+                s.field.y,
+                s.field.x + dx,
+                s.field.y + dy,
+              )
             ) {
               const x = s.field.x + dx,
                 y = s.field.y + dy,
@@ -3470,8 +3673,8 @@ export class Game {
         add(
           "continueReward",
           s.reward.boss
-            ? (s.stratum || 1) === 1 && !s.tutorial
-              ? "Continue to the Unfinished Loom"
+            ? (s.stratum || 1) < 3 && !s.tutorial
+              ? "Continue to " + STRATA[(s.stratum || 1) + 1].name
               : "Complete Stratum " + (s.stratum || 1)
             : "Return to the Field",
           {},
@@ -3676,7 +3879,11 @@ export class Game {
             "ward",
             `${cards[c.id].name} · ${c.ward} ${defensiveElement(b, c)} Ward`,
             { uid: c.uid, slot: i },
-            { ward: c.ward, element: defensiveElement(b, c), column: i % MIND_COLUMNS },
+            {
+              ward: c.ward,
+              element: defensiveElement(b, c),
+              column: i % MIND_COLUMNS,
+            },
           );
         for (const p of choices.shields)
           add(
@@ -3740,6 +3947,7 @@ export class Game {
               baseCost == null ? Infinity : baseCost + (b.milky ? 1 : 0);
             if (cost > b.focus) continue;
             if (
+              !ideonsAt(b, i).length &&
               canEnter(b, c, i) &&
               this.canStack(c, b.grid[i]) &&
               (d.type !== "Hex" ||
@@ -3855,12 +4063,19 @@ export class Game {
           const charging = !!(d.charge && c.charge < d.charge);
           const targets =
             charging ||
+            f.guide ||
             f.all ||
             f.randomDamage ||
             d.stack === "plasmaMeld" ||
             !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode)
               ? [null]
-              : b.enemies.filter((e) => e.hp > 0).map((e) => e.uid);
+              : (f.beam
+                  ? b.enemies.filter(
+                      (e) => e.hp > 0 && !protectedOwner(b, e.uid),
+                    )
+                  : legalHostiles(b)
+                ).map((e) => e.uid);
+          if (f.beam && !targets.length) targets.push(null);
           let extras = f.mend ? repairTargets(this, c, i) : [{}];
           if (f.transmute)
             extras = b.grid.flatMap((slot, j) =>
@@ -3872,9 +4087,10 @@ export class Game {
             );
           if (f.shift)
             extras = b.grid.flatMap((slot, j) =>
-              slot.length && !slot.some((x) => x.lock)
+              slot.length && !coveredByIdeon(b, j) && !slot.some((x) => x.lock)
                 ? b.grid.flatMap((dest, k) =>
                     !dest.length &&
+                    !ideonsAt(b, k).length &&
                     canEnter(b, top(slot), k) &&
                     !top(slot).mending
                       ? [{ cardTarget: j, destination: k }]
@@ -3886,12 +4102,51 @@ export class Game {
             extras = this.neighbors(i)
               .filter((j) => cards[top(b.grid[j])?.id]?.type === "Ally")
               .map((cardTarget) => ({ cardTarget }));
-          for (const element of els)
+          if (f.guide) {
+            extras = [];
+            for (const destination of [
+              i,
+              ...adjacent(i).filter(
+                (j) =>
+                  !b.grid[j].length &&
+                  !ideonsAt(b, j).length &&
+                  canEnter(b, c, j),
+              ),
+            ]) {
+              const victims = livingIdeons(b).filter((e) =>
+                adjacent(destination).includes(e.slot),
+              );
+              for (const v of victims)
+                extras.push({ destination, target: v.uid });
+              if (destination !== i && !victims.length)
+                extras.push({ destination, target: null });
+            }
+          }
+          if (
+            f.secondSpring &&
+            !b.grid.some((slot, j) => {
+              const x = top(slot),
+                d = cards[x?.id];
+              return (
+                x &&
+                !d.singleUse &&
+                !d.destroyAfterActivation &&
+                this.allowance(x, j) === 0 &&
+                (hasDirectDamageActivation(x) ||
+                  d.effects.shield ||
+                  d.effects.ward)
+              );
+            })
+          )
+            continue;
+          for (const element of els.filter(
+            (el) => !ideonActivationReason(b, i, el),
+          ))
             for (const target of targets)
               for (const ex of extras)
                 add(
                   "activate",
-                  `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + b.enemies.find((e) => e.uid === target).name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + hostiles(b).find((e) => e.uid === target)?.name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
                     heatBurn: charging ? 0 : attachedBurn(b, c, i),
@@ -4094,7 +4349,14 @@ export class Game {
         if (s.hp <= 0)
           this.finish(false, events.find((e) => e.id === s.event).name);
         else if (c.fight)
-          this.beginBattle([{ uid: this.uid(), enemy: c.fight, restless: 0 }]);
+          this.beginBattle([
+            {
+              uid: this.uid(),
+              enemy: c.fight,
+              restless: 0,
+              count: c.count || 1,
+            },
+          ]);
         else this.resolveTile();
         break;
       }
@@ -4114,13 +4376,19 @@ export class Game {
         s.reward.setting = false;
         break;
       case "continueReward":
-        if (s.reward.boss && !s.tutorial && (s.stratum || 1) === 1)
-          this.enterStratum2();
+        if (s.reward.boss && !s.tutorial && (s.stratum || 1) < 3)
+          this.enterStratum2((s.stratum || 1) + 1);
         else if (s.reward.boss) this.finish(true);
         else this.resolveTile();
         break;
+      case "enterDepths":
+        this.addCard("lucidGuide");
+        delete s.depthsIntro;
+        this.beginRound();
+        break;
       case "leave":
-        if (s.loomIntro) {
+        if (s.depthsIntro) s.mode = "depthsIntro";
+        else if (s.loomIntro) {
           s.mode = "loomIntro";
         } else this.resolveTile();
         break;
@@ -4385,7 +4653,12 @@ export class Game {
       case "ward": {
         const c = b.grid[a.slot].find((c) => c.uid === a.uid),
           h = b.reaction;
-        const result = blockHit(c.ward, defensiveElement(b, c), h.damage, h.element);
+        const result = blockHit(
+          c.ward,
+          defensiveElement(b, c),
+          h.damage,
+          h.element,
+        );
         const stopped = h.damage - result.remaining;
         const loss = c.ward - result.block;
         c.ward = result.block;
@@ -4506,6 +4779,7 @@ export class Game {
           openBefore[i] && stack.length ? [i] : [],
         ),
       );
+    if (a.type === "place" && s.mode === "battle") drainLeeches(this);
     const challenge = s.stats.withoutMenders;
     if (challenge && !challenge.disqualified) {
       if (!s.deck.some((c) => c.uid === challenge.uid))
@@ -4538,6 +4812,7 @@ export class Game {
       stratum: s.stratum || 1,
       stratumName: STRATA[s.stratum || 1].name,
       loomIntro: s.loomIntro,
+      depthsIntro: s.depthsIntro,
       tutorial: s.tutorial
         ? {
             id: s.tutorial.id,
