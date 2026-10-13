@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
 import { cards, enemies } from "../src/content.mjs";
-import { startLoomTutorial } from "../src/loom-tutorial.mjs";
+import { startLoomTutorial, LOOM_TUTORIAL } from "../src/loom-tutorial.mjs";
 import {
   bilePlan,
   resolveBile,
@@ -137,7 +137,7 @@ test("Old guided Mending lesson restarts with new rules; independent lesson can 
       step: independent ? 34 : 10,
     });
     const loaded = new Game(0, structuredClone(g.s));
-    assert.equal(loaded.s.tutorial.version, 3);
+    assert.equal(loaded.s.tutorial.version, LOOM_TUTORIAL.version);
     assert.equal(
       loaded.s.tutorial.lesson,
       independent ? "independent" : "loom-welcome",

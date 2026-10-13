@@ -35,6 +35,8 @@ import {
   repairTargets,
   mend,
   corruptionAt,
+  cardFrozen,
+  cardSevered,
   corruptionPower,
   resetCoveredInsanity,
   prepareCorruption,
@@ -43,6 +45,7 @@ import {
   startRepairs,
   corruptionRound,
   triggerAnger,
+  angerPreview,
 } from "./corruptions.mjs";
 import {
   SATCHEL_CAPACITY,
@@ -116,8 +119,8 @@ export function offense(n, from, to) {
   return Math.ceil(n * elementalRate(from, to));
 }
 export function gridNeighbors(b, i) {
-  if (top(b.grid[i])?.sever) return [];
-  return adjacent(i).filter((j) => top(b.grid[j]) && !top(b.grid[j]).sever);
+  if (cardSevered(b, top(b.grid[i]), i)) return [];
+  return adjacent(i).filter((j) => top(b.grid[j]) && !cardSevered(b, top(b.grid[j]), j));
 }
 // A relay changes only the element offered for Attune, never printed-element conditions.
 export function attunementSourceElement(b, c) {
@@ -149,7 +152,7 @@ export function defensiveElement(b, c) {
   return conduitActive(b, c) ? attunementSourceElement(b, c) : c.element;
 }
 export function matchingNeighborSlots(b, c, i) {
-  if (c.sever || top(b.grid[i])?.uid !== c.uid) return [];
+  if (cardSevered(b, c, i) || top(b.grid[i])?.uid !== c.uid) return [];
   return gridNeighbors(b, i).filter((j) => {
     const other = top(b.grid[j]);
     return (
@@ -191,7 +194,7 @@ export function matchingNeighbors(b, c, i) {
 // Shared by resolution, UI and policy; added HP never enters the current attack.
 export function activationGrowth(b, c, i) {
   const d = cards[c.id];
-  if (c.sever || top(b.grid[i])?.uid !== c.uid) return 0;
+  if (cardSevered(b, c, i) || top(b.grid[i])?.uid !== c.uid) return 0;
   return Math.max(
     0,
     Math.min(
@@ -223,7 +226,7 @@ export function enemyDamage(n, element, enemy) {
 }
 // Shared by damage and its visual indicator; first valid block wins (no stacking).
 export function squarePattern(b, c, i) {
-  if (c.sever) return [];
+  if (cardSevered(b, c, i)) return [];
   for (const origin of [i, i - 1, i - MIND_COLUMNS, i - MIND_COLUMNS - 1]) {
     if (
       origin < 0 ||
@@ -237,7 +240,7 @@ export function squarePattern(b, c, i) {
       origin + MIND_COLUMNS,
       origin + MIND_COLUMNS + 1,
     ];
-    if (cells.every((j) => top(b.grid[j]) && !top(b.grid[j]).sever))
+    if (cells.every((j) => top(b.grid[j]) && !cardSevered(b, top(b.grid[j]), j)))
       return cells;
   }
   return [];
@@ -348,8 +351,8 @@ export function cardPower(b, c, i) {
         (j !== i &&
         Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS) &&
         top(slot)?.element === c.element &&
-        !top(slot).sever &&
-        !c.sever
+        !cardSevered(b, top(slot), j) &&
+        !cardSevered(b, c, i)
           ? f.row
           : 0),
       0,
@@ -1879,7 +1882,7 @@ export class Game {
       !coveredByIdeon(this.s.battle, i) &&
       this.allowance(c, i) > 0 &&
       !c.zeroWard &&
-      c.freeze < this.s.battle.turn &&
+      !cardFrozen(this.s.battle, c, i) &&
       (cards[c.id].blink === true || c.lastActivatedTurn !== this.s.battle.turn)
     );
   }
@@ -4849,6 +4852,11 @@ export class Game {
       o.battle = clone(s.battle);
       delete o.battle.jobs;
       o.battle.telegraphs = this.gridTelegraphs();
+      o.battle.angerTargets = Object.entries(s.battle.corruptions || {}).flatMap(([slot, q]) => {
+        if (q.kind !== "anger") return [];
+        const a = angerPreview(this, Number(slot));
+        return a ? [{ from: Number(slot), to: a.slot }] : [];
+      });
       o.battle.deck.sort((a, b) => a.id.localeCompare(b.id) || a.uid - b.uid);
       o.battle.enemies = o.battle.enemies
         .filter((e) => e.hp > 0 || (enemies[e.id].onDeath && !e.deathResolved))

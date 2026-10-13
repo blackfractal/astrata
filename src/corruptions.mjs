@@ -8,6 +8,15 @@ const neighbors = (i) =>
 export function corruptionAt(b, i) {
   return b.corruptions?.[i] || null;
 }
+export function insanityCover(b, i) {
+  return corruptionAt(b, i)?.kind === "insanity";
+}
+export function cardFrozen(b, c, i) {
+  return insanityCover(b, i) || c?.freeze >= b.turn;
+}
+export function cardSevered(b, c, i) {
+  return insanityCover(b, i) || !!c?.sever;
+}
 export function canMend(c, corruption) {
   return !!corruption && !!CORRUPTIONS[corruption.kind];
 }
@@ -17,9 +26,12 @@ export function canEnter(b, c, i) {
   if (c.id === "elves") return !b.grid[i].length;
   return q?.kind !== "hole";
 }
+export function nauseaTargets(b, slot) {
+  return b.grid[slot].length ? [slot] : neighbors(slot);
+}
 export function corruptionPower(b, i, power) {
-  return neighbors(i).some(
-    (j) => corruptionAt(b, j)?.kind === "nausea" && !b.grid[j].length,
+  return [i, ...neighbors(i)].some(
+    (j) => corruptionAt(b, j)?.kind === "nausea" && nauseaTargets(b, j).includes(i),
   )
     ? Math.floor(power / 2)
     : power;
@@ -32,7 +44,8 @@ export function resetCoveredInsanity(b) {
 // Utility cards score zero; ties follow row-major order, then normal target order.
 export function angerChoice(g, slot) {
   const b = g.s.battle;
-  if (b.channel < 1 || b.grid[slot].length) return null;
+  if (b.channel < 1) return null;
+  const targets = b.grid[slot].length ? [slot] : neighbors(slot);
   const phase = b.phase,
     channel = b.channel;
   let choices;
@@ -41,7 +54,7 @@ export function angerChoice(g, slot) {
     b.channel = Number.MAX_SAFE_INTEGER;
     choices = g.baseLegal().filter((a) => {
       const c = a.type === "activate" && top(b.grid[a.slot]);
-      return c && neighbors(slot).includes(a.slot) && a.element === c.element;
+      return c && targets.includes(a.slot) && a.element === c.element;
     });
   } finally {
     b.phase = phase;
@@ -63,6 +76,19 @@ export function angerChoice(g, slot) {
   return (
     choices.sort((a, z) => value(a) - value(z) || a.slot - z.slot)[0] || null
   );
+}
+// Current-board forecast for the next player-turn start. Share legal targeting,
+// but restore every temporary value: observing must never spend or change state.
+export function angerPreview(g, slot) {
+  const b = g.s.battle, turn = b.turn, channel = b.channel;
+  try {
+    b.turn++;
+    b.channel = Math.max(0, g.bonuses().channel - (b.next.channelLoss || 0));
+    return angerChoice(g, slot);
+  } finally {
+    b.turn = turn;
+    b.channel = channel;
+  }
 }
 export function triggerAnger(g, slot) {
   const b = g.s.battle,
@@ -199,18 +225,17 @@ export function retargetCoveredCorruptions(g, covered) {
   if (!b || !covered.length) return;
   for (const e of b.enemies.filter((e) => e.hp > 0)) {
     for (const mark of [...(e.corruptionPlan || [])]) {
-      if (!covered.includes(mark.slot)) continue;
+      // Hypnosis commits to a space, even after Recall and replacement.
+      if (mark.kind === "hypnosis" || !covered.includes(mark.slot)) continue;
       const previous = mark.slot;
       const reserved = b.enemies.flatMap((enemy) =>
         (enemy.corruptionPlan || []).map((p) => p.slot),
       );
       let candidates = b.grid.flatMap((stack, i) => {
         if (b.corruptions[i] || reserved.includes(i)) return [];
-        if (mark.kind !== "hypnosis") return stack.length ? [] : [i];
-        const c = top(stack);
-        return c && g.allowance(c, i) > 0 ? [i] : [];
+        return stack.length ? [] : [i];
       });
-      if (mark.kind !== "hypnosis" && candidates.length) {
+      if (candidates.length) {
         const score = (i) =>
           neighbors(i).filter((j) => b.grid[j].length).length;
         const best = Math.max(...candidates.map(score));
@@ -304,7 +329,7 @@ export function startRepairs(g) {
   for (const [i, stack] of b.grid.entries()) {
     const c = top(stack),
       m = c?.mending;
-    if (!m || m.due > b.turn || c.freeze >= b.turn) continue;
+    if (!m || m.due > b.turn || cardFrozen(b, c, i)) continue;
     delete c.mending;
     // The repair is committed to a space, but must remain within reach.
     if ([i, ...neighbors(i)].includes(m.slot)) completeRepair(g, c, i, m);
@@ -367,7 +392,7 @@ export function compelCard(g, i, q, forced = false) {
     c.hypnosisTurn === b.turn ||
     !g.condition(c, i) ||
     !(forced
-      ? g.allowance(c, i) > 0 && !c.zeroWard && c.freeze < b.turn
+      ? g.allowance(c, i) > 0 && !c.zeroWard && !cardFrozen(b, c, i)
       : g.activationAvailable(c, i))
   )
     return;

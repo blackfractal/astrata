@@ -10,6 +10,7 @@ import {
   canEnter,
   startRepairs,
   angerChoice,
+  angerPreview,
   triggerAnger,
   compelCard,
 } from "../src/corruptions.mjs";
@@ -519,6 +520,25 @@ test("Covering a Corruption tell immediately relocates only that tell, visibly a
   }
 });
 
+test("Hypnosis stays on its space through Recall, replacement, reload and application", () => {
+  for (const replace of [false, true]) {
+    const g = arena("seamstress"), b = g.s.battle, e = b.enemies[0];
+    place(g, "blast", 8);
+    place(g, "blast", 12); // A valid alternative must not steal the warning.
+    e.corruptionPlan = [{ slot: 8, kind: "hypnosis" }];
+    b.focus = 5;
+    b.hand = [g.newCard("shield")];
+    action(g, "recall", { slot: 8 });
+    if (replace) action(g, "place", { slot: 8 });
+    assert.deepEqual(e.corruptionPlan, [{ slot: 8, kind: "hypnosis" }]);
+    const loaded = new Game(0, g.s);
+    assert.deepEqual(loaded.s.battle.enemies[0].corruptionPlan, e.corruptionPlan);
+    applyCorruptions(loaded, loaded.s.battle.enemies[0]);
+    assert.equal(loaded.s.battle.corruptions[8].kind, "hypnosis");
+    assert.equal(loaded.s.battle.corruptions[12], undefined);
+  }
+});
+
 test("Full-grid coverage cancels a tell; unrelated placement leaves Hypnosis on its occupied target", () => {
   const g = arena("seamstress"),
     b = g.s.battle,
@@ -613,7 +633,10 @@ test("Entire deterministic Loom tutorial survives reload at every step and compl
       assert.equal(b.grid[15][0].lastActivatedTurn, b.turn);
       assert.equal(g.s.stats.angerActivations.at(-1).element, "Arcane");
     }
-    if (g.s.tutorial.lesson === "anger-covered") assert.equal(b.channel, 2);
+    if (g.s.tutorial.lesson === "anger-covered") {
+      assert.equal(b.channel, 1);
+      assert.equal(b.grid[16].at(-1).used, 1);
+    }
     if (g.s.tutorial.lesson === "hole-working") assert.ok(b.corruptions[21]);
     if (g.s.tutorial.lesson === "hole-wait") assert.ok(b.corruptions[21]);
     if (g.s.tutorial.lesson === "hole-done") {
@@ -654,13 +677,12 @@ test("Anger uses weakest legal neighbor, native element, first enemy and exactly
   assert.equal(loaded.s.battle.channel, 1);
 });
 
-test("Anger skips covered, frozen, spent and Channel-starved situations", () => {
-  for (const reason of ["covered", "frozen", "spent", "channel"]) {
+test("Anger skips frozen, spent and Channel-starved situations", () => {
+  for (const reason of ["frozen", "spent", "channel"]) {
     const g = arena(),
       b = g.s.battle;
     q(g, 16, "anger");
     const c = place(g, "blast", 15);
-    if (reason === "covered") place(g, "shield", 16);
     if (reason === "frozen") c.freeze = b.turn;
     if (reason === "spent") c.used = 2;
     if (reason === "channel") b.channel = 0;
@@ -668,6 +690,57 @@ test("Anger skips covered, frozen, spent and Channel-starved situations", () => 
     triggerAnger(g, 16);
     assert.equal(g.s.stats.angerActivations, undefined, reason);
   }
+});
+
+test("Covered Anger forces only its cover, with no fallback to adjacent cards", () => {
+  for (const id of ["shield", "focus", "conduit"]) {
+    const g = arena(), b = g.s.battle;
+    q(g, 16, "anger");
+    const c = place(g, id, 16);
+    const neighbor = place(g, "clear", 15);
+    assert.equal(angerChoice(g, 16).slot, 16);
+    triggerAnger(g, 16);
+    assert.equal(c.used, 1);
+    assert.equal(neighbor.used, 0);
+    assert.equal(b.channel, id === "conduit" ? 3 : 1);
+    if (id === "focus") assert.equal(b.permanent.focus, 1);
+    c.used = cards[id].limit;
+    assert.equal(angerChoice(g, 16), null);
+  }
+});
+
+test("Covered Nausea halves its own card, releases neighbors, and never compounds", () => {
+  const g = arena(), b = g.s.battle;
+  const cover = place(g, "shield", 16), neighbor = place(g, "blast", 15);
+  q(g, 16, "nausea");
+  assert.equal(g.shieldPower(cover, 16), 2);
+  assert.equal(cardPower(b, neighbor, 15), 4);
+  q(g, 17, "nausea");
+  assert.equal(g.shieldPower(cover, 16), 2);
+  b.grid[16] = [];
+  assert.equal(cardPower(b, neighbor, 15), 2);
+  const ward = place(g, "ward", 16);
+  g.applyCard(ward, 16, null, "Arcane");
+  assert.equal(ward.ward, 6);
+  const loaded = new Game(0, g.s);
+  assert.equal(loaded.shieldPower(cover, 16), 2);
+});
+
+test("Anger preview tracks the next eligible target without mutating game state", () => {
+  const g = arena(), b = g.s.battle;
+  q(g, 16, "anger");
+  const weak = place(g, "blast", 15);
+  place(g, "blast", 17, true);
+  weak.lastActivatedTurn = b.turn;
+  b.channel = 0;
+  const before = JSON.stringify(g.s);
+  assert.equal(angerPreview(g, 16).slot, 15);
+  assert.deepEqual(g.observe().battle.angerTargets, [{ from: 16, to: 15 }]);
+  assert.equal(JSON.stringify(g.s), before);
+  weak.used = 2;
+  assert.equal(angerPreview(g, 16).slot, 17);
+  place(g, "shield", 16).used = 2;
+  assert.equal(angerPreview(g, 16), null);
 });
 
 test("Anger retains permanent element and utility cards can be forced at one Channel", () => {

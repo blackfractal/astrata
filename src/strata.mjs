@@ -15,7 +15,7 @@ export const CORRUPTIONS = {
   anger: {
     name: "Anger",
     symbol: "✷",
-    text: "At each player-turn start, after Reveal, uncovered Anger forces one eligible north/east/south/west card to activate without choosing an Attunement. Lowest printed damage/Guard strength first (utility: 0); ties use topmost then leftmost space. Costs 1 Channel and the normal card allowance. Attacks target the topmost living enemy; other choices use the first legal target. Fixed or Transmuted elements remain. No eligible card or Channel: nothing happens. Cover to suppress, or Mend immediately.",
+    text: "At each player-turn start, after Reveal, covered Anger forces its covering card; uncovered Anger forces one eligible north/east/south/west card to activate without choosing an Attunement. Lowest printed damage/Guard strength first (utility: 0); ties use topmost then leftmost space. Costs 1 Channel and the normal card allowance. Attacks target the topmost living enemy; other choices use the first legal target. Fixed or Transmuted elements remain. No eligible card or Channel: nothing happens. A spent or ineligible cover prevents activation; covered Anger never targets neighbors. Mend immediately to remove.",
   },
   bile: {
     name: "Bile",
@@ -31,12 +31,12 @@ export const CORRUPTIONS = {
   nausea: {
     name: "Nausea",
     symbol: "≈",
-    text: "While uncovered, orthogonally adjacent cards deal half damage and generate half Guard (rounded down). Multiple Nauseas do not multiply. Cover this space to suppress it; the Corruption remains underneath.",
+    text: "While uncovered, orthogonally adjacent cards deal half damage and generate half Guard (rounded down). While covered, only the covering card suffers this penalty. Multiple Nauseas do not multiply. Existing stored Guard is unchanged. Mend to remove.",
   },
   insanity: {
     name: "Insanity",
     symbol: "↻",
-    text: "At the start of each player turn while uncovered, lose 1, then 2, then 3 HP, and so on. Cover to suppress and reset to 1. This bypasses defenses.",
+    text: "At the start of each player turn while uncovered, lose 1, then 2, then 3 HP, and so on. Cover to stop the HP loss and reset it to 1, but the covering card is Frozen and Severed: it cannot activate, give or receive adjacency or pattern connections. Recall remains possible. Repair with Machine Elves from an adjacent space; Elves on Insanity are frozen too. Repair or moving off the space removes only these space-imposed restrictions. Uncovered HP loss bypasses defenses.",
   },
   mine: {
     name: "Mind Mine",
@@ -49,7 +49,7 @@ export const CORRUPTIONS = {
     name: "Hypnosis",
     symbol: "◎",
     advanced: true,
-    text: "At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Only damage and Guard effects resolve; other effects, including charging, resources, healing and repairs, are wasted. Once-per-turn activation still applies. Utility cards and Machine Elves also spend their use without granting their benefit. Displacement onto Hypnosis compels immediately, even after a normal activation, but never twice that enemy round. Mend takes two turns, or one when upgraded.",
+    text: "Blue warning commits to this space, even after Recall or replacement. At the end of the enemy round, the top card spends one remaining use: its damage attacks you, or its Guard protects the source enemy. No Channel cost. Only damage and Guard effects resolve; other effects, including charging, resources, healing and repairs, are wasted. Once-per-turn activation still applies. Utility cards and Machine Elves also spend their use without granting their benefit. Displacement onto Hypnosis compels immediately, even after a normal activation, but never twice that enemy round. Mend takes two turns, or one when upgraded.",
   },
 };
 
@@ -145,7 +145,7 @@ export function registerStratum2(card, enemy, glossary) {
       { ...mark("nausea"), ...hit("Spore tap", 6, "Earth") },
     ],
     "Marks Nausea at battle start and applies it with its first attack. Later marks also attack.",
-    "Redirect the warning by placing a card, then cover the resulting Nausea or keep attacks away from it.",
+    "Redirect the warning by placing a card, then contain the resulting Nausea beneath a card or keep attacks away from it.",
     { corruptionCap: 2, openingCorruption: mark("nausea") },
   );
   add(

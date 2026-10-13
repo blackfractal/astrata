@@ -56,6 +56,7 @@ function fixture() {
   const { app, p } = await open(g, "preview");
   try {
     assert.equal(await p.locator(".nausea-aura").count(), 2);
+    assert.equal(await p.locator(".nausea-link").count(), 3);
     assert.equal(await p.locator(".bile-motion").count(), 2);
     assert.equal(
       await p.locator(".nausea-warning,.bile-seal,.bile-warning").count(),
@@ -112,6 +113,8 @@ function fixture() {
       assert.equal(v.animation, "none");
       assert.ok(Number(v.opacity) > 0);
     }
+    assert.equal(await p.locator('.nausea-link').first().evaluate(el => getComputedStyle(el).animationName), 'none');
+    assert.equal(await p.locator('.corruption-influence-links').evaluate(el => getComputedStyle(el).pointerEvents), 'none');
     await p.screenshot({ path: dir + "/reduced-motion.png" });
     report.checks.push(
       "Full-card Nausea and moving Bile on cards/empty spaces; no tiny labels or warning arrows; 6 Fire becomes 3 from Nausea, then 5 against Earth / 3 neutral; cancel resets; reduced-motion hazards remain visible.",
@@ -130,14 +133,17 @@ function fixture() {
   try {
     await p.locator("[data-hand]").dragTo(p.locator('[data-slot="7"]'));
     await settle(p);
-    assert.equal(await p.locator(".nausea-aura").count(), 0);
+    assert.equal(await p.locator(".nausea-aura").count(), 1);
+    assert.equal(await p.locator('[data-slot="7"] .nausea-aura').count(), 1);
+    assert.equal(await p.locator('.nausea-link').count(), 0);
+    assert.equal(await p.locator('[data-slot="7"] .damage-value').innerText(), '2');
     assert.equal(
       await p.locator('[data-slot="8"] .damage-value').innerText(),
       "6",
     );
     await p.screenshot({ path: dir + "/covered-nausea.png" });
     report.checks.push(
-      "Real placement covering Nausea removes affected-card swirls and restores damage immediately.",
+      "Covering Nausea restores neighboring damage, weakens only the cover, moves the swirls onto it, and removes adjacent influence links.",
     );
   } finally {
     await app.close();
@@ -188,6 +194,31 @@ function fixture() {
   } finally {
     await app.close();
   }
+}
+{
+  const g = new Game(9);
+  g.s.stratum = 2;
+  g.beginBattle([{ uid: 900, enemy: "mendingTutor", restless: 0 }]);
+  const b = g.s.battle;
+  b.grid = Array.from({ length: 42 }, () => []);
+  b.hand = [g.newCard('shield')];
+  b.focus = 1;
+  put(g, 'blast', 15);
+  b.grid[17] = [g.instance(g.newCard('blast', true))];
+  b.corruptions = { 16: { kind: 'anger', uid: 999, source: 900 } };
+  const { app, p } = await open(g, 'anger-links');
+  try {
+    assert.equal(await p.locator('.anger-link[data-influence-from="16"][data-influence-to="15"]').count(), 1);
+    assert.equal(await p.locator('[data-slot="15"].anger-affected').count(), 1);
+    await p.screenshot({ path: dir + '/anger-links.png' });
+    await p.locator('[data-hand]').dragTo(p.locator('[data-slot="16"]'));
+    await settle(p);
+    assert.equal(await p.locator('.anger-link').count(), 0);
+    assert.equal(await p.locator('[data-slot="16"].anger-affected').count(), 1);
+    assert.equal(await p.locator('[data-slot="15"].anger-affected').count(), 0);
+    await p.screenshot({ path: dir + '/covered-anger.png' });
+    report.checks.push('Anger links only to its weakest eligible neighbor; real covering placement removes the link and redirects the target highlight onto the covering card.');
+  } finally { await app.close(); }
 }
 assert.deepEqual(report.errors, []);
 await fs.writeFile(

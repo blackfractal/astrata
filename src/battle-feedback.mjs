@@ -2,7 +2,7 @@ import { statHelp, statAttribute } from "./card-upgrade-ui.mjs";
 import { cards, glossary } from "./content.mjs";
 import { attackElements, attackPreview } from "./combat-preview.mjs";
 import { cardPower } from "./engine.mjs";
-import { corruptionPower } from "./corruptions.mjs";
+import { corruptionPower, cardFrozen, cardSevered, insanityCover } from "./corruptions.mjs";
 export function damageMarkup(b, c, slot) {
   return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×" + attackElements(b, c, slot).length : ""}</b>`;
 }
@@ -86,8 +86,9 @@ export function statusBadges(ctx, c, i) {
         (c.tauntUntil != null ? " Ends after this enemy phase." : ""),
     ]);
   if (c.lock) states.push(["Lock", "Locked", glossary.Lock]);
-  if (c.freeze >= b.turn) states.push(["Freeze", "Frozen", glossary.Freeze]);
-  if (c.sever) states.push(["Sever", "Severed", glossary.Sever]);
+  const insanity = insanityCover(b, i);
+  if (cardFrozen(b, c, i)) states.push(["Freeze", "Frozen", insanity ? "Insanity freezes this card while it covers this space. Repair from adjacent Machine Elves or Recall the card to uncover the HP-damaging space." : glossary.Freeze]);
+  if (cardSevered(b, c, i)) states.push(["Sever", "Severed", insanity ? "Insanity: this card gives and receives no adjacency or pattern connections while covering this space." : glossary.Sever]);
   for (const name of ["Burn", "Poison", "Corrode"]) {
     const value = c.status?.[name.toLowerCase()] || 0;
     if (value) states.push([name, `${name} ${value}`, glossary[name], value]);

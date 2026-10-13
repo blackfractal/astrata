@@ -1,6 +1,6 @@
 import { phaseMoves } from "./loom-bosses.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
-import { corruptionPower } from "./corruptions.mjs";
+import { corruptionPower, nauseaTargets, cardFrozen } from "./corruptions.mjs";
 import { artPaths } from "./art-paths.mjs";
 const esc = (s) =>
   String(s)
@@ -32,7 +32,7 @@ export function paintCorruptions(o, app) {
       c = b.grid[i].at(-1);
     if (q) {
       const d = CORRUPTIONS[q.kind],
-        suppressed = !!c && ["anger", "nausea", "insanity"].includes(q.kind);
+        suppressed = !!c && q.kind === "insanity";
       el.classList.add("corrupted", "corruption-" + q.kind);
       el.classList.toggle("corruption-covered", suppressed);
       el.classList.toggle("corruption-occupied", !!c);
@@ -46,6 +46,8 @@ export function paintCorruptions(o, app) {
             " " +
             (q.element || "Arcane") +
             " if uncovered. "
+          : c && ["anger", "nausea"].includes(q.kind)
+            ? "Affects the covering card only. "
           : suppressed
             ? "Covered. "
             : "") +
@@ -55,6 +57,8 @@ export function paintCorruptions(o, app) {
         `<span class="corruption-card" aria-hidden="true"><img class="corruption-art" src="${artPaths["corruption-" + q.kind]}" alt=""><span class="corruption-motion">${Array.from({ length: q.kind === "hole" ? 8 : 3 }, (_, n) => `<i style="--particle:${n};--angle:${n * 45}deg;--delay:${-n * 0.37}s"></i>`).join("")}</span><span class="corruption-name">${d.name}</span></span><span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "mine" ? q.remaining + " turns" : q.kind === "insanity" && !c ? q.value + " HP" : suppressed ? "covered" : ""}</small></span>`,
       );
       if (!c) el.title = title;
+      if (c && ["hypnosis", "insanity", "mine"].includes(q.kind))
+        el.insertAdjacentHTML("beforeend", `<span class="corruption-cover-aura ${q.kind}-cover-aura" aria-hidden="true">${particles(q.kind === "mine" ? 8 : 3)}</span>`);
     }
     if (b.biles?.[i]) {
       el.classList.add("has-bile");
@@ -86,10 +90,15 @@ export function paintCorruptions(o, app) {
         .map((p) => ({ ...p, enemy: e.name })),
     );
     if (marks.length) {
-      el.classList.add("corruption-mark");
+      const fixed = marks.some((p) => p.kind === "hypnosis");
+      const behavior = fixed
+        ? "Blue · Fixed space: this warning stays here even if its card is recalled, replaced or moved."
+        : "Red · Relocating: covering this empty warned space redirects the warning to an empty space beside the most cards, if available.";
+      el.classList.add("corruption-mark", fixed ? "corruption-fixed" : "corruption-relocating");
+      hazardHelp(el, behavior);
       el.insertAdjacentHTML(
         "beforeend",
-        `<span class="corruption-foretell" data-tooltip="${esc(marks.map((p) => p.enemy + " will apply " + CORRUPTIONS[p.kind].name + " here on its next action.").join(" "))}">${marks.map((p) => CORRUPTIONS[p.kind].symbol).join(" ")}</span>`,
+        `<span class="corruption-foretell" tabindex="0" data-tooltip="${esc(marks.map((p) => p.enemy + " will apply " + CORRUPTIONS[p.kind].name + " here on its next action.").join(" ") + " " + behavior)}">${marks.map((p) => CORRUPTIONS[p.kind].symbol).join(" ")}</span>`,
       );
     }
   }
@@ -103,6 +112,25 @@ export function paintCorruptions(o, app) {
       : null;
   };
   const repairs = [];
+  const influences = [];
+  const influence = (from, to, kind) => {
+    const x = point(from), y = point(to);
+    if (!x || !y || from === to) return;
+    influences.push(`<path class="corruption-influence ${kind}-link" data-influence-from="${from}" data-influence-to="${to}" d="M ${x[0]} ${x[1]} L ${y[0]} ${y[1]}"/>`);
+  };
+  for (const [key, q] of Object.entries(b.corruptions || {})) {
+    const from = Number(key);
+    if (q.kind === "nausea" && !b.grid[from].length)
+      for (const to of nauseaTargets(b, from)) influence(from, to, "nausea");
+  }
+  for (const { from, to } of b.angerTargets || []) {
+    const target = app.querySelector(`[data-slot="${to}"]`);
+    target?.classList.add("anger-affected");
+    if (target) hazardHelp(target, "Anger targets this card at the next player-turn start, based on the current board. Spends one Channel and a card use without optional Attunement.");
+    if (!b.grid[from].length) influence(from, to, "anger");
+  }
+  if (influences.length)
+    mind.insertAdjacentHTML("beforeend", `<svg class="corruption-influence-links" viewBox="0 0 ${mind.clientWidth} ${mind.clientHeight}" aria-hidden="true">${influences.join("")}</svg>`);
   for (const [from, stack] of b.grid.entries()) {
     const c = stack.at(-1),
       m = c?.mending;
@@ -118,7 +146,7 @@ export function paintCorruptions(o, app) {
     const stalled =
       !inReach ||
       layer?.[m.slot]?.uid !== m.corruptionUid ||
-      c.freeze >= b.turn;
+      cardFrozen(b, c, from);
     source?.classList.add("mending-source");
     target?.classList.add("mending-target");
     if (target) {
@@ -151,15 +179,15 @@ export function paintCorruptions(o, app) {
       el?.classList.add("bile-destination");
       const warning =
         p.to === "player"
-          ? "This Bile will reach you next enemy round: Poison +2."
-          : "Bile arrives next enemy round and consumes one activation. Warning updates if the route changes.";
+          ? "Green · Live Bile route: this Bile will reach you next enemy round: Poison +2."
+          : "Green · Live Bile route: Bile arrives next enemy round and consumes one activation. Warning updates if the route changes.";
       el?.insertAdjacentHTML(
         "beforeend",
         `<span class="bile-forecast${p.to === "player" ? " bile-escape" : ""}" aria-hidden="true">${p.to === "player" ? "←" : ""}</span>`,
       );
       if (el) hazardHelp(el, warning);
       if (p.from != null && p.to !== "player")
-        arrows.push({ from: p.from, to: p.to, color: "#cad63c" });
+        arrows.push({ from: p.from, to: p.to, color: "#63e68b" });
     }
     if (e.tell?.disrupt) {
       for (const m of phaseMoves(b, e.tell.phasePlan)) {

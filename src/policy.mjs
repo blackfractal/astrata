@@ -6,6 +6,7 @@ import {
   offense,
   defenseRate,
   adjacent,
+  gridNeighbors,
   allyHit,
   corner,
   enemyImmuneTo,
@@ -39,9 +40,14 @@ export class WeightedPolicy {
         if (a.type === "place" && b) {
           const card = b.hand.find((c) => c.uid === a.uid),
             d = cards[card?.id];
-          if (["anger", "insanity", "nausea"].includes(q?.kind))
-            score += q.kind === "insanity" ? 14 : 7;
+          if (q?.kind === "insanity") score += d?.limit === 0 ? 14 : 4;
+          if (q?.kind === "nausea") {
+            // Cover contains Nausea, but now weakens the covering card itself.
+            score += adjacent(a.slot).filter((i) => b.grid[i].length).length * 2;
+            if (d?.effects.damage || d?.effects.shield || d?.effects.ward || d?.effects.hpDamage || d?.effects.randomDamage) score -= 5;
+          }
           if (card?.id === "elves") {
+            if (q?.kind === "insanity") score -= 40; // Frozen Elves cannot repair their own space.
             const spaces = [a.slot, ...adjacent(a.slot)];
             const repairs = spaces.filter(
               (i) => b.corruptions?.[i] || b.biles?.[i],
@@ -81,7 +87,7 @@ export class WeightedPolicy {
         if (
           a.type === "recall" &&
           q &&
-          ["anger", "nausea", "insanity", "mine"].includes(q.kind)
+          ["insanity", "mine"].includes(q.kind)
         )
           score -= 20;
         if (a.type === "activate" && q?.kind === "hypnosis") score += 8;
@@ -323,7 +329,7 @@ export class WeightedPolicy {
         const c = cards[f.card],
           e = c.effects,
           slot = b.grid[a.slot],
-          ns = adjacent(a.slot).filter((i) => b.grid[i].length),
+          ns = gridNeighbors(b, a.slot),
           existing = b.grid.flat().filter((x) => x.id === c.id).length;
         const hasOffense = b.grid.some((x) => {
           const t = x.at(-1);
@@ -545,7 +551,7 @@ export class WeightedPolicy {
           const c = b.grid[a.slot].at(-1);
           const supported =
             b.channel > a.costs.channel
-              ? adjacent(a.slot).filter((i) => {
+              ? gridNeighbors(b, a.slot).filter((i) => {
                   const x = b.grid[i].at(-1);
                   return (
                     x &&

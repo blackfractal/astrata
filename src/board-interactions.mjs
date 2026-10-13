@@ -1,4 +1,5 @@
 import { cards, MIND_COLUMNS } from "./content.mjs";
+import { cardSevered } from "./corruptions.mjs";
 import {
   activationGrowth,
   chargeSources,
@@ -65,7 +66,7 @@ export function cardInteraction(b, c, i) {
 export function boardConnections(b) {
   const links = [];
   const add = (from, to, type, element, reason, owner = null, both = false) => {
-    if (from === to || b.grid[from].at(-1)?.sever || b.grid[to].at(-1)?.sever)
+    if (from === to || cardSevered(b, b.grid[from].at(-1), from) || cardSevered(b, b.grid[to].at(-1), to))
       return;
     links.push({ from, to, type, element, reason, owner, both });
   };
@@ -129,7 +130,7 @@ export function boardConnections(b) {
           d.chargeElement,
           "Watering: +2 Charge per activation",
         );
-    if (active && d.effects.row && !c.sever)
+    if (active && d.effects.row && !cardSevered(b, c, i))
       for (const [j, other] of b.grid.entries())
         if (
           j !== i &&
@@ -251,7 +252,7 @@ export function boardInteractions(ctx) {
     const slot = ctx.app.querySelector(`[data-slot="${i}"]`),
       m = cardInteraction(b, c, i);
     slot.classList.add("has-element");
-    if (c.sever) severBorder(slot);
+    if (cardSevered(b, c, i)) severBorder(slot);
     const statusCount = slot.querySelectorAll(".card-status").length;
     slot.style.setProperty(
       "--status-reserve",

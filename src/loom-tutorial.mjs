@@ -2,7 +2,7 @@ import { ELVES_STORY } from "./strata.mjs";
 import { enemies } from "./content.mjs";
 export const LOOM_TUTORIAL = {
   id: "stratum2",
-  version: 3,
+  version: 4,
   name: "The Mending Ground",
   seed: 22002,
 };
@@ -36,13 +36,13 @@ export const LOOM_STEPS = [
   action(
     "cover",
     "Cover Nausea",
-    "Place the Shield on the rippling space. Covering Nausea suppresses it immediately.",
+    "Place the Shield on the rippling space. Covering Nausea protects adjacent cards, but weakens the covering card instead.",
     { type: "place", card: "shield", slot: 14 },
   ),
   note(
     "covered",
     "The Blast recovers",
-    "Its damage is 4 again. The Nausea symbol remains under the Shield: the Corruption is covered, not removed.",
+    "The Blast deals 4 again, but the covering Shield now generates only 2 Guard instead of 4. The Corruption remains underneath. Covering contains Nausea; only repair removes it.",
   ),
   action(
     "phase1",
@@ -96,7 +96,7 @@ export const LOOM_STEPS = [
   note(
     "anger",
     "Anger steals a choice",
-    "The red knot is Anger. At the start of your turn, it forces the eligible adjacent card with the lowest printed damage or Guard to activate, spending a card use and 1 Channel. Utility cards count as zero. Covering the space suppresses it.",
+    "The red knot is Anger. At the start of your turn, it forces the eligible adjacent card with the lowest printed damage or Guard to activate, spending a card use and 1 Channel. Utility cards count as zero. When covered, Anger forces the covering card instead. Follow its glowing link to see the current target.",
     "anger",
   ),
   note(
@@ -122,8 +122,8 @@ export const LOOM_STEPS = [
   ),
   action(
     "anger-cover",
-    "Quiet the Anger",
-    "Place the Shield over Anger. As with Nausea, covering suppresses the Corruption but does not remove it.",
+    "Redirect the Anger",
+    "Place the Shield over Anger. It will force this Shield instead of a neighboring card, still spending 1 Channel and one card use.",
     { type: "place", card: "shield", slot: 16 },
   ),
   action("anger-phase2", "Advance", "Advance to Activation.", {
@@ -131,14 +131,14 @@ export const LOOM_STEPS = [
   }),
   action(
     "anger-end2",
-    "A calmer turn",
-    "Advance to Enemy. Covered Anger will leave your next turn's Channel alone.",
+    "Watch the cover activate",
+    "Advance to Enemy. At the next player-turn start, covered Anger will activate the Shield without optional Attunement.",
     { type: "endTurn" },
   ),
   note(
     "anger-covered",
-    "Your choices return",
-    "Both Channel are available again. The red knot remains beneath its cover. Machine Elves can also Mend Anger immediately.",
+    "Contained, not removed",
+    "One Channel has been spent on the covering Shield, which now has Guard ready. Anger no longer forces a neighboring card, but still controls this one. Machine Elves can Mend Anger immediately.",
   ),
   note(
     "hole",

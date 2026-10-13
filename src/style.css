@@ -3396,10 +3396,76 @@ header {
 .corruption-covered .corruption-seal {
   opacity: 0.8;
 }
+.corruption-cover-aura {
+  position: absolute;
+  inset: 3px;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 5px;
+  contain: paint;
+}
+.corruption-cover-aura i { position: absolute; display: block; }
+.hypnosis-cover-aura { background: radial-gradient(ellipse, #57aaff12, transparent 72%); }
+.hypnosis-cover-aura i {
+  inset: calc(10% + var(--particle) * 10%);
+  border: 2px solid transparent;
+  border-top-color: #a0dbffd0;
+  border-right-color: #638de3a0;
+  border-radius: 46% 56% 48% 52%;
+  box-shadow: 2px -2px 7px #7499e859;
+  animation: hypnosis-cover-swirl 4.8s var(--delay) linear infinite;
+}
+.hypnosis-cover-aura i:nth-child(2) { animation-direction: reverse; }
+@keyframes hypnosis-cover-swirl {
+  from { transform: rotate(0deg) scale(0.9, 1.05); }
+  to { transform: rotate(360deg) scale(0.9, 1.05); }
+}
+.insanity-cover-aura {
+  background: repeating-linear-gradient(118deg, transparent 0 16px, #c36cff15 17px 19px, transparent 20px 34px);
+}
+.insanity-cover-aura i {
+  inset: calc(5% + var(--particle) * 12%);
+  border: 2px solid #d39aff90;
+  border-radius: 4%;
+  box-shadow: 3px 0 6px #ae64ff66, -3px 0 6px #8f94ff55;
+  animation: insanity-cover-tremor 0.24s var(--delay) steps(2, end) infinite;
+}
+@keyframes insanity-cover-tremor {
+  0%, 100% { transform: translate(-3px, 2px) skewX(-5deg); }
+  25% { transform: translate(3px, -2px) skewX(6deg); }
+  50% { transform: translate(-2px, -3px) skewX(-3deg); }
+  75% { transform: translate(2px, 3px) skewX(4deg); }
+}
+.mine-cover-aura { box-shadow: inset 0 -6px 12px #ff9a2926; }
+.mine-cover-aura i {
+  width: 2px;
+  height: 7px;
+  left: calc(8% + var(--particle) * 12%);
+  bottom: 4%;
+  border-radius: 50%;
+  background: #ffe5a0;
+  box-shadow: 0 0 5px #ff9d3d;
+  animation: mine-cover-sparks 1.7s var(--delay) ease-out infinite;
+}
+@keyframes mine-cover-sparks {
+  0% { transform: translate(0, 0) rotate(-20deg); opacity: 0; }
+  18% { opacity: 0.9; }
+  100% { transform: translate(calc((var(--particle) - 3) * 4px), -68px) rotate(45deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .corruption-cover-aura i { animation: none; opacity: 0.65; }
+  .mine-cover-aura i { bottom: calc(10% + var(--particle) * 8%); }
+}
 .corruption-mark {
-  outline: 2px dashed #f2c778;
+  --telegraph-color: #ff7279;
+  outline: 2px dashed var(--telegraph-color);
   outline-offset: -3px;
   animation: corruption-mark-pulse 1.5s ease-in-out infinite;
+}
+.corruption-mark.corruption-fixed {
+  --telegraph-color: #72b7ff;
+  outline-style: solid;
 }
 .corruption-foretell {
   position: absolute;
@@ -3407,8 +3473,8 @@ header {
   top: 3px;
   right: 3px;
   background: #17120bf2;
-  border: 1px solid #f2c778;
-  color: #ffe09c;
+  border: 1px solid var(--telegraph-color);
+  color: var(--telegraph-color);
   padding: 3px 5px;
   font-size: 17px;
   cursor: help;
@@ -3472,12 +3538,12 @@ header {
   }
 }
 .bile-forecast {
-  border: 2px dashed #d6e25e;
-  box-shadow: inset 0 0 12px #d6e25e55;
+  border: 2px dashed #63e68b;
+  box-shadow: inset 0 0 12px #63e68b55;
   animation: bile-foretell 1.5s ease-in-out infinite;
 }
 .bile-escape {
-  color: #e8f491;
+  color: #63e68b;
   font-size: 28px;
   text-align: left;
   text-shadow: 0 0 5px #111;
@@ -3500,8 +3566,8 @@ header {
 }
 @keyframes corruption-mark-pulse {
   50% {
-    outline-color: #fff5ce;
-    filter: drop-shadow(0 0 3px #edc36b);
+    outline-color: var(--telegraph-color);
+    filter: drop-shadow(0 0 5px var(--telegraph-color));
   }
 }
 @keyframes corruption-flare {
@@ -3647,7 +3713,30 @@ header {
   border-color: #c5d559;
 }
 .bile-destination {
-  box-shadow: inset 0 0 0 2px #d6e25e;
+  box-shadow: inset 0 0 0 2px #63e68b;
+}
+.corruption-influence-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+  overflow: visible;
+}
+.corruption-influence {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 7 6;
+  animation: corruption-influence-flow 1.6s linear infinite;
+}
+.nausea-link { stroke: #b5cf52; filter: drop-shadow(0 0 3px #93aa3b); }
+.anger-link { stroke: #ff9462; filter: drop-shadow(0 0 3px #ed713b); }
+.anger-affected .name { text-shadow: 0 0 6px #ff733d; }
+@keyframes corruption-influence-flow { to { stroke-dashoffset: -26; } }
+@media (prefers-reduced-motion: reduce) {
+  .corruption-influence { animation: none; }
 }
 .phase-warning {
   outline: 2px solid #c291e9;
