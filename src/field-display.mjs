@@ -7,7 +7,7 @@ export function fieldEntitiesAt(field, x, y) {
       ? 3
       : e.enemy
         ? 2
-        : items[e.item]?.consumable
+        : (items[e.item]?.consumable || e.fieldSupply)
           ? 1
           : 0;
   return field.entities

@@ -1,6 +1,6 @@
 # Stratum 3 planning — The Lucent Depths / Ideons
 
-Playable draft 0.23 · 2026-10-12 · Jonathan / Codex
+Playable draft 0.24 · 2026-10-13 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 2 planning](stratum_2_planning.md). Jonathan selected **The Lucent Depths** as the Stratum name on 2026-10-12. Jonathan authorized implementation on 2026-10-12. Package 3.0.0 now implements the first playable S3 encounters. The implementation snapshot below takes precedence for this build; the later discussion sections preserve earlier proposals and open alternatives for review. The deterministic S3 tutorial remains deferred under the encounters-first development order.
 
@@ -12,6 +12,12 @@ The Lucent Depths now follows the second transition Tavern. Lucid Guide is grant
 See [the implementation report](../reports/stratum3-build-report.md) for exact choices made from the open proposals, limitations and validation. Runtime definitions are in `src/depths-content.mjs`. Main design §10.13 is the current rules summary. All first-pass numbers are balance candidates rather than claims of final tuning.
 
 The initial Mind Hive test was too easy because late insects could not cross the grid before the timer expired. Its last spawning waves now emerge in progressively nearer columns, with a full player response before their first command. Failed spawns still do nothing; a full legal board remains legitimate spawn denial.
+
+## Liquid Crystal supplies — implemented 3.0.5
+
+**Liquid Crystal (Stratum 3).** A tiny vial of brightly colored liquid, carried as a one-slot material. S3 starts with three visible supplies: seeded one or two Liquid Crystals (equal probability), one Healing Sap, and, when only one Crystal is chosen, one other potion. No ordinary loot/shop pool entry. Drag a Crystal onto a potion in the Satchel (or use the item details action) to consume the Crystal and permanently double that potion's numeric effect. Each potion accepts one Crystal: Healing Sap 5→10 HP, Focus/Channel +1→+2, Insight 1→2 cards, Star Flask 6→12 Arcane damage. The enhanced potion remains one item/slot and retains its normal phase, targeting and one-consumable-per-turn rules. Combining is free, does not count as using a potion, and is allowed during Field movement, Tavern visits and player Placement/Activation, never during enemy turns/reactions. Mark enhanced potions ×2, keep ordinary/enhanced tray groups separate, and show actual values in all item views. Save the enhancement and archive combination/use effects; expose combination to AI. Crystals have 50-Gold worth/25-Gold sale value; enhancement does not change potion resale value. Do not repopulate an existing field.
+
+**Future ingredient quest (unplanned).** A later side quest may require carrying several ingredients in the Satchel and combining them at the end of S4. Its ingredients, recipe, reward and discovery conditions are not decided. Liquid Crystal currently only enhances potions; do not invent or implement that quest yet.
 
 ## Purpose and progression
 

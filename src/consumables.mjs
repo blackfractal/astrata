@@ -1,5 +1,25 @@
 import { items } from "./content.mjs";
 export const SATCHEL_CAPACITY = 12;
+export function potionEffects(item) {
+  const f = items[item?.id]?.consumable;
+  return f && Object.fromEntries(Object.entries(f).map(([k, v]) => [k, typeof v === "number" ? v * (item.crystal ? 2 : 1) : v]));
+}
+export function itemName(item) {
+  return items[item.id].name + (item.crystal ? " ×2" : "");
+}
+export function potionSummary(item) {
+  const f = potionEffects(item);
+  return f && [f.heal ? `+${f.heal} HP` : null, f.focus ? `+${f.focus} Focus` : null, f.channel ? `+${f.channel} Channel` : null, f.draw ? `Draw ${f.draw}` : null, f.damage ? `${f.damage} ${f.element}` : null].filter(Boolean).join(" · ");
+}
+export function itemText(item) {
+  if (!item.crystal) return items[item.id].text;
+  return `Liquid Crystal enhanced: ${potionSummary(item)}. Twice the normal effect; cannot add another Liquid Crystal. ` +
+    ({healingSap:"Use during your turn in battle or map movement.",focusDraught:"Use during Placement. Unspent Focus expires this turn.",channelDraught:"Use during Activation. Unspent Channel expires this turn.",insightDew:"Use during Placement; draw immediately without discarding your hand.",starFlask:"Throw during Activation. Does not trigger equipment attacks."}[item.id] || "") +
+    " Consumed on use. No Channel cost; one consumable per player turn (one per movement round outside battle).";
+}
+export function canCombinePotion(s) {
+  return ["field", "tavern"].includes(s.mode) || (s.mode === "battle" && !s.battle.reaction && ["place", "activate"].includes(s.battle.phase));
+}
 export function satchelContents(s) {
   return s.inventory.filter(
     (x) =>

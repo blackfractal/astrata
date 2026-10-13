@@ -1,14 +1,7 @@
 import { items } from "./content.mjs";
-import { consumableReason } from "./consumables.mjs";
+import { consumableReason, potionSummary, itemName, itemText } from "./consumables.mjs";
 let selected = null,
   listeners = null;
-const short = {
-  healingSap: "+5 HP",
-  focusDraught: "+1 Focus",
-  channelDraught: "+1 Channel",
-  insightDew: "Draw 1",
-  starFlask: "6 Arcane",
-};
 export function enhanceConsumables(ctx) {
   listeners?.abort();
   listeners = new AbortController();
@@ -20,8 +13,9 @@ export function enhanceConsumables(ctx) {
   const groups = new Map();
   for (const x of o.inventory)
     if (items[x.id].consumable) {
-      if (!groups.has(x.id)) groups.set(x.id, []);
-      groups.get(x.id).push(x);
+      const key = x.id + (x.crystal ? ":crystal" : "");
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(x);
     }
   if (!groups.size) {
     selected = null;
@@ -41,8 +35,9 @@ export function enhanceConsumables(ctx) {
   tray.innerHTML = `<div class="supplies-heading"><span>Consumables</span><small data-tooltip="One consumable per player turn. Costs no Channel. Used items are gone permanently.">${spent ? "Used this turn" : "1 ready"}</small></div><div class="consumable-row">${[
     ...groups,
   ]
-    .map(([id, xs]) => {
+    .map(([, xs]) => {
       const x = xs[0],
+        id = x.id,
         d = items[id],
         choices = actions.filter(
           (a) => a.type === "consume" && a.uid === x.uid,
@@ -54,7 +49,7 @@ export function enhanceConsumables(ctx) {
         choices.length && !d.consumable.damage
           ? `data-action="${ctx.esc(choices[0].key)}"`
           : `data-throw="${x.uid}"`;
-      return `<article class="consumable ${choices.length ? "ready" : "unavailable"} ${selected === x.uid ? "selected" : ""}" data-consumable-uid="${x.uid}" draggable="${!!choices.length && !!d.consumable.damage}"><button class="consumable-art" data-consumable-view="${x.uid}" aria-label="View ${d.name}" data-tooltip="${ctx.esc(d.name + ": " + d.text)}">${ctx.img("item-" + id)}<b>×${xs.length}</b></button><button class="consumable-use" ${data} ${choices.length ? "" : "disabled"} data-tooltip="${ctx.esc(reason || d.text)}">${short[id]}</button></article>`;
+      return `<article class="consumable ${x.crystal ? "crystal-enhanced" : ""} ${choices.length ? "ready" : "unavailable"} ${selected === x.uid ? "selected" : ""}" data-consumable-uid="${x.uid}" draggable="${!!choices.length && !!d.consumable.damage}"><button class="consumable-art" data-consumable-view="${x.uid}" aria-label="View ${itemName(x)}" data-tooltip="${ctx.esc(itemName(x) + ": " + itemText(x))}">${ctx.img("item-" + id)}${x.crystal ? '<span class="crystal-badge">2× effect</span>' : ''}<b>×${xs.length}</b></button><button class="consumable-use" ${data} ${choices.length ? "" : "disabled"} data-tooltip="${ctx.esc(reason || itemText(x))}">${potionSummary(x)}</button></article>`;
     })
     .join(
       "",
@@ -76,7 +71,7 @@ export function enhanceConsumables(ctx) {
         ),
         d = items[x.id];
       ctx.dialog(
-        `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p><p>One Satchel slot per bottle.</p></div></div>`,
+        `<h2>${itemName(x)}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(itemText(x))}</p><p>One Satchel slot per bottle.</p></div></div>`,
       );
     };
   const choose = (uid) => {

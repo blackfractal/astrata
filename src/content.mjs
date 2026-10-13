@@ -6,10 +6,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "3.0.4",
-  content: "3.0.4",
+  rules: "3.0.5",
+  content: "3.0.5",
   observation: 2,
-  actions: 8,
+  actions: 9,
 };
 export const TRAVELER_DONATION = 15;
 export const TRAVELER_STORIES = [
@@ -767,6 +767,9 @@ item("tools", "Tools", "material", {}, 50, "A sturdy set of machinery tools", {
   stratum: 2,
   fieldOnly: true,
 });
+item("liquidCrystal", "Liquid Crystal", "material", {}, 50,
+  "A tiny vial of brilliantly colored liquid. Add to a potion in your Satchel to double its effect. Consumes this vial; each potion accepts one Liquid Crystal. Combining costs no Gold, Focus or Channel and does not count as drinking a potion.",
+  { stratum: 3, fieldOnly: true });
 for (const [id, name, effect, worth, short] of [
   [
     "healingSap",

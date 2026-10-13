@@ -1,5 +1,6 @@
 import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
+  "item-liquidCrystal": "assets/item-liquidCrystal.png",
   "item-tools": "assets/item-tools.png",
   "enemy-blackBile": "assets/enemy-blackBile.png",
   "enemy-bombadier": "assets/enemy-bombadier.png",

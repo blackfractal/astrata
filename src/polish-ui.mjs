@@ -1,6 +1,7 @@
 import { enhanceIdeons } from "./ideons-ui.mjs";
 import { coveredByIdeon, fieldIdeons } from "./ideons.mjs";
 import { corruptionPower, cardFrozen, cardSevered, insanityCover } from "./corruptions.mjs";
+import { itemName, itemText } from "./consumables.mjs";
 import { enhanceConsumables } from "./consumables-ui.mjs";
 import { upgradeBadge, statBreakdowns, statHelp } from "./card-upgrade-ui.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
@@ -843,7 +844,7 @@ function equipmentBody(ctx) {
     )
     .map(
       (x) =>
-        `<button class="stash-item" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(items[x.id].text)}">${ctx.img("item-" + x.id)}${fittedGem(ctx, x, ctx.o.mode === "tavern")}<span>${items[x.id].name}</span></button>`,
+        `<button class="stash-item ${x.crystal ? "crystal-enhanced" : ""}" draggable="true" data-item-uid="${x.uid}" data-item-detail="${x.uid}" title="${ctx.esc(itemText(x))}">${ctx.img("item-" + x.id)}${x.crystal ? '<b class="crystal-badge">2× effect</b>' : ''}${fittedGem(ctx, x, ctx.o.mode === "tavern")}<span>${itemName(x)}</span></button>`,
     )
     .join(
       "",
@@ -863,10 +864,11 @@ function itemDetails(ctx, uid, jeweler = false) {
           a.type,
         ) &&
           a.uid === uid) ||
-        (a.type === "socket" && a.gem === uid),
+        (a.type === "socket" && a.gem === uid) ||
+        (a.type === "enhancePotion" && (a.uid === uid || a.potion === uid)),
     );
   ctx.dialog(
-    `<h2>${d.name}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(d.text)}</p>${x.gem ? `<p class="fitted-detail">${fittedGem(ctx, x)}Socketed: ${items[ctx.o.inventory.find((g) => g.uid === x.gem)?.id]?.name}. Unsocket at the Jeweler: ${gemServiceCost(ctx.o.inventory.find((g) => g.uid === x.gem)?.id)} Gold.</p>` : ""}${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
+    `<h2>${itemName(x)}</h2><div class="item-detail">${ctx.img("item-" + x.id, "full-art")}<div><p>${ctx.text(itemText(x))}</p>${x.gem ? `<p class="fitted-detail">${fittedGem(ctx, x)}Socketed: ${items[ctx.o.inventory.find((g) => g.uid === x.gem)?.id]?.name}. Unsocket at the Jeweler: ${gemServiceCost(ctx.o.inventory.find((g) => g.uid === x.gem)?.id)} Gold.</p>` : ""}${d.forbid ? `<p>Cannot socket: ${d.forbid.map((id) => items[id].name).join(", ")}</p>` : ""}${d.cursed ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="item-options">${
       [
         "equip",
         "unequip",
@@ -874,6 +876,7 @@ function itemDetails(ctx, uid, jeweler = false) {
         "unsocket",
         "sell",
         "consume",
+        "enhancePotion",
         "discardItem",
       ]
         .map((type) => {
@@ -881,7 +884,7 @@ function itemDetails(ctx, uid, jeweler = false) {
             (a) => a.type === type && !(type === "sell" && d.cursed),
           );
           return list.length
-            ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove", consume: "Use once", discardItem: "Discard permanently" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
+            ? `<details><summary>${{ equip: "Equip", unequip: "Unequip", socket: "Socket", unsocket: "Remove Gem", sell: "Sell / remove", consume: "Use once", enhancePotion: "Add Liquid Crystal", discardItem: "Discard permanently" }[type]}</summary>${list.map((a) => button(ctx, a)).join("")}</details>`
             : "";
         })
         .join("") || "<p>No changes available here.</p>"
@@ -952,6 +955,9 @@ function bindEquipment(ctx, root) {
       el.dataset.itemDetail ||
       (el.dataset.equipSlot ? ctx.o.equipment[el.dataset.equipSlot] : null);
     if (setting && drag.item != null) {
+      const combine = current(el).find(a => a.type === "enhancePotion" &&
+        ((a.uid === drag.item && a.potion === Number(setting)) || (a.potion === drag.item && a.uid === Number(setting))));
+      if (combine) return combine;
       if (
         ctx.o.mode === "gem" &&
         ctx.o.inventory.find((x) => x.uid === drag.item)?.id === ctx.o.startGem
@@ -1297,7 +1303,7 @@ function sellCatalog(ctx) {
               setting = o.inventory.find((i) => i.gem === x.uid),
               restricted = d.cursed || (gem && items[gem.id].cursed),
               equipped = Object.values(o.equipment).includes(x.uid);
-            return `<article class="market-item ${restricted ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}${fittedGem(ctx, x)}<h4>${d.name}</h4><p>${ctx.text(d.text)}${gem ? "<br>Socket: " + items[gem.id].name : ""}${setting ? "<br>Socketed in " + items[setting.id].name : ""}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : "Sale unavailable during this tutorial lesson"}">Sell unavailable</button>`}</div></article>`;
+            return `<article class="market-item ${restricted ? "healer-only" : ""} ${equipped ? "market-equipped" : ""}" data-catalog-item="${x.uid}">${equipped ? '<span class="equipped-label">Equipped</span>' : ""}${ctx.img("item-" + x.id)}${fittedGem(ctx, x)}<h4>${itemName(x)}</h4><p>${ctx.text(itemText(x))}${gem ? "<br>Socket: " + items[gem.id].name : ""}${setting ? "<br>Socketed in " + items[setting.id].name : ""}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-owned-view="${x.uid}">View</button>${a ? button(ctx, a) : `<button disabled title="${restricted ? healerRequired : "Sale unavailable during this tutorial lesson"}">Sell unavailable</button>`}</div></article>`;
           })
           .join("")
       : o.deck

@@ -51,6 +51,9 @@ import {
   SATCHEL_CAPACITY,
   satchelContents,
   consumableReason,
+  potionEffects,
+  itemName,
+  canCombinePotion,
 } from "./consumables.mjs";
 import {
   tutorialActions,
@@ -796,6 +799,11 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "3.0.4",
+          "3.0.3",
+          "3.0.2",
+          "3.0.1",
+          "3.0.0",
           "2.1.19",
           "2.1.18",
           "2.1.17",
@@ -1418,6 +1426,12 @@ export class Game {
       ]).slice(0, this.s.stratum === 2 ? 1 : 2),
       ...(this.s.stratum === 2 ? ["tools"] : []),
     ]);
+    if (this.s.stratum === 3) {
+      const count = 1 + Math.floor(this.rand() * 2);
+      // Replace non-healing supplies, keeping three total and at least one potion.
+      const replace = ids.map((id, i) => id === "healingSap" ? -1 : i).filter(i => i >= 0);
+      for (const i of replace.slice(0, count)) ids[i] = "liquidCrystal";
+    }
     const direction = Math.floor(this.rand() * 8);
     ids.forEach((item, i) => {
       const sector = (direction + [0, 3, 5][i]) % 8;
@@ -3363,14 +3377,14 @@ export class Game {
     const s = this.s,
       b = s.battle;
     for (const item of s.inventory) {
-      const f = items[item.id].consumable;
+      const f = potionEffects(item);
       if (!f || consumableReason(s, item)) continue;
       const targets = f.damage ? legalHostiles(b) : [null];
       for (const target of targets)
         add(
           "consume",
           (f.damage ? "Throw " : "Use ") +
-            items[item.id].name +
+            itemName(item) +
             (target ? " → " + target.name : ""),
           { uid: item.uid, ...(target ? { target: target.uid } : {}) },
           { ...f, consumable: true },
@@ -3382,8 +3396,7 @@ export class Game {
     const s = this.s,
       b = s.battle,
       item = this.getItem(a.uid),
-      d = items[item.id],
-      f = d.consumable;
+      f = potionEffects(item);
     if (s.mode === "battle") b.consumableTurn = b.turn;
     else s.field.consumableRound = s.field.round;
     const healed = f.heal ? Math.min(f.heal, s.maxHp - s.hp) : 0;
@@ -3392,7 +3405,7 @@ export class Game {
     if (f.channel) b.channel += f.channel;
     this.present("consume", {
       uid: item.uid,
-      name: d.name,
+      name: itemName(item),
       healed,
       focus: f.focus,
       channel: f.channel,
@@ -3400,26 +3413,33 @@ export class Game {
     this.removeItem(item.uid);
     (s.stats.consumablesUsed ||= []).push({
       id: item.id,
+      crystal: !!item.crystal,
+      effects: { ...f },
       round: s.field.round,
       turn: s.mode === "battle" ? b.turn : null,
       target: a.target ?? null,
       healed,
     });
     this.log(
-      "Used " + d.name + (healed ? " · restored " + healed + " HP" : "") + ".",
+      "Used " + itemName(item) + (healed ? " · restored " + healed + " HP" : "") + ".",
     );
     if (f.draw) {
-      if (!b.deck.length) {
-        b.deck = b.discard;
-        b.discard = [];
+      const drawn = [];
+      for (let n = 0; n < f.draw; n++) {
+        if (!b.deck.length) {
+          b.deck = b.discard;
+          b.discard = [];
+        }
+        if (!b.deck.length) break;
+        const card = b.deck.splice(Math.floor(this.rand() * b.deck.length), 1)[0];
+        b.hand.push(card);
+        drawn.push(card.uid);
       }
-      const card = b.deck.splice(Math.floor(this.rand() * b.deck.length), 1)[0];
-      b.hand.push(card);
       b.milky = b.hand.some((c) => c.id === "milky");
       this.present("reveal", {
-        name: d.name + " · 1 Insight",
-        insight: 1,
-        cards: [card.uid],
+        name: itemName(item) + " · " + drawn.length + " Insight",
+        insight: drawn.length,
+        cards: drawn,
         incremental: true,
       });
     }
@@ -3478,6 +3498,11 @@ export class Game {
       actions.push(a);
     };
     if (s.mode === "result") return [];
+    if (canCombinePotion(s))
+      for (const crystal of s.inventory.filter(x => x.id === "liquidCrystal"))
+        for (const potion of s.inventory.filter(x => items[x.id].consumable && !x.crystal))
+          add("enhancePotion", "Add Liquid Crystal → " + itemName(potion) + " (double effect)",
+            { uid: crystal.uid, potion: potion.uid }, { enhancePotion: true, potion: potion.id }, { channel: 0 });
     const loose = satchelContents(s),
       overflow = loose.length > SATCHEL_CAPACITY;
     const removable = loose.filter(
@@ -4247,6 +4272,14 @@ export class Game {
       case "consume":
         this.consume(a);
         break;
+      case "enhancePotion": {
+        const potion = this.getItem(a.potion);
+        potion.crystal = true;
+        this.removeItem(a.uid);
+        (s.stats.potionsEnhanced ||= []).push({ crystalUid: a.uid, potionUid: potion.uid, id: potion.id, stratum: s.stratum, round: s.field.round, turn: s.mode === "battle" ? s.battle.turn : null });
+        this.log("Added Liquid Crystal to " + items[potion.id].name + ": effect doubled.");
+        break;
+      }
       case "discardItem":
         this.log(
           "Discarded " + items[this.getItem(a.uid).id].name + " permanently.",

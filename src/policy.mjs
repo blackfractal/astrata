@@ -180,6 +180,8 @@ export class WeightedPolicy {
     let n = 0,
       reason = a.label;
     switch (a.type) {
+      case "enhancePotion":
+        return [f.potion === "channelDraught" ? 9 : f.potion === "healingSap" && injured >= 10 ? 10 : 3, "Combine a finite Liquid Crystal with a potion for double effect."];
       case "discardItem":
         return [
           -30 -
