@@ -18,8 +18,15 @@ await fs.writeFile(
   JSON.stringify({ width: 1280, fast: true }),
 );
 const app = await electron.launch({
-  executablePath: path.resolve("node_modules/electron/dist/electron.exe"),
-  args: [path.resolve("."), "--user-data-dir=" + profile],
+  executablePath: path.resolve(
+    process.argv.includes("--packaged")
+      ? "release/Astrata/Astrata.exe"
+      : "node_modules/electron/dist/electron.exe",
+  ),
+  args: [
+    ...(process.argv.includes("--packaged") ? [] : [path.resolve(".")]),
+    "--user-data-dir=" + profile,
+  ],
 });
 const errors = [];
 try {
@@ -28,6 +35,25 @@ try {
   const saved = async () =>
     JSON.parse(await fs.readFile(profile + "/save.json", "utf8"));
   await p.locator('[data-ui="continue"]').click();
+  async function inventoryCannotServiceGems() {
+    await p.locator('[data-ui="inventory"]').click();
+    assert.equal(
+      await p.locator('.dialog [data-gem-drag][draggable="true"]').count(),
+      0,
+    );
+    await p.locator(`.dialog [data-item-detail="${setting.uid}"]`).click();
+    assert.equal(
+      await p
+        .locator(
+          '.dialog [data-action*="unsocket"],.dialog [data-action*="socket"]',
+        )
+        .count(),
+      0,
+    );
+    await p.locator(".dialog-close").click();
+  }
+  await inventoryCannotServiceGems();
+  assert.equal((await saved()).gold, 200);
   await p.locator('[data-tavern="equipment"]').click();
   assert.match(
     await p.locator(".jeweler-fees").innerText(),
@@ -38,13 +64,25 @@ try {
     .dragTo(p.locator(".satchel-empty").first(), { force: true });
   await p.waitForTimeout(200);
   assert.equal((await saved()).gold, 180);
+  await p.locator('[data-ui="inventory"]').click();
+  await p
+    .locator(`.dialog [data-item-uid="${gem.uid}"]`)
+    .dragTo(p.locator(`.dialog [data-item-uid="${setting.uid}"]`));
+  assert.equal((await saved()).gold, 180);
+  assert.equal(
+    (await saved()).inventory.find((x) => x.uid === setting.uid).gem,
+    null,
+  );
+  await p.locator(".dialog-close").click();
   assert.equal(
     (await saved()).inventory.find((x) => x.uid === setting.uid).gem,
     null,
   );
   await p
     .locator(`.satchel [data-item-uid="${gem.uid}"]`)
-    .dragTo(p.locator(`.tavern-service .gear-item[data-item-uid="${setting.uid}"]`));
+    .dragTo(
+      p.locator(`.tavern-service .gear-item[data-item-uid="${setting.uid}"]`),
+    );
   await p.waitForTimeout(200);
   assert.equal((await saved()).gold, 160);
   await p
@@ -64,6 +102,14 @@ try {
     gem.uid,
   );
   await p.screenshot({ path: "reports/screenshots/settings-fees/satchel.png" });
+  await inventoryCannotServiceGems();
+  assert.equal((await saved()).gold, 160);
+  // Details opened from the Jeweler itself retain the paid services.
+  await p
+    .locator(`.jeweler-content [data-item-detail="${setting.uid}"]`)
+    .click();
+  assert.equal(await p.locator('.dialog [data-action*="unsocket"]').count(), 1);
+  await p.locator(".dialog-close").click();
   await p.locator('[data-tavern="market"]').click();
   await p.locator('[data-market-tab="sell"]').click();
   await p.locator('[data-market-category="Equipment"]').click();
@@ -91,6 +137,9 @@ try {
     JSON.stringify(
       {
         checks: [
+          "Inventory cannot socket/unsocket, even over the Jeweler",
+          "equipped and unequipped gem controls are Jeweler-only",
+          "Jeweler details retain paid service actions",
           "paid unsocket",
           "paid socket",
           "unequip retains visible Gem",

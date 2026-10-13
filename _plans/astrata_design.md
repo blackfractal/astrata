@@ -603,6 +603,8 @@ Equipment is deliberately shallow so the Mind Grid stays the source of complexit
 
 **Settings** are the Necklace, Bracelets, and Rings. Each Setting has a **printed effect of its own** and **one Gem socket**. **Gems** are fully **interchangeable** among Settings: a Gem taken off a Ring can go into a Bracelet or the Necklace. A Gem does nothing until socketed. **Socketing and unsocketing happen only at the Tavern Jeweler.** Each service costs 20 Gold per Gem, or 35 Gold for Amber Thought, Storm Opal and Clear Quartz. Replacing a fitted Gem requires paying to unsocket it first, then paying to socket the replacement. First Glimmer remains a free initial choice. Where a pairing would be game-breaking, the Setting simply says **"this Gem cannot be socketed here."**
 
+The Jeweler restriction applies to the interface as well as the location: ordinary Inventory and Market inspection must not offer socket/unsocket buttons or Gem drag operations, even while inside a Tavern. Equipped and unequipped Settings pay the same service fees. Moving a fitted Setting between Equipped and Satchel remains free and keeps its Gem attached.
+
 * **Not every Gem has an element.** A Gem's effect is either an element or some other power.
 * **An elemental Gem imbues the Setting** with its element. The Setting's numbers then follow the elemental defense rule (3.3.2) for defensive effects and the cycle for offensive ones. Imbued pieces also count as that element for upgrade conditions.
 * **A non-elemental Gem adds its power** to the Setting's own.

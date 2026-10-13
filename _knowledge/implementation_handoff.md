@@ -1,3 +1,7 @@
+## Latest: Jeweler-only gem controls — 2026-10-12
+
+Package3.0.1; rules/content remain3.0.0. Jonathan spotted unsocket through Inventory while in Tavern. Audited20Tavern actions in clone run0bee2d57-fb5a-4cfa-9b26-21a6ed896c34: all engine-legal/Gold-correct. Amber removed from Bronze uid13 cost35 (327→292), fitted to Silver uid294 cost35 (292→257). No save/Gold correction. UI leaked Tavern-wide legal gem actions through generic itemDetails and equipment drag handlers. Now item-details service choices and drag/drop require origin in `.jeweler-content`; Inventory stays non-Jeweler even while that panel is behind it. Same fees equipped/unequipped.516tests and expanded paid-service UI checks pass. Rebuilt portable package; user must restart open game. Reports: market-action-audit.json, jeweler-only-tests.txt, settings-fees-ui-verification.json. BUILD_LOG169.
+
 ## Latest: Stratum 3 first playable implemented — 2026-10-12
 
 Jonathan explicitly authorized building S3. Package/rules/content3.0.0, action schema8, main design4.185 §10.13, S3 planning draft0.23, BUILD_LOG168. Earlier proposals below are historical; current snapshot and `reports/stratum3-build-report.md` take precedence.

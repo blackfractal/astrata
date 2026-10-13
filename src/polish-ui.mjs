@@ -848,12 +848,13 @@ function equipmentBody(ctx) {
       "",
     )}${'<span class="satchel-empty" aria-hidden="true"></span>'.repeat(Math.max(0, ctx.o.satchel.capacity - ctx.o.satchel.used))}</div>`;
 }
-function itemDetails(ctx, uid) {
+function itemDetails(ctx, uid, jeweler = false) {
   const x = ctx.o.inventory.find((x) => x.uid === uid);
   if (!x) return;
   const d = items[x.id];
   const choices = ctx.game
     .legal()
+    .filter((a) => jeweler || !["socket", "unsocket"].includes(a.type))
     .filter(
       (a) =>
         a.item === uid ||
@@ -892,7 +893,12 @@ function bindEquipment(ctx, root) {
     (el) =>
       (el.onclick = (e) => {
         stop(e);
-        if (!ctx.busy()) itemDetails(ctx, Number(el.dataset.itemDetail));
+        if (!ctx.busy())
+          itemDetails(
+            ctx,
+            Number(el.dataset.itemDetail),
+            !!el.closest(".jeweler-content"),
+          );
       }),
   );
   root
@@ -913,19 +919,31 @@ function bindEquipment(ctx, root) {
         markDrops();
       }),
   );
-  root.querySelectorAll("[data-gem-drag]").forEach(
-    (el) =>
-      (el.ondragstart = (e) => {
-        stop(e);
-        drag = {
-          gem: Number(el.dataset.gemDrag),
-          setting: Number(el.dataset.settingDrag),
+  root.querySelectorAll("[data-gem-drag]").forEach((el) => {
+    const jeweler = !!el.closest(".jeweler-content");
+    el.draggable = jeweler;
+    el.ondragstart = !jeweler
+      ? null
+      : (e) => {
+          stop(e);
+          drag = {
+            gem: Number(el.dataset.gemDrag),
+            setting: Number(el.dataset.settingDrag),
+          };
+          e.dataTransfer.setData("text/plain", JSON.stringify(drag));
+          root
+            .querySelector("[data-unsocket-drop]")
+            ?.classList.add("drop-ready");
         };
-        e.dataTransfer.setData("text/plain", JSON.stringify(drag));
-        root.querySelector("[data-unsocket-drop]")?.classList.add("drop-ready");
-      }),
-  );
-  const current = () => ctx.game.legal();
+  });
+  const current = (el) =>
+    ctx.game
+      .legal()
+      .filter(
+        (a) =>
+          !["socket", "unsocket"].includes(a.type) ||
+          !!el.closest(".jeweler-content"),
+      );
   function dropAction(el) {
     if (!drag) return null;
     const setting =
@@ -937,14 +955,14 @@ function bindEquipment(ctx, root) {
         ctx.o.mode === "gem" &&
         ctx.o.inventory.find((x) => x.uid === drag.item)?.id === ctx.o.startGem
       ) {
-        const initial = current().find(
+        const initial = current(el).find(
           (a) =>
             a.type === "startGem" &&
             ctx.o.equipment[a.slot] === Number(setting),
         );
         if (initial) return initial;
       }
-      const socket = current().find(
+      const socket = current(el).find(
         (a) =>
           a.type === "socket" &&
           a.uid === Number(setting) &&
@@ -953,7 +971,7 @@ function bindEquipment(ctx, root) {
       if (socket) return socket;
     }
     if (el.dataset.equipSlot)
-      return current().find(
+      return current(el).find(
         (a) =>
           a.type === "equip" &&
           a.item === drag.item &&
@@ -961,7 +979,7 @@ function bindEquipment(ctx, root) {
       );
     if (el.dataset.socket) {
       const gem = drag.item;
-      return current().find(
+      return current(el).find(
         (a) =>
           a.type === "socket" &&
           a.uid === Number(el.dataset.socket) &&
@@ -969,7 +987,7 @@ function bindEquipment(ctx, root) {
       );
     }
     if (el.hasAttribute("data-unsocket-drop"))
-      return current().find(
+      return current(el).find(
         (a) =>
           (a.type === "unsocket" && a.uid === drag.setting) ||
           (a.type === "unequip" && a.item === drag.item),

@@ -1,0 +1,428 @@
+{
+  "hp": 11,
+  "turn": 4,
+  "phase": "place",
+  "focus": 4,
+  "channel": 3,
+  "hand": [
+    {
+      "uid": 156,
+      "id": "elves"
+    },
+    {
+      "uid": 168,
+      "id": "resonance"
+    },
+    {
+      "uid": 42,
+      "id": "undertow"
+    },
+    {
+      "uid": 12,
+      "id": "sapling"
+    },
+    {
+      "uid": 3,
+      "id": "blast"
+    }
+  ],
+  "grid": [
+    {
+      "slot": 5,
+      "id": "lucidGuide",
+      "used": 0,
+      "hp": 12,
+      "ward": 0
+    },
+    {
+      "slot": 11,
+      "id": "clear",
+      "used": 0,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 16,
+      "id": "blast",
+      "used": 2,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 17,
+      "id": "square",
+      "used": 2,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 18,
+      "id": "palimpsest",
+      "used": 0,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 18,
+      "id": "storm",
+      "used": 2,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 20,
+      "id": "lattice",
+      "used": 0,
+      "hp": 0,
+      "ward": 1
+    },
+    {
+      "slot": 23,
+      "id": "blast",
+      "used": 1,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 24,
+      "id": "shield",
+      "used": 2,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 25,
+      "id": "rain",
+      "used": 0,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 26,
+      "id": "conduit",
+      "used": 2,
+      "hp": 0,
+      "ward": 0
+    },
+    {
+      "slot": 27,
+      "id": "rot",
+      "used": 1,
+      "hp": 0,
+      "ward": 0
+    }
+  ],
+  "corruptions": {},
+  "enemies": [
+    {
+      "uid": 305,
+      "enemy": "glassBrood",
+      "restless": 0,
+      "count": 3,
+      "id": "glassBrood",
+      "name": "Glass Brood 1",
+      "tier": "Mote",
+      "element": "Wind",
+      "hp": -5,
+      "movement": "Stalker",
+      "rotation": [
+        {
+          "name": "Lay a thought",
+          "damage": 9,
+          "element": "Wind",
+          "summonIdeon": "runner",
+          "summonCount": 1
+        },
+        {
+          "name": "Scuttle",
+          "damage": 12,
+          "element": "Earth",
+          "commandIdeons": true
+        }
+      ],
+      "signature": "Spawns a Glass Skitter, then commands its advance while alternating Wind and Earth attacks.",
+      "counter": "Remove the skitter before it gets behind your guards.",
+      "nemesis": "Slow decks",
+      "grouped": false,
+      "stratum": 3,
+      "entityUid": 305,
+      "maxHp": 48,
+      "cycle": 1,
+      "buff": 0,
+      "guard": 0,
+      "status": {
+        "burn": 0,
+        "poison": 0,
+        "corrode": 0
+      }
+    },
+    {
+      "uid": 306,
+      "enemy": "glassBrood",
+      "restless": 0,
+      "count": 3,
+      "id": "glassBrood",
+      "name": "Glass Brood 2",
+      "tier": "Mote",
+      "element": "Wind",
+      "hp": -1,
+      "movement": "Stalker",
+      "rotation": [
+        {
+          "name": "Lay a thought",
+          "damage": 9,
+          "element": "Wind",
+          "summonIdeon": "runner",
+          "summonCount": 1
+        },
+        {
+          "name": "Scuttle",
+          "damage": 12,
+          "element": "Earth",
+          "commandIdeons": true
+        }
+      ],
+      "signature": "Spawns a Glass Skitter, then commands its advance while alternating Wind and Earth attacks.",
+      "counter": "Remove the skitter before it gets behind your guards.",
+      "nemesis": "Slow decks",
+      "grouped": false,
+      "stratum": 3,
+      "entityUid": 305,
+      "maxHp": 48,
+      "cycle": 2,
+      "buff": 0,
+      "guard": 0,
+      "status": {
+        "burn": 0,
+        "poison": 0,
+        "corrode": 0
+      }
+    },
+    {
+      "uid": 307,
+      "enemy": "glassBrood",
+      "restless": 0,
+      "count": 3,
+      "id": "glassBrood",
+      "name": "Glass Brood 3",
+      "tier": "Mote",
+      "element": "Wind",
+      "hp": 16,
+      "movement": "Stalker",
+      "rotation": [
+        {
+          "name": "Lay a thought",
+          "damage": 9,
+          "element": "Wind",
+          "summonIdeon": "runner",
+          "summonCount": 1
+        },
+        {
+          "name": "Scuttle",
+          "damage": 12,
+          "element": "Earth",
+          "commandIdeons": true
+        }
+      ],
+      "signature": "Spawns a Glass Skitter, then commands its advance while alternating Wind and Earth attacks.",
+      "counter": "Remove the skitter before it gets behind your guards.",
+      "nemesis": "Slow decks",
+      "grouped": false,
+      "stratum": 3,
+      "entityUid": 305,
+      "maxHp": 48,
+      "cycle": 3,
+      "buff": 0,
+      "guard": 0,
+      "status": {
+        "burn": 0,
+        "poison": 0,
+        "corrode": 2
+      }
+    }
+  ],
+  "ideons": [
+    {
+      "name": "Glass Skitter",
+      "element": "Wind",
+      "hp": 10,
+      "damage": 9,
+      "speed": 1,
+      "behavior": "crawl",
+      "text": "Moves one space toward you when commanded. At the left edge, strikes for 9 Wind and disappears.",
+      "id": "ideon_runner",
+      "kind": "runner",
+      "ideon": true,
+      "uid": 313,
+      "owner": 307,
+      "ownerName": "Glass Brood 3",
+      "slot": 6,
+      "maxHp": 10,
+      "status": {
+        "burn": 0,
+        "poison": 0,
+        "corrode": 0
+      },
+      "guard": 0,
+      "born": 3,
+      "age": 0
+    }
+  ],
+  "legal": [
+    {
+      "type": "consume",
+      "uid": 37,
+      "label": "Use Focus Draught",
+      "effects": {
+        "focus": 1,
+        "consumable": true
+      },
+      "costs": {
+        "channel": 0
+      },
+      "key": "[\"consume\",{\"uid\":37}]"
+    },
+    {
+      "type": "consume",
+      "uid": 295,
+      "label": "Use Healing Sap",
+      "effects": {
+        "heal": 5,
+        "consumable": true
+      },
+      "costs": {
+        "channel": 0
+      },
+      "key": "[\"consume\",{\"uid\":295}]"
+    },
+    {
+      "type": "recall",
+      "slot": 11,
+      "label": "Recall slot 12 · 1 Focus",
+      "effects": {
+        "spent": false
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":11}]"
+    },
+    {
+      "type": "recall",
+      "slot": 16,
+      "label": "Recall slot 17 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":16}]"
+    },
+    {
+      "type": "recall",
+      "slot": 17,
+      "label": "Recall slot 18 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":17}]"
+    },
+    {
+      "type": "recall",
+      "slot": 18,
+      "label": "Recall slot 19 · 0 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 0
+      },
+      "key": "[\"recall\",{\"slot\":18}]"
+    },
+    {
+      "type": "recall",
+      "slot": 20,
+      "label": "Recall slot 21 · 1 Focus",
+      "effects": {
+        "spent": false
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":20}]"
+    },
+    {
+      "type": "recall",
+      "slot": 23,
+      "label": "Recall slot 24 · 1 Focus",
+      "effects": {
+        "spent": false
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":23}]"
+    },
+    {
+      "type": "recall",
+      "slot": 24,
+      "label": "Recall slot 25 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":24}]"
+    },
+    {
+      "type": "recall",
+      "slot": 25,
+      "label": "Recall slot 26 · 1 Focus",
+      "effects": {
+        "spent": false
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":25}]"
+    },
+    {
+      "type": "recall",
+      "slot": 26,
+      "label": "Recall slot 27 · 1 Focus",
+      "effects": {
+        "spent": true
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":26}]"
+    },
+    {
+      "type": "recall",
+      "slot": 27,
+      "label": "Recall slot 28 · 1 Focus",
+      "effects": {
+        "spent": false
+      },
+      "costs": {
+        "focus": 1
+      },
+      "key": "[\"recall\",{\"slot\":27}]"
+    },
+    {
+      "type": "activatePhase",
+      "label": "Begin activation",
+      "effects": {
+        "progress": 1
+      },
+      "costs": {},
+      "key": "[\"activatePhase\",{}]"
+    }
+  ]
+}

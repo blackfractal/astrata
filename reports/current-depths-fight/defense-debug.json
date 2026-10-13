@@ -1,0 +1,185 @@
+{
+  "reaction": {
+    "kind": "hit",
+    "damage": 7,
+    "element": "Fire",
+    "name": "Foreign sensation",
+    "source": 305,
+    "stage": "bracelet",
+    "column": -1,
+    "intercepted": [],
+    "weaknessBonus": 0,
+    "weaknessElement": null,
+    "lastNode": {
+      "kind": "item",
+      "uid": 177
+    },
+    "lastImpact": true
+  },
+  "trace": [
+    {
+      "before": {
+        "turn": 3,
+        "hp": 23,
+        "enemy": [
+          {
+            "id": "borrowedOracle",
+            "hp": 87
+          }
+        ],
+        "ideons": []
+      },
+      "action": {
+        "type": "activate",
+        "slot": 33,
+        "target": 305,
+        "element": "Arcane",
+        "label": "Blast · Arcane → Borrowed Oracle",
+        "effects": {
+          "heatBurn": 0,
+          "damage": 4,
+          "matchingDamage": 1,
+          "card": "blast",
+          "charge": 0
+        },
+        "costs": {
+          "channel": 1
+        },
+        "key": "[\"activate\",{\"slot\":33,\"target\":305,\"element\":\"Arcane\"}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 23,
+        "mode": "battle"
+      },
+      "messages": [
+        "Activated Blast."
+      ]
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 23,
+        "enemy": [
+          {
+            "id": "borrowedOracle",
+            "hp": 80
+          }
+        ],
+        "ideons": []
+      },
+      "action": {
+        "type": "endTurn",
+        "label": "End turn",
+        "effects": {
+          "progress": 1
+        },
+        "costs": {},
+        "key": "[\"endTurn\",{}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 23,
+        "mode": "battle"
+      },
+      "messages": [
+        "Borrowed Oracle: Foreign sensation"
+      ]
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 23,
+        "enemy": [
+          {
+            "id": "borrowedOracle",
+            "hp": 79
+          }
+        ],
+        "ideons": []
+      },
+      "action": {
+        "type": "ward",
+        "uid": 74,
+        "slot": 20,
+        "label": "Living Lattice · 6 Earth Ward",
+        "effects": {
+          "ward": 6,
+          "element": "Earth",
+          "column": 6
+        },
+        "costs": {},
+        "key": "[\"ward\",{\"uid\":74,\"slot\":20}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 23,
+        "mode": "battle"
+      },
+      "messages": []
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 23,
+        "enemy": [
+          {
+            "id": "borrowedOracle",
+            "hp": 79
+          }
+        ],
+        "ideons": []
+      },
+      "action": {
+        "type": "block",
+        "uid": 310,
+        "slot": 30,
+        "label": "Arcane Shield · 8 Guard",
+        "effects": {
+          "block": 8,
+          "element": "Arcane",
+          "column": 2
+        },
+        "costs": {},
+        "key": "[\"block\",{\"uid\":310,\"slot\":30}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 23,
+        "mode": "battle"
+      },
+      "messages": []
+    },
+    {
+      "before": {
+        "turn": 3,
+        "hp": 23,
+        "enemy": [
+          {
+            "id": "borrowedOracle",
+            "hp": 79
+          }
+        ],
+        "ideons": []
+      },
+      "action": {
+        "type": "bracelet",
+        "uid": 177,
+        "label": "Gold Bracelet · Arcane · 7 Guard",
+        "effects": {
+          "block": 7,
+          "element": "Arcane",
+          "column": -1
+        },
+        "costs": {},
+        "key": "[\"bracelet\",{\"uid\":177}]"
+      },
+      "after": {
+        "turn": 3,
+        "hp": 23,
+        "mode": "battle"
+      },
+      "messages": []
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "square": {
+    "id": "square",
+    "name": "Fourfold Grove",
+    "element": "Earth",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "damage": 6,
+      "square": true
+    },
+    "text": "Deal 6 damage. Double in an intact 2 by 2 formation.",
+    "rarity": "rare"
+  },
+  "familiar": {
+    "id": "familiar",
+    "name": "Familiar",
+    "element": "Arcane",
+    "type": "Ally",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": null,
+    "effects": {
+      "conduit": true
+    },
+    "text": "6 HP. Conduit: optionally Attune. Until your next turn, defend in that element and count as an adjacent Blast and Shield, giving each +1 damage or Guard. Relay the chosen element to adjacent Attune cards. May intercept attacks.",
+    "rarity": "common",
+    "hp": 6,
+    "attune": true
+  },
+  "water": {
+    "id": "water",
+    "name": "Water Blast",
+    "element": "Water",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "damage": 7
+    },
+    "text": "Deal 7 damage.",
+    "rarity": "common",
+    "upgrade": {
+      "gold": 100,
+      "bonus": 3,
+      "text": "The graftkeeper renews its living ink: +3 damage, Guard, healing, or initial Ally HP."
+    }
+  },
+  "rain": {
+    "id": "rain",
+    "name": "Rain Lantern",
+    "element": "Water",
+    "type": "Object",
+    "focus": 0,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "focus": 2
+    },
+    "text": "+2 Focus next turn.",
+    "rarity": "common"
+  },
+  "storm": {
+    "id": "storm",
+    "name": "Storm Canopy",
+    "element": "Wind",
+    "type": "Spell",
+    "focus": 2,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "damage": 7,
+      "all": true
+    },
+    "text": "Deal 7 to all enemies.",
+    "rarity": "rare",
+    "upgrade": {
+      "sacrifice": true,
+      "bonus": 3,
+      "text": "Destroy another rare card as a wind offering: +3 damage."
+    }
+  },
+  "blast": {
+    "id": "blast",
+    "name": "Blast",
+    "element": "Arcane",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "damage": 4,
+      "matchingDamage": 1
+    },
+    "text": "Attune. Deal 4 damage, +1 per adjacent Blast. After activation, relay its element to adjacent Attune cards until your next turn.",
+    "rarity": "common",
+    "attune": true,
+    "upgrade": {
+      "gold": 50,
+      "bonus": 3,
+      "text": "The graftkeeper renews its living ink: +3 damage, Guard, healing, or initial Ally HP."
+    }
+  },
+  "shield": {
+    "id": "shield",
+    "name": "Shield",
+    "element": "Arcane",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "shield": 4,
+      "matchingShield": 1
+    },
+    "text": "Attune. Add 4 Guard, +1 per adjacent Shield, until the enemy turn ends. After activation, relay its element to adjacent Attune cards until your next turn.",
+    "rarity": "common",
+    "attune": true,
+    "upgrade": {
+      "gold": 50,
+      "bonus": 3,
+      "text": "The graftkeeper renews its living ink: +3 damage, Guard, healing, or initial Ally HP."
+    }
+  },
+  "lucidGuide": {
+    "id": "lucidGuide",
+    "name": "Lucid Guide",
+    "element": "Arcane",
+    "type": "Ally",
+    "focus": 1,
+    "limit": 12,
+    "channel": 1,
+    "recall": null,
+    "effects": {
+      "guide": true,
+      "damage": 5
+    },
+    "text": "Move up to one orthogonal empty space, then deal 5 Arcane to an adjacent Ideon and mark it. The next attack activation from a different card deals +3 damage to it. May move without attacking. Cannot Recall.",
+    "rarity": "common",
+    "stratum": 3,
+    "companion": true,
+    "hp": 12,
+    "upgrade": {
+      "gold": 120,
+      "bonus": 3,
+      "text": "+3 HP and +3 Ideon attack damage."
+    }
+  },
+  "thorn": {
+    "id": "thorn",
+    "name": "Thorn Eruption",
+    "element": "Earth",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 3,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "damage": 4,
+      "adj": 2,
+      "adjDamageOnly": true
+    },
+    "text": "Deal 4 damage, +2 per orthogonally adjacent card with a direct-damage activation. Spent cards and charged attacks count; utility, Guard-only and status-only cards do not.",
+    "rarity": "common",
+    "upgrade": {
+      "gold": 120,
+      "bonus": 3,
+      "text": "The graftkeeper renews its living ink: +3 damage, Guard, healing, or initial Ally HP."
+    }
+  },
+  "rot": {
+    "id": "rot",
+    "name": "Slow Rot",
+    "element": "Water",
+    "type": "Spell",
+    "focus": 1,
+    "limit": 2,
+    "channel": 1,
+    "recall": 1,
+    "effects": {
+      "corrode": 1
+    },
+    "text": "Apply Corrode 1.",
+    "rarity": "common",
+    "upgrade": {
+      "gold": 100,
+      "bonus": 0,
+      "effects": {
+        "damage": 3
+      },
+      "text": "Add an immediate 3-damage Water hit. Corrode remains 1."
+    }
+  },
+  "holyArmor": {
+    "id": "holyArmor",
+    "name": "Holy Armor",
+    "slot": "torso",
+    "effect": {
+      "heal": 2
+    },
+    "worth": 110,
+    "text": "At the start of your turn, heal 2 if injured. Two healing triggers per battle; full HP does not spend a trigger.",
+    "healLimit": 2
+  }
+}
+baseline 0 result 0 8
+baseline 1 result 0 2

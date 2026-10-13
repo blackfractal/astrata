@@ -51,6 +51,28 @@ test("Jeweler charges each gem service, refuses unaffordable work and occupied s
   }
 });
 
+test("Amber unsocket costs 35 whether its Setting is equipped or in the Satchel", () => {
+  for (const equipped of [true, false]) {
+    const g = new Game(13);
+    g.openTavern();
+    const setting = g.addItem("bronze"),
+      gem = g.addItem("focusGem");
+    setting.gem = gem.uid;
+    if (equipped) g.s.equipment.wrist2 = setting.uid;
+    g.s.gold = 34;
+    assert.ok(
+      !g.legal().some((a) => a.type === "unsocket" && a.uid === setting.uid),
+    );
+    g.s.gold = 35;
+    g.act(
+      g.legal().find((a) => a.type === "unsocket" && a.uid === setting.uid),
+    );
+    assert.equal(g.s.gold, 0);
+    assert.equal(setting.gem, null);
+    assert.ok(g.getItem(gem.uid));
+  }
+});
+
 test("Mirror returns original attack element through matchup and enemy Guard, once per battle", () => {
   for (const [element, expected] of [
     ["Water", 15],

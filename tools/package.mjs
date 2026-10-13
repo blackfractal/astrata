@@ -54,6 +54,8 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
   "stratum3-build-report.md",
+  "jeweler-only-tests.txt",
+  "market-action-audit.json",
   "s3-tests.txt",
   "s3-art-provenance.json",
   "depths-ui-verification.json",
