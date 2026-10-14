@@ -1,0 +1,152 @@
+{
+  "version": {
+    "rules": "3.0.7",
+    "content": "3.0.7",
+    "observation": 2,
+    "actions": 9
+  },
+  "builds": [
+    {
+      "id": "baseline",
+      "name": "Original balanced carry-in (25 cards)",
+      "cards": null,
+      "upgrades": []
+    },
+    {
+      "id": "wards",
+      "name": "Wards and repair (30 cards)",
+      "cards": [
+        "blast",
+        "blast",
+        "shield",
+        "shield",
+        "focus",
+        "focus",
+        "clear",
+        "rain",
+        "conduit",
+        "transmute",
+        "elves",
+        "lucidGuide",
+        "ward",
+        "ward",
+        "magnify",
+        "magnify",
+        "lattice",
+        "lattice",
+        "elves",
+        "bastion",
+        "water",
+        "cinder",
+        "solitude",
+        "lucidNeedle",
+        "lucidNeedle",
+        "scouringGale",
+        "sapling",
+        "familiar",
+        "tide",
+        "undertow"
+      ],
+      "upgrades": [
+        "elves",
+        "ward",
+        "lucidNeedle",
+        "water"
+      ]
+    },
+    {
+      "id": "allies",
+      "name": "Allies and elemental chains (30 cards)",
+      "cards": [
+        "blast",
+        "blast",
+        "shield",
+        "shield",
+        "focus",
+        "focus",
+        "clear",
+        "rain",
+        "conduit",
+        "transmute",
+        "elves",
+        "lucidGuide",
+        "sapling",
+        "familiar",
+        "terra",
+        "golem",
+        "grove",
+        "aqua",
+        "ember",
+        "ward",
+        "magnify",
+        "lattice",
+        "water",
+        "cinder",
+        "thorn",
+        "lucidNeedle",
+        "scouringGale",
+        "tide",
+        "clear",
+        "transmute"
+      ],
+      "upgrades": [
+        "grove",
+        "sapling",
+        "elves",
+        "lucidNeedle"
+      ]
+    },
+    {
+      "id": "spells",
+      "name": "Efficient spells and Insight (30 cards)",
+      "cards": [
+        "blast",
+        "blast",
+        "shield",
+        "shield",
+        "focus",
+        "focus",
+        "clear",
+        "rain",
+        "conduit",
+        "transmute",
+        "elves",
+        "lucidGuide",
+        "lucidNeedle",
+        "lucidNeedle",
+        "scouringGale",
+        "scouringGale",
+        "water",
+        "water",
+        "cinder",
+        "cinder",
+        "solitude",
+        "solitude",
+        "plasma",
+        "plasma",
+        "ward",
+        "magnify",
+        "tide",
+        "clear",
+        "keystone",
+        "storm"
+      ],
+      "upgrades": [
+        "lucidNeedle",
+        "scouringGale",
+        "water",
+        "solitude"
+      ]
+    }
+  ],
+  "seeds": [
+    73001,
+    73002,
+    73003,
+    73004,
+    73005
+  ],
+  "hp": 70,
+  "equipment": "Gold/Sapphire + Silver/Ruby bracelets, Ring of Patience/Amber Thought, Ring of Embers/Storm Opal, Stone Armor, Sturdy Metal Helmet. Same as prior baseline. No consumables.",
+  "method": "Synthetic coherent S3 carry-ins, not earned campaigns. One unchanged WeightedPolicy, no training/search or tuning after results. Baseline unchanged from previous five tests; other builds have four upgrades each. Save untouched."
+}

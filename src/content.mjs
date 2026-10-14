@@ -6,8 +6,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "3.0.5",
-  content: "3.0.5",
+  rules: "3.0.11",
+  content: "3.0.11",
   observation: 2,
   actions: 9,
 };
@@ -139,7 +139,7 @@ card(
   1,
   1,
   { focusPermanent: 1 },
-  "+1 Focus for this battle. Cannot Recall.",
+  "+1 Focus for this battle. Cannot Recall. Destroyed if forced off the grid.",
   { recall: null },
 );
 card(
@@ -488,8 +488,8 @@ card(
   "Spell",
   2,
   2,
-  { damage: 7, all: true },
-  "Deal 7 to all enemies.",
+  { damage: 7, all: true, excludeIdeons: true },
+  "Deal 7 to all main enemies. Does not hit Ideons.",
   { rarity: "rare" },
 );
 card(
@@ -1675,7 +1675,7 @@ export const glossary = {
   Insight:
     "Reveal budget. Counts down as cards turn face up and is zero after Reveal. Refills for the next turn when you end your turn.",
   Recall:
-    "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall.",
+    "During placement pay Focus to put the slot into discard. Activations reset on reuse. Allies usually cannot Recall. When a placed card is forced to Discard, non-recallable cards go to Destroyed instead; temporary Locked status does not count.",
   Spent:
     "No activations remain. Still occupies a slot. A Ward can still absorb its remaining value.",
   Ward: "Starts at 1; activate to add persistent defense. Its current element gives +50% protection against the element it beats, -50% against its weakness, rounded up; Arcane is neutral. Fully depleted wards cannot activate, even if the initial 1 was spent before activating. Recall and replay reset it to 1; Magnifier Ward or Living Lattice can also revive it. Chosen by clicking its card. Attacks can only move to the same column or closer to the player. Covered Wards do not absorb unless the top card permits it.",

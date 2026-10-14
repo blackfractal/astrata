@@ -57,6 +57,12 @@ export function enhanceIdeons(ctx) {
     let command = owner?.tell?.commandIdeons
       ? "Acts on the upcoming enemy turn."
       : "Waits; its owner is not commanding it this turn.";
+    if (e.kind === "drone")
+      command += ` Next attack: ${e.damage + (e.damageGrowth || 0) * e.age} ${e.element} damage. Does not move.`;
+    if (e.behavior === "crawl")
+      command += e.slot % 7 === 0
+        ? ` Next: ${e.damage} ${e.element} damage, then disappears.`
+        : ` Next: move${e.turnDamage ? `, then ${e.turnDamage} ${e.element} damage` : "; no attack"}.`;
     if (owner?.tell?.commandIdeons && e.behavior === "tentacle") {
       const allies = b.grid
         .flatMap((s, i) =>
@@ -76,6 +82,19 @@ export function enhanceIdeons(ctx) {
     el.setAttribute("aria-label", help);
     const art = artPaths["ideon-" + e.kind] || `assets/ideon-${e.kind}.png`;
     el.innerHTML = `<img class="ideon-art" src="${art}" alt=""><span class="ideon-owner" title="${esc(owner?.name || e.ownerName)} #${e.owner}">${img("enemy-" + (owner?.id || "mindHive"))}</span><span class="ideon-name">${esc(e.name)}</span><span class="ideon-health"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i><b>${e.hp}</b></span>${e.mark ? '<span class="ideon-mark">✧</span>' : ""}${e.field ? `<span class="ideon-field-name">${fieldNames[e.field]}</span>` : ""}`;
+    if (e.kind === "drone") {
+      const intent = document.createElement("span");
+      intent.className = "ideon-field-name";
+      intent.textContent = `Next: ${e.damage + (e.damageGrowth || 0) * e.age} ${e.element}`;
+      el.append(intent);
+    }
+    if (e.behavior === "crawl") {
+      const intent = document.createElement("span");
+      intent.className = "ideon-field-name";
+      intent.textContent = e.slot % 7 === 0 ? `Exit: ${e.damage} ${e.element}`
+        : e.turnDamage ? `Move + ${e.turnDamage} ${e.element}` : `Move · exit ${e.damage}`;
+      el.append(intent);
+    }
     el.onclick = (ev) => {
       ev.stopPropagation();
       if (ctx.busy() || el.classList.contains("target-option")) return;

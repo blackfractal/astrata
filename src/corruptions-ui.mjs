@@ -2,11 +2,13 @@ import { phaseMoves } from "./loom-bosses.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
 import { corruptionPower, nauseaTargets, cardFrozen } from "./corruptions.mjs";
 import { artPaths } from "./art-paths.mjs";
+import { forcedDiscardLabel } from "./card-removal.mjs";
 const esc = (s) =>
   String(s)
     .replaceAll("&", "&amp;")
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;");
+const eggTones = { Arcane: "#cbd0de", Fire: "#ff9b58", Water: "#79caff", Earth: "#93c37c", Wind: "#c6e6c0", Light: "#f9df81", Chaos: "#bf94f4" };
 const particles = (count) =>
   Array.from(
     { length: count },
@@ -34,12 +36,15 @@ export function paintCorruptions(o, app) {
       const d = CORRUPTIONS[q.kind],
         suppressed = !!c && q.kind === "insanity";
       el.classList.add("corrupted", "corruption-" + q.kind);
+      if (q.kind === "egg") el.style.setProperty("--corruption-color", eggTones[q.element] || eggTones.Arcane);
       el.classList.toggle("corruption-covered", suppressed);
       el.classList.toggle("corruption-occupied", !!c);
       const title =
         d.name +
         " · " +
-        (q.kind === "mine"
+          (q.kind === "egg"
+            ? `${q.element} · hatches next Hive turn: ${c ? "cover to " + forcedDiscardLabel(b.grid[i]) : "8 damage"}; then ${q.insect === "drone" ? "Drone" : q.insect === "runner" ? "Glass Skitter" : "Thought Burrower"}. `
+          : q.kind === "mine"
           ? q.remaining +
             " turns left; " +
             (q.damage || 18) +
@@ -54,10 +59,10 @@ export function paintCorruptions(o, app) {
         d.text;
       el.insertAdjacentHTML(
         "beforeend",
-        `<span class="corruption-card" aria-hidden="true"><img class="corruption-art" src="${artPaths["corruption-" + q.kind]}" alt=""><span class="corruption-motion">${Array.from({ length: q.kind === "hole" ? 8 : 3 }, (_, n) => `<i style="--particle:${n};--angle:${n * 45}deg;--delay:${-n * 0.37}s"></i>`).join("")}</span><span class="corruption-name">${d.name}</span></span><span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "mine" ? q.remaining + " turns" : q.kind === "insanity" && !c ? q.value + " HP" : suppressed ? "covered" : ""}</small></span>`,
+        `<span class="corruption-card" aria-hidden="true"><img class="corruption-art" src="${artPaths["corruption-" + q.kind]}" alt=""><span class="corruption-motion">${Array.from({ length: q.kind === "hole" ? 8 : 3 }, (_, n) => `<i style="--particle:${n};--angle:${n * 45}deg;--delay:${-n * 0.37}s"></i>`).join("")}</span><span class="corruption-name">${d.name}</span></span><span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "egg" ? q.element + " · 1 turn" : q.kind === "mine" ? q.remaining + " turns" : q.kind === "insanity" && !c ? q.value + " HP" : suppressed ? "covered" : ""}</small></span>`,
       );
       if (!c) el.title = title;
-      if (c && ["hypnosis", "insanity", "mine"].includes(q.kind))
+      if (c && ["hypnosis", "insanity", "mine", "egg"].includes(q.kind))
         el.insertAdjacentHTML("beforeend", `<span class="corruption-cover-aura ${q.kind}-cover-aura" aria-hidden="true">${particles(q.kind === "mine" ? 8 : 3)}</span>`);
     }
     if (b.biles?.[i]) {

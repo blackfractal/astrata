@@ -170,7 +170,7 @@ test("all-enemy attacks hit Ideons, guardian protects only its own owner", () =>
   const guard = spawnIdeon(g, b.enemies[0], "guardian", { slot: 6 });
   b.enemies.push({ ...b.enemies[0], uid: 901, hp: 48 });
   const other = b.enemies[1];
-  put(g, "storm", 0);
+  put(g, "eclipse", 0).charge = 2;
   b.phase = "activate";
   const hp = b.enemies[0].hp;
   act(g, "activate", { slot: 0 });

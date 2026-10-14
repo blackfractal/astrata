@@ -1,6 +1,9 @@
 import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
+  "ideon-drone": "assets/ideon-drone.png",
+  "enemy-ideon_drone": "assets/ideon-drone.png",
   "item-liquidCrystal": "assets/item-liquidCrystal.png",
+  "corruption-egg": "assets/corruption-egg.png",
   "item-tools": "assets/item-tools.png",
   "enemy-blackBile": "assets/enemy-blackBile.png",
   "enemy-bombadier": "assets/enemy-bombadier.png",
@@ -183,6 +186,7 @@ Object.assign(artPaths, {
 });
 
 for (const kind of [
+  "larva",
   "runner",
   "burrower",
   "guardian",

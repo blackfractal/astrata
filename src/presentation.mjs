@@ -491,6 +491,17 @@ export async function playFrames(before, frames, after, render, isFast) {
           ghost.remove();
         }
         render(frame.state);
+      } else if (frame.kind === "eggHatch") {
+        const target = card(frame.slot);
+        const burst = spellImpact(target, frame.element || "Arcane", { duration: ms(650), reduced });
+        burst?.classList.add("egg-hatching");
+        await pause(300);
+        if (frame.covered && target) {
+          if (frame.destroyed?.length) target.classList.add("disintegrating");
+          await flash(target, "To " + (frame.destination || "Discard"), false, null, frame.element);
+        }
+        burst?.remove();
+        render(frame.state);
       } else if (frame.kind === "mineExplosion") {
         const target = card(frame.slot);
         const burst = spellImpact(target, "Fire", {
@@ -669,6 +680,19 @@ export async function playFrames(before, frames, after, render, isFast) {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);
         render(frame.state);
+      } else if (frame.kind === "hiveDeath") {
+        await flash(enemy(frame.uid), "", true);
+        enemy(frame.uid)?.remove();
+        await Promise.all(frame.insects.map(uid => flash(enemy(uid), "", true)));
+        const cleared = structuredClone(frame.state);
+        cleared.battle.enemies = cleared.battle.enemies.filter(e => e.hp > 0);
+        render(cleared);
+        bar.querySelector("span").textContent = "The Mind Hive falls silent";
+        bar.dataset.stage = "hive-cleared";
+        // One real second of the cleared battlefield, even in Fast/reduced-motion mode.
+        const until = performance.now() + 1000;
+        while (!skip && performance.now() < until)
+          await new Promise(resolve => setTimeout(resolve, 25));
       } else if (frame.kind === "death") {
         await flash(enemy(frame.uid), frame.name, true);
         render(frame.state);
@@ -782,7 +806,8 @@ export async function playFrames(before, frames, after, render, isFast) {
                   ? after.tutorial.name + " Complete"
                   : "Stratum " + (after.stratum || 1) + " Complete"
               : "Continue";
-      await pause(after.mode === "reward" ? 700 : 450);
+      if (!frames.some(f => f.kind === "hiveDeath"))
+        await pause(after.mode === "reward" ? 700 : 450);
     }
   } finally {
     bar.remove();

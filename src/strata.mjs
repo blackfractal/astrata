@@ -12,6 +12,11 @@ export const STRATA = {
 export const ELVES_STORY =
   "The path ends at a tear in the ground. Three small figures kneel beside it, passing a silver thread through places your eyes cannot follow. One pulls; the far bank draws close. They pack their needles when they see you. The smallest points at your grimoire, then at the damaged path ahead. You open the book. They climb inside.";
 export const CORRUPTIONS = {
+  egg: {
+    name: "Mind Egg",
+    symbol: "◈",
+    text: "Hatches next Hive turn after one full player turn. Uncovered: 8 damage of its visible element through normal defenses. Covered: removes the whole Construct for free instead. Recallable cards go to Discard; non-recallable cards and their melded attachments go to Destroyed for the rest of this battle. Discarded cards return separately when drawn. Either way, an insect of the egg's element hatches here and begins moving next enemy turn. Machine Elves remove the egg immediately, preventing both damage and hatching. If another Ideon occupies the space, hatching waits until it is free. Eggs remain fixed and may be laid beneath existing cards.",
+  },
   anger: {
     name: "Anger",
     symbol: "✷",

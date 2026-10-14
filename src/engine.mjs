@@ -11,6 +11,8 @@ import {
   drainLeeches,
   settleIdeons,
   initializeIdeons,
+  hiveOpeningCount,
+  normalizeInsectMovement,
   depthsTell,
   scheduleDepths,
   depthsJob,
@@ -799,6 +801,9 @@ export class Game {
       if (
         ![
           VERSION.rules,
+          "3.0.7",
+          "3.0.6",
+          "3.0.5",
           "3.0.4",
           "3.0.3",
           "3.0.2",
@@ -903,6 +908,7 @@ export class Game {
       normalizePlasmaMelds(this.s);
       normalizeMagnifierWards(this.s);
       normalizeInitialWards(this.s);
+      normalizeInsectMovement(this.s);
       refreshBossPlans(this);
       this.s.version = VERSION;
       if (this.s.battle) {
@@ -1394,6 +1400,7 @@ export class Game {
       movement,
       hp: d.hp,
       count: e.count || 1,
+      ...(e.enemy === "mindHive" ? { openingLarvae: hiveOpeningCount(this.s.field, e) } : {}),
       rotation: d.rotation.map((_, cycle) =>
         this.tell({
           ...d,
@@ -1774,6 +1781,8 @@ export class Game {
     });
   }
   beginBattle(entities, { enemyFirst = false } = {}) {
+    // The Hive's opening swarm always allows a player response before it moves.
+    if (entities.some(e => e.enemy === "mindHive")) enemyFirst = false;
     tutorialBattle(this, entities);
     const s = this.s;
     delete s.checkpoint;
@@ -2988,7 +2997,7 @@ export class Game {
       f.corrode
     ) {
       const targets = f.all
-        ? legalHostiles(b)
+        ? legalHostiles(b).filter(e => !f.excludeIdeons || !e.ideon)
         : [
             f.randomDamage || d.stack === "plasmaMeld"
               ? this.pick(legalHostiles(b))

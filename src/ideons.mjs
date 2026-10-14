@@ -1,9 +1,101 @@
-import { cards, cycle } from "./content.mjs";
+import { cards, cycle, enemies } from "./content.mjs";
 import { compelCard, resetCoveredInsanity } from "./corruptions.mjs";
 import { ideonDefs } from "./depths-content.mjs";
 import { adjacent, offense, stackValue } from "./engine.mjs";
+import { forcedDiscardOutcome, forcedDiscardLabel } from "./card-removal.mjs";
 const top = (s) => s?.at(-1);
 export const livingIdeons = (b) => (b?.ideons || []).filter((e) => e.hp > 0);
+export function normalizeInsectMovement(state) {
+  const b = state.battle;
+  if (b?.enemies.some(o => o.id === "mindHive") && !b.hiveLarvaOpening) {
+    for (const e of b.ideons || []) {
+      if (e.born === 1 && ["runner", "burrower"].includes(e.kind) &&
+          b.enemies.some(o => o.uid === e.owner && o.id === "mindHive")) {
+        const d = ideonDefs.larva;
+        // Preserve surviving HP, status, age, element and position; never add insects.
+        Object.assign(e, { kind: "larva", id: "ideon_larva", name: d.name,
+          damage: d.damage, turnDamage: 0, speed: 1, behavior: "crawl", swap: true, text: d.text });
+      }
+    }
+    b.hiveLarvaOpening = true;
+  }
+  for (const e of state.battle?.enemies || [])
+    if (e.id === "mindHive") {
+      e.signature = enemies.mindHive.signature;
+      e.counter = enemies.mindHive.counter;
+    }
+  for (const e of state.battle?.ideons || [])
+    if (["runner", "burrower", "larva"].includes(e.kind)) {
+      e.swap = true;
+      e.text = ideonDefs[e.kind].text;
+      e.turnDamage = ideonDefs[e.kind].turnDamage;
+    }
+  if (state.checkpoint) normalizeInsectMovement(state.checkpoint);
+}
+export function hiveBrood(e) {
+  const round = 16 - e.hp;
+  return {
+    round,
+    count: e.hp <= 1 ? 0 : round <= 4 ? 1 : round <= 8 ? 2 : round <= 11 ? 4 : round <= 13 ? 6 : 8,
+    columns: round <= 4 ? 1 : round <= 8 ? 2 : round <= 11 ? 3 : 4,
+  };
+}
+const broodElements = ["Fire", "Water", "Earth", "Wind", "Light", "Chaos", "Arcane"];
+const broodKinds = ["burrower", "runner", "burrower", "drone", "runner", "burrower", "runner", "drone"];
+export function layMindEggs(g, owner) {
+  const b = g.s.battle, wave = hiveBrood(owner);
+  const occupied = new Set(livingIdeons(b).map(e => e.slot));
+  const spaces = b.grid.flatMap((_, i) => i % 7 >= 7 - wave.columns && !occupied.has(i) && !b.corruptions?.[i] && !b.biles?.[i] ? [i] : []);
+  const slots = [];
+  b.corruptions ||= {};
+  for (let n = 0; n < wave.count; n++) {
+    if (!spaces.length) { g.log("Mind Hive: no legal space for another Mind Egg."); break; }
+    // Seeded placement includes occupied player spaces. Laying never removes a card.
+    const slot = spaces.splice(Math.floor(g.rand() * spaces.length), 1)[0];
+    if (!owner.broodOrder?.length) {
+      owner.broodOrder = [...broodElements];
+      for (let i = owner.broodOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(g.rand() * (i + 1));
+        [owner.broodOrder[i], owner.broodOrder[j]] = [owner.broodOrder[j], owner.broodOrder[i]];
+      }
+    }
+    const element = owner.broodOrder[(owner.eggsLaid || 0) % broodElements.length];
+    const insect = broodKinds[(owner.eggsLaid || 0) % broodKinds.length];
+    owner.eggsLaid = (owner.eggsLaid || 0) + 1;
+    b.corruptions[slot] = { kind: "egg", uid: g.uid(), source: owner.uid, createdTurn: b.turn, remaining: 1, damage: 8, element, insect };
+    slots.push(slot);
+    g.log(`Mind Hive lays a ${element} Mind Egg in column ${slot % 7 + 1}, row ${Math.floor(slot / 7) + 1}; hatches next Hive turn.`);
+  }
+  if (slots.length) g.present("corruption", { slots, name: "Mind Eggs · hatch next Hive turn" });
+}
+export function hatchMindEgg(g, owner, slot, uid) {
+  const b = g.s.battle, egg = b.corruptions?.[slot];
+  if (!egg || egg.uid !== uid || egg.createdTurn >= b.turn) return;
+  // Another Ideon can move onto the egg. Wait, rather than overlap or lose the insect.
+  if (ideonsAt(b, slot).length) {
+    g.log("Mind Egg waits to hatch: an Ideon occupies its space.");
+    return;
+  }
+  const cover = b.grid[slot];
+  const covered = cover.length > 0;
+  const { discarded, destroyed } = forcedDiscardOutcome(cover);
+  const destination = forcedDiscardLabel(cover);
+  delete b.corruptions[slot];
+  if (cover.length) {
+    b.discard.push(...discarded.map(c => ({ uid: c.uid, id: c.id, upgrade: c.upgrade })));
+    b.destroyed.push(...destroyed);
+    b.grid[slot] = [];
+    b.shields = b.shields.filter(s => s.slot !== slot);
+    const sent = [];
+    if (discarded.length) sent.push(`${discarded.map(c => cards[c.id].name).join(" + ")} to Discard`);
+    if (destroyed.length) sent.push(`${destroyed.map(c => cards[c.id].name).join(" + ")} to Destroyed`);
+    g.log(`Mind Egg sends ${sent.join("; ")}; no damage.`);
+  } else g.log(`Uncovered Mind Egg hatches: ${egg.damage} ${egg.element} damage.`);
+  g.present("eggHatch", { slot, covered, destination, destroyed: destroyed.map(c => c.uid), element: egg.element, name: "Mind Egg hatches · " + (covered ? "cover to " + destination : "8 " + egg.element) });
+  spawnIdeon(g, owner, egg.insect, { slot, element: egg.element });
+  (g.s.stats.mindEggs ||= []).push({ turn: b.turn, slot, element: egg.element, insect: egg.insect, covered, discarded: discarded.map(c => c.uid), destroyed: destroyed.map(c => c.uid), damage: covered ? 0 : egg.damage });
+  if (!covered) b.jobs.unshift({ kind: "hit", name: "Mind Egg", damage: egg.damage, element: egg.element, source: owner.uid, gridSourceSlot: slot });
+}
 export const hostiles = (b) =>
   [...b.enemies, ...livingIdeons(b)].filter((e) => e.hp > 0);
 export const ideonsAt = (b, slot) =>
@@ -52,13 +144,13 @@ export function drainLeeches(g) {
     }
   }
 }
-export function settleIdeons(g) {
+export function settleIdeons(g, { animate = true } = {}) {
   const b = g.s.battle;
   b.ideons ||= [];
   for (const e of b.ideons) {
     const owner = b.enemies.find((o) => o.uid === e.owner);
     if (!owner || owner.hp <= 0) {
-      if (e.hp > 0)
+      if (e.hp > 0 && animate)
         g.present("hit", {
           target: "enemy",
           uid: e.uid,
@@ -81,6 +173,8 @@ export function settleIdeons(g) {
     }
   }
   b.ideons = b.ideons.filter((e) => e.hp > 0);
+  for (const [slot, q] of Object.entries(b.corruptions || {}))
+    if (q.kind === "egg" && !b.enemies.some(e => e.uid === q.source && e.hp > 0)) delete b.corruptions[slot];
 }
 export function spawnIdeon(g, owner, kind, options = {}) {
   const b = g.s.battle,
@@ -145,12 +239,40 @@ export function spawnIdeon(g, owner, kind, options = {}) {
   });
   return e;
 }
+export function hiveOpeningCount(field, owner) {
+  return 8 + (owner.born == null ? 0 : Math.max(0, Math.floor(field.round - owner.born)));
+}
 export function initializeIdeons(g) {
   const b = g.s.battle;
   b.ideons ||= [];
-  for (const e of b.enemies)
+  for (const e of b.enemies) {
     if (e.id === "cnidarian")
       for (let n = 0; n < 3; n++) spawnIdeon(g, e, "tentacle");
+    if (e.id === "mindHive") {
+      b.hiveLarvaOpening = true;
+      const shuffle = (values) => {
+        for (let i = values.length - 1; i > 0; i--) {
+          const j = Math.floor(g.rand() * (i + 1));
+          [values[i], values[j]] = [values[j], values[i]];
+        }
+        return values;
+      };
+      const rows = shuffle([0, 1, 2, 3, 4, 5]);
+      const elements = shuffle([...broodElements]);
+      // One per lane first; each elapsed Field round adds one to the base eight.
+      // No opening card is overwritten and no insect spills outside these columns.
+      for (let n = 0; n < Math.min(18, hiveOpeningCount(g.s.field, e)); n++) {
+        const row = rows[n % 6];
+        const available = slot => !b.grid[slot].length && !ideonsAt(b, slot).length && b.corruptions?.[slot]?.kind !== "hole";
+        let slots = [4, 5, 6].map(col => row * 7 + col).filter(available);
+        if (!slots.length) slots = rows.flatMap(r => [4, 5, 6].map(col => r * 7 + col)).filter(available);
+        if (!slots.length) break;
+        if (slots.length) spawnIdeon(g, e, "larva", {
+          slot: slots[Math.floor(g.rand() * slots.length)], element: elements[n % elements.length],
+        });
+      }
+    }
+  }
 }
 export function cannonPlan(g, owner, t) {
   const b = g.s.battle;
@@ -220,28 +342,35 @@ export function depthsTell(g, e, t) {
     t.name += ` · ${t.cannonPlan.skipped ? "lane occupied; launch withheld" : t.element + " field, row " + (Math.floor(t.cannonPlan.slot / 7) + 1)}`;
   }
   if (t.hiveWave) {
-    t.waveCount =
-      e.hp === 1 ? 0 : e.hp <= 5 ? 2 * (7 - e.hp) : e.hp <= 9 ? 2 : 1;
-    t.waveColumn = e.hp <= 5 ? Math.max(0, e.hp - 2) : e.hp <= 9 ? 4 : 6;
+    const wave = hiveBrood(e);
+    t.waveCount = wave.count;
+    t.waveColumns = wave.columns;
     t.name =
       e.hp === 1
-        ? "Final command · Hive dies afterward"
-        : `Swarm ${t.waveCount} · columns 1–${t.waveColumn + 1} · ${e.hp} rounds remain`;
+        ? "Final command + hatch · Hive dies afterward"
+        : `Hatch + lay ${wave.count} Eggs · rightmost ${wave.columns} column${wave.columns === 1 ? "" : "s"} · ${e.hp} rounds remain`;
   }
   return t;
 }
-function moveIdeon(g, e, to) {
+function canMoveIdeon(g, e, to) {
   const b = g.s.battle,
     from = e.slot;
+  const rowChange = Math.abs(Math.floor(to / 7) - Math.floor(from / 7));
+  const validLane = e.kind === "runner"
+    ? rowChange <= 1 && to % 7 === from % 7 - 1
+    : rowChange === 0;
   if (
-    to < 0 ||
-    Math.floor(to / 7) !== Math.floor(from / 7) ||
+    to < 0 || to >= b.grid.length || !validLane ||
     ideonsAt(b, to).length ||
     b.corruptions?.[to]?.kind === "hole"
   )
     return false;
+  return !b.grid[to].length || e.covers || (e.swap && !b.grid[from].length);
+}
+function moveIdeon(g, e, to) {
+  const b = g.s.battle, from = e.slot;
+  if (!canMoveIdeon(g, e, to)) return false;
   if (b.grid[to].length && !e.covers) {
-    if (!e.swap || b.grid[from].length) return false;
     b.grid[from] = b.grid[to];
     b.grid[to] = [];
     for (const shield of b.shields) if (shield.slot === to) shield.slot = from;
@@ -302,7 +431,7 @@ export function commandIdeon(g, uid) {
     return;
   }
   if (e.behavior === "strike") {
-    hit(e.damage);
+    hit(e.damage + (e.damageGrowth || 0) * (e.age - 1));
     return;
   }
   if (e.behavior === "tentacle") {
@@ -347,14 +476,21 @@ export function commandIdeon(g, uid) {
       e.removed = true;
       return;
     }
-    moveIdeon(g, e, e.slot - e.speed);
+    if (e.kind === "runner") {
+      const choices = [e.slot - 1, e.slot - 8, e.slot + 6]
+        .filter(to => canMoveIdeon(g, e, to));
+      if (choices.length) moveIdeon(g, e, g.pick(choices));
+    } else moveIdeon(g, e, e.slot - e.speed);
+    if (e.turnDamage) hit(e.turnDamage);
   }
 }
 export function scheduleDepths(g, owner, t) {
   const b = g.s.battle,
     jobs = [];
   if (t.commandIdeons)
-    for (const e of livingIdeons(b).filter((e) => e.owner === owner.uid))
+    for (const e of livingIdeons(b)
+      .filter((e) => e.owner === owner.uid)
+      .sort((a, z) => a.slot % 7 - z.slot % 7 || a.slot - z.slot || a.uid - z.uid))
       jobs.push({ kind: "ideonCommand", uid: e.uid });
   if (t.summonIdeon)
     jobs.push({
@@ -364,14 +500,12 @@ export function scheduleDepths(g, owner, t) {
       count: t.summonCount || 1,
     });
   if (t.tentacles) jobs.push({ kind: "tentacleReplace", owner: owner.uid });
-  if (t.hiveWave && t.waveCount)
-    jobs.push({
-      kind: "ideonSpawn",
-      owner: owner.uid,
-      ideon: owner.hp <= 9 || owner.hp % 3 === 0 ? "burrower" : "runner",
-      count: t.waveCount,
-      options: { maxColumn: t.waveColumn },
-    });
+  if (t.hiveWave) {
+    for (const [slot, egg] of Object.entries(b.corruptions || {}))
+      if (egg.kind === "egg" && egg.source === owner.uid && egg.createdTurn < b.turn)
+        jobs.push({ kind: "hiveHatch", owner: owner.uid, slot: Number(slot), uid: egg.uid });
+    if (hiveBrood(owner).count) jobs.push({ kind: "hiveLay", owner: owner.uid });
+  }
   if (t.cannon && !t.cannonPlan.skipped)
     jobs.push({
       kind: "ideonSpawn",
@@ -386,6 +520,14 @@ export function scheduleDepths(g, owner, t) {
 export function depthsJob(g, j) {
   const b = g.s.battle,
     owner = b.enemies.find((e) => e.uid === j.owner && e.hp > 0);
+  if (j.kind === "hiveHatch") {
+    if (owner) hatchMindEgg(g, owner, j.slot, j.uid);
+    return true;
+  }
+  if (j.kind === "hiveLay") {
+    if (owner) layMindEggs(g, owner);
+    return true;
+  }
   if (j.kind === "ideonCommand") {
     commandIdeon(g, j.uid);
     settleIdeons(g);
@@ -410,7 +552,11 @@ export function depthsJob(g, j) {
     if (owner) {
       owner.hp = Math.max(0, owner.hp - 1);
       g.log(`Mind Hive: ${owner.hp} rounds remain.`);
-      settleIdeons(g);
+      if (owner.hp === 0) {
+        const insects = livingIdeons(b).filter(e => e.owner === owner.uid).map(e => e.uid);
+        settleIdeons(g, { animate: false });
+        g.present("hiveDeath", { uid: owner.uid, insects, name: "The Mind Hive falls silent" });
+      } else settleIdeons(g);
       g.checkBattle();
     }
     return true;

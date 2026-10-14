@@ -1,0 +1,26 @@
+{
+  "version": {
+    "rules": "3.0.8",
+    "content": "3.0.8",
+    "observation": 2,
+    "actions": 9
+  },
+  "builds": [
+    {
+      "id": "baseline",
+      "name": "Original balanced carry-in (25 cards)",
+      "cards": null,
+      "upgrades": []
+    }
+  ],
+  "seeds": [
+    73001,
+    73002,
+    73003,
+    73004,
+    73005
+  ],
+  "hp": 70,
+  "equipment": "Gold/Sapphire + Silver/Ruby bracelets, Ring of Patience/Amber Thought, Ring of Embers/Storm Opal, Stone Armor, Sturdy Metal Helmet. Same as prior baseline. No consumables.",
+  "method": "Synthetic coherent S3 carry-ins, not earned campaigns. One unchanged WeightedPolicy, no training/search or tuning after results. Baseline unchanged from previous five tests; other builds have four upgrades each. Save untouched. Separate five-fight diagnostic: baseline only; +25 action score for damaging Drones or repairing Drone eggs. Production AI unchanged."
+}

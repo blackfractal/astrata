@@ -3453,6 +3453,23 @@ header {
   75% { transform: translate(2px, 3px) skewX(4deg); }
 }
 .mine-cover-aura { box-shadow: inset 0 -6px 12px #ff9a2926; }
+.corruption-egg .corruption-motion i,
+.egg-cover-aura i {
+  inset: calc(5% + var(--particle) * 12%);
+  border: 2px solid var(--corruption-color);
+  border-radius: 50%;
+  box-shadow: 0 0 9px var(--corruption-color);
+  animation: egg-pulse 1.5s var(--delay) ease-in-out infinite;
+}
+.corruption-egg .corruption-seal { max-width: 95%; }
+.corruption-egg .corruption-seal small { font-size: 9px; white-space: nowrap; }
+@keyframes egg-pulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.35; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .corruption-egg .corruption-motion i { animation: none; opacity: 0.65; }
+}
 .mine-cover-aura i {
   width: 2px;
   height: 7px;

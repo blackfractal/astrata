@@ -61,6 +61,7 @@ export class WeightedPolicy {
                   ? 18
                   : -8
                 : 2;
+          if (q?.kind === "egg") score += d?.focus === 0 || d?.limit === 0 ? 12 : 5;
           if (
             q?.kind === "hypnosis" &&
             (d?.effects.damage || d?.effects.shield || d?.effects.ward)
@@ -81,7 +82,7 @@ export class WeightedPolicy {
           const hazard =
             a.repairKind === "bile" ? b.biles?.[slot] : b.corruptions?.[slot];
           score +=
-            hazard?.kind === "mine" ? 25 : hazard?.kind === "bile" ? 22 : 18;
+            hazard?.kind === "mine" ? 25 : hazard?.kind === "egg" ? 26 : hazard?.kind === "bile" ? 22 : 18;
           why = "Repair an eligible nearby Corruption with the companion.";
         }
         if (
@@ -515,7 +516,7 @@ export class WeightedPolicy {
         }
         if (f.all)
           damage *=
-            b.enemies.filter((e) => !e.hive).length + (b.ideons || []).length;
+            b.enemies.filter((e) => !e.hive).length + (f.excludeIdeons ? 0 : (b.ideons || []).length);
         if (f.concord) damage *= 3;
         n +=
           damage * w.damage +
