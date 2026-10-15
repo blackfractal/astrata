@@ -88,7 +88,7 @@ for (const kind of ["guide", "cannon", "map", "intro", "victory"]) {
         path: "reports/screenshots/depths/guide-introduction.png",
       });
       await p
-        .getByRole("button", { name: "Enter the Lucent Depths", exact: true })
+        .getByRole("button", { name: "Enter the Lucent Grotto", exact: true })
         .click();
       await p.locator(".tile.barrier").first().waitFor();
     } else if (kind === "victory") {
@@ -98,7 +98,7 @@ for (const kind of ["guide", "cannon", "map", "intro", "victory"]) {
       );
       assert.match(
         await p.locator("h1").textContent(),
-        /Lucent Depths|Complete/,
+        /Lucent Grotto|Complete/,
       );
     } else if (kind === "map") {
       await p.locator(".tile.barrier").first().waitFor();

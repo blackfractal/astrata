@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.212
+# Astrata: Game Design Document v4.214
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -181,6 +181,8 @@ Avoiding enemies while farming Gold, Items, and Taverns must not be a winning st
 In physical play this is a token placed on the enemy card. Restlessness makes Skittish enemies harder to catch and Sentinels a growing threat, so the Field slowly pushes the player toward fighting.
 
 ### 2.9 Events and the Item Deck
+**Stratum eligibility applies to the initial Event Deck and every later draw/refill.** Stratum 3 events, including A Light in the Chitin, The Listening Stone and The Divided Passage, cannot appear in S1 or S2. Existing saved event queues must obey the same restriction while preserving the order of eligible events. Events already opened or resolved are not retroactively replaced.
+
 **Events** work like Slay the Spire events: a card from the Stratum's **Event Deck** is drawn and anything can happen. Examples of the range:
 
 * A forced enemy encounter.
@@ -1126,9 +1128,11 @@ Use deterministic, pulsing click-to-advance explanations and forced actions for 
 Use one continuous **Patient Spoolkeeper** encounter, starting with 100 HP. He waits through the guided steps; when independent play begins, preserve his identity and remaining HP, the player's HP, grid, hand, draw/discard piles, Corruptions, resources and Elves repair allowance. Do not reset the fight or replace him with a 40-HP opponent. The practice Grimoire is available from the beginning; the guided comparisons add their authored upgraded Blast and Water Blast. Basic Elves remain basic. Independent six-turn cycle: **7 Arcane damage + telegraph Nausea → apply Nausea (no attack) → 7 Arcane + telegraph Anger → apply Anger (no attack) → 7 Arcane + telegraph Memory Hole → apply Hole (no attack)**, then repeat. No opening warning, random Corruption choice or damage escalation; maximum five active Corruptions. The player always gets a full response turn between a warning and application. Only use the three taught Corruptions. Show the independent introduction once, then optional gentle idle hints. Explain Tools + 100 Gold at a Tavern as the only Elves upgrade route, with Tools consuming a Satchel space until spent. Older already-independent saves adopt the cycle and cap while preserving HP/progress and any pending warning; do not heal an already injured legacy 40-HP opponent. Retry snapshots use the updated cycle. Completion and replay availability persist.
 
 
-### 10.13 Playable Stratum 3 — The Lucent Depths (3.0.0)
+### 10.13 Playable Stratum 3 — The Lucent Grotto (3.0.0)
 
-After S2's Archon rewards, visit a transition Tavern (50-HP paid recovery), then explicitly enter the Lucent Depths and receive the Lucid Guide with its story. The build now ends after the third Archon and its reward choices. Existing cumulative card pools remain; S3 Taverns guarantee at least two S3 non-companion Common/Rare cards. The S3 tutorial remains deferred until encounter playtests are reviewed, following Jonathan's encounters-first instruction. No level viewer is introduced.
+**Naming direction (2026-10-15):** Stratum 3 is **The Lucent Grotto**. Preserve its alien crystal-cavern setting, but describe the journey as continuing onward, not descending into deeper levels; Stratum 4 is **The Apex**.
+
+After S2's Archon rewards, visit a transition Tavern (50-HP paid recovery), then explicitly enter the Lucent Grotto and receive the Lucid Guide with its story. The build now ends after the third Archon and its reward choices. Existing cumulative card pools remain; S3 Taverns guarantee at least two S3 non-companion Common/Rare cards. The S3 tutorial remains deferred until encounter playtests are reviewed, following Jonathan's encounters-first instruction. No level viewer is introduced.
 
 **Ideons.** Enemy-controlled cards occupy Mind Grid spaces and identify their owner with a portrait and linked hover highlight. Normal attacks can target any Ideon; all-enemy attacks include them. They provide no player adjacency or Attunement. They use ordinary elemental damage and status immunities, except explicit individual traits. All vanish on owner death. A guardian protects only its owner, including from area attacks; an area activation selects eligible targets at activation start, so killing a guardian does not add its previously protected owner to that same wave. Ideons can still be attacked through other guardians. Hollow Sentinel takes half elemental attack damage and 50% extra Arcane damage.
 

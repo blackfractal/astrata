@@ -1,6 +1,6 @@
 export const STRATA = {
   3: {
-    name: "The Lucent Depths",
+    name: "The Lucent Grotto",
     early: ["glassBrood", "nerveWeaver", "paleGrazer", "echoPolyp"],
   },
   1: { name: "The Whispering Weald", early: ["bat", "beetle", "moth", "wisp"] },

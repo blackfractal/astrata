@@ -1,13 +1,13 @@
-# Stratum 3 planning — The Lucent Depths / Ideons
+# Stratum 3 planning — The Lucent Grotto / Ideons
 
 Playable draft 0.47 · 2026-10-14 · Jonathan / Codex
 
-Companion to [the main design](astrata_design.md) and [Stratum 2 planning](stratum_2_planning.md). Jonathan selected **The Lucent Depths** as the Stratum name on 2026-10-12. Jonathan authorized implementation on 2026-10-12. Package 3.0.0 now implements the first playable S3 encounters. The implementation snapshot below takes precedence for this build; the later discussion sections preserve earlier proposals and open alternatives for review. The deterministic S3 tutorial remains deferred under the encounters-first development order.
+Companion to [the main design](astrata_design.md) and [Stratum 2 planning](stratum_2_planning.md). Jonathan renamed Stratum 3 **The Lucent Grotto** on 2026-10-15. Keep the alien crystal-cavern setting, but avoid language implying descent: the journey continues toward Stratum 4, **The Apex**. Jonathan authorized implementation on 2026-10-12. Package 3.0.0 now implements the first playable S3 encounters. The implementation snapshot below takes precedence for this build; the later discussion sections preserve earlier proposals and open alternatives for review. The deterministic S3 tutorial remains deferred under the encounters-first development order.
 
 
 ## Implemented snapshot — 3.0.0
 
-The Lucent Depths now follows the second transition Tavern. Lucid Guide is granted explicitly on entry, with its story. There are six Motes, three Eidolons, three Archons, eight Ideon kinds, five player cards, three events and thirty new illustrations. Art uses indigo/teal alien crystal caverns, organic ivory/chitin enemies and a candlelit meditation field. No altitude viewer, Tower rules or general Druid movement cards were added.
+The Lucent Grotto now follows the second transition Tavern. Lucid Guide is granted explicitly on entry, with its story. There are six Motes, three Eidolons, three Archons, eight Ideon kinds, five player cards, three events and thirty new illustrations. Art uses indigo/teal alien crystal caverns, organic ivory/chitin enemies and a candlelit meditation field. No altitude viewer, Tower rules or general Druid movement cards were added.
 
 See [the implementation report](../reports/stratum3-build-report.md) for exact choices made from the open proposals, limitations and validation. Runtime definitions are in `src/depths-content.mjs`. Main design §10.13 is the current rules summary. All first-pass numbers are balance candidates rather than claims of final tuning.
 
@@ -46,15 +46,15 @@ The progression is from **disrupting spaces** to **occupying the grid with activ
 
 ## Setting and overworld direction
 
-**Jonathan's direction:** S3 should look substantially different from earlier Strata. Candidate settings include an underground alien landscape, crystal cave or ice cave, with a distinct color scheme. The Stratum name **The Lucent Depths** is approved; detailed art direction remains to refine.
+**Jonathan's direction:** S3 should look substantially different from earlier Strata. Candidate settings include an alien cavern landscape, crystal cave or ice cave, with a distinct color scheme. The Stratum name **The Lucent Grotto** is approved; detailed art direction remains to refine.
 
-**Art recommendation, not approved:** combine alien caverns and crystalline growths in **The Lucent Depths** (approved name): dark indigo rock, pale cyan mineral light, violet shadows and occasional warm amber organisms. Floating or suspended jellyfish-like creatures suit the Cnidarian; porous crystalline colonies suit the Mind Hive; an ancient crystal focusing mechanism suits the cannon. Preserve the established painterly asset style and the player's candlelit meditation space. Keep bright elemental/status cues readable over quieter, darker battlefield surfaces. A literal ice cave remains an alternative, not an added ice/sliding mechanic.
+**Art recommendation, not approved:** combine alien caverns and crystalline growths in **The Lucent Grotto** (approved name): dark indigo rock, pale cyan mineral light, violet shadows and occasional warm amber organisms. Floating or suspended jellyfish-like creatures suit the Cnidarian; porous crystalline colonies suit the Mind Hive; an ancient crystal focusing mechanism suits the cannon. Preserve the established painterly asset style and the player's candlelit meditation space. Keep bright elemental/status cues readable over quieter, darker battlefield surfaces. A literal ice cave remains an alternative, not an added ice/sliding mechanic.
 
 ### Enemy theme and continuity with Astrata
 
 **Jonathan's thematic direction:** S1 has a forest theme, S2 has a steampunk theme, and S3 should explore an **eldritch-horror / alien** enemy theme while remaining recognizably part of Astrata. Apply this to the enemy roster as well as the landscape. Specific creature treatments below are recommendations, not approved designs or a new canonical origin story.
 
-**Recommended visual vocabulary:** translucent membranes, chitin, mineral-grown anatomy, suspended organs, strange symmetries, watchful sensory structures and restrained bioluminescence. Use distinct silhouettes and body plans; do not make every enemy a tentacled blob. Preserve Astrata's painterly rendering, detailed materials, magical elemental colors and readable card composition. Convey otherworldliness through anatomy and behavior while maintaining the existing art style. Regional lighting/palette should connect the creatures to the Lucent Depths without making every creature the same color.
+**Recommended visual vocabulary:** translucent membranes, chitin, mineral-grown anatomy, suspended organs, strange symmetries, watchful sensory structures and restrained bioluminescence. Use distinct silhouettes and body plans; do not make every enemy a tentacled blob. Preserve Astrata's painterly rendering, detailed materials, magical elemental colors and readable card composition. Convey otherworldliness through anatomy and behavior while maintaining the existing art style. Regional lighting/palette should connect the creatures to the Lucent Grotto without making every creature the same color.
 
 | Encounter concept | Suggested S3 treatment |
 | :--- | :--- |
@@ -268,7 +268,7 @@ A jellyfish-like monster creates **Tentacle Ideons** that hunt the player's Alli
 
 A giant cannon launches energy balls across the Mind Grid toward the player. Small diamond-shaped projectile visuals are suggested. The balls emit moving areas of influence whose colors indicate different rules. They can be attacked and stopped. Every launch includes a separate normally defended attack; surviving bullets eventually strike with Pierce. The boss name is approved; HP, intrinsic element and exact projectile stats remain open; this is future planning, not implementation.
 
-**Approved name and theme (Jonathan, 2026-10-12): The Refraction Cannon.** Keep the explicit weapon identity within the Lucent Depths' outer-horror, alienlike aesthetic and Astrata's painterly world. Suggested treatment: an unsettling grown weapon with organic/mineral lenses, chitinous supports and a luminous firing aperture. Its silhouette should communicate a cannon while its anatomy feels otherworldly. This is not S2-style steampunk artillery; exact anatomy and composition remain art-development choices. Earlier Engine/Prismatic/Thoughtlance names are superseded.
+**Approved name and theme (Jonathan, 2026-10-12): The Refraction Cannon.** Keep the explicit weapon identity within the Lucent Grotto' outer-horror, alienlike aesthetic and Astrata's painterly world. Suggested treatment: an unsettling grown weapon with organic/mineral lenses, chitinous supports and a luminous firing aperture. Its silhouette should communicate a cannon while its anatomy feels otherworldly. This is not S2-style steampunk artillery; exact anatomy and composition remain art-development choices. Earlier Engine/Prismatic/Thoughtlance names are superseded.
 
 **Jonathan's spacing direction:** arrange normal firing/movement so bullets ordinarily do not overlap. Cards that prevent Ideon movement are a possible future mechanic; stopping a bullet could cause later bullets/fields to catch up and make the situation worse. No immobilizing card has been approved or specified here. Distinguish overlapping projectile centers from overlapping influence fields: separate spaces alone do not prevent incompatible field restrictions.
 

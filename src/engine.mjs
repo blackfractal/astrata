@@ -1084,7 +1084,7 @@ export class Game {
     };
     this.s.eventDeck = this.shuffle(
       events.filter((e) => e.id !== "shrine").map((e) => e.id),
-    );
+    ).filter(id => this.eventPool().includes(id));
     this.s.itemDeck = this.shuffle([
       ...Object.keys(items).filter((id) => !items[id].fieldOnly),
       ...Object.keys(cards)
@@ -1338,6 +1338,19 @@ export class Game {
         .map((c) => c.id),
     ).slice(0, rare ? 2 : 3);
     return rare ? [...common, ...this.rareOffer(1, reward)] : common;
+  }
+  eventPool() {
+    const stratum = this.s.stratum || 1;
+    return events.filter(e => e.id !== "shrine" &&
+      (stratum >= 3 ? e.stratum === 3 : !e.stratum || e.stratum === stratum))
+      .map(e => e.id);
+  }
+  drawEvent() {
+    const pool = this.eventPool(), allowed = new Set(pool);
+    // Old saves can contain future-Stratum events. Keep the remaining legal
+    // order without consuming RNG; only refill after those entries are spent.
+    this.s.eventDeck = (this.s.eventDeck || []).filter(id => allowed.has(id));
+    return this.drawDeck("eventDeck", pool);
   }
   drawDeck(key, source) {
     let a = this.s[key];
@@ -1636,18 +1649,7 @@ export class Game {
       if (e.type === "Event") {
         s.event = s.quest
           ? "shrine"
-          : this.drawDeck(
-              "eventDeck",
-              events
-                .filter(
-                  (x) =>
-                    x.id !== "shrine" &&
-                    (s.stratum >= 3
-                      ? x.stratum === 3
-                      : !x.stratum || x.stratum === s.stratum),
-                )
-                .map((x) => x.id),
-            );
+          : this.drawEvent();
         s.quest = false;
         s.mode = "event";
         return;
@@ -3611,7 +3613,7 @@ export class Game {
       return actions;
     }
     if (s.mode === "depthsIntro") {
-      add("enterDepths", "Enter the Lucent Depths", {}, { progress: 1 });
+      add("enterDepths", "Enter the Lucent Grotto", {}, { progress: 1 });
       return actions;
     }
     if (s.mode === "loomIntro") {

@@ -58,6 +58,8 @@ for (const name of [
   "storm-column-report.md",
   "cannon-field-label-ui.json",
   "cannon-travel-report.md",
+  "event-stratum-report.md",
+  "event-stratum-tests.txt",
   "cannon-volley-report.md",
   "cannon-volley-tests.txt",
   "cannon-volley-ui.json",

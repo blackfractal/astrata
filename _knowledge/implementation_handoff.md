@@ -1,3 +1,15 @@
+## Latest: Lucent Grotto naming — 2026-10-15
+
+3.0.31/design4.214/S3draft0.48/BUILD_LOG201. S3 display name is The Lucent Grotto; entry, introduction, victory, README/design agree. Avoid implying descent before S4 The Apex. Internal depths IDs/assets unchanged.630 tests pass; app/ZIP refreshed. Historical records/frozen sources unchanged. No live save, commit or push.
+
+Seed1072600984 proof is in _knowledge/run-studies/seed-1072600984:1385 legal actions from fresh3.0.30 to S3victory4HP; Hart58→3, Trickster24→16, Hive14→4. Read README for pre-Hart coaching and reproducibility.
+
+## Latest: S3 events excluded from earlier Strata — 2026-10-15
+
+3.0.30/design4.213/BUILD_LOG200. A Light in the Chitin leakedintoS1 because initialeventDeck hadallregistered events andStratumfilteronlyappliedonrefill. Shared eventPool + drawEvent nowfilterinitialqueue andsavedqueuebeforedraw. Legalorder/RNGpreserved(noreshuffleuntilvalidqueueempty); initialshuffleRNGconsumptionunchanged. S3eventsremainS3; shrineunchanged. Opened/resolvedeventnotretroactivelychanged,liveprofileuntouched.630tests pass;appZIPrefreshed;nocommit/push. reports/event-stratum-report.md.
+
+**Current-board coaching:** read `%APPDATA%/astrata/runs/<uiMeta.runId>/latest.json`, NOT `save.json` alone: normal battle saves intentionally store the opening checkpoint. Latest archive omits `history`/`log`; restore those as empty arrays before simulating a detached copy. Earlier Fire Wolf advice accidentally read turn1 while Jonathan was onturn2; corrected. Never mutate theliveprofileforadvice.
+
 ## Latest: Cannon volleys, HP, glare and retest — 2026-10-15
 
 3.0.29/design4.212/S3draft0.47/BUILD_LOG199. Cannon300HPnewfights; existingbattleHPpreserved. Userclarified +1bullet each15completedactions, maximum5:1–15one,16–30two,31–45three,46–60four,61+five. Ordinarydirectattacknotmultiplied. Purify/Finalcountbutnolaunch. Simultaneousvolleyframes; preferseparatedfields, permitmulti-fieldoverlapneededon6rows; distinctcenters/noHole/withholdonlyunfitentryshots. First201movesrepeat3.0.28opening;manualadaptationwonT18at70HP,0damage/healing,242actions,no rewinds,replayverified. T17MagnifieractivationblockedLightfield;1startingWard+16WaterWard+9TitanHP savedgear12forChaosarrival. Titan3HPend. Finish27HPbossTransmuteSaplingLight6+Solitude15+Storm7. Stillflawlessstrongdeck;no claim3+volleysbalanced(combatended18). UserrequestedFinalBlastbrightglare:largercoloredhalo,fuzzybloom,smallwhite/yellowcore,readabledamage,allhops/heldorb/impacts; reducedmotionstatic/fade.626tests;packaged2/3/5volleys and3glarecases. reports/cannon-volley-report.md;fullreplayreports/codex-cannon-3.0.29. Sourcefreezepriorcosmeticglare,finalenginealsoverified. Liveprofileuntouched;appZIPrebuilt;nocommit/push.
