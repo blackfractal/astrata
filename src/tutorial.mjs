@@ -284,7 +284,7 @@ defend("ward-block", "ward", 18, "Choose Ward to absorb the 3-damage attack.");
 note(
   "ward-persists",
   "8 Ward remains",
-  "Ward kept its remaining 8 ward value into this round. You do not have to activate it every turn. Depleted: fully depleted wards cannot activate.",
+  "Ward kept its remaining 8 ward value into this round. You do not have to activate it every turn. Depleted: cannot activate",
   '[data-slot="18"]',
 );
 place(

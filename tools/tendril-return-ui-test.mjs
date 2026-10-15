@@ -1,0 +1,35 @@
+import {_electron as electron,expect} from '@playwright/test';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {Game} from '../src/engine.mjs';
+import {spawnIdeon,settleIdeons} from '../src/ideons.mjs';
+const g=new Game(735);g.s.stratum=3;g.s.equipment={};
+g.beginBattle([{uid:900,enemy:'cnidarian',restless:0}]);delete g.s.checkpoint;
+const b=g.s.battle;b.grid=Array.from({length:42},()=>[]);b.ideons=[];b.phase='activate';b.jobs=[];
+const c=g.instance(g.newCard('blast'));b.grid[17]=[c];
+const e=spawnIdeon(g,b.enemies[0],'tentacle',{slot:20});
+g.damageEnemy(e,100,'Arcane',{card:c.uid});settleIdeons(g);
+spawnIdeon(g,b.enemies[0],'tentacle',{slot:28});
+const ally=g.instance(g.newCard('familiar'));b.grid[30]=[ally];
+const profile=path.resolve('.tmp/tendril-return-ui-'+Date.now());await fs.mkdir(profile,{recursive:true});
+await fs.writeFile(profile+'/save.json',JSON.stringify(g.s));
+await fs.writeFile(profile+'/settings.json',JSON.stringify({width:1280,fast:true}));
+const app=await electron.launch({executablePath:path.resolve('release/Astrata/Astrata.exe'),args:['--user-data-dir='+profile]});
+const errors=[];
+try{
+ const p=await app.firstWindow();p.on('pageerror',e=>errors.push(e.message));
+ await p.locator('[data-ui="continue"]').click();
+ const warning=p.locator('[data-slot="17"] .tendril-return-mark');
+ await expect(warning).toHaveText('Tendril · 1 turn');
+ await expect(p.locator('[data-slot="17"]')).toHaveClass(/corruption-fixed/);
+ assert.match(await warning.getAttribute('data-tooltip'),/one full player turn/i);
+ assert.match(await p.locator('[data-ideon="tentacle"]').getAttribute('data-tooltip'),/then Tendril strike: 4 Water against Familiar/);
+ await fs.mkdir('reports/screenshots/tendrils',{recursive:true});
+ await p.screenshot({path:'reports/screenshots/tendrils/return-warning.png'});
+ await p.emulateMedia({reducedMotion:'reduce'});
+ await expect(warning).toBeVisible();
+ assert.deepEqual(errors,[]);
+ await fs.writeFile('reports/tendril-return-ui.json',JSON.stringify({fixedWarning:true,fullTurnReprieve:true,pursuitDescription:true,reducedMotionVisible:true,isolatedProfile:profile,errors},null,2));
+ console.log('Tendril return warning and pursuit UI verified');
+}finally{await app.close();}

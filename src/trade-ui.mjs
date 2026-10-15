@@ -1,4 +1,4 @@
-import { cards, items } from "./content.mjs";
+import { cards, items, cardText } from "./content.mjs";
 import { tradeAssets } from "./engine.mjs";
 const slots = {
   wrist1: "Left wrist",
@@ -12,7 +12,7 @@ const slots = {
 function details(ctx, x, kind) {
   const d = (kind === "item" ? items : cards)[x.id];
   const gem = kind === "item" && ctx.o.inventory.find((g) => g.uid === x.gem);
-  return `<p>${ctx.text(d.text)}</p>${x.upgrade && d.upgrade ? `<p>Upgrade: ${ctx.text(d.upgrade.text)}</p>` : ""}${kind === "card" ? `<p>${d.element} · ${d.type} · ${d.focus} Focus · ${d.channel} Channel · ${d.limit < 0 ? "∞" : d.limit} activations${x.upgrade ? " · Upgraded" : ""}</p>` : ""}${gem ? `<p class="trade-gem">${items[gem.id].name}: ${ctx.text(items[gem.id].text)}<br>The socketed Gem is given away with this Setting.</p>` : ""}`;
+  return `<p>${ctx.text(kind === "card" ? cardText(d, ctx.o.stratum) : d.text)}</p>${x.upgrade && d.upgrade ? `<p>Upgrade: ${ctx.text(d.upgrade.text)}</p>` : ""}${kind === "card" ? `<p>${d.element} · ${d.type} · ${d.focus} Focus · ${d.channel} Channel · ${d.limit < 0 ? "∞" : d.limit} activations${x.upgrade ? " · Upgraded" : ""}</p>` : ""}${gem ? `<p class="trade-gem">${items[gem.id].name}: ${ctx.text(items[gem.id].text)}<br>The socketed Gem is given away with this Setting.</p>` : ""}`;
 }
 function tradeChooser(ctx, index) {
   if (ctx.busy()) return;

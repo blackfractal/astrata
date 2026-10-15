@@ -1,3 +1,4 @@
+import { areaHits } from "./area-targets.mjs";
 import {
   livingIdeons,
   hostiles,
@@ -339,7 +340,7 @@ export function damageBonusNeighbors(b, c, i) {
       hasDirectDamageActivation(top(b.grid[j])),
   );
 }
-export function cardPower(b, c, i) {
+export function cardPower(b, c, i, target = null) {
   const d = cards[c.id],
     f = cardEffects(c);
   let n = f.hpDamage
@@ -347,6 +348,10 @@ export function cardPower(b, c, i) {
     : f.damage
       ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
       : 0;
+  if (f.nearDamage && target?.ideon && Number.isInteger(target.slot) &&
+      Math.abs(i % MIND_COLUMNS - target.slot % MIND_COLUMNS) +
+      Math.abs(Math.floor(i / MIND_COLUMNS) - Math.floor(target.slot / MIND_COLUMNS)) <= f.damageRadius)
+    n = f.nearDamage + (c.upgrade ? d.upgrade?.bonus || 0 : 0);
   if (c.id === "plasma")
     n = plasmaContributions(b, c, i).reduce((a, n) => a + n, 0);
   if (f.row)
@@ -798,7 +803,13 @@ function normalizeInitialWards(s) {
 export class Game {
   constructor(seed = Date.now(), saved = null) {
     if (saved) {
+      // 3.0 patch releases share the save schema and the migrations below.
+      // Accept released patches through this build, never unknown future saves.
+      const currentPatch = /^3\.0\.(0|[1-9]\d*)$/.exec(VERSION.rules);
+      const savedPatch = /^3\.0\.(0|[1-9]\d*)$/.exec(saved.version?.rules || "");
+      const compatiblePatch = currentPatch && savedPatch && Number(savedPatch[1]) <= Number(currentPatch[1]);
       if (
+        !compatiblePatch &&
         ![
           VERSION.rules,
           "3.0.7",
@@ -2291,6 +2302,8 @@ export class Game {
         if (e) {
           if (e.hive) continue;
           e.hp -= j.damage;
+          if (e.kind === "tentacle" && e.hp <= 0)
+            e.killedFromSlot = e.statusOrigins?.[j.status] ?? e.slot;
           this.present("hit", {
             target: "enemy",
             uid: e.uid,
@@ -2541,6 +2554,7 @@ export class Game {
       ...detail,
       element: h.element,
       attackPath: true,
+      attackVisual: !h.lastImpact ? h.attackVisual : null,
       collapseOrigins:
         !h.lastImpact && h.collapseOrigins ? h.collapseOrigins : null,
       pathFrom,
@@ -2791,6 +2805,10 @@ export class Game {
       return false;
     }
     e.status[status] += value;
+    if (e.kind === "tentacle" && sourceSlot != null) {
+      e.statusOrigins ||= {};
+      e.statusOrigins[status] = sourceSlot;
+    }
     this.present("status", {
       target: "enemy",
       uid: e.uid,
@@ -2830,6 +2848,12 @@ export class Game {
     e.guard -= guard;
     d -= guard;
     e.hp -= d;
+    if (e.kind === "tentacle" && e.hp <= 0) {
+      const slot = sourceItem == null
+        ? b.grid.findIndex(stack => stack.some(c => c.uid === activation.card))
+        : -1;
+      e.killedFromSlot = slot >= 0 ? slot : e.slot;
+    }
     this.present("hit", {
       target: "enemy",
       uid: e.uid,
@@ -2997,7 +3021,7 @@ export class Game {
       f.corrode
     ) {
       const targets = f.all
-        ? legalHostiles(b).filter(e => !f.excludeIdeons || !e.ideon)
+        ? legalHostiles(b).filter(e => areaHits(f, i, e))
         : [
             f.randomDamage || d.stack === "plasmaMeld"
               ? this.pick(legalHostiles(b))
@@ -3043,7 +3067,7 @@ export class Game {
         const old = e.hp;
         let n = f.randomDamage
           ? 1 + Math.floor(this.rand() * f.randomDamage)
-          : this.cardPower(c, i);
+          : cardPower(b, c, i, e);
         if (f.ideonDouble && e.ideon) n *= 2;
         if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus);
         if (n) {
@@ -4197,7 +4221,8 @@ export class Game {
                           chargedBurnAll: f.burnAll || 0,
                         }
                       : f),
-                    damage: charging ? 0 : this.cardPower(c, i),
+                    damage: charging ? 0 : cardPower(b, c, i,
+                      hostiles(b).find(e => e.uid === (ex.target ?? target))),
                     ...Object.fromEntries(
                       ["burn", "poison", "corrode"]
                         .filter((k) => f[k])

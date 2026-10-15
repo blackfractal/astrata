@@ -45,6 +45,7 @@ export function discover(collection, state, at = new Date().toISOString()) {
   if (!state) return collection;
   for (const key of ["cards", "enemies", "equipment", "achievements"])
     collection[key] ||= {};
+  collection.highestStratum = Math.max(collection.highestStratum || 1, state.stratum || 1);
   const seen = (kind, id) => {
     const catalog = { cards, enemies, equipment: items }[kind];
     if (catalog[id]) collection[kind][id] ||= { firstSeenAt: at };

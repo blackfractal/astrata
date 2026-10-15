@@ -154,26 +154,26 @@ test("Ideons require empty legal spaces, but cannon bullets explicitly cover car
     false,
   );
 });
-test("Needle can attack any Ideon and does double damage, including distant columns", () => {
+test("Needle can attack distant Ideons for eight damage", () => {
   const g = arena(),
     b = g.s.battle,
     c = put(g, "lucidNeedle", 41),
     e = spawnIdeon(g, b.enemies[0], "burrower", { slot: 0 });
   b.phase = "activate";
   act(g, "activate", { slot: 41, target: e.uid });
-  assert.equal(e.hp, 4);
+  assert.equal(e.hp, 8);
   assert.equal(c.used, 1);
 });
-test("all-enemy attacks hit Ideons, guardian protects only its own owner", () => {
+test("Eclipse hits nearby Ideons, guardian protects only its own owner", () => {
   const g = arena(),
     b = g.s.battle;
   const guard = spawnIdeon(g, b.enemies[0], "guardian", { slot: 6 });
   b.enemies.push({ ...b.enemies[0], uid: 901, hp: 48 });
   const other = b.enemies[1];
-  put(g, "eclipse", 0).charge = 2;
+  put(g, "eclipse", 4).charge = 2;
   b.phase = "activate";
   const hp = b.enemies[0].hp;
-  act(g, "activate", { slot: 0 });
+  act(g, "activate", { slot: 4 });
   assert.equal(b.enemies[0].hp, hp);
   assert.ok(other.hp < 48);
   assert.ok(guard.hp < guard.maxHp);
@@ -249,6 +249,7 @@ test("Guide moves and attacks as one activation, then a different card consumes 
     b = g.s.battle;
   const guide = put(g, "lucidGuide", 0),
     e = spawnIdeon(g, b.enemies[0], "burrower", { slot: 2 });
+  e.hp = e.maxHp = 29;
   put(g, "lucidNeedle", 14);
   b.phase = "activate";
   act(g, "activate", { slot: 0, destination: 1, target: e.uid });
@@ -330,11 +331,13 @@ test("Cnidarian replacement tier grows by deaths and owner cleanup causes no rep
     g.checkBattle();
   }
   assert.equal(o.tentacleKills, 4);
-  assert.equal(o.pendingTentacles, 5);
+  assert.equal(b.tendrilReturns.length, 5);
+  assert.ok(b.tendrilReturns.every(q => q.due === b.turn + 1));
   o.hp = 0;
   g.checkBattle();
   assert.equal(b.ideons.length, 0);
-  assert.equal(o.pendingTentacles, 5);
+  assert.equal(b.tendrilReturns.length, 0);
+  assert.equal(o.tentacleKills, 4);
 });
 test("Hive ignores damage/status and countdown reaches victory even on a full grid", () => {
   const g = arena("mindHive"),

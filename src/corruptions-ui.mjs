@@ -120,8 +120,17 @@ export function paintCorruptions(o, app) {
   const influences = [];
   const influence = (from, to, kind) => {
     const x = point(from), y = point(to);
-    if (!x || !y || from === to) return;
-    influences.push(`<path class="corruption-influence ${kind}-link" data-influence-from="${from}" data-influence-to="${to}" d="M ${x[0]} ${x[1]} L ${y[0]} ${y[1]}"/>`);
+    if (!x || !y || from === to || !b.grid[to]?.length) return;
+    const dx = y[0] - x[0], dy = y[1] - x[1], length = Math.hypot(dx, dy);
+    const at = (t, offset = 0) => `${(x[0] + dx * t - dy / length * offset).toFixed(2)} ${(x[1] + dy * t + dx / length * offset).toFixed(2)}`;
+    const paths = Array.from({ length: kind === "nausea" ? 4 : 2 }, (_, n) => {
+      const bend = (n % 2 ? -1 : 1) * (6 + n * 3);
+      const d = kind === "nausea"
+        ? `M ${at(0)} C ${at(.17, bend)} ${at(.33, bend)} ${at(.5)} C ${at(.67, -bend)} ${at(.83, -bend)} ${at(1)}`
+        : `M ${at(0)} L ${at(.18, bend)} ${at(.34, -bend)} ${at(.46, bend * .3)} ${at(.59, -bend)} ${at(.76, bend)} ${at(1)}`;
+      return `<path class="corruption-strand" style="--strand:${n}" d="${d}"/>`;
+    }).join("");
+    influences.push(`<g class="corruption-influence ${kind}-link" data-influence-from="${from}" data-influence-to="${to}">${paths}</g>`);
   };
   for (const [key, q] of Object.entries(b.corruptions || {})) {
     const from = Number(key);

@@ -6,8 +6,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "3.0.11",
-  content: "3.0.11",
+  rules: "3.0.20",
+  content: "3.0.20",
   observation: 2,
   actions: 9,
 };
@@ -18,7 +18,7 @@ export const TRAVELER_STORIES = [
   "The Traveler keeps the chair beside him empty. 'I used to be afraid she would arrive after I'd gone. Now I'm afraid I'll stop expecting her. Just one more night. Could you spare 15 Gold?'",
 ];
 export const DEPLETED_WARD_TEXT =
-  "Depleted: fully depleted wards cannot activate.";
+  "Depleted: cannot activate";
 export const ENEMY_STATUS_IMMUNITY = {
   Water: "burn",
   Fire: "poison",
@@ -489,7 +489,7 @@ card(
   2,
   2,
   { damage: 7, all: true, excludeIdeons: true },
-  "Deal 7 to all main enemies. Does not hit Ideons.",
+  "Deal 7 to all main enemies.",
   { rarity: "rare" },
 );
 card(
@@ -611,8 +611,8 @@ card(
   "Object",
   2,
   3,
-  { damage: 30, all: true },
-  "Charge 2. When fully charged, spend a separate activation to deal 30 to all enemies, then reset to 0.",
+  { damage: 30, all: true, ideonRadius: 2 },
+  "Charge 2. When fully charged, spend a separate activation to deal 30 to all main enemies, then reset to 0.",
   { charge: 2, rarity: "legendary" },
 );
 card(
@@ -1862,3 +1862,10 @@ for (const [kind, d] of Object.entries(ideonDefs))
     counter: "Attack this Ideon, or defeat its owner.",
     movement: "Sentinel",
   };
+
+// Early cards retain their availability; reveal later-mechanic clauses in S3.
+cards.eclipse.ideonText = "Also hits Ideons within a 2-space diamond (up to two north/south/east/west steps from this card).";
+cards.storm.ideonText = "Does not hit Ideons.";
+export function cardText(definition, stratum = 1) {
+  return definition.text + (stratum >= 3 && definition.ideonText ? " " + definition.ideonText : "");
+}

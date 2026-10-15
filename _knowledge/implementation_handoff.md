@@ -1039,3 +1039,63 @@ Jonathan won the 3.0.11 Mind Hive fight, run 0bee2d57-fb5a-4cfa-9b26-21a6ed896c3
 At Jonathan's request, prepared and installed a fresh Cnidarian battle as Continue: same post-victory 36-card deck/inventory/equipment/socketing, HP reset to 70 for testing, base 4 Focus/3 Channel, 3 opening tentacles, player first, no Restless. New run ID 0c117e2e-dd65-43fa-ba03-420ad8008ca3, source run recorded in cloneOrigin. Original completed Hive archive/history preserved, also copied to reports/cnidarian-same-build-20261014 with prepared-save and setup verification. App was closed; installed file hash and packaged-engine reload verified. No balance/code changes.
 
 For future current-board inspection: normal save.json deliberately contains the battle-start checkpoint. Read runs/<runId>/latest.json or events.jsonl (gzip after completion) for the actual latest decision. Archive state needs history=[] and log=[] when used for a playable clone. Earlier requested turn-12 recovery preserved in reports/hive-turn12-recovery-20261014.
+
+## 2026-10-14 — Cnidarian manual win and revised tendrils 3.0.12
+
+Codex manually won the prepared same-build Cnidarian fight under3.0.11: turn10,69/70HP,121legal decisions,no rewinds,4HPdamage/3HolyArmorhealing. No Allies placed and no Tendrils killed; ordinary cards stalled all three. Exact replay independently verified with frozen sources in reports/codex-cnidarian-play; live save untouched. This was the full-health70HP fixture, not originalHive20HP.
+
+Jonathan then requested revised tendrils and Corruption links, plus Splash; confirmed fixed4adjacent/fixed1Splash, no age scaling. Implemented3.0.12: weakest orthogonally adjacent Ally attacked, else move west swapping whole Constructs and Guard, then Splash weakest Ally anywhere (blocked movement still Splashes). At edge strikeadjacent/Splashdistant/Poison2ifnoAllies. Normal elements and Ally Attunement apply. Old saves migrate without reset. Nausea four woven strands only to actual affected cards; Anger two jagged bolts to current target. Covered forms and reducedmotion preserved.575tests+packagedUI pass; design4.196/S3draft0.31; report reports/tendril-corruption-report.md. Earlier victory invalid as evidence for newrules; no new fullfight balance claim. No userprofile changes. Restart app for updated rules. No commit/push.
+
+Same-round follow-up: both attacks now animate a tapered tentacle. Splash short lash→pulse from tip→impact; adjacent strike full lash→impact with no pulse. Four packaged normal/reduced-motion cases pass exact effect order, gameplay state and cleanup. Module src/tendril-effects.mjs, report and screenshots in reports/tendril-ui-verification.json and reports/screenshots/tendrils. Still package3.0.12.
+
+## 2026-10-14 — Strong-fixture Cnidarian victory under revised rules
+
+Jonathan requested the same transmutable-Titan build used for Mind Hive. Codex manually won revised3.0.12 Cnidarian on turn12 at65/70HP:149legal decisions, no rewinds/search/policy, no consumables/healing. Exact deck/inventory/equipment match priorHivefixture asserted. Seed73001,25cards,3Focus4Channel,full70HP,noRestless. Frozen-source replay verified; reports/codex-cnidarian-strong-3.0.12, tools/verify-cnidarian-strong.mjs. All5playerHP lost turn1. Titan deals72total, then remains alive at23HP as a remote Splash target; 3adjacentcards regen3/turn offsets3Splashes. Only2tendrils killed, so replacements remainone-for-one. SmallerAllies sacrificed; WindShields/Wards and equipment cover boss, recalledStorm/Solitude finish. Plasma never activated.
+
+Balance finding: straight-west tendrils never change lanes to reach remoteTitan; atleftedge anysurvivingAlly changesPoisonintoSplash. Titanregen therefore creates stable sustain even after attacks spent. Cnidarian remains forgiving for this build (previousHive16HP vsCnidarian65HP), not representativewinrate evidence. No newbalancechange authorized or applied, live save untouched. Detailed tactics/damage breakdown in reportREADME.
+
+## 2026-10-14 — Tendril scaling restored, replacements reset (3.0.13)
+
+Jonathan superseded fixed4/1 damage: each surviving tendril gains2 adjacent damage and0.5 Splash per successive command, rounding Splash upward before elemental modifiers. First command4/1; next6/2,8/2,10/3,12/3. Explicit follow-up: destruction/replacement resets both to4/1. Newborns age0 and wait next command; survivors preserve age, including across Continue. Shared tendrilDamage helper in src/ideons.mjs serves combat/previews.577tests and packaged normal/reduced-motion UI checks. Design4.197/S3draft0.32; reports/tendril-growth-report.md. Old3.0.12 strong-deck65HP win is historical, not tested under new scaling. Killer-space replacement burst/telegraph proposal remains pending. No live profile changes, commit or push.
+
+## 2026-10-14 — Scaling Cnidarian manually beaten with same Titan fixture
+
+Jonathan requested a repeat after3.0.13 tendril growth. Codex manually won first attempt at62/70HP on turn14,178legal decisions,no search/AI/rewinds/healing/consumables. Frozen-source replay verified. Same seed73001/25-card strong fixture,3Focus4Channel,full70HP,noRestless,exact prior deck/inventory/equipment assertion. Reports/codex-cnidarian-strong-3.0.13; verifier tools/verify-cnidarian-scaling.mjs. Old3.0.12 result65HP/turn12 preserved.
+
+Scaling defeats infinite Titan sustain: Titan14HP on turn4,8HP turn7; dealt62 boss damage then sacrificed to guard16 incoming Water on turn7. Guide died to Splash turn8; allAlliesgone. Killed4tendrils (Gale+Needle T5, randomWindPlasma T8, Needle+WindBlast T9, randomWindPlasma T10). Four surviving replacements still traveling at victory; noPoison. Total8HP lost:5T1,2T9,1T13. BossdamageStorm66,Titan62,Solitude60,Water29,Plasma24,Gale12,Needle9,Blast4,Sapling4. CycledWards/Magnifier/Lattice and damage spells; no further rule changes or userprofile edits.
+
+Balance: more costly in Ally survival and actions, but still comfortable for this authored strong build. Once noAllies remain, tendrils threaten no damage until leftedge; selective kills reset their travel time. Replacement-on-killer-space burst/telegraph is still pending, not tested. No population winrate claim.
+
+## 2026-10-14 — Player Splash closes harmless no-Ally travel (3.0.14)
+
+NoAllies: Tendril moves then Splashes player from resulting column (blocked movement still attacks). Normal optional defenses only samecolumn/fartherleft plus equipment; never backward. Startsleftedge/noAllies: Poison2 instead. Adjacent/distantAlly priorities, agegrowth and replacementreset unchanged. Initial lash only firstattackpathimpact. Design4.198/S3draft0.33,579tests, normal/reduced packagedUI pass.
+
+Controlled replay of same3.0.13 Titan line plus six new manually selected Splash defenses winsT14 at38/70 vs62/70.184actions,32lost,24additional fromSplash; nohealing/consumables/rewinds. Verifier asserts all nonSplash decisions identical; frozen sources and checkpoints preserved reports/codex-cnidarian-strong-3.0.14; tools/verify-cnidarian-splash.mjs. Not optimized fresh play. No liveprofilewrites.
+
+Jonathan conditionally proposed+2tendrils at halfHP,+4at quarterHP if stilleasy. Deferred after substantial damageincrease; no thresholdspawns added. Current3opening means9baseline withthoseincrements, notguaranteed10living because killreplacementmultiplication varies. Killer-space deathtelegraph/burst remains pending. Jellyfish numbers vary byspecies; NOAA Aegina fourtentacles, Smithsonian Turritopsis8-24; no need biologicalaverage forgamebalance.
+
+## 2026-10-14 — Continue compatibility fixed (3.0.15)
+
+Actualuser3.0.11save failed constructor allowlist (onlythrough3.0.7 pluscurrent). Fixed3.0patch acceptance throughrunningcurrent version; future/malformed families stillrejected. Existingmigrationsnowrun.581tests inclall3.0patches. Packaged Continue test onisolatedcopy ofcurrentuser save verifies latestSplash/scaling and unchangedprogress; originalhash c739ed4d035e20f7800881e16e082b5126a5618a3f2ae3897b6d5e54c68ed87c untouched. reports/continue-patches-report.md and continue-patches-ui.json. No combatbalancechange, no save rewrite. Telluserrestartonce. Priorbalance3.0.14replayremainsvalid.
+
+## Latest: Tendril pursuit correction — 2026-10-14
+
+3.0.16/design4.199/S3draft0.34. Distant Allies now draw Tendrils toward their location, NOT always west. Select weakestHP/read-order Ally; closer orthogonal legal step, horizontal preferred then reading-order; blocked stays. Splash same selected Ally, even if now adjacent. Starting adjacent still strikes. No Allies retains west/playerSplash/edgePoison. Whole Construct/Guard swapping works vertically/rightward too.584tests pass. User save untouched; restart app. Existing win replays used older west-only behavior. Killer-space respawn telegraph/burst still NOT implemented (Jonathan noticed this immediately before pursuit report); do not claim it was delivered. reports/tendril-pursuit-report.md.
+
+## Latest: killer-space returns implemented — 2026-10-14
+
+Supersedes earlier pending notes.3.0.17/design4.200/S3draft0.35 now has immediate fixed blue return warning on killing card space, b.tendrilReturns {owner,slot,due:turn+1}. Full next player turn before emergence after surviving commands; entire cover/Guard destroyed, spawn age0/no immediate command. Multiplying extras warn distinct nearest legal positions (Manhattan/read order); blocked at due fails without retargeting; owner death cancels. Direct source captured before card destruction; equipment/consumable no-source fallback deadTendrilspace; status source recorded at application. Existing unlocated pending counts warn first; do not fabricate previous kill history. Pursuit3.0.16 included.591tests plus packaged UI warning/pursuit/reduced and Splash traversal pass. User save untouched. Restart required. Prior strong-deck win replays no longer represent current rules; no new difficulty claim. reports/tendril-return-report.md.
+
+## Latest: Lucid cards buffed — 2026-10-14
+
+3.0.18/design4.201/S3draft0.36. Needle now15 Arcane vsIdeon Manhattan≤2;8 distantIdeon/mainenemy, single-target. Upgrade17/10. Costs0Focus1Channel2usesRecall1 unchanged. Guide18 (upgrade21), retains12HP/12uses/move1/+3mark/noRecall. Proposed interrupt/16HP NOT adopted. cardPower optionaltarget drives engine/preview/legalAIeffects; removed hardcodedGuide5 in preview/policy.595tests+isolated packaged drag-preview UI pass. No live save edits; restart. reports/lucid-balance-report.md. Prior playtest wins predate buffs.
+
+## Latest: post-movement Tendril strike — 2026-10-14
+
+3.0.19/design4.202/S3draft0.37. Supersedes earlier rule that arriving adjacent onlySplashes. Move toward selected Ally then test distance: adjacent→full age-scaled strike, distant→Splash. Alreadyadjacent stays/strikes; noAlly west/playerSplash/edgePoison unchanged. Shared tendrilPlan drives combat and preview.596tests+packaged intent/return/playerSplash UI pass. User latestturn4 WindLattice atslot17 was legally recallable1Focus with3Focus; user identified scrolling as cause. No Recall/UI changes or save edits. Restart required. reports/tendril-arrival-report.md.
+
+Compact-label follow-up: Jonathan requested exact "Depleted: cannot activate"; shared label/tutorial/design updated in3.0.19. Full glossary retains recovery explanation. Recall remains available when legal. Verified with tools/lattice-recall-ui-test.mjs using fixed isolated depleted Wind Lattice fixture (current game advanced during test). Both controls fit one row; Recall enabled.
+
+## Latest: Eclipse Seed radius and progressive descriptions — 2026-10-14
+
+3.0.20/design4.203/S3draft0.38. Jonathan clarified: hide Ideon-specific text untilS3; do NOT restrict early cards toS3. Seed remainsS1legendary, releases30 to all legalmainenemies plusIdeons Manhattan<=2 centeredonSeed. Costs/Charge2/3uses unchanged. areaHits shared byengine/preview/policy; guardianprotectionretained. cardText(def,stratum) appendsideonText onlyS3+; Seedrange andStormexclusion gated acrosscardfaces/tooltips/details/Tavern/trade/Archives. Archivescollection.highestStratum remembersreach; runUI usescurrentStratum.600tests+packagedisolated3-stratumUI pass. Userprofile untouched, app/ZIP refreshed. Pending tentacledistance-order/edge-return proposals notimplemented. reports/eclipse-range-report.md.

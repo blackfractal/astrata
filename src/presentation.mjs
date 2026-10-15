@@ -8,6 +8,7 @@ import {
 } from "./impact-effects.mjs";
 import { installKeywordHelp } from "./keywords.mjs";
 import { artPaths } from "./art-paths.mjs";
+import { tendrilLash } from "./tendril-effects.mjs";
 export function installTooltips() {
   installKeywordHelp();
   const tip = document.createElement("div");
@@ -133,6 +134,7 @@ export async function playFrames(before, frames, after, render, isFast) {
     attack = null,
     boost = null,
     revealTarget = true,
+    attackVisual = null,
   ) {
     // Reveal the acting/struck foe inside crowded encounters without moving the stage.
     for (const node of revealTarget ? [from, el] : []) {
@@ -146,9 +148,10 @@ export async function playFrames(before, frames, after, render, isFast) {
             stageBounds().scale;
       }
     }
+    const lash = attackVisual ? await tendrilLash(from, el, attackVisual, {ms, pause, reduced, skip:()=>skip}) : null;
     let projectile;
-    if (el && from && from !== el && !reduced) {
-      const a = from.getBoundingClientRect(),
+    if (el && from && from !== el && !reduced && attackVisual !== "tendril" && !skip) {
+      const a = (lash?.tip || from).getBoundingClientRect(),
         b = el.getBoundingClientRect();
       projectile = attack
         ? attackOrb(attack.incoming, element)
@@ -187,7 +190,7 @@ export async function playFrames(before, frames, after, render, isFast) {
       await Promise.race([animation.finished, pause(350)]);
       projectile.remove();
     }
-    if (skip) return;
+    if (skip) { lash?.node.remove(); return; }
     // Arrive in the same paint as the hit burst, before its pause or disintegration.
     // A viewport overlay stays visible even while the struck card fades underneath.
     if (el && attack?.remaining > 0) {
@@ -208,7 +211,7 @@ export async function playFrames(before, frames, after, render, isFast) {
       tag.classList.add("status-impact-number");
       tag.style.top = parseFloat(tag.style.top) - 55 + "px";
     }
-    await pause(550);
+    await Promise.all([pause(550), lash?.retract()]);
     el?.classList.remove("impact");
     tag?.remove();
     burst?.remove();
@@ -781,6 +784,9 @@ export async function playFrames(before, frames, after, render, isFast) {
                     : 0,
                 }
               : null,
+            null,
+            true,
+            frame.attackVisual,
           );
         } finally {
           if (frame.sourceItem != null) from?.classList.remove("gear-proc");
@@ -813,7 +819,7 @@ export async function playFrames(before, frames, after, render, isFast) {
     bar.remove();
     document
       .querySelectorAll(
-        ".impact-number,.attack-bolt,.spell-impact,.attack-orb-overlay,.boss-effect",
+        ".impact-number,.attack-bolt,.spell-impact,.attack-orb-overlay,.boss-effect,.tendril-effect",
       )
       .forEach((el) => el.remove());
   }

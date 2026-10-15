@@ -84,7 +84,8 @@ export const ideonDefs = {
     hp: 18,
     damage: 4,
     behavior: "tentacle",
-    text: "Gains 1 attack each owner command. Attacks the weakest Ally directly; without Allies, moves left. At the left edge inflicts Poison 2 each command. Killing tendrils increases their replacements.",
+    swap: true,
+    text: "Strikes the weakest orthogonally adjacent Ally for 4 Water, gaining 2 damage each successive command. Otherwise moves one orthogonal space toward the weakest Ally, swapping with player cards and whole Constructs, then checks distance: strike if now adjacent, otherwise Splash against that Ally. Splash starts at 1 Water, gains 0.5 each successive command, rounded up. Each replacement resets both attacks to their starting damage. With no Allies, moves left and Splashes the player from its column after movement (Guard only in that column or farther left; equipment also works). If it starts at the left edge, inflicts Poison 2 instead. Killing tendrils increases their replacements. Returns are warned on the killing card's space, wait one full player turn, then destroy the card or Construct there. Extra returns warn nearby spaces.",
   },
   bullet: {
     name: "Refracted Thought",
@@ -107,15 +108,15 @@ export function registerDepths(card, enemy, glossary, events) {
     "Spell",
     0,
     2,
-    { damage: 6, ideonDouble: true },
-    "Deal 6 Arcane damage, doubled against Ideons. Recall: 1 Focus.",
+    { damage: 8, nearDamage: 15, damageRadius: 2 },
+    "Deal 15 Arcane damage to one Ideon within a 2-space diamond (up to two north/south/east/west steps), or 8 to any other target. Recall: 1 Focus.",
     {
       ...extra,
       recall: 1,
       upgrade: {
         gold: 120,
         bonus: 2,
-        text: "+2 damage (8; 16 against Ideons).",
+        text: "+2 damage (17 within the 2-space diamond; 10 elsewhere).",
       },
     },
   );
@@ -146,8 +147,8 @@ export function registerDepths(card, enemy, glossary, events) {
     "Ally",
     1,
     12,
-    { guide: true, damage: 5 },
-    "Move up to one orthogonal empty space, then deal 5 Arcane to an adjacent Ideon and mark it. The next attack activation from a different card deals +3 damage to it. May move without attacking. Cannot Recall.",
+    { guide: true, damage: 18 },
+    "Move up to one orthogonal empty space, then deal 18 Arcane to an adjacent Ideon and mark it. The next attack activation from a different card deals +3 damage to it. May move without attacking. Cannot Recall.",
     {
       ...extra,
       companion: true,
@@ -426,8 +427,8 @@ export function registerDepths(card, enemy, glossary, events) {
         ],
       }),
     ],
-    "Begins with three hunting tendrils. They grow +1 attack each command and hunt Allies; without Allies they drift left to inflict Poison 2. Deaths 1–3 replace one-for-one, 4–6 two-for-one, then three-for-one. Replacements arrive after surviving tendrils act.",
-    "Race the owner while selectively cutting old tendrils. Killing every tendril makes the brood grow.",
+    "Begins with three hunting tendrils. They strike adjacent Allies for 4 Water (+2 each successive command); otherwise move one orthogonal space toward the weakest Ally, swapping past player cards and Constructs, then strike if adjacent after moving, otherwise Splash that Ally for 1 Water (+0.5 each successive command, rounded up). Replacements start again at 4 strike / 1 Splash. Without Allies they move left and Splash the player from their resulting column, or inflict Poison 2 instead when starting at the left edge. Deaths 1–3 replace one-for-one, 4–6 two-for-one, then three-for-one. Replacements warn the killing card's space (extras nearby), give one full player turn of reprieve, then erupt after survivors act, destroying any card or Construct left there.",
+    "Race the owner while selectively cutting aging tendrils to reset their damage. Killing every tendril makes the brood grow.",
     { bossMode: "stalker", flying: true, corruptionCap: 6 },
   );
   add(

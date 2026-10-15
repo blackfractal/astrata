@@ -5,6 +5,17 @@ import { adjacent, offense, stackValue } from "./engine.mjs";
 import { forcedDiscardOutcome, forcedDiscardLabel } from "./card-removal.mjs";
 const top = (s) => s?.at(-1);
 export const livingIdeons = (b) => (b?.ideons || []).filter((e) => e.hp > 0);
+// Age counts completed commands in previews; resolution has already incremented it.
+// New/replacement tendrils start at age zero and never inherit a dead tendril's growth.
+export const tendrilDamage = (e, completed = e.age || 0) => ({
+  strike: e.damage + 2 * Math.max(0, completed),
+  splash: Math.ceil(1 + 0.5 * Math.max(0, completed)),
+});
+// Share the exact current target with the intent preview. Diagonals do not count.
+export const tendrilTargets = (b, e, distant = false) => (distant ? b.grid.map((_, i) => i) : adjacent(e.slot))
+  .flatMap(i => cards[top(b.grid[i])?.id]?.type === "Ally" && top(b.grid[i]).hp > 0
+    ? [{ c: top(b.grid[i]), i }] : [])
+  .sort((a, z) => a.c.hp - z.c.hp || a.i - z.i);
 export function normalizeInsectMovement(state) {
   const b = state.battle;
   if (b?.enemies.some(o => o.id === "mindHive") && !b.hiveLarvaOpening) {
@@ -20,15 +31,16 @@ export function normalizeInsectMovement(state) {
     b.hiveLarvaOpening = true;
   }
   for (const e of state.battle?.enemies || [])
-    if (e.id === "mindHive") {
-      e.signature = enemies.mindHive.signature;
-      e.counter = enemies.mindHive.counter;
+    if (["mindHive", "cnidarian"].includes(e.id)) {
+      e.signature = enemies[e.id].signature;
+      e.counter = enemies[e.id].counter;
     }
   for (const e of state.battle?.ideons || [])
-    if (["runner", "burrower", "larva"].includes(e.kind)) {
+    if (["runner", "burrower", "larva", "tentacle"].includes(e.kind)) {
       e.swap = true;
       e.text = ideonDefs[e.kind].text;
       e.turnDamage = ideonDefs[e.kind].turnDamage;
+      if (e.kind === "tentacle") e.damage = ideonDefs.tentacle.damage;
     }
   if (state.checkpoint) normalizeInsectMovement(state.checkpoint);
 }
@@ -144,6 +156,21 @@ export function drainLeeches(g) {
     }
   }
 }
+function warnTendrilReturn(g, owner, origin, count) {
+  const b = g.s.battle;
+  b.tendrilReturns ||= [];
+  const reserved = new Set(b.tendrilReturns.map(q => q.slot));
+  const distance = i => Math.abs(i % 7 - origin % 7) +
+    Math.abs(Math.floor(i / 7) - Math.floor(origin / 7));
+  const spaces = b.grid.map((_, i) => i)
+    .filter(i => !reserved.has(i) && !ideonsAt(b, i).length && b.corruptions?.[i]?.kind !== "hole")
+    .sort((a, z) => distance(a) - distance(z) || a - z);
+  for (const slot of spaces.slice(0, count)) {
+    b.tendrilReturns.push({ owner: owner.uid, slot, due: b.turn + 1 });
+    g.log(`Tendril return warned at column ${slot % 7 + 1}, row ${Math.floor(slot / 7) + 1}: one full player turn to clear the space.`);
+    g.present("activate", { slot, name: "Tendril return · one turn to clear" });
+  }
+}
 export function settleIdeons(g, { animate = true } = {}) {
   const b = g.s.battle;
   b.ideons ||= [];
@@ -164,15 +191,15 @@ export function settleIdeons(g, { animate = true } = {}) {
       e.removed = true;
       if (e.kind === "tentacle" && owner.id === "cnidarian") {
         owner.tentacleKills = (owner.tentacleKills || 0) + 1;
-        owner.pendingTentacles =
-          (owner.pendingTentacles || 0) +
-          1 +
-          Math.floor((owner.tentacleKills - 1) / 3);
+        warnTendrilReturn(g, owner, e.killedFromSlot ?? e.slot,
+          1 + Math.floor((owner.tentacleKills - 1) / 3));
       }
       g.log(`${e.name} is defeated.`);
     }
   }
   b.ideons = b.ideons.filter((e) => e.hp > 0);
+  if (b.tendrilReturns)
+    b.tendrilReturns = b.tendrilReturns.filter(q => b.enemies.some(e => e.uid === q.owner && e.hp > 0));
   for (const [slot, q] of Object.entries(b.corruptions || {}))
     if (q.kind === "egg" && !b.enemies.some(e => e.uid === q.source && e.hp > 0)) delete b.corruptions[slot];
 }
@@ -352,13 +379,14 @@ export function depthsTell(g, e, t) {
   }
   return t;
 }
-function canMoveIdeon(g, e, to) {
-  const b = g.s.battle,
-    from = e.slot;
+function canMoveIdeon(b, e, to) {
+  const from = e.slot;
   const rowChange = Math.abs(Math.floor(to / 7) - Math.floor(from / 7));
   const validLane = e.kind === "runner"
     ? rowChange <= 1 && to % 7 === from % 7 - 1
-    : rowChange === 0;
+    : e.behavior === "tentacle"
+      ? adjacent(from).includes(to)
+      : rowChange === 0;
   if (
     to < 0 || to >= b.grid.length || !validLane ||
     ideonsAt(b, to).length ||
@@ -367,9 +395,26 @@ function canMoveIdeon(g, e, to) {
     return false;
   return !b.grid[to].length || e.covers || (e.swap && !b.grid[from].length);
 }
+export function tendrilPlan(b, e) {
+  const nearby = tendrilTargets(b, e)[0];
+  const target = nearby || tendrilTargets(b, e, true)[0];
+  let destination = e.slot;
+  if (target && !nearby) {
+    const distance = i => Math.abs(i % 7 - target.i % 7) +
+      Math.abs(Math.floor(i / 7) - Math.floor(target.i / 7));
+    destination = adjacent(e.slot)
+      .filter(i => distance(i) < distance(e.slot) && canMoveIdeon(b, e, i))
+      .sort((a, z) => distance(a) - distance(z) ||
+        Number(Math.floor(a / 7) !== Math.floor(e.slot / 7)) -
+        Number(Math.floor(z / 7) !== Math.floor(e.slot / 7)) || a - z)[0] ?? e.slot;
+  } else if (!target && e.slot % 7 && canMoveIdeon(b, e, e.slot - 1)) {
+    destination = e.slot - 1;
+  }
+  return { target, destination, adjacent: !!target && adjacent(destination).includes(target.i) };
+}
 function moveIdeon(g, e, to) {
   const b = g.s.battle, from = e.slot;
-  if (!canMoveIdeon(g, e, to)) return false;
+  if (!canMoveIdeon(b, e, to)) return false;
   if (b.grid[to].length && !e.covers) {
     b.grid[from] = b.grid[to];
     b.grid[to] = [];
@@ -435,19 +480,15 @@ export function commandIdeon(g, uid) {
     return;
   }
   if (e.behavior === "tentacle") {
-    const allies = b.grid
-      .flatMap((s, i) =>
-        cards[top(s)?.id]?.type === "Ally" && top(s).hp > 0
-          ? [{ c: top(s), i }]
-          : [],
-      )
-      .sort((a, z) => a.c.hp - z.c.hp || a.i - z.i);
-    if (allies.length) {
-      const { c, i } = allies[0],
-        damage = offense(e.damage + e.age, e.element, c.element),
+    const plan = tendrilPlan(b, e);
+    const damage = tendrilDamage(e, e.age - 1);
+    const strike = ({ c, i }, base, name) => {
+      const damage = offense(base, e.element, c.attuned || c.element),
         loss = Math.min(c.hp, damage);
       c.hp -= loss;
       g.present("hit", {
+        name,
+        attackVisual: name === "Splash" ? "splash" : "tendril",
         target: "card",
         slot: i,
         amount: loss,
@@ -455,18 +496,24 @@ export function commandIdeon(g, uid) {
         gridSourceSlot: e.slot,
         dead: c.hp <= 0,
       });
-      g.log(`${e.name} strikes ${cards[c.id].name} for ${loss}.`);
+      g.log(`${e.name} uses ${name} on ${cards[c.id].name} for ${loss}.`);
       if (c.hp <= 0) g.destroyCard(i, c.uid);
-      return;
+    };
+    const atEdge = e.slot % 7 === 0;
+    if (plan.destination !== e.slot) moveIdeon(g, e, plan.destination);
+    if (plan.target) {
+      const close = adjacent(e.slot).includes(plan.target.i);
+      strike(plan.target, close ? damage.strike : damage.splash,
+        close ? "Tendril strike" : "Splash");
     }
-    if (e.slot % 7 === 0) {
+    else if (atEdge) {
       g.applyFriendlyStatus("poison", 2, {
         source: owner.uid,
         gridSourceSlot: e.slot,
       });
-      return;
+    } else {
+      hit(damage.splash, { name: "Splash", attackVisual: "splash" });
     }
-    moveIdeon(g, e, e.slot - 1);
     return;
   }
   if (e.behavior === "bullet" || e.behavior === "crawl") {
@@ -478,7 +525,7 @@ export function commandIdeon(g, uid) {
     }
     if (e.kind === "runner") {
       const choices = [e.slot - 1, e.slot - 8, e.slot + 6]
-        .filter(to => canMoveIdeon(g, e, to));
+        .filter(to => canMoveIdeon(b, e, to));
       if (choices.length) moveIdeon(g, e, g.pick(choices));
     } else moveIdeon(g, e, e.slot - e.speed);
     if (e.turnDamage) hit(e.turnDamage);
@@ -542,9 +589,23 @@ export function depthsJob(g, j) {
   }
   if (j.kind === "tentacleReplace") {
     if (owner) {
+      // Legacy saves may contain an unlocated replacement count: warn it first.
       const n = owner.pendingTentacles || 0;
       owner.pendingTentacles = 0;
-      for (let k = 0; k < n; k++) spawnIdeon(g, owner, "tentacle");
+      if (n) warnTendrilReturn(g, owner, 6, n);
+      const due = (b.tendrilReturns || []).filter(q => q.owner === owner.uid && q.due <= b.turn);
+      b.tendrilReturns = (b.tendrilReturns || []).filter(q => !due.includes(q));
+      for (const q of due) {
+        // Fixed warnings never chase a recalled or moved card. A blocked spawn fails.
+        if (ideonsAt(b, q.slot).length || b.corruptions?.[q.slot]?.kind === "hole") continue;
+        g.present("activate", { slot: q.slot, name: "Tendril erupts" });
+        if (b.grid[q.slot].length)
+          g.present("hit", { target: "card", slot: q.slot, amount: 0,
+            dead: true, element: "Water", name: "Tendril eruption" });
+        for (const c of [...b.grid[q.slot]]) g.destroyCard(q.slot, c.uid);
+        b.shields = b.shields.filter(s => s.slot !== q.slot);
+        spawnIdeon(g, owner, "tentacle", { slot: q.slot });
+      }
     }
     return true;
   }

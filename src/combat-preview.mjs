@@ -1,3 +1,4 @@
+import { areaHits } from "./area-targets.mjs";
 import { protectedOwner } from "./ideons.mjs";
 import { cards } from "./content.mjs";
 import {
@@ -31,14 +32,13 @@ export function attackPreview(b, c, i, enemy, element = c.element) {
   if (
     !(f.damage || f.hpDamage || f.guide) ||
     f.randomDamage ||
+    (f.all && !areaHits(f, i, enemy)) ||
     d.stack === "plasmaMeld" ||
     (d.charge && c.charge < d.charge)
   )
     return null;
   const power =
-      (f.guide
-        ? 5 + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
-        : cardPower(b, c, i)) * (f.ideonDouble && enemy.ideon ? 2 : 1),
+      cardPower(b, c, i, enemy) * (f.ideonDouble && enemy.ideon ? 2 : 1),
     elements = attackElements(b, c, i, element);
   const base = power * elements.length;
   const damage =

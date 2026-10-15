@@ -35,5 +35,5 @@ if(process.argv[2]==='query'){
  grid:b.grid.flatMap((s,i)=>s.length?[{slot:i,cards:s.map(c=>({id:c.id,uid:c.uid,el:c.attuned||c.element,uses:c.used,left:g.allowance(c,i),hp:c.hp,ward:c.ward,charge:c.charge,zero:c.zeroWard,last:c.lastActivatedTurn}))}]:[]),
  shields:b.shields,bracelets:b.bracelets,ideons:b.ideons.filter(e=>e.hp>0).map(e=>({uid:e.uid,slot:e.slot,el:e.element,hp:e.hp,age:e.age,status:e.status})),corruptions:b.corruptions,reaction:b.reaction,
  actions:g.legal().filter(a=>!['place','activate','transmute','equip','unequip','recall'].includes(a.type)),
- activations:g.legal().filter(a=>['activate','transmute'].includes(a.type)).map(a=>({type:a.type,slot:a.slot,target:a.target,element:a.element,cardTarget:a.cardTarget,destination:a.destination})),log:g.s.log.slice(-4)}));
+ log:g.s.log.slice(-4)}));
 }

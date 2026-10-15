@@ -56,7 +56,12 @@ function fixture() {
   const { app, p } = await open(g, "preview");
   try {
     assert.equal(await p.locator(".nausea-aura").count(), 2);
-    assert.equal(await p.locator(".nausea-link").count(), 3);
+    assert.equal(await p.locator(".nausea-link").count(), 2);
+    assert.equal(await p.locator('.nausea-link[data-influence-to="0"]').count(), 0);
+    assert.equal(await p.locator('.nausea-link .corruption-strand').count(), 8);
+    for (const d of await p.locator('.nausea-link path').evaluateAll(es => es.map(e => e.getAttribute('d'))))
+      assert.match(d, /C .* C /);
+    assert.equal(await p.locator('.nausea-link path').first().evaluate(el => getComputedStyle(el).animationName), 'nausea-weave');
     assert.equal(await p.locator(".bile-motion").count(), 2);
     assert.equal(
       await p.locator(".nausea-warning,.bile-seal,.bile-warning").count(),
@@ -114,6 +119,7 @@ function fixture() {
       assert.ok(Number(v.opacity) > 0);
     }
     assert.equal(await p.locator('.nausea-link').first().evaluate(el => getComputedStyle(el).animationName), 'none');
+    assert.equal(await p.locator('.nausea-link path').first().evaluate(el => getComputedStyle(el).animationName), 'none');
     assert.equal(await p.locator('.corruption-influence-links').evaluate(el => getComputedStyle(el).pointerEvents), 'none');
     await p.screenshot({ path: dir + "/reduced-motion.png" });
     report.checks.push(
@@ -209,6 +215,8 @@ function fixture() {
   const { app, p } = await open(g, 'anger-links');
   try {
     assert.equal(await p.locator('.anger-link[data-influence-from="16"][data-influence-to="15"]').count(), 1);
+    assert.equal(await p.locator('.anger-link path').count(), 2);
+    assert.equal(await p.locator('.anger-link path').first().evaluate(el => getComputedStyle(el).animationName), 'anger-zap');
     assert.equal(await p.locator('[data-slot="15"].anger-affected').count(), 1);
     await p.screenshot({ path: dir + '/anger-links.png' });
     await p.locator('[data-hand]').dragTo(p.locator('[data-slot="16"]'));

@@ -1,3 +1,4 @@
+import { areaHits } from "./area-targets.mjs";
 import { cards, items, enemies, VERSION } from "./content.mjs";
 import {
   activationGrowth,
@@ -478,7 +479,7 @@ export class WeightedPolicy {
         if (f.charge > 1) damage /= f.charge;
         if (f.ideonDouble && target?.ideon) damage *= 2;
         if (f.guide) {
-          damage = target ? 5 : 0;
+          damage = target ? f.damage : 0;
           n += target ? 7 : 0;
           if (!target && b.ideons?.length) {
             const distance = (i) =>
@@ -516,7 +517,7 @@ export class WeightedPolicy {
         }
         if (f.all)
           damage *=
-            b.enemies.filter((e) => !e.hive).length + (f.excludeIdeons ? 0 : (b.ideons || []).length);
+            b.enemies.filter((e) => !e.hive).length + (b.ideons || []).filter(e => e.hp > 0 && areaHits(f, a.slot, e)).length;
         if (f.concord) damage *= 3;
         n +=
           damage * w.damage +

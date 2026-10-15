@@ -21,6 +21,7 @@ import { playFrames, installTooltips } from "./presentation.mjs";
 import { Game, incomingDamageText } from "./engine.mjs";
 import {
   cards,
+  cardText,
   items,
   enemies,
   glossary,
@@ -234,7 +235,7 @@ function toast(s) {
 function card(c, { select = false } = {}) {
   const d = cards[c.id],
     live = c.used != null;
-  return `<button class="card ${selectedHand === c.uid ? "selected" : ""}" ${select ? `data-hand="${c.uid}"` : `data-inspect-card="${c.id}"`} title="${esc(d.text)}">${img("card-" + c.id)}${upgradeBadge(c)}<span class="cost" title="Focus cost">${d.recallPlacement ? "1+R" : d.focus === 99 ? "—" : d.focus}</span><div class="body"><div class="eyebrow" style="color:var(--${c.element || d.element})">${c.element || d.element} · ${d.type}</div><h4>${d.name}${c.upgrade ? " +" : ""}</h4><div class="text">${text(d.text)}</div><div class="meta">${d.requiresHost ? "On placement · no Channel<br>Requires " + (d.recallPlacement ? "a recallable card" : "a placed card") : `${d.limit < 0 ? "∞" : live ? Math.max(0, d.limit - c.used) : d.limit} activations · ${d.channel} Channel<br>Recall ${d.recall == null ? "—" : d.recall} · ${d.rarity}`}</div></div></button>`;
+  return `<button class="card ${selectedHand === c.uid ? "selected" : ""}" ${select ? `data-hand="${c.uid}"` : `data-inspect-card="${c.id}"`} title="${esc(cardText(d, game?.s?.stratum))}">${img("card-" + c.id)}${upgradeBadge(c)}<span class="cost" title="Focus cost">${d.recallPlacement ? "1+R" : d.focus === 99 ? "—" : d.focus}</span><div class="body"><div class="eyebrow" style="color:var(--${c.element || d.element})">${c.element || d.element} · ${d.type}</div><h4>${d.name}${c.upgrade ? " +" : ""}</h4><div class="text">${text(cardText(d, game?.s?.stratum))}</div><div class="meta">${d.requiresHost ? "On placement · no Channel<br>Requires " + (d.recallPlacement ? "a recallable card" : "a placed card") : `${d.limit < 0 ? "∞" : live ? Math.max(0, d.limit - c.used) : d.limit} activations · ${d.channel} Channel<br>Recall ${d.recall == null ? "—" : d.recall} · ${d.rarity}`}</div></div></button>`;
 }
 function actionButton(a, cls = "") {
   return `<button class="${cls}" data-action="${esc(a.key)}">${esc(a.label)}</button>`;
@@ -293,7 +294,7 @@ function sidebar(o) {
     ? '<div class="panel"><h4>' +
       cards[selected.at(-1).id].name +
       '</h4><div style="font-size:12px">' +
-      selected.map((c) => text(cards[c.id].text)).join("<br>") +
+      selected.map((c) => text(cardText(cards[c.id], game?.s?.stratum))).join("<br>") +
       '</div><div class="choices" style="margin-top:10px;max-height:230px">' +
       game
         .legal()
@@ -521,7 +522,7 @@ function render(frame = null) {
                 a.type === "place" && a.uid === selectedHand && a.slot === i,
             ),
           spent = c && (c.zeroWard || game.allowance(c, i) === 0);
-        return `<button class="slot ${c ? "" : "empty"} ${valid ? "valid" : ""} ${selectedSlot === i ? "chosen" : ""} ${spent ? "spent" : ""}" data-slot="${i}" title="${esc(c ? d.name + ": " + d.text : "Empty slot " + (i + 1))}">${c ? `${img("card-" + c.id)}${upgradeBadge(c)}${slot.length > 1 ? `<span class="level">Lv ${slot.length}</span>` : ""}<span class="overlay"><span class="name">${d.name}${c.upgrade ? " +" : ""}</span><span class="nums">${d.type === "Ally" ? "♥ " + c.hp + " · " : ""}${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}${d.limit < 0 ? "∞" : game.allowance(c, i)} acts${d.charge ? " · Charge " + c.charge + "/" + d.charge : ""}${c.lock ? " · Lock" : ""}${c.sever ? " · Sever" : ""}${c.freeze >= b.turn ? " · Freeze" : ""}</span></span>` : ""}</button>`;
+        return `<button class="slot ${c ? "" : "empty"} ${valid ? "valid" : ""} ${selectedSlot === i ? "chosen" : ""} ${spent ? "spent" : ""}" data-slot="${i}" title="${esc(c ? d.name + ": " + cardText(d, game?.s?.stratum) : "Empty slot " + (i + 1))}">${c ? `${img("card-" + c.id)}${upgradeBadge(c)}${slot.length > 1 ? `<span class="level">Lv ${slot.length}</span>` : ""}<span class="overlay"><span class="name">${d.name}${c.upgrade ? " +" : ""}</span><span class="nums">${d.type === "Ally" ? "♥ " + c.hp + " · " : ""}${d.type === "Ward" ? "Ward " + c.ward + " · " : ""}${d.limit < 0 ? "∞" : game.allowance(c, i)} acts${d.charge ? " · Charge " + c.charge + "/" + d.charge : ""}${c.lock ? " · Lock" : ""}${c.sever ? " · Sever" : ""}${c.freeze >= b.turn ? " · Freeze" : ""}</span></span>` : ""}</button>`;
       })
       .join("")}</div>${
       b.reaction

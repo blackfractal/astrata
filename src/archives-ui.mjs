@@ -1,4 +1,4 @@
-import { cards, enemies, items } from "./content.mjs";
+import { cards, enemies, items, cardText } from "./content.mjs";
 import { achievements } from "./archive-profile.mjs";
 
 const sections = [
@@ -87,7 +87,7 @@ export function showArchives(ctx, section = "hub") {
       ];
     const specifics =
       section === "cards"
-        ? `<p class="gold">${esc(d.element)} · ${esc(d.type)} · ${esc(d.rarity)}</p><p>Focus ${d.unplaceable ? "Automatic" : d.focus} · Activation allowance ${d.limit < 0 ? "∞" : d.limit} · Channel ${d.channel ?? 1}${d.hp ? " · Initial HP " + d.hp : ""}${d.charge ? " · Charge " + d.charge : ""} · Recall ${d.recall == null ? "Unavailable" : d.recall}</p><p>${text(d.text)}</p>`
+        ? `<p class="gold">${esc(d.element)} · ${esc(d.type)} · ${esc(d.rarity)}</p><p>Focus ${d.unplaceable ? "Automatic" : d.focus} · Activation allowance ${d.limit < 0 ? "∞" : d.limit} · Channel ${d.channel ?? 1}${d.hp ? " · Initial HP " + d.hp : ""}${d.charge ? " · Charge " + d.charge : ""} · Recall ${d.recall == null ? "Unavailable" : d.recall}</p><p>${text(cardText(d, collection.highestStratum || 1))}</p>`
         : section === "enemies"
           ? `<p class="gold">${esc(d.tier)} · ${esc(d.element)} · ${d.hp} base HP</p><p>${esc(d.schedule || d.movement)}</p><p>${text(d.signature)}</p><h3>Move cycle</h3><ol>${d.rotation.map((t) => `<li>${text(ctx.tellText(t))}</li>`).join("")}</ol>${d.onDeath ? `<h3>On death</h3><p>${text(ctx.tellText(d.onDeath))}</p>` : ""}<p class="muted">${text(d.counter)}</p>`
           : `<p class="gold">${esc(d.slot)}</p><p>${text(d.text)}</p>`;

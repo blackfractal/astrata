@@ -1,5 +1,5 @@
 import { adjacent } from "./engine.mjs";
-import { coveredByIdeon, fieldIdeons, stickyAt } from "./ideons.mjs";
+import { coveredByIdeon, fieldIdeons, stickyAt, tendrilPlan, tendrilDamage } from "./ideons.mjs";
 import { artPaths } from "./art-paths.mjs";
 import { cards } from "./content.mjs";
 const tones = {
@@ -25,6 +25,20 @@ export function enhanceIdeons(ctx) {
     const i = Number(el.dataset.slot),
       fields = fieldIdeons(b, i);
     el.classList.toggle("ideon-covered", coveredByIdeon(b, i));
+    const returns = (b.tendrilReturns || []).filter(q => q.slot === i);
+    if (returns.length) {
+      const due = Math.min(...returns.map(q => q.due));
+      const help = `Tendril return: fixed space. ${due > b.turn ? "One full player turn of reprieve; emerges on the following enemy turn." : "Emerges this enemy turn."} Destroys the entire card or Construct here. Recall or move it to safety; replacing it does not move this warning.`;
+      el.classList.add("corruption-mark", "corruption-fixed", "tendril-return");
+      el.dataset.tooltip = (el.dataset.tooltip || "") + " " + help;
+      const mark = document.createElement("span");
+      mark.className = "corruption-foretell tendril-return-mark";
+      mark.tabIndex = 0;
+      mark.dataset.tooltip = help;
+      mark.setAttribute("aria-label", help);
+      mark.textContent = due > b.turn ? "Tendril · 1 turn" : "Tendril · incoming";
+      el.append(mark);
+    }
     if (stickyAt(b, i)) {
       el.classList.add("ideon-bound");
       el.dataset.tooltip =
@@ -64,18 +78,15 @@ export function enhanceIdeons(ctx) {
         ? ` Next: ${e.damage} ${e.element} damage, then disappears.`
         : ` Next: move${e.turnDamage ? `, then ${e.turnDamage} ${e.element} damage` : "; no attack"}.`;
     if (owner?.tell?.commandIdeons && e.behavior === "tentacle") {
-      const allies = b.grid
-        .flatMap((s, i) =>
-          cards[s.at(-1)?.id]?.type === "Ally" && s.at(-1).hp > 0
-            ? [{ c: s.at(-1), i }]
-            : [],
-        )
-        .sort((a, z) => a.c.hp - z.c.hp || a.i - z.i);
-      command += allies.length
-        ? ` Next: ${e.damage + e.age + 1} Water against ${cards[allies[0].c.id].name} (column ${(allies[0].i % 7) + 1}, row ${Math.floor(allies[0].i / 7) + 1}). Target updates after earlier tendrils act.`
-        : e.slot % 7 === 0
-          ? " Next: Poison 2 to you."
-          : " Next: move one space left.";
+      const plan = tendrilPlan(b, e), damage = tendrilDamage(e);
+      if (plan.target) {
+        const target = plan.target;
+        command += ` Next: ${plan.destination !== e.slot ? `move to column ${plan.destination % 7 + 1}, row ${Math.floor(plan.destination / 7) + 1}, then ` : ""}${plan.adjacent ? "Tendril strike: " + damage.strike : "Splash: " + damage.splash} ${e.element} against ${cards[target.c.id].name} (column ${target.i % 7 + 1}, row ${Math.floor(target.i / 7) + 1}). Attack is chosen after movement; target and route update after earlier tendrils act.`;
+      } else if (e.slot % 7 === 0) {
+        command += " Next: Poison 2 to you.";
+      } else {
+        command += ` Next: move one space left, swapping with a player card or Construct. Splash: ${damage.splash} ${e.element} against you after movement. Guard from its resulting column or farther left; equipment can also defend.`;
+      }
     }
     const help = `${e.name} · ${e.element} · ${e.hp}/${e.maxHp} HP. Owner: ${owner?.name || e.ownerName}. ${e.text} ${e.field ? fieldNames[e.field] + " field." : ""} ${e.reserve ? "Stored Ward: " + e.reserve + "." : ""} ${state} ${command}`;
     el.dataset.tooltip = help;
