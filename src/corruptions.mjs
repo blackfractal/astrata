@@ -124,9 +124,9 @@ export function prepareCorruption(g, e, t) {
     ...(t.alsoCorruption ? Array(t.alsoCount || 1).fill(t.alsoCorruption) : []),
   ];
   for (const kind of kinds) {
-    // Bombadier reserves a separate mine pool so accumulated Holes and Anger cannot
-    // silently cancel the promised late-cycle three-bomb cast.
-    if (!(e.id === "bombadier" && kind === "mine") && room-- <= 0) break;
+    // Bombadier and Cannon reserve separate mine casts so the ordinary
+    // Corruption cap cannot silently cancel their promised bombs.
+    if (!(["bombadier", "refractionCannon"].includes(e.id) && kind === "mine") && room-- <= 0) break;
     if (
       kind === "mine" &&
       e.mineCap &&
@@ -138,6 +138,7 @@ export function prepareCorruption(g, e, t) {
     )
       continue;
     let candidates = b.grid.flatMap((stack, i) => {
+      if (t.emptyOnly && (stack.length || b.ideons?.some(x => x.hp > 0 && x.slot === i))) return [];
       if (
         b.corruptions[i] ||
         b.enemies.some(
@@ -185,10 +186,10 @@ export function prepareCorruption(g, e, t) {
         (Math.floor(slot / 7) + 1) +
         ", column " +
         ((slot % 7) + 1) +
-        ". One player turn to respond.",
+        (t.immediate ? ". Mind Mine laid; one player turn before detonation." : ". One player turn to respond."),
     );
   }
-  if (e.corruptionPlan.length)
+  if (e.corruptionPlan.length && !t.immediate)
     g.present("corruption", {
       slots: e.corruptionPlan.map((p) => p.slot),
       name: "Foretold Corruptions",
@@ -360,28 +361,28 @@ export function corruptionRound(g) {
     const i = Number(key),
       c = top(b.grid[i]);
     if (q.kind === "mine" && q.createdTurn < b.turn && --q.remaining <= 0) {
-      delete b.corruptions[i];
-      if (c) {
-        g.destroyCard(i, c.uid);
-        g.log("Mind Mine destroys its cover.");
-      }
-      g.present("mineExplosion", {
-        slot: i,
-        covered: !!c,
-        name: "Mind Mine detonates",
-      });
-      if (!c)
-        b.jobs.unshift({
-          kind: "hit",
-          name: "Mind Mine",
-          damage: q.damage || 18,
-          element: q.element || "Arcane",
-          gridSourceSlot: i,
-          source: q.source,
-        });
+      detonateMine(g, i, q);
     }
     if (q.kind === "hypnosis") compelCard(g, i, q);
   }
+}
+
+function detonateMine(g, i, q) {
+  const b = g.s.battle, c = top(b.grid[i]);
+  delete b.corruptions[i];
+  if (c) { g.destroyCard(i, c.uid); g.log("Mind Mine destroys its cover."); }
+  g.present("mineExplosion", {slot:i, covered:!!c, name:"Mind Mine detonates"});
+  if (!c) b.jobs.unshift({kind:"hit", name:"Mind Mine", damage:q.damage || 18,
+    element:q.element || "Arcane", gridSourceSlot:i, source:q.source});
+}
+
+// Only this owner's armed mines move ahead of its Final Blast. Other Corruptions
+// retain their ordinary end-of-enemy-round timing; removed mines cannot tick twice.
+export function detonateCannonMines(g, owner) {
+  const b = g.s.battle;
+  for (const [i,q] of Object.entries(b.corruptions || {}))
+    if (q.kind === "mine" && q.source === owner && q.createdTurn < b.turn && --q.remaining <= 0)
+      detonateMine(g, Number(i), q);
 }
 
 export function compelCard(g, i, q, forced = false) {

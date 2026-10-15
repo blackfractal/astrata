@@ -1,9 +1,10 @@
-import { cards, cycle, enemies } from "./content.mjs";
-import { compelCard, resetCoveredInsanity } from "./corruptions.mjs";
+import { cards, cycle, enemies, ELEMENTS } from "./content.mjs";
+import { compelCard, resetCoveredInsanity, prepareCorruption, applyCorruptions } from "./corruptions.mjs";
 import { ideonDefs } from "./depths-content.mjs";
 import { adjacent, offense, stackValue } from "./engine.mjs";
 import { forcedDiscardOutcome, forcedDiscardLabel } from "./card-removal.mjs";
 const top = (s) => s?.at(-1);
+export const REFRACTION_RADIUS = 2;
 export const livingIdeons = (b) => (b?.ideons || []).filter((e) => e.hp > 0);
 // Age counts completed commands in previews; resolution has already incremented it.
 // New/replacement tendrils start at age zero and never inherit a dead tendril's growth.
@@ -31,9 +32,10 @@ export function normalizeInsectMovement(state) {
     b.hiveLarvaOpening = true;
   }
   for (const e of state.battle?.enemies || [])
-    if (["mindHive", "cnidarian"].includes(e.id)) {
+    if (["mindHive", "cnidarian", "refractionCannon"].includes(e.id)) {
       e.signature = enemies[e.id].signature;
       e.counter = enemies[e.id].counter;
+      if (e.id === "refractionCannon") e.cannonTurns ??= e.cycle || 0;
     }
   for (const e of state.battle?.ideons || [])
     if (["runner", "burrower", "larva", "tentacle"].includes(e.kind)) {
@@ -42,6 +44,8 @@ export function normalizeInsectMovement(state) {
       e.turnDamage = ideonDefs[e.kind].turnDamage;
       if (e.kind === "tentacle") e.damage = ideonDefs.tentacle.damage;
     }
+  for (const e of b?.ideons || [])
+    if (e.behavior === "bullet") e.text = ideonDefs.bullet.text;
   if (state.checkpoint) normalizeInsectMovement(state.checkpoint);
 }
 export function hiveBrood(e) {
@@ -122,7 +126,8 @@ export const stickyAt = (b, slot) =>
   livingIdeons(b).some((e) => e.sticky && adjacent(e.slot).includes(slot));
 export const fieldIdeons = (b, slot) =>
   livingIdeons(b).filter(
-    (e) => e.field && (e.slot === slot || adjacent(e.slot).includes(slot)),
+    (e) => e.field && Math.abs(e.slot % 7 - slot % 7) +
+      Math.abs(Math.floor(e.slot / 7) - Math.floor(slot / 7)) <= REFRACTION_RADIUS,
   );
 export function ideonActivationReason(b, slot, element) {
   if (coveredByIdeon(b, slot)) return "Covered by an Ideon";
@@ -174,10 +179,17 @@ function warnTendrilReturn(g, owner, origin, count) {
 export function settleIdeons(g, { animate = true } = {}) {
   const b = g.s.battle;
   b.ideons ||= [];
+  const fallen = b.enemies.filter(e => e.hp <= 0 && e.tier === "Archon" &&
+    e.stratum === 3 && !e.ideonDeathPresented);
+  const departures = fallen.map(owner => ({
+    uid: owner.uid, name: owner.name,
+    children: livingIdeons(b).filter(e => e.owner === owner.uid).map(e => ({ ...e })),
+  }));
+  for (const owner of fallen) owner.ideonDeathPresented = true;
   for (const e of b.ideons) {
     const owner = b.enemies.find((o) => o.uid === e.owner);
     if (!owner || owner.hp <= 0) {
-      if (e.hp > 0 && animate)
+      if (e.hp > 0 && animate && !fallen.some(o => o.uid === e.owner))
         g.present("hit", {
           target: "enemy",
           uid: e.uid,
@@ -202,6 +214,8 @@ export function settleIdeons(g, { animate = true } = {}) {
     b.tendrilReturns = b.tendrilReturns.filter(q => b.enemies.some(e => e.uid === q.owner && e.hp > 0));
   for (const [slot, q] of Object.entries(b.corruptions || {}))
     if (q.kind === "egg" && !b.enemies.some(e => e.uid === q.source && e.hp > 0)) delete b.corruptions[slot];
+  if (animate)
+    for (const departure of departures) g.present("ownerDeath", departure);
 }
 export function spawnIdeon(g, owner, kind, options = {}) {
   const b = g.s.battle,
@@ -273,6 +287,7 @@ export function initializeIdeons(g) {
   const b = g.s.battle;
   b.ideons ||= [];
   for (const e of b.enemies) {
+    if (e.id === "refractionCannon") e.cannonTurns = 0;
     if (e.id === "cnidarian")
       for (let n = 0; n < 3; n++) spawnIdeon(g, e, "tentacle");
     if (e.id === "mindHive") {
@@ -301,7 +316,7 @@ export function initializeIdeons(g) {
     }
   }
 }
-export function cannonPlan(g, owner, t) {
+function cannonPlans(g, owner, t, allowOverlap = false) {
   const b = g.s.battle;
   const candidates = b.grid.flatMap((s, i) =>
     top(s)
@@ -321,10 +336,12 @@ export function cannonPlan(g, owner, t) {
     })),
   ];
   const bullets = livingIdeons(b).filter((e) => e.behavior === "bullet");
-  const safe = (c) =>
-    bullets.every((e) => {
-      const start =
-        Math.floor(c.slot / 7) * 7 + ((c.slot % 7) % 2 === 0 ? 6 : 5);
+  const safe = (c) => {
+    const start = Math.floor(c.slot / 7) * 7 + ((c.slot % 7) % 2 === 0 ? 6 : 5);
+    if (b.corruptions?.[start]?.kind === "hole" ||
+        livingIdeons(b).some(e => e.behavior !== "bullet" && e.slot === start)) return false;
+    if (allowOverlap) return true;
+    return bullets.every((e) => {
       for (let k = 0; k < 4; k++) {
         const x = (start % 7) - k * 2,
           other = (e.slot % 7) - (k + 1) * 2;
@@ -333,13 +350,14 @@ export function cannonPlan(g, owner, t) {
           other >= 0 &&
           Math.abs(x - other) +
             Math.abs(Math.floor(start / 7) - Math.floor(e.slot / 7)) <=
-            2
+            REFRACTION_RADIUS * 2
         )
           return false;
       }
       return true;
     });
-  const chosen = all.find(safe);
+  };
+  return all.filter(safe).map(chosen => {
   const element =
     chosen && chosen.element !== "Arcane"
       ? Object.keys(cycle).find((el) => cycle[el] === chosen.element)
@@ -357,16 +375,80 @@ export function cannonPlan(g, owner, t) {
     element: t.destructionShot ? "Arcane" : element,
     skipped: !chosen,
   };
+  });
+}
+export function cannonPlan(g, owner, t) {
+  return cannonPlans(g, owner, t)[0] || {
+    targetSlot: null, slot: null, field: t.destructionShot ? "destroy" : "shared",
+    element: "Arcane", skipped: true,
+  };
+}
+export const cannonVolleySize = e => Math.min(5, 1 + Math.floor((e.cannonTurns ?? e.cycle ?? 0) / 15));
+export function cannonVolley(g, owner, t) {
+  const plans = cannonPlans(g, owner, t);
+  const count = cannonVolleySize(owner);
+  if (count === 1) return plans.slice(0, 1);
+  const distance = (a, z) => Math.abs(a % 7 - z % 7) + Math.abs(Math.floor(a / 7) - Math.floor(z / 7));
+  let chosen = plans.slice(0, 1);
+  // Both newborn bullets advance together. Prefer a complete, non-overlapping
+  // pair, then formation value; never reroll or mutate the state during intent.
+  pair: for (let i = 0; i < plans.length; i++)
+    for (let j = i + 1; j < plans.length; j++) {
+      const a = plans[i].slot, z = plans[j].slot;
+      if (distance(a, z) > REFRACTION_RADIUS * 2) {
+        chosen = [plans[i], plans[j]];
+        break pair;
+      }
+    }
+  // Three or more radius-two diamonds cannot all fit without overlap in six
+  // rows. Keep distinct centers, spreading additional shots as far as possible.
+  const bySlot = new Map();
+  for (const p of [...plans, ...cannonPlans(g, owner, t, true)])
+    if (!bySlot.has(p.slot)) bySlot.set(p.slot, p);
+  const candidates = [...bySlot.values()];
+  while (chosen.length < count) {
+    const remaining = candidates.filter(p => !chosen.some(c => c.slot === p.slot));
+    if (!remaining.length) break;
+    remaining.sort((a, z) => {
+      const clearance = p => chosen.length ? Math.min(...chosen.map(c => distance(p.slot, c.slot))) : 0;
+      return clearance(z) - clearance(a);
+    });
+    chosen.push(remaining[0]);
+  }
+  return chosen;
+}
+// The saved action counter preserves escalation across Continue and older saves.
+export const cannonBlastDamage = (e) =>
+  40 + 10 * Math.floor((e.cannonTurns ?? e.cycle ?? 0) / 5);
+function cannonAttack(e, t) {
+  const total = 14 + 2 * Math.floor((e.cycle || 0) / 2);
+  t.damage = total;
+  if ((e.cycle || 0) % 2) {
+    // Counter the first element; Arcane has no counter, so rotate a non-Arcane partner.
+    const elements = ELEMENTS.filter(el => el !== "Arcane");
+    const second = Object.keys(cycle).find(el => cycle[el] === t.element) ||
+      elements[Math.floor((e.cycle || 0) / 2) % elements.length];
+    t.damage = 0;
+    t.sequence = [{ damage: total / 2, element: t.element }, { damage: total / 2, element: second }];
+  }
 }
 export function depthsTell(g, e, t) {
+  if (e.id === "refractionCannon" && !t.finalBlast && g.s.mode === "battle" &&
+      ((e.cannonTurns ?? e.cycle ?? 0) + 1) % 5 === 4)
+    t.name += ` · Charging Final Blast... (${cannonBlastDamage(e)} damage) + 2 Mind Mines`;
   if (t.cannon && (!g.s.battle || g.s.mode !== "battle")) {
     t.name += " · field chosen from your battle formation";
+    cannonAttack(e, t);
     return t;
   }
   if (t.cannon) {
-    t.cannonPlan = cannonPlan(g, e, t);
+    t.cannonPlans = cannonVolley(g, e, t);
+    t.cannonPlan = t.cannonPlans[0] || cannonPlan(g, e, t);
     t.element = t.cannonPlan.element;
-    t.name += ` · ${t.cannonPlan.skipped ? "lane occupied; launch withheld" : t.element + " field, row " + (Math.floor(t.cannonPlan.slot / 7) + 1)}`;
+    cannonAttack(e, t);
+    t.name += ` · ${t.cannonPlan.skipped ? "lane occupied; launch withheld" : t.cannonPlans.map(p => p.element + " field, row " + (Math.floor(p.slot / 7) + 1)).join(" + ")}`;
+    if (cannonVolleySize(e) > 1)
+      t.name += ` · ${t.cannonPlans.length}/${cannonVolleySize(e)} bullets`;
   }
   if (t.hiveWave) {
     const wave = hiveBrood(e);
@@ -424,10 +506,14 @@ function moveIdeon(g, e, to) {
       compelCard(g, from, b.corruptions[from], true);
   }
   e.slot = to;
-  g.present("ideonMove", {
+  g.present(e.behavior === "bullet" ? "ideonTravel" : "ideonMove", {
     uid: e.uid,
     fromSlot: from,
     slot: to,
+    ...(e.behavior === "bullet" ? {
+      path: Array.from({ length: from - to }, (_, n) => from - n - 1),
+      projectile: { ...e },
+    } : {}),
     element: e.element,
     name: e.name,
   });
@@ -518,9 +604,17 @@ export function commandIdeon(g, uid) {
   }
   if (e.behavior === "bullet" || e.behavior === "crawl") {
     if (e.slot % 7 < e.speed) {
-      hit(e.damage, { pierce: e.behavior === "bullet" });
+      const edge = e.slot - e.slot % 7, projectile = { ...e };
+      hit(e.damage, { pierce: e.behavior === "bullet",
+        ...(e.behavior === "bullet" ? { gridSourceSlot: edge } : {}) });
       e.hp = 0;
       e.removed = true;
+      if (e.behavior === "bullet")
+        g.present("ideonTravel", {
+          uid: e.uid, fromSlot: e.slot, slot: edge,
+          path: Array.from({ length: e.slot - edge }, (_, n) => e.slot - n - 1),
+          projectile, exiting: true, element: e.element, name: e.name,
+        });
       return;
     }
     if (e.kind === "runner") {
@@ -534,6 +628,18 @@ export function commandIdeon(g, uid) {
 export function scheduleDepths(g, owner, t) {
   const b = g.s.battle,
     jobs = [];
+  if (owner.id === "refractionCannon") {
+    owner.cannonTurns = (owner.cannonTurns ?? Math.max(0, owner.cycle - 1)) + 1;
+    if (t.finalBlast) delete owner.finalBlastElement;
+    else if (owner.cannonTurns % 5 === 4) {
+      owner.finalBlastElement = g.pick(ELEMENTS);
+      const name = `Charging Final Blast... Next move: ${cannonBlastDamage(owner)} ${owner.finalBlastElement} damage`;
+      g.log(`${owner.name}: ${name}.`);
+      g.present("status", { target: "enemy", uid: owner.uid, name });
+      prepareCorruption(g, owner, {markCorruption:"mine", count:2, emptyOnly:true, immediate:true});
+      applyCorruptions(g, owner);
+    }
+  }
   if (t.commandIdeons)
     for (const e of livingIdeons(b)
       .filter((e) => e.owner === owner.uid)
@@ -555,11 +661,9 @@ export function scheduleDepths(g, owner, t) {
   }
   if (t.cannon && !t.cannonPlan.skipped)
     jobs.push({
-      kind: "ideonSpawn",
+      kind: "cannonVolley",
       owner: owner.uid,
-      ideon: "bullet",
-      count: 1,
-      options: t.cannonPlan,
+      plans: t.cannonPlans || [t.cannonPlan],
     });
   if (t.hiveWave) jobs.push({ kind: "hiveTick", owner: owner.uid });
   b.jobs.unshift(...jobs);
@@ -567,6 +671,17 @@ export function scheduleDepths(g, owner, t) {
 export function depthsJob(g, j) {
   const b = g.s.battle,
     owner = b.enemies.find((e) => e.uid === j.owner && e.hp > 0);
+  if (j.kind === "cannonVolley") {
+    if (owner) {
+      const start = g.presentation?.length || 0;
+      const spawned = j.plans.map(p => spawnIdeon(g, owner, "bullet", p)).filter(Boolean);
+      if (g.capturePresentation && spawned.length > 1) {
+        g.presentation.splice(start);
+        g.present("ideonVolley", { bullets: spawned.map(e => ({ uid: e.uid, name: e.name, element: e.element })) });
+      }
+    }
+    return true;
+  }
   if (j.kind === "hiveHatch") {
     if (owner) hatchMindEgg(g, owner, j.slot, j.uid);
     return true;

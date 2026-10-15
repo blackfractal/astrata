@@ -56,7 +56,7 @@ impactStyles.Corrode = {
 export function spellImpact(
   target,
   element,
-  { duration = 500, reduced = false } = {},
+  { duration = 500, reduced = false, finalBlast = false } = {},
 ) {
   if (!target) return null;
   const name = Object.hasOwn(impactStyles, element) ? element : "Arcane";
@@ -64,10 +64,12 @@ export function spellImpact(
     r = target.getBoundingClientRect();
   const root = document.createElement("div");
   root.className = "spell-impact";
+  if (finalBlast) root.classList.add("final-blast-impact");
   root.dataset.element = name;
   root.dataset.motion = reduced ? "reduced" : "normal";
   root.setAttribute("aria-hidden", "true");
   root.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px;--hit-color:${style.color}`;
+  root.style.setProperty("--blast-duration", duration + "ms");
   root.innerHTML = `<svg class="impact-core" viewBox="0 0 100 100" fill="currentColor">${style.core}</svg>`;
   document.body.append(root);
   root.querySelector(".impact-core").animate(
@@ -108,7 +110,7 @@ export function spellImpact(
 }
 
 // Shared appearance for the traveling, impact and waiting portions of one attack.
-export function attackOrb(damage, element) {
+export function attackOrb(damage, element, finalBlast = false) {
   const orb = document.createElement("span");
   orb.className = "held-attack";
   orb.style.setProperty(
@@ -116,6 +118,13 @@ export function attackOrb(damage, element) {
     (impactStyles[element] || impactStyles.Arcane).color,
   );
   orb.textContent = damage;
+  if (finalBlast) {
+    orb.classList.add("final-blast-orb");
+    const number = document.createElement("span");
+    number.className = "blast-damage";
+    number.textContent = damage;
+    orb.replaceChildren(number);
+  }
   orb.setAttribute("aria-label", `${damage} ${element} damage remaining`);
   return orb;
 }

@@ -1,0 +1,201 @@
+{
+  "version": {
+    "rules": "3.0.28",
+    "content": "3.0.28",
+    "observation": 2,
+    "actions": 9
+  },
+  "controller": "Codex manual legal-action selections",
+  "seed": 73001,
+  "fixture": "stratum3-developed-foundation-v1",
+  "startingHp": 70,
+  "endingHp": 70,
+  "damageTaken": 0,
+  "healed": 0,
+  "turn": 17,
+  "decisions": 220,
+  "rewinds": 0,
+  "replayVerified": true,
+  "startingFocus": 3,
+  "startingChannel": 4,
+  "deck": [
+    "Blast",
+    "Blast",
+    "Shield",
+    "Shield",
+    "Focus Energy",
+    "Focus Energy",
+    "Clear Mind",
+    "Rain Lantern",
+    "Ward",
+    "Ward",
+    "Magnifier Ward",
+    "Living Lattice",
+    "Sapling",
+    "Familiar",
+    "Machine Elves",
+    "Transmute",
+    "Water Blast",
+    "Cinder Snap",
+    "Grove Titan",
+    "Storm Canopy",
+    "Solitude",
+    "Plasma Ball",
+    "Lucid Needle",
+    "Scouring Gale",
+    "Lucid Guide"
+  ],
+  "equipment": {
+    "wrist1": 40,
+    "wrist2": 42,
+    "finger1": 44,
+    "finger2": 46,
+    "torso": 48,
+    "head": 49
+  },
+  "blasts": [
+    {
+      "turn": 5,
+      "element": "Water",
+      "damage": 40
+    },
+    {
+      "turn": 10,
+      "element": "Wind",
+      "damage": 50
+    },
+    {
+      "turn": 15,
+      "element": "Water",
+      "damage": 60
+    }
+  ],
+  "titanDefense": [
+    {
+      "turn": 5,
+      "attack": "Mind Mines detonate, then Final Blast",
+      "element": "Water",
+      "damage": 21,
+      "titanElement": "Earth",
+      "hpBefore": 29
+    },
+    {
+      "turn": 7,
+      "attack": "Chromatic shot · Wind field, row 1",
+      "element": "Wind",
+      "damage": 9,
+      "titanElement": "Earth",
+      "hpBefore": 14
+    },
+    {
+      "turn": 10,
+      "attack": "Mind Mines detonate, then Final Blast",
+      "element": "Wind",
+      "damage": 13,
+      "titanElement": "Earth",
+      "hpBefore": 15
+    },
+    {
+      "turn": 14,
+      "attack": "Terminal refraction · Charging Final Blast... (60 damage) + 2 Mind Mines · lane occupied; launch withheld",
+      "element": "Light",
+      "damage": 12,
+      "titanElement": "Earth",
+      "hpBefore": 16
+    }
+  ],
+  "bossDamage": {
+    "grove": 63,
+    "focus": 0,
+    "magnify": 0,
+    "lucidNeedle": 8,
+    "blast": 4,
+    "shield": 0,
+    "transmute": 0,
+    "plasma": 64,
+    "scouringGale": 4,
+    "elves": 0,
+    "rain": 0,
+    "ward": 0,
+    "lucidGuide": 0,
+    "storm": 28,
+    "water": 0,
+    "solitude": 89,
+    "clear": 0,
+    "cinder": 0
+  },
+  "perTurn": {
+    "1": {
+      "hpLost": 0,
+      "bossHpEnd": 240
+    },
+    "2": {
+      "hpLost": 0,
+      "bossHpEnd": 220
+    },
+    "3": {
+      "hpLost": 0,
+      "bossHpEnd": 197
+    },
+    "4": {
+      "hpLost": 0,
+      "bossHpEnd": 169
+    },
+    "5": {
+      "hpLost": 0,
+      "bossHpEnd": 169
+    },
+    "6": {
+      "hpLost": 0,
+      "bossHpEnd": 138
+    },
+    "7": {
+      "hpLost": 0,
+      "bossHpEnd": 123
+    },
+    "8": {
+      "hpLost": 0,
+      "bossHpEnd": 116
+    },
+    "9": {
+      "hpLost": 0,
+      "bossHpEnd": 100
+    },
+    "10": {
+      "hpLost": 0,
+      "bossHpEnd": 85
+    },
+    "11": {
+      "hpLost": 0,
+      "bossHpEnd": 70
+    },
+    "12": {
+      "hpLost": 0,
+      "bossHpEnd": 70
+    },
+    "13": {
+      "hpLost": 0,
+      "bossHpEnd": 47
+    },
+    "14": {
+      "hpLost": 0,
+      "bossHpEnd": 32
+    },
+    "15": {
+      "hpLost": 0,
+      "bossHpEnd": 25
+    },
+    "16": {
+      "hpLost": 0,
+      "bossHpEnd": 14
+    },
+    "17": {
+      "hpLost": 0,
+      "bossHpEnd": 0
+    }
+  },
+  "projectilesLaunched": 11,
+  "launchesWithheld": 2,
+  "sourcesSha256": "cdaad2780bfc1ebf4fe7d953b62f2a60f3c81b3d2af9e053e8dfcfd96c9bffd3",
+  "limitation": "One authored strong carry-in and one seed, manually played with placement errors; not an optimized line, a natural run, or a population win-rate estimate."
+}

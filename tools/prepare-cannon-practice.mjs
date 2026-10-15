@@ -1,0 +1,25 @@
+import fs from 'node:fs/promises';import path from 'node:path';import assert from 'node:assert/strict';import {randomUUID,createHash} from 'node:crypto';
+import {Game} from '../src/engine.mjs';
+const profile=path.join(process.env.APPDATA,'astrata'),sourceRunId='0c117e2e-dd65-43fa-ba03-420ad8008ca3';
+const report=path.resolve('reports/cannon-same-build-20261014');await fs.mkdir(report,{recursive:true});
+const bytes=await fs.readFile(path.join(profile,'runs',sourceRunId,'latest.json'));
+await fs.writeFile(path.join(report,'source-latest.json'),bytes);
+await fs.copyFile(path.join(profile,'history.json'),path.join(report,'history-before.json'));
+try{await fs.copyFile(path.join(profile,'save.json'),path.join(report,'save-before.json'));}catch(e){if(e.code!=='ENOENT')throw e;}
+const source=JSON.parse(bytes),s=structuredClone(source),runId=randomUUID();
+for(const key of ['battle','checkpoint','reward','outcome','cause','death','uiMeta'])delete s[key];
+s.history=[];s.log=[];s.mode='field';s.hp=s.maxHp;s.archon='refractionCannon';s.revealedArchon=s.archon;
+s.evaluationFixture='jonathan-same-build-cannon-20261014';
+s.cloneOrigin={sourceRunId,reason:'Same-build Refraction Cannon practice after Cnidarian victory',sourceHp:source.hp,startingHp:s.hp,createdAt:new Date().toISOString()};
+s.uiMeta={runId,elapsed:0};
+const g=new Game(0,s),foe={uid:g.uid(),enemy:'refractionCannon',kind:'enemy',x:s.field.x,y:s.field.y,born:s.field.round,restless:0};
+g.s.field.entities=[foe];g.beginBattle([foe]);
+const prepared={...g.save(),uiMeta:{runId,elapsed:0}};
+assert.equal(prepared.hp,70);assert.equal(prepared.battle.turn,1);assert.equal(prepared.battle.enemyFirst,false);
+assert.deepEqual(prepared.deck,source.deck);assert.deepEqual(prepared.inventory,source.inventory);assert.deepEqual(prepared.equipment,source.equipment);
+const loaded=new Game(0,structuredClone(prepared));assert.equal(loaded.s.battle.enemies[0].id,'refractionCannon');assert.ok(loaded.legal().length);
+const {Game:PackagedGame}=await import('../release/Astrata/resources/app/src/engine.mjs');
+assert.equal(new PackagedGame(0,structuredClone(prepared)).s.battle.enemies[0].id,'refractionCannon');
+await fs.writeFile(path.join(report,'prepared-save.json'),JSON.stringify(prepared));
+const setup={sourceRunId,runId,boss:'The Refraction Cannon',version:prepared.version.rules,startingHp:prepared.hp,deck:prepared.deck.length,inventory:prepared.inventory.length,focus:prepared.battle.focus,channel:prepared.battle.channel,turn:prepared.battle.turn,sourceSha256:createHash('sha256').update(bytes).digest('hex'),deckInventoryEquipmentIdentical:true,reloadVerified:true,status:'prepared'};
+await fs.writeFile(path.join(report,'setup.json'),JSON.stringify(setup,null,2));console.log(JSON.stringify(setup));

@@ -19,6 +19,7 @@ for(const stratum of [1,2,3]){
    const detail=p.locator('.card-detail');await expect(detail).toBeVisible();
    const text=await detail.innerText();assert.equal(text.includes('Ideons'),stratum===3,`${id} in S${stratum}`);
    if(id==='eclipse'&&stratum===3)assert.ok(text.includes('2-space diamond'));
+   if(id==='storm'&&stratum===3)assert.ok(text.includes('Ideons below this card in the same column'));
    results.push({stratum,id,ideonClause:text.includes('Ideons')});
    await p.keyboard.press('Escape');
   }

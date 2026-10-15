@@ -61,7 +61,23 @@ export function installTooltips() {
     if (e.key === "Escape") hide();
   });
 }
-export async function playFrames(before, frames, after, render, isFast) {
+export async function playFrames(before, frames, after, renderView, isFast) {
+  const departedOwners = new Set();
+  const deferredDeaths = new Set(frames.filter(f => f.kind === "ownerDeath").map(f => f.uid));
+  const render = state => {
+    if ((!departedOwners.size && !deferredDeaths.size) || !state.battle) return renderView(state);
+    const view = structuredClone(state);
+    // Observations omit dead enemies. Keep their final portrait mounted until
+    // the ordered disappearance sequence has actually played.
+    for (const uid of deferredDeaths) {
+      if (departedOwners.has(uid) || view.battle.enemies.some(e => e.uid === uid)) continue;
+      const portrait = before.battle?.enemies.find(e => e.uid === uid);
+      if (portrait) view.battle.enemies.push({ ...structuredClone(portrait), hp: 0 });
+    }
+    view.battle.enemies = view.battle.enemies.filter(e => !departedOwners.has(e.uid));
+    view.battle.ideons = view.battle.ideons.filter(e => !departedOwners.has(e.owner));
+    renderView(view);
+  };
   if (!frames.length && before.mode === after.mode) return;
   const bar = document.createElement("div");
   bar.className = "presentation-bar";
@@ -154,7 +170,7 @@ export async function playFrames(before, frames, after, render, isFast) {
       const a = (lash?.tip || from).getBoundingClientRect(),
         b = el.getBoundingClientRect();
       projectile = attack
-        ? attackOrb(attack.incoming, element)
+        ? attackOrb(attack.incoming, element, attack.finalBlast)
         : document.createElement("div");
       projectile.classList.add("attack-bolt");
       if (boost) {
@@ -195,7 +211,7 @@ export async function playFrames(before, frames, after, render, isFast) {
     // A viewport overlay stays visible even while the struck card fades underneath.
     if (el && attack?.remaining > 0) {
       const r = el.getBoundingClientRect();
-      const orb = attackOrb(attack.remaining, element);
+      const orb = attackOrb(attack.remaining, element, attack.finalBlast);
       orb.classList.add("attack-orb-overlay");
       orb.style.left = r.left + r.width / 2 + "px";
       orb.style.top = r.top + r.height / 2 + "px";
@@ -203,7 +219,7 @@ export async function playFrames(before, frames, after, render, isFast) {
       document.body.append(orb);
     }
     const burst = element
-      ? spellImpact(el, element, { duration: ms(500), reduced })
+      ? spellImpact(el, element, { duration: ms(500), reduced, finalBlast: attack?.finalBlast })
       : null;
     el?.classList.add("impact");
     const tag = floating(el, label, attack ? "attack-impact-number" : "");
@@ -261,7 +277,7 @@ export async function playFrames(before, frames, after, render, isFast) {
                 await flash(
                   enemy(hit.uid),
                   hit.kind === "status" ? hit.name : "−" + hit.amount,
-                  hit.dead,
+                  hit.dead && !deferredDeaths.has(hit.uid),
                   from,
                   hit.kind === "status"
                     ? statusVisual[hit.statusEffect]
@@ -656,9 +672,34 @@ export async function playFrames(before, frames, after, render, isFast) {
               (frame.focus ? " Focus" : " Channel"),
           );
         render(frame.state);
+      } else if (frame.kind === "ideonVolley") {
+        render(frame.state);
+        await Promise.all(frame.bullets.map(e => flash(enemy(e.uid), e.name, false, null, e.element)));
       } else if (frame.kind === "ideonSpawn") {
         render(frame.state);
         await flash(enemy(frame.uid), frame.name, false, null, frame.element);
+      } else if (frame.kind === "ideonTravel") {
+        let fromSlot = frame.fromSlot;
+        // These are presentation-only stops: do not resolve fields or collisions
+        // on intermediate spaces, or turn a two-space command into two commands.
+        for (const slot of frame.path) {
+          const from = card(fromSlot)?.getBoundingClientRect();
+          const view = structuredClone(frame.state);
+          view.battle.ideons = view.battle.ideons.filter(e => e.uid !== frame.uid);
+          view.battle.ideons.push({ ...frame.projectile, slot });
+          render(view);
+          const el = enemy(frame.uid), to = el?.getBoundingClientRect();
+          if (el && from && to && !reduced) {
+            await el.animate([
+              { transform: `translate(${from.left + from.width / 2 - to.left - to.width / 2}px,${from.top + from.height / 2 - to.top - to.height / 2}px)` },
+              { transform: "translate(0,0)" },
+            ], { duration: ms(210), easing: "ease-in-out" }).finished;
+          } else await pause(100);
+          fromSlot = slot;
+          await pause(45);
+        }
+        if (frame.exiting) await flash(enemy(frame.uid), "", true);
+        render(frame.state);
       } else if (frame.kind === "ideonMove" || frame.kind === "guideMove") {
         const from = card(frame.fromSlot)?.getBoundingClientRect();
         render(frame.state);
@@ -683,16 +724,23 @@ export async function playFrames(before, frames, after, render, isFast) {
         source = { slot: frame.slot };
         await flash(card(frame.slot), frame.name);
         render(frame.state);
-      } else if (frame.kind === "hiveDeath") {
+      } else if (frame.kind === "hiveDeath" || frame.kind === "ownerDeath") {
+        if (frame.kind === "ownerDeath") {
+          const scene = structuredClone(frame.state);
+          scene.battle.ideons.push(...frame.children);
+          render(scene);
+        }
         await flash(enemy(frame.uid), "", true);
         enemy(frame.uid)?.remove();
-        await Promise.all(frame.insects.map(uid => flash(enemy(uid), "", true)));
+        const children = frame.insects || frame.children.map(e => e.uid);
+        await Promise.all(children.map(uid => flash(enemy(uid), "", true)));
+        departedOwners.add(frame.uid);
         const cleared = structuredClone(frame.state);
         cleared.battle.enemies = cleared.battle.enemies.filter(e => e.hp > 0);
         render(cleared);
-        bar.querySelector("span").textContent = "The Mind Hive falls silent";
-        bar.dataset.stage = "hive-cleared";
-        // One real second of the cleared battlefield, even in Fast/reduced-motion mode.
+        bar.querySelector("span").textContent = frame.kind === "hiveDeath" ? "The Mind Hive falls silent" : `${frame.name} falls`;
+        bar.dataset.stage = frame.kind === "hiveDeath" ? "hive-cleared" : "owner-cleared";
+        // One real second to see the defeated owner and its Ideons gone.
         const until = performance.now() + 1000;
         while (!skip && performance.now() < until)
           await new Promise(resolve => setTimeout(resolve, 25));
@@ -713,6 +761,8 @@ export async function playFrames(before, frames, after, render, isFast) {
         await flash(
           el,
           `${frame.name} · ${frame.amount} ${frame.element || ""}`,
+          false, null, frame.finalBlast ? frame.element : null,
+          frame.finalBlast ? { finalBlast: true } : null,
         );
         render(frame.state);
       } else if (frame.kind === "hit" || frame.kind === "defend") {
@@ -767,7 +817,7 @@ export async function playFrames(before, frames, after, render, isFast) {
               : frame.amount != null
                 ? (frame.kind === "defend" ? "Absorbed " : "−") + frame.amount
                 : frame.name || "Hit",
-            frame.dead,
+            frame.dead && !deferredDeaths.has(frame.uid),
             frame.collapseOrigins?.length ? null : from,
             frame.amount != null
               ? statusVisual[frame.attackStatus] ||
@@ -779,6 +829,7 @@ export async function playFrames(before, frames, after, render, isFast) {
             frame.attackPath && frame.pathFrom
               ? {
                   incoming: previous.battle?.reaction?.damage ?? frame.amount,
+                  finalBlast: frame.finalBlast,
                   remaining: ["card", "item"].includes(frame.pathTo?.kind)
                     ? frame.remaining
                     : 0,
@@ -812,7 +863,7 @@ export async function playFrames(before, frames, after, render, isFast) {
                   ? after.tutorial.name + " Complete"
                   : "Stratum " + (after.stratum || 1) + " Complete"
               : "Continue";
-      if (!frames.some(f => f.kind === "hiveDeath"))
+      if (!frames.some(f => f.kind === "hiveDeath" || f.kind === "ownerDeath"))
         await pause(after.mode === "reward" ? 700 : 450);
     }
   } finally {

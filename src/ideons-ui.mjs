@@ -12,10 +12,10 @@ const tones = {
   Chaos: "#bf94f4",
 };
 const fieldNames = {
-  element: "Element",
   shared: "One card",
   destroy: "Destruction",
 };
+const fieldName = (e) => e.field === "element" ? e.element : fieldNames[e.field];
 export function enhanceIdeons(ctx) {
   const { o, app, esc, img } = ctx,
     b = o.battle;
@@ -49,7 +49,7 @@ export function enhanceIdeons(ctx) {
       const ring = document.createElement("span");
       ring.className = "refraction-field";
       ring.style.setProperty("--field-color", tones[field.element]);
-      ring.dataset.tooltip = `${fieldNames[field.field]} field · ${field.field === "element" ? "Only " + field.element + " activations" : field.field === "shared" ? "One card may activate here each turn" : "Activating destroys the card afterward"}`;
+      ring.dataset.tooltip = `${fieldName(field)} field · 2-space diamond · ${field.field === "element" ? "Only " + field.element + " activations" : field.field === "shared" ? "One card may activate here each turn" : "Activating destroys the card afterward"}`;
       el.append(ring);
     }
   }
@@ -88,11 +88,11 @@ export function enhanceIdeons(ctx) {
         command += ` Next: move one space left, swapping with a player card or Construct. Splash: ${damage.splash} ${e.element} against you after movement. Guard from its resulting column or farther left; equipment can also defend.`;
       }
     }
-    const help = `${e.name} · ${e.element} · ${e.hp}/${e.maxHp} HP. Owner: ${owner?.name || e.ownerName}. ${e.text} ${e.field ? fieldNames[e.field] + " field." : ""} ${e.reserve ? "Stored Ward: " + e.reserve + "." : ""} ${state} ${command}`;
+    const help = `${e.name} · ${e.element} · ${e.hp}/${e.maxHp} HP. Owner: ${owner?.name || e.ownerName}. ${e.text} ${e.field ? fieldName(e) + " field." : ""} ${e.reserve ? "Stored Ward: " + e.reserve + "." : ""} ${state} ${command}`;
     el.dataset.tooltip = help;
     el.setAttribute("aria-label", help);
     const art = artPaths["ideon-" + e.kind] || `assets/ideon-${e.kind}.png`;
-    el.innerHTML = `<img class="ideon-art" src="${art}" alt=""><span class="ideon-owner" title="${esc(owner?.name || e.ownerName)} #${e.owner}">${img("enemy-" + (owner?.id || "mindHive"))}</span><span class="ideon-name">${esc(e.name)}</span><span class="ideon-health"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i><b>${e.hp}</b></span>${e.mark ? '<span class="ideon-mark">✧</span>' : ""}${e.field ? `<span class="ideon-field-name">${fieldNames[e.field]}</span>` : ""}`;
+    el.innerHTML = `<img class="ideon-art" src="${art}" alt=""><span class="ideon-owner" title="${esc(owner?.name || e.ownerName)} #${e.owner}">${img("enemy-" + (owner?.id || "mindHive"))}</span><span class="ideon-name">${esc(e.name)}</span><span class="ideon-health"><i style="width:${Math.max(0, (e.hp / e.maxHp) * 100)}%"></i><b>${e.hp}</b></span>${e.mark ? '<span class="ideon-mark">✧</span>' : ""}${e.field ? `<span class="ideon-field-name">${fieldName(e)}</span>` : ""}`;
     if (e.kind === "drone") {
       const intent = document.createElement("span");
       intent.className = "ideon-field-name";

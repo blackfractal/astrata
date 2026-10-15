@@ -104,7 +104,7 @@ test('Final round resolves egg damage before Hive victory',()=>{
  const g=arena(),b=g.s.battle,o=b.enemies[0];o.hp=1;g.s.hp=4;egg(g,6);g.endTurn();settle(g);
  assert.equal(g.s.outcome,'loss');assert.equal(o.hp,1);
 });
-test('Storm Canopy including upgrade/transmute never hits Ideons or bypasses their guardian',()=>{
+test('Storm Canopy including upgrade/transmute ignores other columns and respects guardians',()=>{
  const g=arena('glassBrood'),b=g.s.battle,o=b.enemies[0];const guardian=spawnIdeon(g,o,'guardian',{slot:6}),other=spawnIdeon(g,o,'runner',{slot:13});
  const c=put(g,'storm',0);c.upgrade=true;c.element='Fire';b.enemies.push({...o,uid:901,hp:100});b.phase='activate';
  act(g,'activate',{slot:0});assert.equal(guardian.hp,guardian.maxHp);assert.equal(other.hp,other.maxHp);assert.equal(o.hp,o.maxHp);assert.ok(b.enemies[1].hp<100);

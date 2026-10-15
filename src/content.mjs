@@ -6,8 +6,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "3.0.20",
-  content: "3.0.20",
+  rules: "3.0.29",
+  content: "3.0.29",
   observation: 2,
   actions: 9,
 };
@@ -488,7 +488,7 @@ card(
   "Spell",
   2,
   2,
-  { damage: 7, all: true, excludeIdeons: true },
+  { damage: 7, all: true, ideonBelow: true },
   "Deal 7 to all main enemies.",
   { rarity: "rare" },
 );
@@ -1865,7 +1865,7 @@ for (const [kind, d] of Object.entries(ideonDefs))
 
 // Early cards retain their availability; reveal later-mechanic clauses in S3.
 cards.eclipse.ideonText = "Also hits Ideons within a 2-space diamond (up to two north/south/east/west steps from this card).";
-cards.storm.ideonText = "Does not hit Ideons.";
+cards.storm.ideonText = "Also hits all Ideons below this card in the same column. Ideons above it are unaffected.";
 export function cardText(definition, stratum = 1) {
   return definition.text + (stratum >= 3 && definition.ideonText ? " " + definition.ideonText : "");
 }

@@ -1,0 +1,214 @@
+{
+  "version": {
+    "rules": "3.0.29",
+    "content": "3.0.29",
+    "observation": 2,
+    "actions": 9
+  },
+  "controller": "Codex manual legal-action selections",
+  "seed": 73001,
+  "fixture": "stratum3-developed-foundation-v1",
+  "startingHp": 70,
+  "endingHp": 70,
+  "damageTaken": 0,
+  "healed": 0,
+  "turn": 18,
+  "decisions": 242,
+  "rewinds": 0,
+  "replayVerified": true,
+  "startingFocus": 3,
+  "startingChannel": 4,
+  "deck": [
+    "Blast",
+    "Blast",
+    "Shield",
+    "Shield",
+    "Focus Energy",
+    "Focus Energy",
+    "Clear Mind",
+    "Rain Lantern",
+    "Ward",
+    "Ward",
+    "Magnifier Ward",
+    "Living Lattice",
+    "Sapling",
+    "Familiar",
+    "Machine Elves",
+    "Transmute",
+    "Water Blast",
+    "Cinder Snap",
+    "Grove Titan",
+    "Storm Canopy",
+    "Solitude",
+    "Plasma Ball",
+    "Lucid Needle",
+    "Scouring Gale",
+    "Lucid Guide"
+  ],
+  "equipment": {
+    "wrist1": 40,
+    "wrist2": 42,
+    "finger1": 44,
+    "finger2": 46,
+    "torso": 48,
+    "head": 49
+  },
+  "blasts": [
+    {
+      "turn": 5,
+      "element": "Water",
+      "damage": 40
+    },
+    {
+      "turn": 10,
+      "element": "Wind",
+      "damage": 50
+    },
+    {
+      "turn": 15,
+      "element": "Water",
+      "damage": 60
+    }
+  ],
+  "titanDefense": [
+    {
+      "turn": 5,
+      "attack": "Mind Mines detonate, then Final Blast",
+      "element": "Water",
+      "damage": 21,
+      "titanElement": "Earth",
+      "hpBefore": 29
+    },
+    {
+      "turn": 7,
+      "attack": "Chromatic shot · Wind field, row 1",
+      "element": "Wind",
+      "damage": 9,
+      "titanElement": "Earth",
+      "hpBefore": 14
+    },
+    {
+      "turn": 10,
+      "attack": "Mind Mines detonate, then Final Blast",
+      "element": "Wind",
+      "damage": 13,
+      "titanElement": "Earth",
+      "hpBefore": 15
+    },
+    {
+      "turn": 14,
+      "attack": "Terminal refraction · Charging Final Blast... (60 damage) + 2 Mind Mines · lane occupied; launch withheld",
+      "element": "Light",
+      "damage": 12,
+      "titanElement": "Earth",
+      "hpBefore": 16
+    },
+    {
+      "turn": 17,
+      "attack": "Chromatic shot · Light field, row 1 + Wind field, row 6 · 2/2 bullets",
+      "element": "Chaos",
+      "damage": 9,
+      "titanElement": "Earth",
+      "hpBefore": 10
+    }
+  ],
+  "bossDamage": {
+    "grove": 63,
+    "focus": 0,
+    "magnify": 0,
+    "lucidNeedle": 16,
+    "blast": 4,
+    "shield": 0,
+    "transmute": 0,
+    "plasma": 64,
+    "scouringGale": 8,
+    "elves": 0,
+    "rain": 0,
+    "ward": 0,
+    "lucidGuide": 0,
+    "storm": 34,
+    "water": 0,
+    "solitude": 105,
+    "clear": 0,
+    "cinder": 0,
+    "sapling": 6
+  },
+  "perTurn": {
+    "1": {
+      "hpLost": 0,
+      "bossHpEnd": 280
+    },
+    "2": {
+      "hpLost": 0,
+      "bossHpEnd": 260
+    },
+    "3": {
+      "hpLost": 0,
+      "bossHpEnd": 237
+    },
+    "4": {
+      "hpLost": 0,
+      "bossHpEnd": 209
+    },
+    "5": {
+      "hpLost": 0,
+      "bossHpEnd": 209
+    },
+    "6": {
+      "hpLost": 0,
+      "bossHpEnd": 178
+    },
+    "7": {
+      "hpLost": 0,
+      "bossHpEnd": 163
+    },
+    "8": {
+      "hpLost": 0,
+      "bossHpEnd": 156
+    },
+    "9": {
+      "hpLost": 0,
+      "bossHpEnd": 140
+    },
+    "10": {
+      "hpLost": 0,
+      "bossHpEnd": 125
+    },
+    "11": {
+      "hpLost": 0,
+      "bossHpEnd": 110
+    },
+    "12": {
+      "hpLost": 0,
+      "bossHpEnd": 110
+    },
+    "13": {
+      "hpLost": 0,
+      "bossHpEnd": 87
+    },
+    "14": {
+      "hpLost": 0,
+      "bossHpEnd": 72
+    },
+    "15": {
+      "hpLost": 0,
+      "bossHpEnd": 65
+    },
+    "16": {
+      "hpLost": 0,
+      "bossHpEnd": 54
+    },
+    "17": {
+      "hpLost": 0,
+      "bossHpEnd": 27
+    },
+    "18": {
+      "hpLost": 0,
+      "bossHpEnd": 0
+    }
+  },
+  "projectilesLaunched": 14,
+  "launchesWithheld": 2,
+  "sourcesSha256": "37c1d3cba02f3e394f5899e708573b6efb24977c150264dddd8c73948916e2fc",
+  "limitation": "One authored strong carry-in and one seed, manually played with placement errors; not an optimized line, a natural run, or a population win-rate estimate."
+}

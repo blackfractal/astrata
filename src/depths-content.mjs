@@ -95,7 +95,7 @@ export const ideonDefs = {
     speed: 2,
     covers: true,
     behavior: "bullet",
-    text: "Moves two spaces left per command. Covers and disables its current space. Emits a radius-1 diamond activation field. On leaving the grid: 12 Pierce damage; only equipment can defend.",
+    text: "Moves two spaces left per command. Covers and disables its current space. Emits a radius-2 Manhattan diamond activation field. On leaving the grid: 12 Pierce damage; only equipment can defend.",
   },
 };
 
@@ -397,7 +397,7 @@ export function registerDepths(card, enemy, glossary, events) {
       }),
     ],
     "Invulnerable: survive 15 rounds. Starts with eight mixed-element Hive Larvae, plus one per overworld movement round since spawning, across the rightmost three columns (space permitting), spread over all six lanes. Larvae have 16 HP, move west without attacking, then hit for 18 damage and disappear on their next command at the left edge. You act before they move. Each turn commands existing insects, hatches last turn's Mind Eggs, then lays new ones, including beneath cards. Rounds 1–4: 1 egg in the rightmost column; 5–8: 2 in the rightmost two; 9–11: 4 in the rightmost three; 12–13: 6 in the rightmost four; 14: 8 in the rightmost four. Round 15 commands and hatches, then dies. Eggs vary across all seven elements. Uncovered eggs deal 8 of their element; covered eggs remove the whole Construct without damage: recallable cards to Discard, non-recallable cards and their attachments to Destroyed. Both hatch an insect. Every fourth egg contains a stationary 50-HP Drone: attacks for 5, 10, 15 damage and so on. Burrowers move west; Skitters choose west, northwest or southwest. Both then attack for 1 damage of their element, even if blocked from moving; at the left edge they instead attack for 12 or 9 respectively and disappear. All moving insects swap through player cards, moving leftmost first. Newborns first act on the following turn; all vanish when the Hive dies.",
-    "Cover eggs with expendable cards to recycle them, or remove eggs with Machine Elves. Prepare for mixed elements. Storm Canopy does not hit Ideons; use targeted attacks, Lucid Guide or Scouring Gale.",
+    "Cover eggs with expendable cards to recycle them, or remove eggs with Machine Elves. Prepare for mixed elements. Storm Canopy hits Ideons below it in the same column; use targeted attacks, Lucid Guide or Scouring Gale for other positions.",
     {
       hive: true,
       bossMode: "stalker",
@@ -436,7 +436,7 @@ export function registerDepths(card, enemy, glossary, events) {
     "The Refraction Cannon",
     "Archon",
     "Chaos",
-    260,
+    300,
     "Archon",
     [0, 1, 2, 3].map((n) =>
       command(
@@ -446,8 +446,8 @@ export function registerDepths(card, enemy, glossary, events) {
         { cannon: true, destructionShot: n === 3, fixedDamage: true },
       ),
     ),
-    "Fires three counter-element fields then a destruction field. Every launch also attacks normally for 14. Bullets move two columns left; arrival is 12 Pierce. Covering disables a card. Radius-1 fields restrict activations; destroying the bullet removes its field.",
-    "Kill or work around each moving field. Equipment is the only defense against a bullet that reaches you.",
+    "Fires three counter-element volleys then a destruction volley. Launches one bullet per ordinary move on turns 1–15, two on 16–30, three on 31–45, four on 46–60, and five on 61 onward (maximum five). Bullets appear together in distinct spaces; larger volleys can overlap fields when separated lanes do not fit. The normal direct attack is not multiplied. Ordinary attacks alternate one hit and two different-element hits, escalating after each pair: 14, then 7+7, then 16, then 8+8, then 18, then 9+9, and so on. Final Blast and Purify pause this sequence. Both hits are shown in its intent. The first element follows its field; the second counters the first, or rotates through elemental partners when the first is Arcane. Bullets move two columns left; arrival is 12 Pierce. Covering disables a card. Radius-2 Manhattan diamond fields restrict activations; destroying the bullet removes its field. On turns 4, 9, 14 and so on, it charges Final Blast, revealing its random element, and lays two Mind Mines on empty spaces. Cover or defuse the mines during your next turn: they detonate before Final Blast, each dealing 20 Fire if uncovered or destroying its cover. After the mines detonate, the next turn fires Final Blast: 40 damage the first time, then 50, 60 and +10 each later cycle, of the announced element, blockable by normal defenses anywhere on the grid. No bullets launch or act on that turn.",
+    "Kill or work around each moving field. Equipment is the only defense against a bullet that reaches you. Prepare matching Guard for the telegraphed escalating Final Blast; it can be defended normally.",
     { bossMode: "sentinel" },
   );
   events.push(

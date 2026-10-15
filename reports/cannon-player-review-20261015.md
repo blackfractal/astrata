@@ -1,0 +1,9 @@
+# Jonathan's Refraction Cannon victory
+
+Run72eb2dc1-eb88-403d-a867-a9ecc071be52, rules3.0.21, same-build practice clone starting70HP with37cards,4Focus/3Channel. One recorded attempt (one resume atturn1). Victoryturn14 at58HP;15incomingHPdamage,3HolyArmorhealing. LastHPdamage occurs enemyturn8; noHP lost thereafter. No claim of general win rate or optimized minimum damage.
+
+Successful tools: local Eclipse Seed releases removed three projectiles, Scouring Gale hit a projectile while damaging the Cannon, Storm Canopy contributed repeated boss damage and downward-column projectile damage, Second Spring refreshed used cards, and Wild Conduit supplied extra actions. Light-transmuted Fourfold Grove struck Chaos for18. Kiln delivered two20-damage releases. Damage totals attributed to activating cards including associated gear procs: Storm69,Eclipse66,Kiln42,Fourfold21,Thorn20,Blast12,Sapling11,Gale10,Cinder10. These are gross hit amounts, including final overkill; not net bossHP loss.
+
+Clear improvements: Resonance next to Focus Energy failed its isolation requirement. Slow Rot on turn8 wasted an activation against the Chaos Cannon's Corrode immunity. The Wind projectile atcolumn2 had3HP remaining on turn8. Read-only alternate-action verification confirms Sapling could legally kill it instead of attacking the Cannon, preventing its impending12Pierce hit (6got through after bracelet defense in the actual line). This checks one decision, not a full optimized replay.
+
+Balance impression: comfortable for this strong engine, with seven or so final player turns noHP loss despite early errors. Mixed damage and spatial tools mattered, so no single global-clear card explains the win. More evidence is needed before nerfs; if further pressure is desired, assess Cannon/projectile pressure against established engine output instead of merely inflating bossHP. No tuning applied.

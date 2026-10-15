@@ -15,6 +15,7 @@ import {
   hiveOpeningCount,
   normalizeInsectMovement,
   depthsTell,
+  cannonBlastDamage,
   scheduleDepths,
   depthsJob,
 } from "./ideons.mjs";
@@ -47,6 +48,7 @@ import {
   applyCorruptions,
   startRepairs,
   corruptionRound,
+  detonateCannonMines,
   triggerAnger,
   angerPreview,
 } from "./corruptions.mjs";
@@ -2164,8 +2166,12 @@ export class Game {
     });
   }
   tell(e) {
+    if (e.id === "refractionCannon" && e.finalBlastElement)
+      return { name: Object.values(this.s.battle?.corruptions || {}).some(q => q.kind === "mine" && q.source === e.uid)
+        ? "Mind Mines detonate, then Final Blast" : "Final Blast", damage: cannonBlastDamage(e), element: e.finalBlastElement,
+        fixedDamage: true, finalBlast: true };
     if (enemies[e.id].tier === "Archon" && e.purifyPending)
-      return { name: "Purify", purify: true, damage: 0 };
+      return depthsTell(this, e, { name: "Purify", purify: true, damage: 0 });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
     // The warning at cycle 15 precedes the fifth full cycle; both waves escalate thereafter.
@@ -2322,12 +2328,14 @@ export class Game {
         if (!e) continue;
         const t = this.tell(e),
           actionCycle = e.cycle;
-        if (!t.purify && !t.openingWarning) e.cycle++;
+        if (!t.purify && !t.openingWarning && !t.finalBlast) e.cycle++;
         this.log(
           e.name +
             ": " +
             t.name +
-            (t.damage
+            (t.sequence
+              ? " · " + t.sequence.map(hit => `${hit.damage} ${hit.element}`).join(" → ")
+              : t.damage
               ? ` · ${t.damage} ${t.randomElement ? "in the new element" : t.element}${t.hits ? " ×" + t.hits : ""}`
               : ""),
         );
@@ -2373,6 +2381,7 @@ export class Game {
         if (
           !t.purify &&
           !t.openingWarning &&
+          !t.finalBlast &&
           enemies[e.id].tier === "Archon" &&
           e.cycle % enemies[e.id].rotation.length === 0
         )
@@ -2434,6 +2443,7 @@ export class Game {
               source: e.uid,
             })),
           );
+        if (t.finalBlast) detonateCannonMines(this, e.uid);
         continue;
       }
       if (j.kind === "hit") {
@@ -2457,6 +2467,7 @@ export class Game {
           name: j.name,
           collapseOrigins: j.collapseOrigins,
           gridSourceSlot: j.gridSourceSlot,
+          finalBlast: !!j.finalBlast,
         });
         this.advanceHit();
       }
@@ -2554,6 +2565,7 @@ export class Game {
       ...detail,
       element: h.element,
       attackPath: true,
+      finalBlast: !!h.finalBlast,
       attackVisual: !h.lastImpact ? h.attackVisual : null,
       collapseOrigins:
         !h.lastImpact && h.collapseOrigins ? h.collapseOrigins : null,

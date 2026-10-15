@@ -1902,7 +1902,7 @@ export function enhance(ctx) {
               `.battle-player .gear-item[data-item-uid="${node.uid}"]`,
             );
       if (anchor) {
-        const held = attackOrb(hit.damage, hit.element);
+        const held = attackOrb(hit.damage, hit.element, hit.finalBlast);
         anchor.append(held);
       }
     }
