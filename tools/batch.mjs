@@ -18,6 +18,8 @@ const sources = Object.fromEntries(
   await Promise.all(
     [
       "engine.mjs",
+      "apex.mjs",
+      "apex-content.mjs",
       "depths-content.mjs",
       "depths-field.mjs",
       "ideons.mjs",

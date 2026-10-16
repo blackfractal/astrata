@@ -8,5 +8,11 @@ _knowledge/situations/_builds/
 __pycache__/
 *.pyc
 
+# Manual playthrough runtime files stay local; reports and saved evidence remain tracked.
+/reports/codex-fullrun-*/app/
+/reports/codex-fullrun-*/commands/
+/reports/codex-fullrun-*/profile/
+/reports/codex-fullrun-*/current.json
+
 # Full pre-LFS recovery bundle stays local.
 _knowledge/git-lfs-migration-2026-10-05/pre-lfs.bundle

@@ -72,7 +72,7 @@ test("Boss achievements require confirmed non-tutorial victories, including earl
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
   discover(c, state, "later");
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
-  assert.equal(achievements.length, 16);
+  assert.equal(achievements.length, 18);
   state.stats.encounters.push(
     ...["The Black Bile", "King Bombadier", "The Trickster"].map((name) => ({
       enemies: [name],

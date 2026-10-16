@@ -1,3 +1,4 @@
+import { registerApex } from "./apex-content.mjs";
 import { registerDepths, ideonDefs } from "./depths-content.mjs";
 import { registerStratum2 } from "./strata.mjs";
 export const DRUID_COMPANION_STORY =
@@ -6,8 +7,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "3.0.31",
-  content: "3.0.31",
+  rules: "4.0.1",
+  content: "4.0.1",
   observation: 2,
   actions: 9,
 };
@@ -1787,7 +1788,7 @@ export const glossary = {
   Archon:
     "The Stratum's gatekeeper. Defeat the Stratum 1 Archon to complete this build's journey.",
   Stratum:
-    "One Field journey ending with an Archon battle. This build contains Stratum 1.",
+    "One Field journey ending with an Archon battle. This build contains Strata 1–4; The Apex has four shrinking floors.",
   Tell: "An enemy's announced next action. Inspect it to plan for damage, element and other effects.",
   Hunter:
     "A Field movement pattern that moves directly onto the player when it pursues. Archon grace periods still apply.",
@@ -1817,6 +1818,9 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  apex: "The mountain was only the beginning of its hunger.",
+  riftBoar: "The mountain shook. Then the tusks found you.",
+  riftChimera: "The shadow had wings. The hunger had teeth.",
   kindlyHunger: "It asked for so little, until nothing remained.",
   knotkeeper: "The knot held. You did not.",
   borrowedOracle: "It saw your ending through borrowed eyes.",
@@ -1869,3 +1873,5 @@ cards.storm.ideonText = "Also hits all Ideons below this card in the same column
 export function cardText(definition, stratum = 1) {
   return definition.text + (stratum >= 3 && definition.ideonText ? " " + definition.ideonText : "");
 }
+
+registerApex(enemy);

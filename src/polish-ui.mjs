@@ -1414,7 +1414,7 @@ export function enhance(ctx) {
     sidebar.innerHTML = "";
     if (o.mode !== "battle")
       sidebar.insertAdjacentHTML("beforeend", playerMarkup(ctx));
-    if (gate) {
+    if (gate && o.stratum !== 4) {
       const detail = document.createElement("details");
       detail.className = "gate-detail";
       detail.innerHTML =
@@ -1445,8 +1445,8 @@ export function enhance(ctx) {
   if (o.mode === "field") {
     app.querySelectorAll(".tile").forEach((el, i) => {
       el.dataset.cell = i;
-      const x = i % 11,
-        y = Math.floor(i / 11),
+      const x = i % (o.field.size || 11),
+        y = Math.floor(i / (o.field.size || 11)),
         foe = fieldEntitiesAt(o.field, x, y).find((e) => e.enemy);
       if (foe) el.querySelector("img")?.setAttribute("data-token", foe.uid);
       el.querySelector(".player-mark")?.setAttribute("data-player-token", "");

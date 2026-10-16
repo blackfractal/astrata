@@ -29,7 +29,9 @@ export const achievements = [
     enemy: "colossus",
   },
   { id: "defeat-choir", name: "Defeat the Glass Choir", enemy: "choir" },
-  { id: "defeat-apex", name: "Defeat the Apex Predator" },
+  { id: "defeat-apex", name: "Defeat the Apex Predator", enemy: "apex" },
+  { id: "i-stand-alone", name: "I Stand Alone" },
+  { id: "without-menders", name: "Without the Menders" },
   { id: "calm-apex", name: "Calm the Apex Predator" },
   { id: "calm-astrata", name: "Calm Astrata" },
   {
@@ -122,5 +124,9 @@ export function discover(collection, state, at = new Date().toISOString()) {
     )
   )
     collection.achievements["traveler-kindness"] ||= { earnedAt: at };
+  if (!state.tutorial && state.outcome === "win" && state.stratum === 4) {
+    if (state.stats?.iStandAlone) collection.achievements["i-stand-alone"] ||= {earnedAt:at};
+    if (state.stats?.withoutMendersCompleted) collection.achievements["without-menders"] ||= {earnedAt:at};
+  }
   return collection;
 }

@@ -40,7 +40,7 @@ Stratum 3 teaches **Ideons**: enemy-controlled cards placed inside the player's 
 - Stratum 1: arrange cards, manage resources, connect elements, and survive card destruction.
 - Stratum 2: distinguish cards from the spaces beneath them; manage Corruptions and repair them with Machine Elves.
 - Stratum 3: respond to active enemies inside the grid while maintaining a spatial engine.
-- Stratum 4, The Apex: combine these skills under sustained pressure. Its climb and gates belong in a separate plan.
+- Stratum 4, The Apex: combine these skills under sustained pressure. Its shrinking floors, returning Archon choices and final encounter are specified in [Stratum 4 planning](stratum_4_planning.md).
 
 The progression is from **disrupting spaces** to **occupying the grid with active hostile cards**. Existing foundation cards should remain useful. Later cards should reward a developed foundation without making their early acquisition completely useless.
 

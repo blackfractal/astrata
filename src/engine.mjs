@@ -1,3 +1,4 @@
+import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete } from "./apex.mjs";
 import { areaHits } from "./area-targets.mjs";
 import {
   livingIdeons,
@@ -809,7 +810,9 @@ export class Game {
       // Accept released patches through this build, never unknown future saves.
       const currentPatch = /^3\.0\.(0|[1-9]\d*)$/.exec(VERSION.rules);
       const savedPatch = /^3\.0\.(0|[1-9]\d*)$/.exec(saved.version?.rules || "");
-      const compatiblePatch = currentPatch && savedPatch && Number(savedPatch[1]) <= Number(currentPatch[1]);
+      const currentApexPatch = /^4\.0\.(0|[1-9]\d*)$/.exec(VERSION.rules);
+      const savedApexPatch = /^4\.0\.(0|[1-9]\d*)$/.exec(saved.version?.rules || "");
+      const compatiblePatch = (currentPatch && savedPatch && Number(savedPatch[1]) <= Number(currentPatch[1])) || (currentApexPatch && savedPatch && Number(savedPatch[1]) <= 31) || (currentApexPatch && savedApexPatch && Number(savedApexPatch[1]) <= Number(currentApexPatch[1]));
       if (
         !compatiblePatch &&
         ![
@@ -1109,7 +1112,7 @@ export class Game {
     const s = this.s;
     if (s.reward?.cards) {
       if (
-        s.reward.boss &&
+        s.reward.boss && !s.reward.apexReward &&
         (s.reward.cards.length !== 3 ||
           new Set(s.reward.cards).size !== 3 ||
           s.reward.cards.filter((id) => cards[id]?.rarity === "legendary")
@@ -1386,6 +1389,7 @@ export class Game {
     this.batch();
   }
   batch() {
+    if (apexActive(this.s)) return apexBatch(this);
     const f = this.s.field;
     while (f.queue.length < Math.min(8, 32 - f.spawned)) {
       const number = f.spawned + f.queue.length + 1;
@@ -1399,7 +1403,7 @@ export class Game {
     }
   }
   fieldEnemyPreview(e) {
-    const d = enemies[e.enemy],
+    const d = apexMovement(enemies[e.enemy], e),
       restless = e.restless || 0;
     const age =
       e.born == null ? null : Math.max(0, this.s.field.round - e.born);
@@ -1418,13 +1422,14 @@ export class Game {
         : `Archon · ${spaces} spaces this enemy movement`;
     } else
       movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
+    if (e.apexMap && d.tier === "Archon") movement = this.s.field.round < 8 ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
     if (d.flying) movement += " · Flying: crosses barriers";
     return {
       age,
       born: e.born ?? null,
       restless,
       movement,
-      hp: d.hp,
+      hp: apexStats(d, e).hp,
       count: e.count || 1,
       ...(e.enemy === "mindHive" ? { openingLarvae: hiveOpeningCount(this.s.field, e) } : {}),
       rotation: d.rotation.map((_, cycle) =>
@@ -1435,7 +1440,8 @@ export class Game {
           cycle,
           buff: 0,
           hp: d.hp,
-          maxHp: d.hp,
+          maxHp: apexStats(d, e).hp,
+          apexDamageBonus: apexStats(d, e).damageBonus,
         }),
       ),
     };
@@ -1515,6 +1521,7 @@ export class Game {
   }
   beginRound() {
     if (this.s.mode === "result") return;
+    if (apexActive(this.s)) return apexRound(this);
     const f = this.s.field;
     if (this.s.tutorial) {
       f.round++;
@@ -1618,6 +1625,10 @@ export class Game {
       f = s.field,
       here = f.entities.filter((e) => e.x === f.x && e.y === f.y),
       foes = here.filter((e) => e.enemy);
+    if (apexActive(s) && here.some(e => e.type === "Ascend")) {
+      enterApexFloor(this, s.apex.floor + 1);
+      return;
+    }
     if (foes.length) {
       enemyFirst ||= !!s.pendingEnemyFirst;
       delete s.pendingEnemyFirst;
@@ -1694,8 +1705,8 @@ export class Game {
         const step = enemyStep(
           f,
           e,
-          clamp(e.x + dx(e), 0, 10),
-          clamp(e.y + dy(e), 0, 10),
+          clamp(e.x + dx(e), 0, fieldSize(f) - 1),
+          clamp(e.y + dy(e), 0, fieldSize(f) - 1),
           enemies[e.enemy],
         );
         if (!step) break;
@@ -1712,9 +1723,13 @@ export class Game {
       }
     };
     for (const e of f.entities.filter((e) => e.enemy)) {
-      const d = enemies[e.enemy];
+      const d = apexMovement(enemies[e.enemy], e);
       let n = (d.speed || 2) + e.restless,
         type = d.movement;
+      if (e.apexMap && type === "Archon") {
+        if (f.round < 8) continue;
+        type = "Hunter";
+      }
       if (type === "Archon") {
         const age = f.round - e.born + 1;
         if (age >= 6 || (d.bossMode === "hunter" && age >= 5)) type = "Hunter";
@@ -1824,8 +1839,9 @@ export class Game {
           name:
             enemies[e.enemy].name +
             ((e.count || 1) > 1 ? " " + (member + 1) : ""),
-          hp: enemies[e.enemy].hp,
-          maxHp: enemies[e.enemy].hp,
+          hp: apexStats(enemies[e.enemy], e).hp,
+          maxHp: apexStats(enemies[e.enemy], e).hp,
+          apexDamageBonus: apexStats(enemies[e.enemy], e).damageBonus,
           cycle: 0,
           buff: 0,
           guard: 0,
@@ -1893,6 +1909,8 @@ export class Game {
     s.stats.encounters.push({
       stratum: s.stratum || 1,
       round: s.field.round,
+      apexFloor: s.apex?.floor || null,
+      mapEntityUids: entities.filter(e => e.apexMap).map(e => e.uid),
       enemies: b.enemies.map((e) => e.name),
       outcome: "in progress",
       hpStart: s.hp,
@@ -2173,7 +2191,7 @@ export class Game {
         ? "Mind Mines detonate, then Final Blast" : "Final Blast", damage: cannonBlastDamage(e), element: e.finalBlastElement,
         fixedDamage: true, finalBlast: true };
     if (enemies[e.id].tier === "Archon" && e.purifyPending)
-      return depthsTell(this, e, { name: "Purify", purify: true, damage: 0 });
+      return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex" });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
     // The warning at cycle 15 precedes the fifth full cycle; both waves escalate thereafter.
@@ -2220,6 +2238,18 @@ export class Game {
         ...hit,
         damage: hit.damage + bonus,
       }));
+    }
+    const bonus = e.id === "apex" ? 3 * Math.floor(e.cycle / d.rotation.length) + (e.hp <= e.maxHp / 2 ? 4 : 0) : (e.apexDamageBonus || 0);
+    if (bonus) {
+      // S4 rematch bonus applies to direct hits, including fixed sequences, not statuses/mines.
+      if(t.damage) t.damage += bonus;
+      if(t.sequence) t.sequence = t.sequence.map(h => ({...h, damage:h.damage + bonus}));
+    }
+    if(e.id === "apex") {
+      // Replace ordinary boss escalation with its explicit +3/cycle, +4 at half HP.
+      const ordinary = Math.floor(e.cycle / d.rotation.length) + (e.restless || 0) + (e.buff || 0) + (e.hp <= e.maxHp/2 ? 3 : 0);
+      if(t.damage) t.damage -= ordinary;
+      if(t.sequence) t.sequence = t.sequence.map(h => ({...h,damage:h.damage-ordinary}));
     }
     return depthsTell(this, e, t);
   }
@@ -2702,7 +2732,7 @@ export class Game {
     if (!b || b.reaction || !["start", "place", "activate"].includes(b.phase))
       return [];
     return b.enemies
-      .filter((e) => e.hp > 0 && ["hart", "colossus", "choir"].includes(e.id))
+      .filter((e) => e.hp > 0 && ["hart", "colossus", "choir", "apex"].includes(e.id))
       .flatMap((e) => {
         const tell = this.tell(e);
         if (!["row", "column", "destroy"].includes(tell.grid)) return [];
@@ -3279,7 +3309,7 @@ export class Game {
       const boss = original.some((e) => e.tier === "Archon"),
         elite = original.some((e) => e.tier === "Eidolon"),
         skittish = original.some((e) => e.movement === "Skittish");
-      this.gainGold(boss ? 120 : elite || skittish ? 45 : 18 * original.length);
+      this.gainGold(apexActive(s) && boss ? 180 * original.filter(e=>e.tier === "Archon").length : boss ? 120 : elite || skittish ? 45 : 18 * original.length);
       s.field.entities = s.field.entities.filter(
         (e) => !original.some((x) => x.entityUid === e.uid),
       );
@@ -3291,12 +3321,13 @@ export class Game {
         gem: boss || elite || this.rand() < (skittish ? 0.65 : 0.12),
         setting: boss,
       };
+      if (apexActive(s)) s.reward = apexVictory(this, original);
       this.normalizeRewards();
       if (tutorialReward(this)) return;
       delete s.checkpoint;
       this.log(
         boss
-          ? "Victory. Choose one card: one Legendary or either of two Rares."
+          ? apexActive(s) ? "Victory. Choose one Archon reward." : "Victory. Choose one card: one Legendary or either of two Rares."
           : "Victory. Choose a card or skip.",
       );
     }
@@ -3311,6 +3342,10 @@ export class Game {
       s.stats.strataCompleted = [
         ...new Set([...(s.stats.strataCompleted || []), s.stratum || 1]),
       ];
+    if (win && apexActive(s)) {
+      s.stats.iStandAlone = apexComplete(s);
+      s.stats.withoutMendersCompleted = !!s.stats.withoutMenders && !s.stats.withoutMenders.disqualified && s.deck.some(c => c.uid === s.stats.withoutMenders.uid);
+    }
     s.cause = cause;
     s.hp = Math.max(0, s.hp);
     s.status = blankStatus();
@@ -3366,6 +3401,8 @@ export class Game {
     if (next === 3) {
       s.depthsIntro = true;
       s.field.barriers = makeBarriers();
+    } else if (next === 4) {
+      s.apexIntro = true;
     } else s.loomIntro = true;
     s.eventDeck = [];
     this.openTavern({ afterStratum: next - 1 });
@@ -3390,7 +3427,7 @@ export class Game {
           Object.keys(items).filter((id) => items[id].consumable),
         ).slice(0, 2),
       ],
-      healer: this.s.nextTavernHealer ?? this.rand() < 0.75,
+      healer: apexActive(this.s) || (this.s.nextTavernHealer ?? this.rand() < 0.75),
       healerPrice: this.pick([35, 50, 80]),
       healUsed: false,
       removeUsed: false,
@@ -3612,6 +3649,10 @@ export class Game {
         );
       return actions;
     }
+    if (s.mode === "apexIntro") {
+      add("enterApex", "Enter The Apex", {}, { progress:1 });
+      return actions;
+    }
     if (s.mode === "depthsIntro") {
       add("enterDepths", "Enter the Lucent Grotto", {}, { progress: 1 });
       return actions;
@@ -3625,15 +3666,20 @@ export class Game {
       return actions;
     }
     if (s.mode === "field") {
+      if (apexActive(s) && s.apex.floor === 4) {
+        add("fightApex", "Face the Apex Predator", {}, {progress:1});
+        this.equipChoices(add);
+        return actions;
+      }
       if (s.field.moves > 0)
         for (let dy = -1; dy <= 1; dy++)
           for (let dx = -1; dx <= 1; dx++)
             if (
               (dx || dy) &&
               s.field.x + dx >= 0 &&
-              s.field.x + dx <= 10 &&
+              s.field.x + dx < fieldSize(s.field) &&
               s.field.y + dy >= 0 &&
-              s.field.y + dy <= 10 &&
+              s.field.y + dy < fieldSize(s.field) &&
               fieldStep(
                 s.field,
                 s.field.x,
@@ -3748,19 +3794,20 @@ export class Game {
         add(
           "continueReward",
           s.reward.boss
-            ? (s.stratum || 1) < 3 && !s.tutorial
+            ? apexActive(s) ? s.reward.extraOffers?.length ? "Next Archon reward" : s.reward.apexFinal ? "Complete The Apex" : s.reward.apexAscend ? "Ascend to floor " + (s.apex.floor + 1) : "Return to the Field" : (s.stratum || 1) < 4 && !s.tutorial
               ? "Continue to " + STRATA[(s.stratum || 1) + 1].name
               : "Complete Stratum " + (s.stratum || 1)
             : "Return to the Field",
           {},
           { progress: 1 },
         );
+      if (s.reward.apexReward && !s.reward.cards && (s.reward.gem || s.reward.setting)) add("leaveRewardItem", "Leave item", {}, {skip:true});
       return actions;
     }
     if (s.mode === "tavern") {
       const shop = s.shop,
         afterStratum = shop.afterStratum ?? (s.loomIntro ? 1 : null),
-        recovery = afterStratum ? 50 : 20;
+        recovery = afterStratum || apexActive(s) ? 50 : 20;
       add("leave", "Leave the Lantern Rest", {}, { progress: 1 });
       if (s.gold >= recovery && !shop.healUsed && s.hp < s.maxHp)
         add(
@@ -3790,7 +3837,7 @@ export class Game {
           { progress: 1 },
         );
       }
-      if (!afterStratum && s.gold >= 15 && !shop.gossipUsed)
+      if (!afterStratum && !apexActive(s) && s.gold >= 15 && !shop.gossipUsed)
         add(
           "gossip",
           "Gossip · Archon and next healer · 15 Gold",
@@ -4299,6 +4346,13 @@ export class Game {
         ).uid;
         s.mode = "intro";
         break;
+      case "enterApex":
+        delete s.apexIntro;
+        enterApexFloor(this, 1);
+        break;
+      case "fightApex":
+        this.beginBattle([{uid:this.uid(), enemy:"apex", restless:0, apexFloor:4}]);
+        break;
       case "begin":
         this.beginRound();
         break;
@@ -4459,8 +4513,18 @@ export class Game {
         this.addItem(a.id);
         s.reward.setting = false;
         break;
+      case "leaveRewardItem":
+        s.reward.gem = false; s.reward.setting = false;
+        break;
       case "continueReward":
-        if (s.reward.boss && !s.tutorial && (s.stratum || 1) < 3)
+        if (s.reward.apexReward) {
+          if (s.reward.extraOffers?.length) { s.reward.cards = s.reward.extraOffers.shift(); break; }
+          if (s.reward.apexFinal) this.finish(true);
+          else if (s.reward.apexAscend) enterApexFloor(this, s.apex.floor + 1);
+          else this.resolveTile();
+          break;
+        }
+        if (s.reward.boss && !s.tutorial && (s.stratum || 1) < 4)
           this.enterStratum2((s.stratum || 1) + 1);
         else if (s.reward.boss) this.finish(true);
         else this.resolveTile();
@@ -4471,7 +4535,8 @@ export class Game {
         this.beginRound();
         break;
       case "leave":
-        if (s.depthsIntro) s.mode = "depthsIntro";
+        if (s.apexIntro) s.mode = "apexIntro";
+        else if (s.depthsIntro) s.mode = "depthsIntro";
         else if (s.loomIntro) {
           s.mode = "loomIntro";
         } else this.resolveTile();
@@ -4897,6 +4962,8 @@ export class Game {
       stratumName: STRATA[s.stratum || 1].name,
       loomIntro: s.loomIntro,
       depthsIntro: s.depthsIntro,
+      apexIntro: s.apexIntro,
+      apex: s.apex ? clone(s.apex) : null,
       tutorial: s.tutorial
         ? {
             id: s.tutorial.id,

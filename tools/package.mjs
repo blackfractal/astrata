@@ -53,6 +53,15 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "apex-nightmare-report.md",
+  "apex-nightmare-prompt.txt",
+  "apex-nightmare-tests.txt",
+  "apex-nightmare-audit.txt",
+  "stratum4-build-report.md",
+  "apex-ai-report.md",
+  "apex-art-provenance.md",
+  "apex-regression-tests.txt",
+  "apex-ui-verification.json",
   "stratum3-build-report.md",
   "eclipse-range-report.md",
   "storm-column-report.md",

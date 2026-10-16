@@ -17,6 +17,8 @@ function archive() {
     sources: Object.fromEntries(
       [
         "engine.mjs",
+        "apex.mjs",
+        "apex-content.mjs",
         "depths-content.mjs",
         "ideons.mjs",
         "depths-field.mjs",

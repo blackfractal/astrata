@@ -1,7 +1,7 @@
 export const barrierAt = (f, x, y) =>
   (f.barriers || []).some((p) => p.x === x && p.y === y);
 export function fieldStep(f, x, y, nx, ny, flying = false) {
-  if (nx < 0 || nx > 10 || ny < 0 || ny > 10) return false;
+  if (nx < 0 || nx >= (f.size || 11) || ny < 0 || ny >= (f.size || 11)) return false;
   if (flying) return true;
   if (barrierAt(f, nx, ny)) return false;
   return !(

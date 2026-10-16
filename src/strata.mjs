@@ -1,4 +1,5 @@
 export const STRATA = {
+  4: { name: "The Apex", early: [] },
   3: {
     name: "The Lucent Grotto",
     early: ["glassBrood", "nerveWeaver", "paleGrazer", "echoPolyp"],

@@ -698,8 +698,10 @@ export function depthsJob(g, j) {
   }
   if (j.kind === "ideonSpawn") {
     if (owner)
-      for (let k = 0; k < j.count; k++)
+      for (let k = 0; k < j.count; k++) {
+        if (owner.ideonCap && livingIdeons(b).filter(e => e.owner === owner.uid).length >= owner.ideonCap) break;
         spawnIdeon(g, owner, j.ideon, j.options);
+      }
     return true;
   }
   if (j.kind === "tentacleReplace") {

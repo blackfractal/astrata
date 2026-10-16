@@ -1,5 +1,10 @@
 import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
+  "enemy-apex": "assets/enemy-apex.png",
+  "enemy-riftBoar": "assets/enemy-riftBoar.png",
+  "enemy-riftChimera": "assets/enemy-riftChimera.png",
+  "location-apex-field": "assets/location-apex-field.png",
+  "location-apex-mind": "assets/location-apex-mind.png",
   "ideon-drone": "assets/ideon-drone.png",
   "enemy-ideon_drone": "assets/ideon-drone.png",
   "item-liquidCrystal": "assets/item-liquidCrystal.png",

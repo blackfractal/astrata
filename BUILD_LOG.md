@@ -1825,3 +1825,53 @@ Controlled Titan-fixture replay reused the exact3.0.13 action line plus six manu
 ## Lucent Grotto naming — round201
 
 2026-10-15. Jonathan renamed Stratum 3 to The Lucent Grotto so the journey does not imply descent before The Apex. Updated region name, entry action, companion introduction, victory copy, README, main design4.214 and S3planning0.48. Replaced introductory “deeper Strata” with “next Strata.” Package/rules/content3.0.31; stable internal action and asset IDs retain save/replay compatibility. Historical reports and frozen replay sources retain their original wording.630 existing tests pass. Packaged app and portable ZIP refreshed. Additional editing/documentation/verification approximately5minutes. No live-save edits, commit or push.
+
+## The Apex four-floor planning — round202
+
+2026-10-15. Jonathan requested a Stratum 4 design document: three eight-round floors revisiting prior Archons, paired Archons on round 4, round-8 hunt deadline, central Ascend after either victory, shrinking rooms, floor-3 opening Tavern, and a timeless final Apex Predator room. Subsequently confirmed Archon spawns two steps NW/NE of center. Created planning draft 0.1, linked it from S3 and main design 4.215, and replaced conflicting generic S4 progression/language rules. Preserved earlier achievement intentions and marked timing, geometry, encounter/economy and final-boss design decisions still open. Documentation only; no gameplay, runtime version, assets, save changes, commit or push. Additional planning/documentation/review approximately 10 minutes.
+
+### Round202 clarification — stationary marked Archons and deadline
+
+2026-10-15. Jonathan confirmed pursuit occurs after round 8 player movement, and both Archons remain stationary on their northwest/northeast spawn spaces until then. Their spaces must have visible symbols in the map image. Updated S4 draft0.2, main design4.216 and handoff; removed superseded open questions. Documentation only; approximately2 additional minutes. No gameplay or asset changes.
+
+### Round202 clarification — I Stand Alone and S4 Mote movement
+
+2026-10-15. Jonathan confirmed I Stand Alone requires killing every Mote, Eidolon and Archon that spawns in S4 plus defeating the Apex Predator. Recorded actual-spawn tracking across floors; no extra waiting requirement. Restricted S4 Motes to Hunters, Stalkers or single-space Restless movers, with no Skittish Motes; exact single-space direction remains open. S4 draft0.3/main design4.217/handoff updated. Documentation only; approximately2 additional minutes. No gameplay changes.
+
+### Round202 clarification — floor transitions, rematches and Predator direction
+
+2026-10-15. Jonathan approved11x11/9x9/7x7/5x5 center-entry rooms, quick replacement on ascent, corresponding original enemies with increased HP/damage, somewhat stronger familiar Archons, and automatic ascent after deadline hunt victory (no cleanup). Retained S3 transition Tavern; floor3 first spawn full-service Tavern50HP/50Gold. Archon rewards generous Gold/rares with possible legendary/good item. Clarified one-space random movement as Wanderer. Approved Predator endurance fight combining card destruction, Corruptions and Ideons, plus early Archon identity visibility via preview or map symbols. Updated S4draft0.4/main4.218/handoff; numerical tuning and no-surviving-Archon deadline edge remain open. Documentation only; approximately5 additional minutes. No gameplay, assets or live-save changes.
+
+### Round202 clarification — The Apex art direction
+
+2026-10-16. Jonathan specified majestic rocky mountain exteriors with lava rivers and crystals for S4 overworld, Event and enemy backgrounds. Predator should be a horrific recognizable pig/boar/bison-like beast with fuzzy edges suggesting dark evil energy. Recorded confirmed direction plus clearly separated readability/composition recommendations in S4draft0.5, main design4.219 and handoff. Documentation only; approximately2 additional minutes. No images generated, gameplay or save changes.
+
+### Round202 clarification — deadline clear, achievement origin and S3 rematches
+
+2026-10-16. Jonathan confirmed round8 ascent even if both Archons were already defeated, while considering immediate ascent on second kill as an alternative. Recorded the current deadline rule and kept that alternative explicitly pending. Ordinary map enemies join the forced hunt and count toward I Stand Alone; event-only fights are excluded. Interpreted “round9 fight” as existing post-round8 hunt, no ninth pair. S3 Archons unchanged first pass or minimally adjusted after testing, preserving Hive15-turn timer; earlier-Stratum rematch increases remain planned. Updated S4draft0.6/main4.220/handoff. Documentation only; approximately3 additional minutes, no gameplay or save changes.
+
+### Round202 clarification — second Archon forces ascent
+
+2026-10-16. Jonathan selected immediate ascent after the second Archon dies, or voluntary exit by touching Ascend revealed immediately after the first defeat. Supersedes waiting until round8 after both defeated. Preserve full-encounter victory, death effects and rewards before transition so surviving enemies in a combined fight are not skipped. Updated S4draft0.7/main4.221/handoff. Documentation only; approximately2 additional minutes. No gameplay/save changes.
+
+
+### Round 203 — The Apex first playable build
+
+2026-10-16. Jonathan authorized building S4. Implemented package/rules/content 4.0.0, main design4.222, S4draft0.8: shrinking four-floor ascent, pair-four returning Archons and identity seals, round-eight combined hunt, both ascent routes, grouped encounter completion, ordinary/rematch scaling, floor-three Tavern, individual Archon reward offers, 640-HP Predator with six-move destruction/Corruption/Ideon cycle, normal ending and S4 achievements. Saved RNG/floor/spawn ledgers and included Apex sources in run archives; old3.0.x Continue accepted. New mountain, candle-lit Mind Grid and dark-energy boar Predator artwork via built-in image generation, originals preserved.
+
+Validation:645/645 regression tests,207 required art entries present/provenanced, all nine same-Stratum Archon pairings exercised across eight turns. Eight source and eight packaged Electron UI scenarios pass; fixed map-control overflow and removed misleading Unknown Archon sidebar in S4. Five sample ascents and five direct Predator trials all terminated without errors; all lost, three ascents reached floor3. These are heuristic-policy carry-ins, not full-run victory proofs. Balance is explicitly provisional. Exact initial states/actions/frozen sources retained; no weakening merely to satisfy the AI. Reports: reports/stratum4-build-report.md, reports/apex-ai-report.md, reports/apex-art-provenance.md.
+
+Runtime refreshed at release/Astrata/Astrata.exe; portable archive release/Astrata-v4.zip. Approximately45 minutes implementation/verification in this build pass. No live profile/save/history changes, commit or push. Existing v3 archive retained. Decisions and limitations recorded in planning snapshot and handoff.
+
+
+### Round 203 refinement — winged Predator and Rift Boar
+
+Jonathan liked the boar but requested using it as an Eidolon and making the Predator much more terrifying, wolf/tiger-like and possibly winged. Generated a winged wolf–tiger final beast with dark-energy edges; preserved the first image as The Rift Boar. Added native Apex Eidolon135HPChaosStalker (18Earth;12Fire+12Chaos;22ChaosPierce), in all three floor Eidolon pools without rematch scaling. Predator mechanics retained, Crushing Tusks renamed Rending Fangs. Art provenance, planning snapshot and handoff updated. Approximately8 additional minutes.646 tests and208asset entries pass; final AI evaluation0/5ascents and0/5directPredator trials, two ascents reachedfloor3. Initial evaluation preserved. App/portableZIP refreshed; no live-save changes.
+
+
+### Round 204 — colossal nightmare Predator; Rift Chimera
+
+2026-10-16. Jonathan requested reassigning the previous winged Predator to another Eidolon, The Rift Chimera, and a new final-boss image with much greater scale, terror, frame occupancy, daylight suppression and corrupt-energy contrast. Generated/select new colossal nightmare; preserved prior image as enemy-riftChimera.png. Added native Apex Wind/flying/Stalker Eidolon145HP with20Wind,9Fire+9Earth+9Chaos,22Light cycle; no rematch scaling. Predator stats unchanged. Rules/content/package4.0.1; design4.223/S4draft0.9. Added4.0.x Continue compatibility.648regression tests pass;209asset entries audited. Packaged UI includes Chimera and revised Predator; runtime/portableZIP refreshed. Prior4.0.0AIruns retained as historical evidence, no new balance claims. Approximately8additional minutes. No live save, commit or push. reports/apex-nightmare-report.md, exact prompt and provenance retained.
+
+
+Round204 follow-up: mirror Apex Predator, Rift Boar and Rift Chimera artwork horizontally in every image view so their composition faces the player. Display-only CSS preserves original PNGs exactly and leaves text/controls unchanged. Approximately3additional minutes including packaged visual verification and archive refresh.

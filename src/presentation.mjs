@@ -595,8 +595,8 @@ export async function playFrames(before, frames, after, renderView, isFast) {
         let token = frame.player
           ? find("[data-player-token]")
           : find(`[data-token="${frame.uid}"]`);
-        const start = find(`[data-cell="${frame.from.y * 11 + frame.from.x}"]`),
-          end = find(`[data-cell="${frame.to.y * 11 + frame.to.x}"]`);
+        const start = find(`[data-cell="${frame.from.y * (frame.state.field.size || 11) + frame.from.x}"]`),
+          end = find(`[data-cell="${frame.to.y * (frame.state.field.size || 11) + frame.to.x}"]`);
         if (!token && start && frame.enemy) {
           token = document.createElement("img");
           token.src =
@@ -626,7 +626,7 @@ export async function playFrames(before, frames, after, renderView, isFast) {
           frame.to.y === frame.state.field.y &&
           !frame.player
         ) {
-          const cell = find(`[data-cell="${frame.to.y * 11 + frame.to.x}"]`);
+          const cell = find(`[data-cell="${frame.to.y * (frame.state.field.size || 11) + frame.to.x}"]`);
           cell?.classList.add("collision");
           await pause(550);
         }

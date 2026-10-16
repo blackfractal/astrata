@@ -1,0 +1,3898 @@
+TAP version 13
+# Subtest: ordinary cards reject repeated activation despite Channel and remaining total allowance
+ok 1 - ordinary cards reject repeated activation despite Channel and remaining total allowance
+  ---
+  duration_ms: 62.6112
+  type: 'test'
+  ...
+# Subtest: Shield has two total activations, once per turn, then is spent until recalled
+ok 2 - Shield has two total activations, once per turn, then is spent until recalled
+  ---
+  duration_ms: 2.3089
+  type: 'test'
+  ...
+# Subtest: Blink permits paid repeats while respecting allowance and Channel
+ok 3 - Blink permits paid repeats while respecting allowance and Channel
+  ---
+  duration_ms: 2.5944
+  type: 'test'
+  ...
+# Subtest: Melding another Plasma cannot refresh the host's per-turn opportunity
+ok 4 - Melding another Plasma cannot refresh the host's per-turn opportunity
+  ---
+  duration_ms: 3.943
+  type: 'test'
+  ...
+# Subtest: moving a used card and restoring its exact state cannot refresh the turn opportunity
+ok 5 - moving a used card and restoring its exact state cannot refresh the turn opportunity
+  ---
+  duration_ms: 4.7712
+  type: 'test'
+  ...
+# Subtest: Charge-building activation also consumes the turn opportunity
+ok 6 - Charge-building activation also consumes the turn opportunity
+  ---
+  duration_ms: 2.2052
+  type: 'test'
+  ...
+# Subtest: Uncapped Ally health scale still tracks passive growth and healing
+ok 7 - Uncapped Ally health scale still tracks passive growth and healing
+  ---
+  duration_ms: 10.9568
+  type: 'test'
+  ...
+# Subtest: old Ally saves infer the visible HP scale without changing current HP
+ok 8 - old Ally saves infer the visible HP scale without changing current HP
+  ---
+  duration_ms: 38.9855
+  type: 'test'
+  ...
+# Subtest: S3 victory reward leads through full transition Tavern and Apex introduction, without another companion
+ok 9 - S3 victory reward leads through full transition Tavern and Apex introduction, without another companion
+  ---
+  duration_ms: 20.3508
+  type: 'test'
+  ...
+# Subtest: all four floors enter center, shrink and reset local rounds; summit has no movement or spawning
+ok 10 - all four floors enter center, shrink and reset local rounds; summit has no movement or spawning
+  ---
+  duration_ms: 20.9555
+  type: 'test'
+  ...
+# Subtest: pair four replaces both slots with distinct corresponding Archons at fixed marked spaces
+ok 11 - pair four replaces both slots with distinct corresponding Archons at fixed marked spaces
+  ---
+  duration_ms: 10.8286
+  type: 'test'
+  ...
+# Subtest: floor three starts Tavern plus ordinary spawn and offers full services with 50/50 rest
+ok 12 - floor three starts Tavern plus ordinary spawn and offers full services with 50/50 rest
+  ---
+  duration_ms: 1.1486
+  type: 'test'
+  ...
+# Subtest: S4 Motes never flee; Wanderers have one-space base movement; S3 Archons retain stats
+ok 13 - S4 Motes never flee; Wanderers have one-space base movement; S3 Archons retain stats
+  ---
+  duration_ms: 0.5156
+  type: 'test'
+  ...
+# Subtest: Archons are stationary through round seven and hunt together only after round eight movement
+ok 14 - Archons are stationary through round seven and hunt together only after round eight movement
+  ---
+  duration_ms: 4.3551
+  type: 'test'
+  ...
+# Subtest: map enemies can join deadline hunt; entire encounter must die before ascent
+ok 15 - map enemies can join deadline hunt; entire encounter must die before ascent
+  ---
+  duration_ms: 7.0485
+  type: 'test'
+  ...
+# Subtest: first victory reveals central stairs; voluntary entry abandons survivor and disqualifies full clear
+ok 16 - first victory reveals central stairs; voluntary entry abandons survivor and disqualifies full clear
+  ---
+  duration_ms: 2.8042
+  type: 'test'
+  ...
+# Subtest: second voluntary victory forces ascent before round eight, after both reward offers if paired
+ok 17 - second voluntary victory forces ascent before round eight, after both reward offers if paired
+  ---
+  duration_ms: 2.8974
+  type: 'test'
+  ...
+# Subtest: event-only enemies do not enter full-clear ledger; all six map Archons and map Motes are required
+ok 18 - event-only enemies do not enter full-clear ledger; all six map Archons and map Motes are required
+  ---
+  duration_ms: 2.7743
+  type: 'test'
+  ...
+# Subtest: final victory grants completed S4 and durable I Stand Alone only with a complete ledger
+ok 19 - final victory grants completed S4 and durable I Stand Alone only with a complete ledger
+  ---
+  duration_ms: 5.5838
+  type: 'test'
+  ...
+# Subtest: Apex save/load retains layout, deadline, ledger, scaled HP and reward offers without RNG changes
+ok 20 - Apex save/load retains layout, deadline, ledger, scaled HP and reward offers without RNG changes
+  ---
+  duration_ms: 6.1507
+  type: 'test'
+  ...
+# Subtest: each existing Archon pair can initialize, command and survive a save/load without double-commanding Ideons
+ok 21 - each existing Archon pair can initialize, command and survive a save/load without double-commanding Ideons
+  ---
+  duration_ms: 76.9642
+  type: 'test'
+  ...
+# Subtest: Predator has readable destruction warnings, bounded owned Ideons, Purify commands and explicit damage scaling
+ok 22 - Predator has readable destruction warnings, bounded owned Ideons, Purify commands and explicit damage scaling
+  ---
+  duration_ms: 13.8774
+  type: 'test'
+  ...
+# Subtest: movement actions and enemy steps remain inside each smaller floor
+ok 23 - movement actions and enemy steps remain inside each smaller floor
+  ---
+  duration_ms: 0.8887
+  type: 'test'
+  ...
+# Subtest: Rift Boar uses native Apex stats and can spawn only in the Apex
+ok 24 - Rift Boar uses native Apex stats and can spawn only in the Apex
+  ---
+  duration_ms: 2.4223
+  type: 'test'
+  ...
+# Subtest: Rift Chimera is a native Apex Eidolon with a three-element breath
+ok 25 - Rift Chimera is a native Apex Eidolon with a three-element breath
+  ---
+  duration_ms: 0.9325
+  type: 'test'
+  ...
+# Subtest: Discovery retains all visible offers but never reads future queues, deck pools or hidden boss
+ok 26 - Discovery retains all visible offers but never reads future queues, deck pools or hidden boss
+  ---
+  duration_ms: 15.9114
+  type: 'test'
+  ...
+# Subtest: Visible event offers count, and legacy summaries establish acquisitions and encounters
+ok 27 - Visible event offers count, and legacy summaries establish acquisitions and encounters
+  ---
+  duration_ms: 0.4442
+  type: 'test'
+  ...
+# Subtest: Boss achievements require confirmed non-tutorial victories, including earlier victories in a lost run
+ok 28 - Boss achievements require confirmed non-tutorial victories, including earlier victories in a lost run
+  ---
+  duration_ms: 0.5663
+  type: 'test'
+  ...
+# Subtest: Collection store imports compressed and active traces once and survives restart without changing archives
+ok 29 - Collection store imports compressed and active traces once and survives restart without changing archives
+  ---
+  duration_ms: 18.1939
+  type: 'test'
+  ...
+# Subtest: Unreadable legacy traces are retained and flagged without inventing discoveries
+ok 30 - Unreadable legacy traces are retained and flagged without inventing discoveries
+  ---
+  duration_ms: 11.2305
+  type: 'test'
+  ...
+# Subtest: area presentation shares a batch across targets, retains Ring sequence and cannot alter state
+ok 31 - area presentation shares a batch across targets, retains Ring sequence and cannot alter state
+  ---
+  duration_ms: 46.1039
+  type: 'test'
+  ...
+# Subtest: area batches preserve guard, Flicker, kills and single-target animations stay ungrouped
+ok 32 - area batches preserve guard, Flicker, kills and single-target animations stay ungrouped
+  ---
+  duration_ms: 5.824
+  type: 'test'
+  ...
+# Subtest: Kiln fires its single hit before a simultaneous area Burn batch, including immune targets
+ok 33 - Kiln fires its single hit before a simultaneous area Burn batch, including immune targets
+  ---
+  duration_ms: 3.7716
+  type: 'test'
+  ...
+# Subtest: Arcane30 traverses Ward5, Ally6, Bracelet2, player17 across separate choices and save
+ok 34 - Arcane30 traverses Ward5, Ally6, Bracelet2, player17 across separate choices and save
+  ---
+  duration_ms: 30.578
+  type: 'test'
+  ...
+# Subtest: Elemental block floats actual block spent; weak Ally shows only HP lost and keeps spillover math
+ok 35 - Elemental block floats actual block spent; weak Ally shows only HP lost and keeps spillover math
+  ---
+  duration_ms: 4.5234
+  type: 'test'
+  ...
+# Subtest: Each hit starts from its own enemy, status has no projectile, lethal player label caps at HP
+ok 36 - Each hit starts from its own enemy, status has no projectile, lethal player label caps at HP
+  ---
+  duration_ms: 4.3272
+  type: 'test'
+  ...
+# Subtest: committed Shield to Blast to Shield chain survives spent allowance and block depletion, then expires together
+ok 37 - committed Shield to Blast to Shield chain survives spent allowance and block depletion, then expires together
+  ---
+  duration_ms: 44.0684
+  type: 'test'
+  ...
+# Subtest: Sever and covering suppress relays; frozen and spent sources retain them; recalled cards start fresh
+ok 38 - Sever and covering suppress relays; frozen and spent sources retain them; recalled cards start fresh
+  ---
+  duration_ms: 5.0703
+  type: 'test'
+  ...
+# Subtest: Blink relays its latest activation while existing Shield portions keep earlier elements
+ok 39 - Blink relays its latest activation while existing Shield portions keep earlier elements
+  ---
+  duration_ms: 11.0841
+  type: 'test'
+  ...
+# Subtest: Transmute overrides a relay immediately and remains a source on later turns
+ok 40 - Transmute overrides a relay immediately and remains a source on later turns
+  ---
+  duration_ms: 7.7515
+  type: 'test'
+  ...
+# Subtest: Bracelet refills are Bronze2 Silver4 Gold7, with shared elemental conversion and saved partial block
+ok 41 - Bracelet refills are Bronze2 Silver4 Gold7, with shared elemental conversion and saved partial block
+  ---
+  duration_ms: 7.9878
+  type: 'test'
+  ...
+# Subtest: every HP-healing card resolves once then goes to Destroyed, even under Keystone
+ok 42 - every HP-healing card resolves once then goes to Destroyed, even under Keystone
+  ---
+  duration_ms: 40.402
+  type: 'test'
+  ...
+# Subtest: healing at full HP still consumes the card; ownership restores it next battle
+ok 43 - healing at full HP still consumes the card; ownership restores it next battle
+  ---
+  duration_ms: 1.8459
+  type: 'test'
+  ...
+# Subtest: Heat cannot meld beneath a healing-only spell
+ok 44 - Heat cannot meld beneath a healing-only spell
+  ---
+  duration_ms: 0.9453
+  type: 'test'
+  ...
+# Subtest: healing cards are rare, weighted down in rare offers, and scarce in Item Decks
+ok 45 - healing cards are rare, weighted down in rare offers, and scarce in Item Decks
+  ---
+  duration_ms: 79.4133
+  type: 'test'
+  ...
+# Subtest: starter strength and enemy HP match the revised balance, including summons
+ok 46 - starter strength and enemy HP match the revised balance, including summons
+  ---
+  duration_ms: 0.4859
+  type: 'test'
+  ...
+# Subtest: previous saves retain acquired healing cards and active enemy HP
+ok 47 - previous saves retain acquired healing cards and active enemy HP
+  ---
+  duration_ms: 4.8401
+  type: 'test'
+  ...
+# Subtest: live power follows neighbors, Sever, row elements, HP, upgrades and snapshot identity
+ok 48 - live power follows neighbors, Sever, row elements, HP, upgrades and snapshot identity
+  ---
+  duration_ms: 6.7519
+  type: 'test'
+  ...
+# Subtest: target preview matches actual single-card hits without changing state, RNG or costs
+ok 49 - target preview matches actual single-card hits without changing state, RNG or costs
+  ---
+  duration_ms: 51.1255
+  type: 'test'
+  ...
+# Subtest: attuned attack previews selected element; charging and random attacks make no false forecast
+ok 50 - attuned attack previews selected element; charging and random attacks make no false forecast
+  ---
+  duration_ms: 1.2721
+  type: 'test'
+  ...
+# Subtest: Displayed attunement options match legal choices; Transmute overrides them
+ok 51 - Displayed attunement options match legal choices; Transmute overrides them
+  ---
+  duration_ms: 17.9607
+  type: 'test'
+  ...
+# Subtest: Shield colors follow remaining portions, preserve mixed elements and exclude covered/inactive owners
+ok 52 - Shield colors follow remaining portions, preserve mixed elements and exclude covered/inactive owners
+  ---
+  duration_ms: 28.6316
+  type: 'test'
+  ...
+# Subtest: Blast cast tint and offered relay last only this turn
+ok 53 - Blast cast tint and offered relay last only this turn
+  ---
+  duration_ms: 2.3691
+  type: 'test'
+  ...
+# Subtest: Matching links and badges follow live adjacency, including Sever and covered cards
+ok 54 - Matching links and badges follow live adjacency, including Sever and covered cards
+  ---
+  duration_ms: 1.2663
+  type: 'test'
+  ...
+# Subtest: Visuals don't recalculate stored block after adjacency changes, and are read only
+ok 55 - Visuals don't recalculate stored block after adjacency changes, and are read only
+  ---
+  duration_ms: 9.0135
+  type: 'test'
+  ...
+# Subtest: Fourfold visual block matches damage in every corner, retargets and breaks on Sever
+ok 56 - Fourfold visual block matches damage in every corner, retargets and breaks on Sever
+  ---
+  duration_ms: 3.8592
+  type: 'test'
+  ...
+# Subtest: Opening Rite grants only opening Focus and cannot Recall alone or beneath Palimpsest
+ok 57 - Opening Rite grants only opening Focus and cannot Recall alone or beneath Palimpsest
+  ---
+  duration_ms: 5.8876
+  type: 'test'
+  ...
+# Subtest: Connections require an effect: no Focus-Blast cable, but spent neighbors can feed live bonuses
+ok 58 - Connections require an effect: no Focus-Blast cable, but spent neighbors can feed live bonuses
+  ---
+  duration_ms: 1.732
+  type: 'test'
+  ...
+# Subtest: Real effects connect: Keystone allowance, growth and adjacent damage, without mutating state
+ok 59 - Real effects connect: Keystone allowance, growth and adjacent damage, without mutating state
+  ---
+  duration_ms: 2.4928
+  type: 'test'
+  ...
+# Subtest: Attune links have a useful recipient; exhausted providers retain their element
+ok 60 - Attune links have a useful recipient; exhausted providers retain their element
+  ---
+  duration_ms: 1.1796
+  type: 'test'
+  ...
+# Subtest: Collapse counts empty spaces, not missing cards, snapshots before destruction, and removes defenses before impact
+ok 61 - Collapse counts empty spaces, not missing cards, snapshots before destruction, and removes defenses before impact
+  ---
+  duration_ms: 35.484
+  type: 'test'
+  ...
+# Subtest: Collapse live preview retargets, handles full/empty columns and uses no randomness
+ok 62 - Collapse live preview retargets, handles full/empty columns and uses no randomness
+  ---
+  duration_ms: 2.2725
+  type: 'test'
+  ...
+# Subtest: Collapse starts at its column and never permits defenses behind its origin or latest impact
+ok 63 - Collapse starts at its column and never permits defenses behind its origin or latest impact
+  ---
+  duration_ms: 4.2237
+  type: 'test'
+  ...
+# Subtest: Glare attacks in its newly chosen element, bypasses all grid defenses, and permits equipment
+ok 64 - Glare attacks in its newly chosen element, bypasses all grid defenses, and permits equipment
+  ---
+  duration_ms: 3.352
+  type: 'test'
+  ...
+# Subtest: Wildfire destroys its row then applies Burn 2, including on an empty grid
+ok 65 - Wildfire destroys its row then applies Burn 2, including on an empty grid
+  ---
+  duration_ms: 3.6561
+  type: 'test'
+  ...
+# Subtest: Silence uses 2 + 2 per living board Ally per hit, counts covered Allies and snapshots all three hits
+ok 66 - Silence uses 2 + 2 per living board Ally per hit, counts covered Allies and snapshots all three hits
+  ---
+  duration_ms: 15.339
+  type: 'test'
+  ...
+# Subtest: New attacks keep exact formulas under cycle, Restless, buffs and half HP; legacy saves and Field inspection work
+ok 67 - New attacks keep exact formulas under cycle, Restless, buffs and half HP; legacy saves and Field inspection work
+  ---
+  duration_ms: 4.7622
+  type: 'test'
+  ...
+# Subtest: Boss animation capture preserves exact combat state and RNG for all three destruction moves
+ok 68 - Boss animation capture preserves exact combat state and RNG for all three destruction moves
+  ---
+  duration_ms: 13.5978
+  type: 'test'
+  ...
+# Subtest: hart inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+ok 69 - hart inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+  ---
+  duration_ms: 65.0782
+  type: 'test'
+  ...
+# Subtest: colossus inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+ok 70 - colossus inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+  ---
+  duration_ms: 17.4684
+  type: 'test'
+  ...
+# Subtest: choir inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+ok 71 - choir inserts one visible Purify turn at the cycle boundary, preserves scaling and resumes
+  ---
+  duration_ms: 11.1981
+  type: 'test'
+  ...
+# Subtest: Clean cycle boundaries skip Purify; late statuses wait for the next complete cycle; Motes and Eidolons never Purify
+ok 72 - Clean cycle boundaries skip Purify; late statuses wait for the next complete cycle; Motes and Eidolons never Purify
+  ---
+  duration_ms: 13.1785
+  type: 'test'
+  ...
+# Subtest: Queued Purify stays committed if Burn expires, clears only damage statuses and retains old saves
+ok 73 - Queued Purify stays committed if Burn expires, clears only damage statuses and retains old saves
+  ---
+  duration_ms: 5.1052
+  type: 'test'
+  ...
+# Subtest: Lethal status before Purify still triggers Choir Final Note instead of cleansing or healing
+ok 74 - Lethal status before Purify still triggers Choir Final Note instead of cleansing or healing
+  ---
+  duration_ms: 2.5614
+  type: 'test'
+  ...
+# Subtest: Hymn targets charged damage and banked Ward defense over expensive utility, then live-retargets
+ok 75 - Hymn targets charged damage and banked Ward defense over expensive utility, then live-retargets
+  ---
+  duration_ms: 3.6193
+  type: 'test'
+  ...
+# Subtest: Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln three one-Channel activations from firing
+ok 76 - Wild Conduit nets one Channel, and one Fire neighbor leaves Kiln three one-Channel activations from firing
+  ---
+  duration_ms: 8.7581
+  type: 'test'
+  ...
+# Subtest: ordinary Cannon attacks escalate 14, 7+7, 16, 8+8 across Final Blast turns
+ok 77 - ordinary Cannon attacks escalate 14, 7+7, 16, 8+8 across Final Blast turns
+  ---
+  duration_ms: 73.7829
+  type: 'test'
+  ...
+# Subtest: mixed elemental intent is stable, counters its first element and survives Continue
+ok 78 - mixed elemental intent is stable, counters its first element and survives Continue
+  ---
+  duration_ms: 5.9947
+  type: 'test'
+  ...
+# Subtest: Final Blast warning and pending intent escalate, including old saved pending blasts
+ok 79 - Final Blast warning and pending intent escalate, including old saved pending blasts
+  ---
+  duration_ms: 18.7702
+  type: 'test'
+  ...
+# Subtest: Purify preserves ordinary alternation; explicitly scaled attacks ignore half-HP and Restless bonuses
+ok 80 - Purify preserves ordinary alternation; explicitly scaled attacks ignore half-HP and Restless bonuses
+  ---
+  duration_ms: 3.6153
+  type: 'test'
+  ...
+# Subtest: charging lays two distinct empty-space mines with a full response turn, then 20+20 Fire before 40 Final Blast
+ok 81 - charging lays two distinct empty-space mines with a full response turn, then 20+20 Fire before 40 Final Blast
+  ---
+  duration_ms: 36.7119
+  type: 'test'
+  ...
+# Subtest: mine covers are destroyed before Final Blast can select them as defenses
+ok 82 - mine covers are destroyed before Final Blast can select them as defenses
+  ---
+  duration_ms: 5.5626
+  type: 'test'
+  ...
+# Subtest: Cannon mines respect occupied player/Ideon/corruption spaces and never overwrite a full grid
+ok 83 - Cannon mines respect occupied player/Ideon/corruption spaces and never overwrite a full grid
+  ---
+  duration_ms: 5.8381
+  type: 'test'
+  ...
+# Subtest: defused mines stay absent across Continue and do not detonate with Final Blast
+ok 84 - defused mines stay absent across Continue and do not detonate with Final Blast
+  ---
+  duration_ms: 13.8414
+  type: 'test'
+  ...
+# Subtest: every thought field uses a clipped radius-two Manhattan diamond
+ok 85 - every thought field uses a clipped radius-two Manhattan diamond
+  ---
+  duration_ms: 31.1177
+  type: 'test'
+  ...
+# Subtest: Cannon charges on actual turns 4/9/14 and fires escalating 40/50/60 on 5/10/15
+ok 86 - Cannon charges on actual turns 4/9/14 and fires escalating 40/50/60 on 5/10/15
+  ---
+  duration_ms: 47.2139
+  type: 'test'
+  ...
+# Subtest: Final Blast element is seeded, stable under inspection and preserved by Continue
+ok 87 - Final Blast element is seeded, stable under inspection and preserved by Continue
+  ---
+  duration_ms: 429.1828
+  type: 'test'
+  ...
+# Subtest: Final Blast takes priority over Purify; Purify still counts toward the five-turn timer
+ok 88 - Final Blast takes priority over Purify; Purify still counts toward the five-turn timer
+  ---
+  duration_ms: 4.243
+  type: 'test'
+  ...
+# Subtest: Final Blast starts at the enemy edge and permits Wards across the entire grid
+ok 89 - Final Blast starts at the enemy edge and permits Wards across the entire grid
+  ---
+  duration_ms: 8.4912
+  type: 'test'
+  ...
+# Subtest: old Cannon snapshots acquire the counter and current field description without changing combat position
+ok 90 - old Cannon snapshots acquire the counter and current field description without changing combat position
+  ---
+  duration_ms: 1.8069
+  type: 'test'
+  ...
+# Subtest: Cannon two-space move presents both individual steps without applying intermediate field or collision rules
+ok 91 - Cannon two-space move presents both individual steps without applying intermediate field or collision rules
+  ---
+  duration_ms: 32.3726
+  type: 'test'
+  ...
+# Subtest: Cannon exit from columns 1 and 2 disappears at column 1 then queues exactly one equipment-only Pierce attack
+ok 92 - Cannon exit from columns 1 and 2 disappears at column 1 then queues exactly one equipment-only Pierce attack
+  ---
+  duration_ms: 3.1734
+  type: 'test'
+  ...
+# Subtest: Cannon odd/even paths retain their original command count and never deal damage before exit
+ok 93 - Cannon odd/even paths retain their original command count and never deal damage before exit
+  ---
+  duration_ms: 5.6946
+  type: 'test'
+  ...
+# Subtest: Cannon has 300 base HP and switches to two simultaneous bullets after fifteen completed turns
+ok 94 - Cannon has 300 base HP and switches to two simultaneous bullets after fifteen completed turns
+  ---
+  duration_ms: 66.5812
+  type: 'test'
+  ...
+# Subtest: volley chooses two separated lanes even when the strongest target is in the middle
+ok 95 - volley chooses two separated lanes even when the strongest target is in the middle
+  ---
+  duration_ms: 7.4066
+  type: 'test'
+  ...
+# Subtest: blocked launch lanes withhold bullets without duplicating the ordinary attack
+ok 96 - blocked launch lanes withhold bullets without duplicating the ordinary attack
+  ---
+  duration_ms: 2.4771
+  type: 'test'
+  ...
+# Subtest: Final Blast still pauses all bullets and launches none after the volley threshold
+ok 97 - Final Blast still pauses all bullets and launches none after the volley threshold
+  ---
+  duration_ms: 3.1739
+  type: 'test'
+  ...
+# Subtest: Colossus opens with two Chaos fists, Collapse, then piercing Glare
+ok 98 - Colossus opens with two Chaos fists, Collapse, then piercing Glare
+  ---
+  duration_ms: 39.9149
+  type: 'test'
+  ...
+# Subtest: Glare supports Fire; both fists and live details use it
+ok 99 - Glare supports Fire; both fists and live details use it
+  ---
+  duration_ms: 7.7931
+  type: 'test'
+  ...
+# Subtest: Glare supports Earth; both fists and live details use it
+ok 100 - Glare supports Earth; both fists and live details use it
+  ---
+  duration_ms: 4.345
+  type: 'test'
+  ...
+# Subtest: Glare supports Wind; both fists and live details use it
+ok 101 - Glare supports Wind; both fists and live details use it
+  ---
+  duration_ms: 5.2709
+  type: 'test'
+  ...
+# Subtest: Glare supports Water; both fists and live details use it
+ok 102 - Glare supports Water; both fists and live details use it
+  ---
+  duration_ms: 5.7083
+  type: 'test'
+  ...
+# Subtest: Glare supports Chaos; both fists and live details use it
+ok 103 - Glare supports Chaos; both fists and live details use it
+  ---
+  duration_ms: 4.5814
+  type: 'test'
+  ...
+# Subtest: Glare supports Light; both fists and live details use it
+ok 104 - Glare supports Light; both fists and live details use it
+  ---
+  duration_ms: 3.8891
+  type: 'test'
+  ...
+# Subtest: Fire form takes Water +50%, Earth half; legacy saved Arcane form remains neutral
+ok 105 - Fire form takes Water +50%, Earth half; legacy saved Arcane form remains neutral
+  ---
+  duration_ms: 1.8085
+  type: 'test'
+  ...
+# Subtest: Matching-element Mini-Void trait follows a change to Fire
+ok 106 - Matching-element Mini-Void trait follows a change to Fire
+  ---
+  duration_ms: 1.3338
+  type: 'test'
+  ...
+# Subtest: Glare selection and later random state survive replay and exact-state resume
+ok 107 - Glare selection and later random state survive replay and exact-state resume
+  ---
+  duration_ms: 11.9672
+  type: 'test'
+  ...
+# Subtest: Glare tells do not roll the element early, and a previous-version save adopts the fourth move
+ok 108 - Glare tells do not roll the element early, and a previous-version save adopts the fourth move
+  ---
+  duration_ms: 2.1874
+  type: 'test'
+  ...
+# Subtest: Kiln placement caps at three charges and all nine-use schedules match the agreed releases
+ok 109 - Kiln placement caps at three charges and all nine-use schedules match the agreed releases
+  ---
+  duration_ms: 71.7304
+  type: 'test'
+  ...
+# Subtest: Undertow replay grants current placement charges but only three Fire neighbors allow an immediate shot
+ok 110 - Undertow replay grants current placement charges but only three Fire neighbors allow an immediate shot
+  ---
+  duration_ms: 7.2348
+  type: 'test'
+  ...
+# Subtest: Prior-rules Kiln saves preserve stored charges and used allowance without retroactive placement bonuses
+ok 111 - Prior-rules Kiln saves preserve stored charges and used allowance without retroactive placement bonuses
+  ---
+  duration_ms: 4.1877
+  type: 'test'
+  ...
+# Subtest: Patient Seed gives one unwatered or two watered releases with no damage on filling
+ok 112 - Patient Seed gives one unwatered or two watered releases with no damage on filling
+  ---
+  duration_ms: 20.7465
+  type: 'test'
+  ...
+# Subtest: watering checks each activation, caps excess, and multiple Water neighbors never stack
+ok 113 - watering checks each activation, caps excess, and multiple Water neighbors never stack
+  ---
+  duration_ms: 3.2396
+  type: 'test'
+  ...
+# Subtest: watering uses exposed orthogonal innate/Transmuted/committed Water, respecting Sever and relay expiry
+ok 114 - watering uses exposed orthogonal innate/Transmuted/committed Water, respecting Sever and relay expiry
+  ---
+  duration_ms: 1.8928
+  type: 'test'
+  ...
+# Subtest: every Charge card has a separate release, costs Channel and preserves historical Surge/Eclipse first-shot timing
+ok 115 - every Charge card has a separate release, costs Channel and preserves historical Surge/Eclipse first-shot timing
+  ---
+  duration_ms: 6.9824
+  type: 'test'
+  ...
+# Subtest: pending charge and spent allowance survive saves; legacy overcharge clamps and Recall resets
+ok 116 - pending charge and spent allowance survive saves; legacy overcharge clamps and Recall resets
+  ---
+  duration_ms: 3.746
+  type: 'test'
+  ...
+# Subtest: Hymn and policy count the release activation, including current watering and a fully charged spent card
+ok 117 - Hymn and policy count the release activation, including current watering and a fully charged spent card
+  ---
+  duration_ms: 3.2447
+  type: 'test'
+  ...
+# Subtest: Insight is spent after Reveal; the refill is captured before enemies act and cannot reopen player phases
+ok 118 - Insight is spent after Reveal; the refill is captured before enemies act and cannot reopen player phases
+  ---
+  duration_ms: 25.3769
+  type: 'test'
+  ...
+# Subtest: refill respects gear, permanent and delayed bonuses, and enemy Insight changes apply at Reveal
+ok 119 - refill respects gear, permanent and delayed bonuses, and enemy Insight changes apply at Reveal
+  ---
+  duration_ms: 8.9392
+  type: 'test'
+  ...
+# Subtest: empty or short draws finish with zero Insight, including legacy completed Reveal saves
+ok 120 - empty or short draws finish with zero Insight, including legacy completed Reveal saves
+  ---
+  duration_ms: 3.2332
+  type: 'test'
+  ...
+# Subtest: every charged card builds charge without an enemy target or premature effects
+ok 121 - every charged card builds charge without an enemy target or premature effects
+  ---
+  duration_ms: 9.7487
+  type: 'test'
+  ...
+# Subtest: Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its fourth activation
+ok 122 - Kiln releases 20 on only the chosen enemy and Burn 2 on all enemies on its fourth activation
+  ---
+  duration_ms: 3.1253
+  type: 'test'
+  ...
+# Subtest: Kiln on-place Fire charges can make the first activation a targeted release; Burn still reaches others after a kill
+ok 123 - Kiln on-place Fire charges can make the first activation a targeted release; Burn still reaches others after a kill
+  ---
+  duration_ms: 3.4873
+  type: 'test'
+  ...
+# Subtest: Flicker blocks Kiln only for the negating enemy, including its secondary Burn
+ok 124 - Flicker blocks Kiln only for the negating enemy, including its secondary Burn
+  ---
+  duration_ms: 2.67
+  type: 'test'
+  ...
+# Subtest: Chorus replaces turn four and Final Note is explicitly warned
+ok 125 - Chorus replaces turn four and Final Note is explicitly warned
+  ---
+  duration_ms: 8.8789
+  type: 'test'
+  ...
+# Subtest: Killing blow resolves fixed Light 20 before rewards, then disintegrates
+ok 126 - Killing blow resolves fixed Light 20 before rewards, then disintegrates
+  ---
+  duration_ms: 34.5617
+  type: 'test'
+  ...
+# Subtest: Mutual death loses with no rewards and zero-HP hit snapshot
+ok 127 - Mutual death loses with no rewards and zero-HP hit snapshot
+  ---
+  duration_ms: 3.7463
+  type: 'test'
+  ...
+# Subtest: Cull skips intact Wards and Shields, permits Ally/equipment defense, and resumes once
+ok 128 - Cull skips intact Wards and Shields, permits Ally/equipment defense, and resumes once
+  ---
+  duration_ms: 10.2648
+  type: 'test'
+  ...
+# Subtest: Enemy status kill triggers Final Note before its queued attack or next turn
+ok 129 - Enemy status kill triggers Final Note before its queued attack or next turn
+  ---
+  duration_ms: 2.95
+  type: 'test'
+  ...
+# Subtest: Reflection kill triggers Final Note; spent mirror cannot reflect it again
+ok 130 - Reflection kill triggers Final Note; spent mirror cannot reflect it again
+  ---
+  duration_ms: 4.4537
+  type: 'test'
+  ...
+# Subtest: Equipment killing blow triggers Final Note
+ok 131 - Equipment killing blow triggers Final Note
+  ---
+  duration_ms: 4.0907
+  type: 'test'
+  ...
+# Subtest: Area kill of two Choirs resolves each death attack once before victory
+ok 132 - Area kill of two Choirs resolves each death attack once before victory
+  ---
+  duration_ms: 9.4134
+  type: 'test'
+  ...
+# Subtest: Choir death with another enemy alive resolves Final Note and allows battle to continue
+ok 133 - Choir death with another enemy alive resolves Final Note and allows battle to continue
+  ---
+  duration_ms: 3.7501
+  type: 'test'
+  ...
+# Subtest: Recent saves load and use current Choir warnings and rotation
+ok 134 - Recent saves load and use current Choir warnings and rotation
+  ---
+  duration_ms: 9.0731
+  type: 'test'
+  ...
+# Subtest: Conduit costs one Channel, has two uses, and grants no attack or block itself
+ok 135 - Conduit costs one Channel, has two uses, and grants no attack or block itself
+  ---
+  duration_ms: 29.6993
+  type: 'test'
+  ...
+# Subtest: committed elements relay through spent Conduit and expire together, including defense
+ok 136 - committed elements relay through spent Conduit and expire together, including defense
+  ---
+  duration_ms: 9.1366
+  type: 'test'
+  ...
+# Subtest: chosen defensive element changes actual interception damage in either direction
+ok 137 - chosen defensive element changes actual interception damage in either direction
+  ---
+  duration_ms: 6.034
+  type: 'test'
+  ...
+# Subtest: Sever and covering suppress Conduit bonuses and relays, preserving committed block and defensive element
+ok 138 - Sever and covering suppress Conduit bonuses and relays, preserving committed block and defensive element
+  ---
+  duration_ms: 2.3776
+  type: 'test'
+  ...
+# Subtest: each Conduit contributes once, links in either direction, and Transmute persists after expiry
+ok 139 - each Conduit contributes once, links in either direction, and Transmute persists after expiry
+  ---
+  duration_ms: 3.3463
+  type: 'test'
+  ...
+# Subtest: Consumables respect phases, one use across phases, save/resume and next-turn refresh
+ok 140 - Consumables respect phases, one use across phases, save/resume and next-turn refresh
+  ---
+  duration_ms: 34.198
+  type: 'test'
+  ...
+# Subtest: Healing is five HP, never spent at full HP, once per map round and independent of battle allowance
+ok 141 - Healing is five HP, never spent at full HP, once per map round and independent of battle allowance
+  ---
+  duration_ms: 6.0909
+  type: 'test'
+  ...
+# Subtest: No consumables during an incoming hit, enemy/reveal phases, rewards or at result
+ok 142 - No consumables during an incoming hit, enemy/reveal phases, rewards or at result
+  ---
+  duration_ms: 2.1202
+  type: 'test'
+  ...
+# Subtest: Insight draws exactly one using the seeded deck, preserves hand/phase and recycles discard
+ok 143 - Insight draws exactly one using the seeded deck, preserves hand/phase and recycles discard
+  ---
+  duration_ms: 5.8597
+  type: 'test'
+  ...
+# Subtest: Star Flask targets explicitly, deals six without Ring triggers and retains normal death resolution
+ok 144 - Star Flask targets explicitly, deals six without Ring triggers and retains normal death resolution
+  ---
+  duration_ms: 6.1442
+  type: 'test'
+  ...
+# Subtest: Twelve shared Satchel slots exclude equipped gear and every socketed gem, but count separate bottles
+ok 145 - Twelve shared Satchel slots exclude equipped gear and every socketed gem, but count separate bottles
+  ---
+  duration_ms: 2.5371
+  type: 'test'
+  ...
+# Subtest: Full acquisition preserves every item until an explicit discard; legacy overflow survives save/load
+ok 146 - Full acquisition preserves every item until an explicit discard; legacy overflow survives save/load
+  ---
+  duration_ms: 1.8404
+  type: 'test'
+  ...
+# Subtest: Cursed objects and cursed socket holders cannot be discarded to evade the Healer
+ok 147 - Cursed objects and cursed socket holders cannot be discarded to evade the Healer
+  ---
+  duration_ms: 1.4337
+  type: 'test'
+  ...
+# Subtest: Every normal Tavern offers two distinct consumables, uses posted prices, and supports sales
+ok 148 - Every normal Tavern offers two distinct consumables, uses posted prices, and supports sales
+  ---
+  duration_ms: 3.5566
+  type: 'test'
+  ...
+# Subtest: AI values finite supplies and can finish an enemy using a legal Flask action
+ok 149 - AI values finite supplies and can finish an enemy using a legal Flask action
+  ---
+  duration_ms: 5.2213
+  type: 'test'
+  ...
+# Subtest: Legacy overflow cannot interrupt or deadlock a pending enemy hit
+ok 150 - Legacy overflow cannot interrupt or deadlock a pending enemy hit
+  ---
+  duration_ms: 2.0212
+  type: 'test'
+  ...
+# Subtest: Normal Continue restores the whole battle checkpoint, including potion inventory and HP together
+ok 151 - Normal Continue restores the whole battle checkpoint, including potion inventory and HP together
+  ---
+  duration_ms: 4.8888
+  type: 'test'
+  ...
+# Subtest: A full Satchel may consume legal healing to make room instead of discarding it
+ok 152 - A full Satchel may consume legal healing to make room instead of discarding it
+  ---
+  duration_ms: 1.6295
+  type: 'test'
+  ...
+# Subtest: Continue accepts every released 3.0 patch and migrates tendrils without resetting battle progress
+ok 153 - Continue accepts every released 3.0 patch and migrates tendrils without resetting battle progress
+  ---
+  duration_ms: 86.9359
+  type: 'test'
+  ...
+# Subtest: Continue still rejects future, malformed and unknown save versions
+ok 154 - Continue still rejects future, malformed and unknown save versions
+  ---
+  duration_ms: 1.5911
+  type: 'test'
+  ...
+# Subtest: Continue accepts the first Apex release without resetting its floor
+ok 155 - Continue accepts the first Apex release without resetting its floor
+  ---
+  duration_ms: 0.831
+  type: 'test'
+  ...
+# Subtest: Enemy attribution uses the actual lethal source in a pack, not the first enemy
+ok 156 - Enemy attribution uses the actual lethal source in a pack, not the first enemy
+  ---
+  duration_ms: 8.5706
+  type: 'test'
+  ...
+# Subtest: Actual burn tick records status death before counters clear
+ok 157 - Actual burn tick records status death before counters clear
+  ---
+  duration_ms: 1.6698
+  type: 'test'
+  ...
+# Subtest: Actual poison tick records status death before counters clear
+ok 158 - Actual poison tick records status death before counters clear
+  ---
+  duration_ms: 1.2433
+  type: 'test'
+  ...
+# Subtest: Actual corrode tick records status death before counters clear
+ok 159 - Actual corrode tick records status death before counters clear
+  ---
+  duration_ms: 1.3706
+  type: 'test'
+  ...
+# Subtest: All bosses and Eidolons have distinct flavor; unknown future enemies still have clear attribution
+ok 160 - All bosses and Eidolons have distinct flavor; unknown future enemies still have clear attribution
+  ---
+  duration_ms: 23.8988
+  type: 'test'
+  ...
+# Subtest: Final Note attributes the already-dead Choir and retains attribution through observation, archive and save
+ok 161 - Final Note attributes the already-dead Choir and retains attribution through observation, archive and save
+  ---
+  duration_ms: 40.4697
+  type: 'test'
+  ...
+# Subtest: Hex/event/legacy death text is useful without inventing an enemy; victory has no death
+ok 162 - Hex/event/legacy death text is useful without inventing an enemy; victory has no death
+  ---
+  duration_ms: 2.756
+  type: 'test'
+  ...
+# Subtest: field inspection can preview every S3 Archon without a battle
+ok 163 - field inspection can preview every S3 Archon without a battle
+  ---
+  duration_ms: 12.322
+  type: 'test'
+  ...
+# Subtest: Concord requires a foundation and releases one wave per distinct source element
+ok 164 - Concord requires a foundation and releases one wave per distinct source element
+  ---
+  duration_ms: 33.4755
+  type: 'test'
+  ...
+# Subtest: Second Spring restores spent combat uses without refreshing the turn or depleted Ward
+ok 165 - Second Spring restores spent combat uses without refreshing the turn or depleted Ward
+  ---
+  duration_ms: 2.6456
+  type: 'test'
+  ...
+# Subtest: S2 rewards enter the transition Tavern, Guide is granted only at Depths entry
+ok 166 - S2 rewards enter the transition Tavern, Guide is granted only at Depths entry
+  ---
+  duration_ms: 8.0134
+  type: 'test'
+  ...
+# Subtest: Ideons require empty legal spaces, but cannon bullets explicitly cover cards
+ok 167 - Ideons require empty legal spaces, but cannon bullets explicitly cover cards
+  ---
+  duration_ms: 5.3529
+  type: 'test'
+  ...
+# Subtest: Needle can attack distant Ideons for eight damage
+ok 168 - Needle can attack distant Ideons for eight damage
+  ---
+  duration_ms: 1.5558
+  type: 'test'
+  ...
+# Subtest: Eclipse hits nearby Ideons, guardian protects only its own owner
+ok 169 - Eclipse hits nearby Ideons, guardian protects only its own owner
+  ---
+  duration_ms: 1.6173
+  type: 'test'
+  ...
+# Subtest: Ideons do not supply adjacency or attunement; owner death clears only its children
+ok 170 - Ideons do not supply adjacency or attunement; owner death clears only its children
+  ---
+  duration_ms: 3.7787
+  type: 'test'
+  ...
+# Subtest: Ideon statuses tick, elemental immunities apply and guardians are Arcane-vulnerable
+ok 171 - Ideon statuses tick, elemental immunities apply and guardians are Arcane-vulnerable
+  ---
+  duration_ms: 3.9925
+  type: 'test'
+  ...
+# Subtest: Ideon attack originates at its column; same-column defenses allowed, farther right excluded
+ok 172 - Ideon attack originates at its column; same-column defenses allowed, farther right excluded
+  ---
+  duration_ms: 1.2242
+  type: 'test'
+  ...
+# Subtest: Scouring Gale is a rightward row beam with one ordinary enemy hit
+ok 173 - Scouring Gale is a rightward row beam with one ordinary enemy hit
+  ---
+  duration_ms: 1.632
+  type: 'test'
+  ...
+# Subtest: Guide moves and attacks as one activation, then a different card consumes its mark
+ok 174 - Guide moves and attacks as one activation, then a different card consumes its mark
+  ---
+  duration_ms: 2.5454
+  type: 'test'
+  ...
+# Subtest: Refraction fields obey source element, disable covered defense, and destroy only after activation
+ok 175 - Refraction fields obey source element, disable covered defense, and destroy only after activation
+  ---
+  duration_ms: 2.9365
+  type: 'test'
+  ...
+# Subtest: shared fields follow card identity when cards move and Guide marks ignore equipment
+ok 176 - shared fields follow card identity when cards move and Guide marks ignore equipment
+  ---
+  duration_ms: 0.8182
+  type: 'test'
+  ...
+# Subtest: Cannon parity reaches odd and even targets and ordinary launch plans avoid field overlap
+ok 177 - Cannon parity reaches odd and even targets and ordinary launch plans avoid field overlap
+  ---
+  duration_ms: 3.3014
+  type: 'test'
+  ...
+# Subtest: Cnidarian replacement tier grows by deaths and owner cleanup causes no replacement
+ok 178 - Cnidarian replacement tier grows by deaths and owner cleanup causes no replacement
+  ---
+  duration_ms: 2.0462
+  type: 'test'
+  ...
+# Subtest: Hive ignores damage/status and countdown reaches victory even on a full grid
+ok 179 - Hive ignores damage/status and countdown reaches victory even on a full grid
+  ---
+  duration_ms: 17.4119
+  type: 'test'
+  ...
+# Subtest: barriers stop both sides, forbid corner cutting, permit explicit flight and preserve paths
+ok 180 - barriers stop both sides, forbid corner cutting, permit explicit flight and preserve paths
+  ---
+  duration_ms: 2.1737
+  type: 'test'
+  ...
+# Subtest: S3 live saves preserve Ideons, field state and deterministic subsequent actions
+ok 181 - S3 live saves preserve Ideons, field state and deterministic subsequent actions
+  ---
+  duration_ms: 9.8127
+  type: 'test'
+  ...
+# Subtest: Druid opens each battle with four revealed cards, one Focus, two Channel and its 12-card starter
+ok 182 - Druid opens each battle with four revealed cards, one Focus, two Channel and its 12-card starter
+  ---
+  duration_ms: 9.3392
+  type: 'test'
+  ...
+# Subtest: loading an older run preserves its edited deck and applies base Insight at the next Reveal
+ok 183 - loading an older run preserves its edited deck and applies base Insight at the next Reveal
+  ---
+  duration_ms: 15.3419
+  type: 'test'
+  ...
+# Subtest: first four pairs draw only easy single Motes; fifth pair unlocks full deck
+ok 184 - first four pairs draw only easy single Motes; fifth pair unlocks full deck
+  ---
+  duration_ms: 23.1039
+  type: 'test'
+  ...
+# Subtest: temporary enemy resource reductions last one turn, stack, clamp, and keep zero-cost placements legal
+ok 185 - temporary enemy resource reductions last one turn, stack, clamp, and keep zero-cost placements legal
+  ---
+  duration_ms: 12.9994
+  type: 'test'
+  ...
+# Subtest: early deck and queued resource penalty survive old and current save loading
+ok 186 - early deck and queued resource penalty survive old and current save loading
+  ---
+  duration_ms: 26.3017
+  type: 'test'
+  ...
+# Subtest: map age and Restless preview use actual combat damage and movement exceptions
+ok 187 - map age and Restless preview use actual combat damage and movement exceptions
+  ---
+  duration_ms: 5.7786
+  type: 'test'
+  ...
+# Subtest: Eclipse hits main enemies and only Ideons inside its Manhattan diamond, including boundaries and no row wrapping
+ok 188 - Eclipse hits main enemies and only Ideons inside its Manhattan diamond, including boundaries and no row wrapping
+  ---
+  duration_ms: 44.6888
+  type: 'test'
+  ...
+# Subtest: Eclipse retains charging, elemental damage and Continue state
+ok 189 - Eclipse retains charging, elemental damage and Continue state
+  ---
+  duration_ms: 8.0589
+  type: 'test'
+  ...
+# Subtest: Eclipse remains available in S1; Ideon clauses are displayed only from S3
+ok 190 - Eclipse remains available in S1; Ideon clauses are displayed only from S3
+  ---
+  duration_ms: 1.305
+  type: 'test'
+  ...
+# Subtest: Archives learn the furthest visited Stratum without forgetting it in later early runs
+ok 191 - Archives learn the furthest visited Stratum without forgetting it in later early runs
+  ---
+  duration_ms: 2.3662
+  type: 'test'
+  ...
+# Subtest: all elemental attack/block matchups share one cycle; same element and Arcane are neutral
+ok 192 - all elemental attack/block matchups share one cycle; same element and Arcane are neutral
+  ---
+  duration_ms: 3.3284
+  type: 'test'
+  ...
+# Subtest: actual Shield activation and Ruby bracelet both use the favorable defensive cycle
+ok 193 - actual Shield activation and Ruby bracelet both use the favorable defensive cycle
+  ---
+  duration_ms: 34.8598
+  type: 'test'
+  ...
+# Subtest: Wards use the same elemental Guard math, depletion and overflow as Shields
+ok 194 - Wards use the same elemental Guard math, depletion and overflow as Shields
+  ---
+  duration_ms: 182.4407
+  type: 'test'
+  ...
+# Subtest: Water Magnifier meld spends ten Ward on fifteen Fire and reports actual loss
+ok 195 - Water Magnifier meld spends ten Ward on fifteen Fire and reports actual loss
+  ---
+  duration_ms: 15.7414
+  type: 'test'
+  ...
+# Subtest: each elemental Armor reduces attacks by 3 favorable, 1 weak, 2 neutral and does not amplify damage
+ok 196 - each elemental Armor reduces attacks by 3 favorable, 1 weak, 2 neutral and does not amplify damage
+  ---
+  duration_ms: 75.4386
+  type: 'test'
+  ...
+# Subtest: legacy equipment identity and sockets load under new rules without replacing owned items
+ok 197 - legacy equipment identity and sockets load under new rules without replacing owned items
+  ---
+  duration_ms: 3.2331
+  type: 'test'
+  ...
+# Subtest: Movement contact grants one opening enemy turn to the whole encounter before first Reveal
+ok 198 - Movement contact grants one opening enemy turn to the whole encounter before first Reveal
+  ---
+  duration_ms: 36.3077
+  type: 'test'
+  ...
+# Subtest: Player movement, direct encounters and spawning onto a player retain player-first initiative
+ok 199 - Player movement, direct encounters and spawning onto a player retain player-first initiative
+  ---
+  duration_ms: 5.4451
+  type: 'test'
+  ...
+# Subtest: Enemy-first opening can be a utility move; opening statuses and Rite still prepare first player turn once
+ok 200 - Enemy-first opening can be a utility move; opening statuses and Rite still prepare first player turn once
+  ---
+  duration_ms: 3.4718
+  type: 'test'
+  ...
+# Subtest: Older mid-Rootling tutorials restart only that changed encounter and remain completable
+ok 201 - Older mid-Rootling tutorials restart only that changed encounter and remain completable
+  ---
+  duration_ms: 238.3647
+  type: 'test'
+  ...
+# Subtest: Water blocks burn from actual heat activation, with cost and immune feedback
+ok 202 - Water blocks burn from actual heat activation, with cost and immune feedback
+  ---
+  duration_ms: 34.0414
+  type: 'test'
+  ...
+# Subtest: Fire blocks poison from actual spore activation, with cost and immune feedback
+ok 203 - Fire blocks poison from actual spore activation, with cost and immune feedback
+  ---
+  duration_ms: 2.3442
+  type: 'test'
+  ...
+# Subtest: Chaos blocks corrode from actual rot activation, with cost and immune feedback
+ok 204 - Chaos blocks corrode from actual rot activation, with cost and immune feedback
+  ---
+  duration_ms: 2.2088
+  type: 'test'
+  ...
+# Subtest: Only the three specified element/status pairs are immune; other applications stack
+ok 205 - Only the three specified element/status pairs are immune; other applications stack
+  ---
+  duration_ms: 43.9528
+  type: 'test'
+  ...
+# Subtest: Kiln still damages a Water target but its area Burn skips only Water enemies
+ok 206 - Kiln still damages a Water target but its area Burn skips only Water enemies
+  ---
+  duration_ms: 19.2817
+  type: 'test'
+  ...
+# Subtest: Melded Heat cannot burn Water; its host attack still resolves
+ok 207 - Melded Heat cannot burn Water; its host attack still resolves
+  ---
+  duration_ms: 2.3483
+  type: 'test'
+  ...
+# Subtest: Immune statuses never tick; other statuses retain their normal progression
+ok 208 - Immune statuses never tick; other statuses retain their normal progression
+  ---
+  duration_ms: 7.6478
+  type: 'test'
+  ...
+# Subtest: Glare uses current-form immunity, clears existing status immediately, and does not restore it
+ok 209 - Glare uses current-form immunity, clears existing status immediately, and does not restore it
+  ---
+  duration_ms: 6.6312
+  type: 'test'
+  ...
+# Subtest: Legacy saves and battle checkpoints clear impossible statuses without changing the input
+ok 210 - Legacy saves and battle checkpoints clear impossible statuses without changing the input
+  ---
+  duration_ms: 4.2946
+  type: 'test'
+  ...
+# Subtest: AI prefers a susceptible status target over an immune one
+ok 211 - AI prefers a susceptible status target over an immune one
+  ---
+  duration_ms: 3.1887
+  type: 'test'
+  ...
+# Subtest: Cinder Hart rejects Burn and Poison from cards and area effects; Corrode remains effective
+ok 212 - Cinder Hart rejects Burn and Poison from cards and area effects; Corrode remains effective
+  ---
+  duration_ms: 7.1903
+  type: 'test'
+  ...
+# Subtest: Cinder Hart legacy statuses and queued ticks clear without mutating the save; Corrode still ticks
+ok 213 - Cinder Hart legacy statuses and queued ticks clear without mutating the save; Corrode still ticks
+  ---
+  duration_ms: 3.5036
+  type: 'test'
+  ...
+# Subtest: AI directs Burn at an ordinary Fire enemy instead of immune Cinder Hart
+ok 214 - AI directs Burn at an ordinary Fire enemy instead of immune Cinder Hart
+  ---
+  duration_ms: 1.721
+  type: 'test'
+  ...
+# Subtest: Rootbound Ring adds two only on the first attack and refreshes each player turn and battle
+ok 215 - Rootbound Ring adds two only on the first attack and refreshes each player turn and battle
+  ---
+  duration_ms: 51.279
+  type: 'test'
+  ...
+# Subtest: Ring fires once across a Plasma pile, an area attack, and a multi-element Prism
+ok 216 - Ring fires once across a Plasma pile, an area attack, and a multi-element Prism
+  ---
+  duration_ms: 11.0655
+  type: 'test'
+  ...
+# Subtest: Charge building and status-only activations preserve the Ring, including melded Heat
+ok 217 - Charge building and status-only activations preserve the Ring, including melded Heat
+  ---
+  duration_ms: 7.391
+  type: 'test'
+  ...
+# Subtest: Negated, guarded or lethal opening attacks spend the Ring without moving its proc to another target
+ok 218 - Negated, guarded or lethal opening attacks spend the Ring without moving its proc to another target
+  ---
+  duration_ms: 6.0811
+  type: 'test'
+  ...
+# Subtest: Ring retains socketed elemental damage; other damage gear keeps its own trigger
+ok 219 - Ring retains socketed elemental damage; other damage gear keeps its own trigger
+  ---
+  duration_ms: 3.3356
+  type: 'test'
+  ...
+# Subtest: Bronze Bracelet refills two block per enemy turn and starting gem previews match new equipment
+ok 220 - Bronze Bracelet refills two block per enemy turn and starting gem previews match new equipment
+  ---
+  duration_ms: 4.62
+  type: 'test'
+  ...
+# Subtest: every current beneficial wearable is equipped into an empty slot before moving
+ok 221 - every current beneficial wearable is equipped into an empty slot before moving
+  ---
+  duration_ms: 30.4526
+  type: 'test'
+  ...
+# Subtest: Mirror Armor and helmet are both equipped in Tavern before leaving
+ok 222 - Mirror Armor and helmet are both equipped in Tavern before leaving
+  ---
+  duration_ms: 7.3718
+  type: 'test'
+  ...
+# Subtest: do not prefer cursed gear or overlook a socket when comparing occupied slots
+ok 223 - do not prefer cursed gear or overlook a socket when comparing occupied slots
+  ---
+  duration_ms: 4.0643
+  type: 'test'
+  ...
+# Subtest: recall and Dew synergy count; shield bonus depends on owning Shields
+ok 224 - recall and Dew synergy count; shield bonus depends on owning Shields
+  ---
+  duration_ms: 1.2054
+  type: 'test'
+  ...
+# Subtest: socketing an owned cursed Garnet suppresses its Poison rather than adding a new curse penalty
+ok 225 - socketing an owned cursed Garnet suppresses its Poison rather than adding a new curse penalty
+  ---
+  duration_ms: 5.2277
+  type: 'test'
+  ...
+# Subtest: unknown effects and choices remain legal fallbacks without mutating observation
+ok 226 - unknown effects and choices remain legal fallbacks without mutating observation
+  ---
+  duration_ms: 2.1118
+  type: 'test'
+  ...
+# Subtest: S1 initial event decks exclude all S3 events, including A Light in the Chitin
+ok 227 - S1 initial event decks exclude all S3 events, including A Light in the Chitin
+  ---
+  duration_ms: 23.7366
+  type: 'test'
+  ...
+# Subtest: existing S1 and S2 queues discard foreign events while preserving legal order and RNG
+ok 228 - existing S1 and S2 queues discard foreign events while preserving legal order and RNG
+  ---
+  duration_ms: 20.7655
+  type: 'test'
+  ...
+# Subtest: empty or wholly invalid event queues refill only from the current Stratum pool
+ok 229 - empty or wholly invalid event queues refill only from the current Stratum pool
+  ---
+  duration_ms: 1.6143
+  type: 'test'
+  ...
+# Subtest: S3 still offers A Light in the Chitin; shrine quest remains separate
+ok 230 - S3 still offers A Light in the Chitin; shrine quest remains separate
+  ---
+  duration_ms: 0.4129
+  type: 'test'
+  ...
+# Subtest: Trader exposes exact equipped and spare Bracelet copies and selecting one consumes only that instance
+ok 231 - Trader exposes exact equipped and spare Bracelet copies and selecting one consumes only that instance
+  ---
+  duration_ms: 10.4529
+  type: 'test'
+  ...
+# Subtest: Equipped trade clears its slot and surrenders its socketed Gem
+ok 232 - Equipped trade clears its slot and surrenders its socketed Gem
+  ---
+  duration_ms: 1.053
+  type: 'test'
+  ...
+# Subtest: A saved spare fitted Bracelet trades its exact Gem, preserving loose duplicates
+ok 233 - A saved spare fitted Bracelet trades its exact Gem, preserving loose duplicates
+  ---
+  duration_ms: 17.8192
+  type: 'test'
+  ...
+# Subtest: A Cursed fitted Gem prevents trading the Setting as a removal loophole
+ok 234 - A Cursed fitted Gem prevents trading the Setting as a removal loophole
+  ---
+  duration_ms: 0.7137
+  type: 'test'
+  ...
+# Subtest: Satchel-only Bracelets qualify, keep belongings changes no ownership, observations enumerate without mutation
+ok 235 - Satchel-only Bracelets qualify, keep belongings changes no ownership, observations enumerate without mutation
+  ---
+  duration_ms: 1.1728
+  type: 'test'
+  ...
+# Subtest: Wrong item, ambiguous old trade action, missing asset and Cursed Bracelet are rejected
+ok 236 - Wrong item, ambiguous old trade action, missing asset and Cursed Bracelet are rejected
+  ---
+  duration_ms: 1.0245
+  type: 'test'
+  ...
+# Subtest: Generic card-for-item exchange removes selected upgraded copy, saves and AI retain concrete choices
+ok 237 - Generic card-for-item exchange removes selected upgraded copy, saves and AI retain concrete choices
+  ---
+  duration_ms: 4.3764
+  type: 'test'
+  ...
+# Subtest: AI trade score recognizes the particular Bracelet being surrendered
+ok 238 - AI trade score recognizes the particular Bracelet being surrendered
+  ---
+  duration_ms: 17.9051
+  type: 'test'
+  ...
+# Subtest: three seeded distinct supplies, including healing, start away from player/pair in spread directions
+ok 239 - three seeded distinct supplies, including healing, start away from player/pair in spread directions
+  ---
+  duration_ms: 82.269
+  type: 'test'
+  ...
+# Subtest: supplies persist without decay or respawn across rounds and old saves are not populated retroactively
+ok 240 - supplies persist without decay or respawn across rounds and old saves are not populated retroactively
+  ---
+  duration_ms: 15.8621
+  type: 'test'
+  ...
+# Subtest: direct healing works with twelve loose items, records one use, caps HP, and is unavailable at full HP
+ok 241 - direct healing works with twelve loose items, records one use, caps HP, and is unavailable at full HP
+  ---
+  duration_ms: 22.5911
+  type: 'test'
+  ...
+# Subtest: leave here retains exact bottle and permits a later revisit, without immediate reopening
+ok 242 - leave here retains exact bottle and permits a later revisit, without immediate reopening
+  ---
+  duration_ms: 3.0299
+  type: 'test'
+  ...
+# Subtest: collecting into a full Satchel pauses movement until space is chosen; direct use needs no such choice
+ok 243 - collecting into a full Satchel pauses movement until space is chosen; direct use needs no such choice
+  ---
+  duration_ms: 2.8348
+  type: 'test'
+  ...
+# Subtest: enemies on a supply tile fight first and inspection evidence discovers only visible supplies
+ok 244 - enemies on a supply tile fight first and inspection evidence discovers only visible supplies
+  ---
+  duration_ms: 9.585
+  type: 'test'
+  ...
+# Subtest: tutorial supplies appear in a corner after Sapphire and are collected through the authored route
+ok 245 - tutorial supplies appear in a corner after Sapphire and are collected through the authored route
+  ---
+  duration_ms: 186.0151
+  type: 'test'
+  ...
+# Subtest: visible supplies outrank other loot but never hide enemies or Archons
+ok 246 - visible supplies outrank other loot but never hide enemies or Archons
+  ---
+  duration_ms: 0.4527
+  type: 'test'
+  ...
+# Subtest: Lethal enemy damage records zero HP in the hit snapshot before defeat
+ok 247 - Lethal enemy damage records zero HP in the hit snapshot before defeat
+  ---
+  duration_ms: 45.4753
+  type: 'test'
+  ...
+# Subtest: Lethal status damage also has zero-HP snapshots
+ok 248 - Lethal status damage also has zero-HP snapshots
+  ---
+  duration_ms: 3.5176
+  type: 'test'
+  ...
+# Subtest: Golem grows 10 to 16, intercepts all attacks that round, then keeps growth without Taunt
+ok 249 - Golem grows 10 to 16, intercepts all attacks that round, then keeps growth without Taunt
+  ---
+  duration_ms: 6.6637
+  type: 'test'
+  ...
+# Subtest: Golem growth adds six when wounded rather than healing to full, and remains a normal Ally
+ok 250 - Golem growth adds six when wounded rather than healing to full, and remains a normal Ally
+  ---
+  duration_ms: 4.0669
+  type: 'test'
+  ...
+# Subtest: hart preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+ok 251 - hart preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+  ---
+  duration_ms: 55.1443
+  type: 'test'
+  ...
+# Subtest: colossus preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+ok 252 - colossus preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+  ---
+  duration_ms: 7.4372
+  type: 'test'
+  ...
+# Subtest: choir preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+ok 253 - choir preview breaks ties deterministically, retargets after Recall, and matches actual destruction
+  ---
+  duration_ms: 4.0152
+  type: 'test'
+  ...
+# Subtest: Line previews count covered cards and outline empty cells along the threatened line
+ok 254 - Line previews count covered cards and outline empty cells along the threatened line
+  ---
+  duration_ms: 1.6275
+  type: 'test'
+  ...
+# Subtest: Choir counts covered combat value and selects two distinct stacks with reading-order ties
+ok 255 - Choir counts covered combat value and selects two distinct stacks with reading-order ties
+  ---
+  duration_ms: 1.6394
+  type: 'test'
+  ...
+# Subtest: Empty board, normal moves, enemy resolution and reaction windows have no danger markings
+ok 256 - Empty board, normal moves, enemy resolution and reaction windows have no danger markings
+  ---
+  duration_ms: 2.2339
+  type: 'test'
+  ...
+# Subtest: Multiple bosses have independent live forecasts; observations do not mutate state or RNG
+ok 257 - Multiple bosses have independent live forecasts; observations do not mutate state or RNG
+  ---
+  duration_ms: 5.6384
+  type: 'test'
+  ...
+# Subtest: Shared targeting retains other grid effects' newest and connected tie rules
+ok 258 - Shared targeting retains other grid effects' newest and connected tie rules
+  ---
+  duration_ms: 1.043
+  type: 'test'
+  ...
+# Subtest: Choir prioritizes defense over height, excludes spent output, and handles fewer than two stacks
+ok 259 - Choir prioritizes defense over height, excludes spent output, and handles fewer than two stacks
+  ---
+  duration_ms: 1.5643
+  type: 'test'
+  ...
+# Subtest: Heat meld preserves host and spends only first two attack uses, including upgraded Burn
+ok 260 - Heat meld preserves host and spends only first two attack uses, including upgraded Burn
+  ---
+  duration_ms: 57.3596
+  type: 'test'
+  ...
+# Subtest: Heat can meld to Earth Allies, Water or Wind attacks, including transmuted attacks; rejects utilities and other elements
+ok 261 - Heat can meld to Earth Allies, Water or Wind attacks, including transmuted attacks; rejects utilities and other elements
+  ---
+  duration_ms: 25.4839
+  type: 'test'
+  ...
+# Subtest: Charging does not spend Heat; an area attack spends one use and burns each target
+ok 262 - Charging does not spend Heat; an area attack spends one use and burns each target
+  ---
+  duration_ms: 12.9716
+  type: 'test'
+  ...
+# Subtest: Immune or Flickering target still consumes a Heat attack use; no extra Burn6
+ok 263 - Immune or Flickering target still consumes a Heat attack use; no extra Burn6
+  ---
+  duration_ms: 22.9112
+  type: 'test'
+  ...
+# Subtest: Heat recall resets separate cards, destruction follows host, saves preserve spent attachment uses
+ok 264 - Heat recall resets separate cards, destruction follows host, saves preserve spent attachment uses
+  ---
+  duration_ms: 13.9375
+  type: 'test'
+  ...
+# Subtest: Separate Heat copies each supply two uses and old Fusion saves migrate below their host
+ok 265 - Separate Heat copies each supply two uses and old Fusion saves migrate below their host
+  ---
+  duration_ms: 6.8054
+  type: 'test'
+  ...
+# Subtest: Drone stays put and attacks 5,10,15,20,25 of its own element across save/load
+ok 266 - Drone stays put and attacks 5,10,15,20,25 of its own element across save/load
+  ---
+  duration_ms: 47.4836
+  type: 'test'
+  ...
+# Subtest: Every fourth newly laid egg contains a Drone, but the opening swarm contains none
+ok 267 - Every fourth newly laid egg contains a Drone, but the opening swarm contains none
+  ---
+  duration_ms: 8.9312
+  type: 'test'
+  ...
+# Subtest: Hive final command precedes one grouped death frame with the emptied battle still visible
+ok 268 - Hive final command precedes one grouped death frame with the emptied battle still visible
+  ---
+  duration_ms: 7.8619
+  type: 'test'
+  ...
+# Subtest: A lethal final Drone command kills the player before Hive victory or death animation
+ok 269 - A lethal final Drone command kills the player before Hive victory or death animation
+  ---
+  duration_ms: 9.8104
+  type: 'test'
+  ...
+# Subtest: Larva moves and swaps silently, then makes one heavy exit attack and disappears
+ok 270 - Larva moves and swaps silently, then makes one heavy exit attack and disappears
+  ---
+  duration_ms: 11.7025
+  type: 'test'
+  ...
+# Subtest: Hatched crawlers attack once after moving and still attack when movement is blocked
+ok 271 - Hatched crawlers attack once after moving and still attack when movement is blocked
+  ---
+  duration_ms: 2.6786
+  type: 'test'
+  ...
+# Subtest: Covered hatches spawn mature insects without an immediate chip attack
+ok 272 - Covered hatches spawn mature insects without an immediate chip attack
+  ---
+  duration_ms: 1.8554
+  type: 'test'
+  ...
+# Subtest: Old opening insects migrate to Larvae without restoring HP or adding insects; hatched insects stay mature
+ok 273 - Old opening insects migrate to Larvae without restoring HP or adding insects; hatched insects stay mature
+  ---
+  duration_ms: 28.2709
+  type: 'test'
+  ...
+# Subtest: Hive opens with eight seeded mixed-element Larvae across all lanes, before any enemy movement
+ok 274 - Hive opens with eight seeded mixed-element Larvae across all lanes, before any enemy movement
+  ---
+  duration_ms: 134.2144
+  type: 'test'
+  ...
+# Subtest: Opening swarm moves only after the player ends their first turn
+ok 275 - Opening swarm moves only after the player ends their first turn
+  ---
+  duration_ms: 4.3895
+  type: 'test'
+  ...
+# Subtest: Hive opening grows once per elapsed Field round, independently of Restless and player steps
+ok 276 - Hive opening grows once per elapsed Field round, independently of Restless and player steps
+  ---
+  duration_ms: 27.75
+  type: 'test'
+  ...
+# Subtest: Hive age bonus respects opening cards and available enemy-side spaces
+ok 277 - Hive age bonus respects opening cards and available enemy-side spaces
+  ---
+  duration_ms: 10.5098
+  type: 'test'
+  ...
+# Subtest: Missing or future birth data does not invent a Hive age bonus; loading does not retrofit Larvae
+ok 278 - Missing or future birth data does not invent a Hive age bonus; loading does not retrofit Larvae
+  ---
+  duration_ms: 7.0771
+  type: 'test'
+  ...
+# Subtest: Insanity disables activation and both directions of adjacency, patterns and attunement
+ok 279 - Insanity disables activation and both directions of adjacency, patterns and attunement
+  ---
+  duration_ms: 16.5777
+  type: 'test'
+  ...
+# Subtest: Covered Insanity suppresses and resets HP loss but derived Freeze/Sever survive reload and turn changes
+ok 280 - Covered Insanity suppresses and resets HP loss but derived Freeze/Sever survive reload and turn changes
+  ---
+  duration_ms: 40.3872
+  type: 'test'
+  ...
+# Subtest: Elves on Insanity cannot Mend, adjacent Elves repair it and restore the cover immediately
+ok 281 - Elves on Insanity cannot Mend, adjacent Elves repair it and restore the cover immediately
+  ---
+  duration_ms: 4.8039
+  type: 'test'
+  ...
+# Subtest: Repairing Insanity does not erase independent Freeze or Sever statuses
+ok 282 - Repairing Insanity does not erase independent Freeze or Sever statuses
+  ---
+  duration_ms: 1.7849
+  type: 'test'
+  ...
+# Subtest: An existing Mend job pauses while its Elves cover Insanity
+ok 283 - An existing Mend job pauses while its Elves cover Insanity
+  ---
+  duration_ms: 1.2504
+  type: 'test'
+  ...
+# Subtest: Rear-first creation order cannot prevent the whole insect queue advancing left
+ok 284 - Rear-first creation order cannot prevent the whole insect queue advancing left
+  ---
+  duration_ms: 13.5826
+  type: 'test'
+  ...
+# Subtest: Command ordering is column first, then row, and limited to the commanded owner
+ok 285 - Command ordering is column first, then row, and limited to the commanded owner
+  ---
+  duration_ms: 1.5394
+  type: 'test'
+  ...
+# Subtest: Both insects swap whole Constructs but cannot cross another Ideon or Memory Hole
+ok 286 - Both insects swap whole Constructs but cannot cross another Ideon or Memory Hole
+  ---
+  duration_ms: 2.6826
+  type: 'test'
+  ...
+# Subtest: Swapped player cards still land on the original-space Hypnosis corruption
+ok 287 - Swapped player cards still land on the original-space Hypnosis corruption
+  ---
+  duration_ms: 3.0218
+  type: 'test'
+  ...
+# Subtest: Old saved Skitters gain swapping without resetting their HP, element, age or position
+ok 288 - Old saved Skitters gain swapping without resetting their HP, element, age or position
+  ---
+  duration_ms: 18.7169
+  type: 'test'
+  ...
+# Subtest: Skitters use every legal westward direction with seeded replay and diagonal Construct swaps
+ok 289 - Skitters use every legal westward direction with seeded replay and diagonal Construct swaps
+  ---
+  duration_ms: 57.1121
+  type: 'test'
+  ...
+# Subtest: Skitters take the only legal diagonal; Burrowers remain blocked instead of changing lanes
+ok 290 - Skitters take the only legal diagonal; Burrowers remain blocked instead of changing lanes
+  ---
+  duration_ms: 2.6908
+  type: 'test'
+  ...
+# Subtest: Skitter diagonals never wrap across the top or bottom edge
+ok 291 - Skitter diagonals never wrap across the top or bottom edge
+  ---
+  duration_ms: 14.546
+  type: 'test'
+  ...
+# Subtest: declining a cursed pickup has no ownership or curse effects and cannot be repeated
+ok 292 - declining a cursed pickup has no ownership or curse effects and cannot be repeated
+  ---
+  duration_ms: 9.5968
+  type: 'test'
+  ...
+# Subtest: collecting a cursed pickup still adds it and applies forced equipment
+ok 293 - collecting a cursed pickup still adds it and applies forced equipment
+  ---
+  duration_ms: 0.9259
+  type: 'test'
+  ...
+# Subtest: declining consumes the pickup, resolves other tile contents, and advances the forfeited movement phase normally
+ok 294 - declining consumes the pickup, resolves other tile contents, and advances the forfeited movement phase normally
+  ---
+  duration_ms: 18.0361
+  type: 'test'
+  ...
+# Subtest: old pending pickups load with a stable decline choice, including Item Deck Hexes
+ok 295 - old pending pickups load with a stable decline choice, including Item Deck Hexes
+  ---
+  duration_ms: 1.3464
+  type: 'test'
+  ...
+# Subtest: AI can refuse a cursed pickup while authored Event item outcomes remain mandatory
+ok 296 - AI can refuse a cursed pickup while authored Event item outcomes remain mandatory
+  ---
+  duration_ms: 3.3805
+  type: 'test'
+  ...
+# Subtest: all nine Archons offer one Legendary and two Rares; either rarity may be selected
+ok 297 - all nine Archons offer one Legendary and two Rares; either rarity may be selected
+  ---
+  duration_ms: 84.2172
+  type: 'test'
+  ...
+# Subtest: mixed boss offers use seed, survive observation/load and migrate pending old offers once
+ok 298 - mixed boss offers use seed, survive observation/load and migrate pending old offers once
+  ---
+  duration_ms: 25.7644
+  type: 'test'
+  ...
+# Subtest: ordinary Mote and Eidolon rewards still allow skipping and retain their rarity rules
+ok 299 - ordinary Mote and Eidolon rewards still allow skipping and retain their rarity rules
+  ---
+  duration_ms: 2.3424
+  type: 'test'
+  ...
+# Subtest: Heartwood Bastion begins at one and can activate beside cards, stores Earth Ward and exhausts after three uses
+ok 300 - Heartwood Bastion begins at one and can activate beside cards, stores Earth Ward and exhausts after three uses
+  ---
+  duration_ms: 7.0292
+  type: 'test'
+  ...
+# Subtest: Previous S3 saves load without retroactive supply changes
+ok 301 - Previous S3 saves load without retroactive supply changes
+  ---
+  duration_ms: 25.8183
+  type: 'test'
+  ...
+# Subtest: S3 starts with one or two seeded Crystals among three supplies, always retaining Healing Sap
+ok 302 - S3 starts with one or two seeded Crystals among three supplies, always retaining Healing Sap
+  ---
+  duration_ms: 36.3888
+  type: 'test'
+  ...
+# Subtest: Combination consumes only the Crystal, frees one slot, persists, and cannot repeat
+ok 303 - Combination consumes only the Crystal, frees one slot, persists, and cannot repeat
+  ---
+  duration_ms: 14.9019
+  type: 'test'
+  ...
+# Subtest: Crystal doubles healingSap while preserving one-use limit
+ok 304 - Crystal doubles healingSap while preserving one-use limit
+  ---
+  duration_ms: 6.856
+  type: 'test'
+  ...
+# Subtest: Crystal doubles focusDraught while preserving one-use limit
+ok 305 - Crystal doubles focusDraught while preserving one-use limit
+  ---
+  duration_ms: 6.7649
+  type: 'test'
+  ...
+# Subtest: Crystal doubles channelDraught while preserving one-use limit
+ok 306 - Crystal doubles channelDraught while preserving one-use limit
+  ---
+  duration_ms: 2.8258
+  type: 'test'
+  ...
+# Subtest: Crystal doubles insightDew while preserving one-use limit
+ok 307 - Crystal doubles insightDew while preserving one-use limit
+  ---
+  duration_ms: 7.3788
+  type: 'test'
+  ...
+# Subtest: Crystal doubles starFlask while preserving one-use limit
+ok 308 - Crystal doubles starFlask while preserving one-use limit
+  ---
+  duration_ms: 3.2593
+  type: 'test'
+  ...
+# Subtest: Enhanced Insight crosses draw/discard boundary and tolerates only one remaining card
+ok 309 - Enhanced Insight crosses draw/discard boundary and tolerates only one remaining card
+  ---
+  duration_ms: 2.209
+  type: 'test'
+  ...
+# Subtest: Combining is legal in Field/Tavern/player phases, not reactions or enemy turns
+ok 310 - Combining is legal in Field/Tavern/player phases, not reactions or enemy turns
+  ---
+  duration_ms: 3.6127
+  type: 'test'
+  ...
+# Subtest: Machine Elves have 8 HP, or 11 with the Tools upgrade, without healing deployed saves
+ok 311 - Machine Elves have 8 HP, or 11 with the Tools upgrade, without healing deployed saves
+  ---
+  duration_ms: 35.4281
+  type: 'test'
+  ...
+# Subtest: New bosses replace the Archon pool; former bosses are weaker Eidolons
+ok 312 - New bosses replace the Archon pool; former bosses are weaker Eidolons
+  ---
+  duration_ms: 12.1264
+  type: 'test'
+  ...
+# Subtest: Legacy assigned Archon migrates without RNG; active old boss keeps a completing reward
+ok 313 - Legacy assigned Archon migrates without RNG; active old boss keeps a completing reward
+  ---
+  duration_ms: 15.3437
+  type: 'test'
+  ...
+# Subtest: Old guided Mending lesson restarts with new rules; independent lesson can continue
+ok 314 - Old guided Mending lesson restarts with new rules; independent lesson can continue
+  ---
+  duration_ms: 3.6451
+  type: 'test'
+  ...
+# Subtest: Bile deterministic spawn, left-diagonal priority, no trail and only arrival drains
+ok 315 - Bile deterministic spawn, left-diagonal priority, no trail and only arrival drains
+  ---
+  duration_ms: 1.6963
+  type: 'test'
+  ...
+# Subtest: Bile picks leftmost movable glob; blocked globs persist and trigger fresh throws
+ok 316 - Bile picks leftmost movable glob; blocked globs persist and trigger fresh throws
+  ---
+  duration_ms: 1.2724
+  type: 'test'
+  ...
+# Subtest: Left edge poison outranks all spreading; only that glob disappears
+ok 317 - Left edge poison outranks all spreading; only that glob disappears
+  ---
+  duration_ms: 1.1829
+  type: 'test'
+  ...
+# Subtest: Bile shares a Corruption space; Elves intercept without a player activation
+ok 318 - Bile shares a Corruption space; Elves intercept without a player activation
+  ---
+  duration_ms: 1.1439
+  type: 'test'
+  ...
+# Subtest: Bile warning changes after legal placement/activation and survives live save reload
+ok 319 - Bile warning changes after legal placement/activation and survives live save reload
+  ---
+  duration_ms: 10.646
+  type: 'test'
+  ...
+# Subtest: Basic Elves place anywhere, repair NESW/self immediately, three uses then discard
+ok 320 - Basic Elves place anywhere, repair NESW/self immediately, three uses then discard
+  ---
+  duration_ms: 7.3715
+  type: 'test'
+  ...
+# Subtest: Strong adjacent Mend takes two turns, upgraded one; reload preserves committed space
+ok 321 - Strong adjacent Mend takes two turns, upgraded one; reload preserves committed space
+  ---
+  duration_ms: 10.364
+  type: 'test'
+  ...
+# Subtest: Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse immediately
+ok 322 - Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse immediately
+  ---
+  duration_ms: 3.1484
+  type: 'test'
+  ...
+# Subtest: Steam preserves ordered independent elements and exact8/10/12 damage
+ok 323 - Steam preserves ordered independent elements and exact8/10/12 damage
+  ---
+  duration_ms: 3.5267
+  type: 'test'
+  ...
+# Subtest: Bombadier alternates paired Hole and Anger waves with a full mine response turn
+ok 324 - Bombadier alternates paired Hole and Anger waves with a full mine response turn
+  ---
+  duration_ms: 7.3839
+  type: 'test'
+  ...
+# Subtest: both Bombadier waves escalate only after four complete cycles; secondary counts stay two
+ok 325 - both Bombadier waves escalate only after four complete cycles; secondary counts stay two
+  ---
+  duration_ms: 3.5428
+  type: 'test'
+  ...
+# Subtest: older Bombadier saves retain every rotation phase and their committed warnings
+ok 326 - older Bombadier saves retain every rotation phase and their committed warnings
+  ---
+  duration_ms: 7.6983
+  type: 'test'
+  ...
+# Subtest: Phase H commits fullest row, shifts stacks simultaneously, destroys whole stack in Hole
+ok 327 - Phase H commits fullest row, shifts stacks simultaneously, destroys whole stack in Hole
+  ---
+  duration_ms: 1.5718
+  type: 'test'
+  ...
+# Subtest: Phase V wraps bottom stack two rows; Hypnosis forces spent-this-turn card exactly once
+ok 328 - Phase V wraps bottom stack two rows; Hypnosis forces spent-this-turn card exactly once
+  ---
+  duration_ms: 1.1734
+  type: 'test'
+  ...
+# Subtest: Moved Shield pools follow owner; Hole removes destroyed owners' Guard
+ok 329 - Moved Shield pools follow owner; Hole removes destroyed owners' Guard
+  ---
+  duration_ms: 0.9833
+  type: 'test'
+  ...
+# Subtest: Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, ties use Arcane
+ok 330 - Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, ties use Arcane
+  ---
+  duration_ms: 7.2136
+  type: 'test'
+  ...
+# Subtest: Anti-elemental ignores covered or destroyed Shield owners
+ok 331 - Anti-elemental ignores covered or destroyed Shield owners
+  ---
+  duration_ms: 2.0182
+  type: 'test'
+  ...
+# Subtest: New boss full cycles and Purify stay legal with seeded reloads
+ok 332 - New boss full cycles and Purify stay legal with seeded reloads
+  ---
+  duration_ms: 84.5126
+  type: 'test'
+  ...
+# Subtest: Black Bile escalates only after four completed cycles, forecasts distinct fresh targets, and still spreads once
+ok 333 - Black Bile escalates only after four completed cycles, forecasts distinct fresh targets, and still spreads once
+  ---
+  duration_ms: 1.0412
+  type: 'test'
+  ...
+# Subtest: fourth-cycle final Bile action still uses the single-glob forecast
+ok 334 - fourth-cycle final Bile action still uses the single-glob forecast
+  ---
+  duration_ms: 0.7998
+  type: 'test'
+  ...
+# Subtest: Bombadier telegraphs three mines for its fifth full cycle, with ordinary caps retained
+ok 335 - Bombadier telegraphs three mines for its fifth full cycle, with ordinary caps retained
+  ---
+  duration_ms: 2.8783
+  type: 'test'
+  ...
+# Subtest: ordinary mines also grant exactly one response turn, preserve covered lower stacks, and emit explosion frames
+ok 336 - ordinary mines also grant exactly one response turn, preserve covered lower stacks, and emit explosion frames
+  ---
+  duration_ms: 2.4235
+  type: 'test'
+  ...
+# Subtest: existing saved mines retain their explicit fuse and damage element while new casts use current rules
+ok 337 - existing saved mines retain their explicit fuse and damage element while new casts use current rules
+  ---
+  duration_ms: 2.1581
+  type: 'test'
+  ...
+# Subtest: Bombadier retains room for three late mines even with its full Memory Hole allowance
+ok 338 - Bombadier retains room for three late mines even with its full Memory Hole allowance
+  ---
+  duration_ms: 1.4163
+  type: 'test'
+  ...
+# Subtest: Opening Corruptions are visible, deterministic and apply on the first enemy round
+ok 339 - Opening Corruptions are visible, deterministic and apply on the first enemy round
+  ---
+  duration_ms: 64.8302
+  type: 'test'
+  ...
+# Subtest: Enemy-first encounters attack immediately but allow a player turn before opening Corruption
+ok 340 - Enemy-first encounters attack immediately but allow a player turn before opening Corruption
+  ---
+  duration_ms: 7.8353
+  type: 'test'
+  ...
+# Subtest: Delayed normal Corruptors threaten multiple spaces and attack while marking and applying
+ok 341 - Delayed normal Corruptors threaten multiple spaces and attack while marking and applying
+  ---
+  duration_ms: 0.4594
+  type: 'test'
+  ...
+# Subtest: Hollow Scribe fills a third of the grid, spreads marks, redirects coverage and respects its cap
+ok 342 - Hollow Scribe fills a third of the grid, spreads marks, redirects coverage and respects its cap
+  ---
+  duration_ms: 10.6695
+  type: 'test'
+  ...
+# Subtest: Scribe cannot overwrite cards, other Corruptions or another enemy's warnings
+ok 343 - Scribe cannot overwrite cards, other Corruptions or another enemy's warnings
+  ---
+  duration_ms: 2.0577
+  type: 'test'
+  ...
+# Subtest: Nausea selects empty spaces adjacent to the most cards
+ok 344 - Nausea selects empty spaces adjacent to the most cards
+  ---
+  duration_ms: 1.5425
+  type: 'test'
+  ...
+# Subtest: Spoolkeeper keeps casting after covered Nausea, caps at ten and replaces repaired spaces
+ok 345 - Spoolkeeper keeps casting after covered Nausea, caps at ten and replaces repaired spaces
+  ---
+  duration_ms: 34.5929
+  type: 'test'
+  ...
+# Subtest: Saved Spoolkeeper adopts ten-space cap without changing combat progress
+ok 346 - Saved Spoolkeeper adopts ten-space cap without changing combat progress
+  ---
+  duration_ms: 3.0383
+  type: 'test'
+  ...
+# Subtest: Old battle rotations migrate without changing committed targets or consuming randomness
+ok 347 - Old battle rotations migrate without changing committed targets or consuming randomness
+  ---
+  duration_ms: 2.3649
+  type: 'test'
+  ...
+# Subtest: Needle diamond uses Manhattan distance including diagonals, edges and upgraded values; previews/legal effects match damage
+ok 348 - Needle diamond uses Manhattan distance including diagonals, edges and upgraded values; previews/legal effects match damage
+  ---
+  duration_ms: 61.3324
+  type: 'test'
+  ...
+# Subtest: Needle remains single-target, main enemies take eight/ten, and Nausea halves its near damage
+ok 349 - Needle remains single-target, main enemies take eight/ten, and Nausea halves its near damage
+  ---
+  duration_ms: 3.4209
+  type: 'test'
+  ...
+# Subtest: Guide moves, kills an unguarded tentacle outright and warns its new location; existing costs/HP retained
+ok 350 - Guide moves, kills an unguarded tentacle outright and warns its new location; existing costs/HP retained
+  ---
+  duration_ms: 4.5075
+  type: 'test'
+  ...
+# Subtest: Upgraded Guide deals21 and retains its mark; Continue uses new damage without resetting card uses/HP
+ok 351 - Upgraded Guide deals21 and retains its mark; Continue uses new damage without resetting card uses/HP
+  ---
+  duration_ms: 4.1732
+  type: 'test'
+  ...
+# Subtest: Magnifier Ward alone costs one Focus, stores 1+10 Ward, has one use and recalls for one
+ok 352 - Magnifier Ward alone costs one Focus, stores 1+10 Ward, has one use and recalls for one
+  ---
+  duration_ms: 43.3241
+  type: 'test'
+  ...
+# Subtest: Meld revives depleted Ward and preserves its unused activation, without a separate pool
+ok 353 - Meld revives depleted Ward and preserves its unused activation, without a separate pool
+  ---
+  duration_ms: 7.2618
+  type: 'test'
+  ...
+# Subtest: Meld grants allowance but does not refresh turn usage, bypass isolation, or add Ward to a healthy host
+ok 354 - Meld grants allowance but does not refresh turn usage, bypass isolation, or add Ward to a healthy host
+  ---
+  duration_ms: 5.4824
+  type: 'test'
+  ...
+# Subtest: Recall returns host and attachments separately with no surcharge or persistent bonus
+ok 355 - Recall returns host and attachments separately with no surcharge or persistent bonus
+  ---
+  duration_ms: 6.5174
+  type: 'test'
+  ...
+# Subtest: Attachments remain inert under a covered-Ward tower and die with their host
+ok 356 - Attachments remain inert under a covered-Ward tower and die with their host
+  ---
+  duration_ms: 10.7141
+  type: 'test'
+  ...
+# Subtest: Mind Mine destroys the melded host and reinforcement together
+ok 357 - Mind Mine destroys the melded host and reinforcement together
+  ---
+  duration_ms: 3.3999
+  type: 'test'
+  ...
+# Subtest: Undertow cannot detach a reinforcement from a locked host
+ok 358 - Undertow cannot detach a reinforcement from a locked host
+  ---
+  duration_ms: 4.3301
+  type: 'test'
+  ...
+# Subtest: Meld is save-stable, rejects non-Wards, and legacy magnification no longer increases damage
+ok 359 - Meld is save-stable, rejects non-Wards, and legacy magnification no longer increases damage
+  ---
+  duration_ms: 8.8261
+  type: 'test'
+  ...
+# Subtest: cursed removal requires a present healer and payment; ordinary sales remain available
+ok 360 - cursed removal requires a present healer and payment; ordinary sales remain available
+  ---
+  duration_ms: 16.1389
+  type: 'test'
+  ...
+# Subtest: old restricted stock cannot be bought and previous saves still load
+ok 361 - old restricted stock cannot be bought and previous saves still load
+  ---
+  duration_ms: 16.6097
+  type: 'test'
+  ...
+# Subtest: fitted gems cannot sell separately; paired sales remove both owned items and survive reload
+ok 362 - fitted gems cannot sell separately; paired sales remove both owned items and survive reload
+  ---
+  duration_ms: 3.2563
+  type: 'test'
+  ...
+# Subtest: a fitted cursed gem prevents selling the pair to evade the Healer
+ok 363 - a fitted cursed gem prevents selling the pair to evade the Healer
+  ---
+  duration_ms: 4.733
+  type: 'test'
+  ...
+# Subtest: socketed Cursed Gems require a paid Healer removal, leaving their Setting intact
+ok 364 - socketed Cursed Gems require a paid Healer removal, leaving their Setting intact
+  ---
+  duration_ms: 2.2345
+  type: 'test'
+  ...
+# Subtest: Hive egg stages ramp from one to eight across four columns
+ok 365 - Hive egg stages ramp from one to eight across four columns
+  ---
+  duration_ms: 22.2382
+  type: 'test'
+  ...
+# Subtest: Eggs land under occupied cards and use all elements with deterministic persisted RNG
+ok 366 - Eggs land under occupied cards and use all elements with deterministic persisted RNG
+  ---
+  duration_ms: 29.4267
+  type: 'test'
+  ...
+# Subtest: Covered egg discards whole Construct, clears Guard and resets fresh cards without Focus
+ok 367 - Covered egg discards whole Construct, clears Guard and resets fresh cards without Focus
+  ---
+  duration_ms: 1.6123
+  type: 'test'
+  ...
+# Subtest: Covered egg destroys normally unrecallable Allies but still prevents hatch damage
+ok 368 - Covered egg destroys normally unrecallable Allies but still prevents hatch damage
+  ---
+  duration_ms: 2.8731
+  type: 'test'
+  ...
+# Subtest: Egg cannot recycle Focus Energy after its permanent bonus, including across save/load
+ok 369 - Egg cannot recycle Focus Energy after its permanent bonus, including across save/load
+  ---
+  duration_ms: 11.4699
+  type: 'test'
+  ...
+# Subtest: Recallable Allies and temporarily Locked cards still discard; attached cards follow destroyed hosts
+ok 370 - Recallable Allies and temporarily Locked cards still discard; attached cards follow destroyed hosts
+  ---
+  duration_ms: 3.13
+  type: 'test'
+  ...
+# Subtest: Unplayed non-recallable cards still use the ordinary hand discard
+ok 371 - Unplayed non-recallable cards still use the ordinary hand discard
+  ---
+  duration_ms: 2.8371
+  type: 'test'
+  ...
+# Subtest: Uncovered egg hits for eight of its element from its own column through legal defenses
+ok 372 - Uncovered egg hits for eight of its element from its own column through legal defenses
+  ---
+  duration_ms: 1.9051
+  type: 'test'
+  ...
+# Subtest: Eggs get a full player response, then hatch without moving their newborn insects
+ok 373 - Eggs get a full player response, then hatch without moving their newborn insects
+  ---
+  duration_ms: 3.1127
+  type: 'test'
+  ...
+# Subtest: Machine Elves remove eggs immediately and stop both burst and insect
+ok 374 - Machine Elves remove eggs immediately and stop both burst and insect
+  ---
+  duration_ms: 2.7185
+  type: 'test'
+  ...
+# Subtest: Egg waits if another Ideon occupies its hatch space; it is not silently lost
+ok 375 - Egg waits if another Ideon occupies its hatch space; it is not silently lost
+  ---
+  duration_ms: 2.7224
+  type: 'test'
+  ...
+# Subtest: Hive death removes its unhatched eggs and insects but leaves unrelated corruption
+ok 376 - Hive death removes its unhatched eggs and insects but leaves unrelated corruption
+  ---
+  duration_ms: 1.1468
+  type: 'test'
+  ...
+# Subtest: Final round resolves egg damage before Hive victory
+ok 377 - Final round resolves egg damage before Hive victory
+  ---
+  duration_ms: 1.5915
+  type: 'test'
+  ...
+# Subtest: Storm Canopy including upgrade/transmute ignores other columns and respects guardians
+ok 378 - Storm Canopy including upgrade/transmute ignores other columns and respects guardians
+  ---
+  duration_ms: 2.083
+  type: 'test'
+  ...
+# Subtest: 7×6 has 42 distinct slots and symmetric orthogonal neighbors without edge wrapping
+ok 379 - 7×6 has 42 distinct slots and symmetric orthogonal neighbors without edge wrapping
+  ---
+  duration_ms: 25.1304
+  type: 'test'
+  ...
+# Subtest: placement, activation, and Recall reach the final slot
+ok 380 - placement, activation, and Recall reach the final slot
+  ---
+  duration_ms: 15.412
+  type: 'test'
+  ...
+# Subtest: far-edge Shield matching/attunement and Ally growth/statuses use new neighbors
+ok 381 - far-edge Shield matching/attunement and Ally growth/statuses use new neighbors
+  ---
+  duration_ms: 3.2524
+  type: 'test'
+  ...
+# Subtest: bottom-right 2×2 formation doubles once, respects Sever and cannot cross a row boundary
+ok 382 - bottom-right 2×2 formation doubles once, respects Sever and cannot cross a row boundary
+  ---
+  duration_ms: 1.3164
+  type: 'test'
+  ...
+# Subtest: sixth-row bonuses, corner Keystone and legacy magnification use expanded geometry
+ok 383 - sixth-row bonuses, corner Keystone and legacy magnification use expanded geometry
+  ---
+  duration_ms: 1.46
+  type: 'test'
+  ...
+# Subtest: boss line selection and telegraphs include the last row and column, all stacks counted
+ok 384 - boss line selection and telegraphs include the last row and column, all stacks counted
+  ---
+  duration_ms: 2.0036
+  type: 'test'
+  ...
+# Subtest: legacy 5×4 saves migrate coordinates, whole stacks, Shield owners and checkpoints without mutating input
+ok 385 - legacy 5×4 saves migrate coordinates, whole stacks, Shield owners and checkpoints without mutating input
+  ---
+  duration_ms: 7.2153
+  type: 'test'
+  ...
+# Subtest: AI placement recognizes new corner locations and stays on legal engine actions
+ok 386 - AI placement recognizes new corner locations and stays on legal engine actions
+  ---
+  duration_ms: 4.76
+  type: 'test'
+  ...
+# Subtest: Arcane form summons only on matching hits, once per activation
+ok 387 - Arcane form summons only on matching hits, once per activation
+  ---
+  duration_ms: 6.6134
+  type: 'test'
+  ...
+# Subtest: Fire form summons only on matching hits, once per activation
+ok 388 - Fire form summons only on matching hits, once per activation
+  ---
+  duration_ms: 1.0147
+  type: 'test'
+  ...
+# Subtest: Earth form summons only on matching hits, once per activation
+ok 389 - Earth form summons only on matching hits, once per activation
+  ---
+  duration_ms: 0.9251
+  type: 'test'
+  ...
+# Subtest: Wind form summons only on matching hits, once per activation
+ok 390 - Wind form summons only on matching hits, once per activation
+  ---
+  duration_ms: 0.9159
+  type: 'test'
+  ...
+# Subtest: Water form summons only on matching hits, once per activation
+ok 391 - Water form summons only on matching hits, once per activation
+  ---
+  duration_ms: 0.9161
+  type: 'test'
+  ...
+# Subtest: Chaos form summons only on matching hits, once per activation
+ok 392 - Chaos form summons only on matching hits, once per activation
+  ---
+  duration_ms: 0.7561
+  type: 'test'
+  ...
+# Subtest: Light form summons only on matching hits, once per activation
+ok 393 - Light form summons only on matching hits, once per activation
+  ---
+  duration_ms: 1.6556
+  type: 'test'
+  ...
+# Subtest: Fire example: Water +50%, Earth half, Fire normal and creates a Fire Mini-Void
+ok 394 - Fire example: Water +50%, Earth half, Fire normal and creates a Fire Mini-Void
+  ---
+  duration_ms: 0.9121
+  type: 'test'
+  ...
+# Subtest: Existing summons retain their elements after a real Glare and through save/resume
+ok 395 - Existing summons retain their elements after a real Glare and through save/resume
+  ---
+  duration_ms: 37.8466
+  type: 'test'
+  ...
+# Subtest: A matching equipment bonus can summon after a nonmatching card hit
+ok 396 - A matching equipment bonus can summon after a nonmatching card hit
+  ---
+  duration_ms: 4.861
+  type: 'test'
+  ...
+# Subtest: Matching killing blow leaves its summon to fight before victory
+ok 397 - Matching killing blow leaves its summon to fight before victory
+  ---
+  duration_ms: 1.7536
+  type: 'test'
+  ...
+# Subtest: a Restless Bat stops at first contact while subsequent enemies finish before one battle
+ok 398 - a Restless Bat stops at first contact while subsequent enemies finish before one battle
+  ---
+  duration_ms: 39.841
+  type: 'test'
+  ...
+# Subtest: Pack arrivals remain on the player through later pack triggers and their normal moves
+ok 399 - Pack arrivals remain on the player through later pack triggers and their normal moves
+  ---
+  duration_ms: 3.267
+  type: 'test'
+  ...
+# Subtest: diagonal contact also stops a Wanderer and presentation capture leaves rules unchanged
+ok 400 - diagonal contact also stops a Wanderer and presentation capture leaves rules unchanged
+  ---
+  duration_ms: 4.2165
+  type: 'test'
+  ...
+# Subtest: rules 1.3.2 saves load with the stop-on-player rule
+ok 401 - rules 1.3.2 saves load with the stop-on-player rule
+  ---
+  duration_ms: 3.1957
+  type: 'test'
+  ...
+# Subtest: Taverns reroll the Archon's center in either Stratum, including repeated center rolls
+ok 402 - Taverns reroll the Archon's center in either Stratum, including repeated center rolls
+  ---
+  duration_ms: 19.8678
+  type: 'test'
+  ...
+# Subtest: first pair always lands two king-moves from the starting player, for every spawn type
+ok 403 - first pair always lands two king-moves from the starting player, for every spawn type
+  ---
+  duration_ms: 56.2566
+  type: 'test'
+  ...
+# Subtest: all 16 opening locations are reachable relative to the player; both independent rolls may coincide
+ok 404 - all 16 opening locations are reachable relative to the player; both independent rolls may coincide
+  ---
+  duration_ms: 18.7589
+  type: 'test'
+  ...
+# Subtest: later pairs keep Location dice, the Archon stays centered, and old saves preserve existing spawns
+ok 405 - later pairs keep Location dice, the Archon stays centered, and old saves preserve existing spawns
+  ---
+  duration_ms: 1.6016
+  type: 'test'
+  ...
+# Subtest: armor is optional, consumes no Channel, drains across hits and refreshes on the next enemy turn
+ok 406 - armor is optional, consumes no Channel, drains across hits and refreshes on the next enemy turn
+  ---
+  duration_ms: 47.111
+  type: 'test'
+  ...
+# Subtest: equipment routing permits armor then Bracelet or the reverse; choosing armor passes all grid cards
+ok 407 - equipment routing permits armor then Bracelet or the reverse; choosing armor passes all grid cards
+  ---
+  duration_ms: 11.5404
+  type: 'test'
+  ...
+# Subtest: clicking through preserves Mirror; choosing Mirror spends it, while statuses never offer armor
+ok 408 - clicking through preserves Mirror; choosing Mirror spends it, while statuses never offer armor
+  ---
+  duration_ms: 10.5613
+  type: 'test'
+  ...
+# Subtest: helmet bonus is stored at activation, source-attributed once and never retroactive
+ok 409 - helmet bonus is stored at activation, source-attributed once and never retroactive
+  ---
+  duration_ms: 6.19
+  type: 'test'
+  ...
+# Subtest: Unattune is legal with neighbors, Transmute stays fixed, and current armor/helmets supply no attunement
+ok 410 - Unattune is legal with neighbors, Transmute stays fixed, and current armor/helmets supply no attunement
+  ---
+  duration_ms: 1.866
+  type: 'test'
+  ...
+# Subtest: Armor retains partial block across hits and saves; skip and status damage do not spend it
+ok 411 - Armor retains partial block across hits and saves; skip and status damage do not spend it
+  ---
+  duration_ms: 3.2061
+  type: 'test'
+  ...
+# Subtest: multi-hit and multiple-enemy attacks share one Armor pool until next enemy turn
+ok 412 - multi-hit and multiple-enemy attacks share one Armor pool until next enemy turn
+  ---
+  duration_ms: 2.8672
+  type: 'test'
+  ...
+# Subtest: legacy saves initialize Armor once and preserve a known spent current hit
+ok 413 - legacy saves initialize Armor once and preserve a known spent current hit
+  ---
+  duration_ms: 3.7565
+  type: 'test'
+  ...
+# Subtest: Skip item block preserves both portions, damages HP, and can block the next hit
+ok 414 - Skip item block preserves both portions, damages HP, and can block the next hit
+  ---
+  duration_ms: 32.811
+  type: 'test'
+  ...
+# Subtest: Can block partially then skip the other item and unused armor
+ok 415 - Can block partially then skip the other item and unused armor
+  ---
+  duration_ms: 2.9503
+  type: 'test'
+  ...
+# Subtest: Skipping is per hit, survives save/load, and still applies on-hit statuses
+ok 416 - Skipping is per hit, survives save/load, and still applies on-hit statuses
+  ---
+  duration_ms: 6.8565
+  type: 'test'
+  ...
+# Subtest: Skip can be lethal and AI still prefers usable block
+ok 417 - Skip can be lethal and AI still prefers usable block
+  ---
+  duration_ms: 3.7386
+  type: 'test'
+  ...
+# Subtest: S3 boss death groups surviving owned Ideons after its killing hit, once, and preserves other owners
+ok 418 - S3 boss death groups surviving owned Ideons after its killing hit, once, and preserves other owners
+  ---
+  duration_ms: 36.2459
+  type: 'test'
+  ...
+# Subtest: Owner death presents even without surviving Ideons and does not delay reward mechanics
+ok 419 - Owner death presents even without surviving Ideons and does not delay reward mechanics
+  ---
+  duration_ms: 3.4247
+  type: 'test'
+  ...
+# Subtest: base Channel is two and refreshes each battle turn without changing card limits
+ok 420 - base Channel is two and refreshes each battle turn without changing card limits
+  ---
+  duration_ms: 14.3134
+  type: 'test'
+  ...
+# Subtest: a full pair lands before collision resolution and produces unique independent battle targets
+ok 421 - a full pair lands before collision resolution and produces unique independent battle targets
+  ---
+  duration_ms: 2.8473
+  type: 'test'
+  ...
+# Subtest: group sizes progress with spawn round and are limited to authored types
+ok 422 - group sizes progress with spawn round and are limited to authored types
+  ---
+  duration_ms: 0.7041
+  type: 'test'
+  ...
+# Subtest: preview refill does not cause Restlessness; every four spawned pairs does
+ok 423 - preview refill does not cause Restlessness; every four spawned pairs does
+  ---
+  duration_ms: 0.8612
+  type: 'test'
+  ...
+# Subtest: legacy single-spawn saves preserve revealed entries and existing enemies when migrating to pairs
+ok 424 - legacy single-spawn saves preserve revealed entries and existing enemies when migrating to pairs
+  ---
+  duration_ms: 19.9859
+  type: 'test'
+  ...
+# Subtest: group membership, target UIDs and preview survive battle restart without rerolling
+ok 425 - group membership, target UIDs and preview survive battle restart without rerolling
+  ---
+  duration_ms: 11.184
+  type: 'test'
+  ...
+# Subtest: Plasma meld keeps original host, diminishing damage 16/24/28/30, and allowance 2/3/4/5
+ok 426 - Plasma meld keeps original host, diminishing damage 16/24/28/30, and allowance 2/3/4/5
+  ---
+  duration_ms: 44.9671
+  type: 'test'
+  ...
+# Subtest: Four fresh melded balls deal150 for5Channel; four separate balls deal128 for8Channel
+ok 427 - Four fresh melded balls deal150 for5Channel; four separate balls deal128 for8Channel
+  ---
+  duration_ms: 33.7158
+  type: 'test'
+  ...
+# Subtest: A new ball grants one use without erasing spent activations; save/resume preserves the shared host
+ok 428 - A new ball grants one use without erasing spent activations; save/resume preserves the shared host
+  ---
+  duration_ms: 13.8103
+  type: 'test'
+  ...
+# Subtest: Recall separates every attachment and resets uses; destroying the host removes all attachments
+ok 429 - Recall separates every attachment and resets uses; destroying the host removes all attachments
+  ---
+  duration_ms: 10.237
+  type: 'test'
+  ...
+# Subtest: Host element controls the combined hit; Heat triggers once and Nausea halves the total
+ok 430 - Host element controls the combined hit; Heat triggers once and Nausea halves the total
+  ---
+  duration_ms: 9.433
+  type: 'test'
+  ...
+# Subtest: Legacy piles migrate once, preserve total spent uses and attachments, and keep excess owned cards without extra power
+ok 431 - Legacy piles migrate once, preserve total spent uses and attachments, and keep excess owned cards without extra power
+  ---
+  duration_ms: 3.3872
+  type: 'test'
+  ...
+# Subtest: Loading the previous meld build never revives an already depleted Magnifier Ward
+ok 432 - Loading the previous meld build never revives an already depleted Magnifier Ward
+  ---
+  duration_ms: 1.5967
+  type: 'test'
+  ...
+# Subtest: presentation capture does not alter choices, random stream, or outcomes
+ok 433 - presentation capture does not alter choices, random stream, or outcomes
+  ---
+  duration_ms: 206.9679
+  type: 'test'
+  ...
+# Subtest: item spawn yields one fixed collectible; repeated observation never rerolls
+ok 434 - item spawn yields one fixed collectible; repeated observation never rerolls
+  ---
+  duration_ms: 0.8163
+  type: 'test'
+  ...
+# Subtest: victory rolls one Gem and one Setting while retaining choose-one card rewards
+ok 435 - victory rolls one Gem and one Setting while retaining choose-one card rewards
+  ---
+  duration_ms: 2.4972
+  type: 'test'
+  ...
+# Subtest: v1 saves migrate fixed rewards deterministically and retain current version
+ok 436 - v1 saves migrate fixed rewards deterministically and retain current version
+  ---
+  duration_ms: 3.1368
+  type: 'test'
+  ...
+# Subtest: Hunter presentation traverses cells but only triggers arrival at destination
+ok 437 - Hunter presentation traverses cells but only triggers arrival at destination
+  ---
+  duration_ms: 1.9144
+  type: 'test'
+  ...
+# Subtest: ordinary card removal is once per Tavern and resets at the next Tavern
+ok 438 - ordinary card removal is once per Tavern and resets at the next Tavern
+  ---
+  duration_ms: 3.6382
+  type: 'test'
+  ...
+# Subtest: each Stratum previews four stable pairs, with one Tavern in pair 8 and Archon in pair 16
+ok 439 - each Stratum previews four stable pairs, with one Tavern in pair 8 and Archon in pair 16
+  ---
+  duration_ms: 23.7025
+  type: 'test'
+  ...
+# Subtest: two-stage physical dice exactly realize 40:10:15:10:20 relative weights
+ok 440 - two-stage physical dice exactly realize 40:10:15:10:20 relative weights
+  ---
+  duration_ms: 22.0501
+  type: 'test'
+  ...
+# Subtest: all five Hex payments spend the disclosed resources and remain separate from pruning
+ok 441 - all five Hex payments spend the disclosed resources and remain separate from pruning
+  ---
+  duration_ms: 9.8125
+  type: 'test'
+  ...
+# Subtest: Hex treatments cannot kill the player or offer unaffordable payments
+ok 442 - Hex treatments cannot kill the player or offer unaffordable payments
+  ---
+  duration_ms: 0.9897
+  type: 'test'
+  ...
+# Subtest: equipment changes work before and between map steps; Gem changes stay Tavern-only
+ok 443 - equipment changes work before and between map steps; Gem changes stay Tavern-only
+  ---
+  duration_ms: 6.0699
+  type: 'test'
+  ...
+# Subtest: any defense type can be first; column five excludes six/seven but allows same column and left
+ok 444 - any defense type can be first; column five excludes six/seven but allows same column and left
+  ---
+  duration_ms: 33.5191
+  type: 'test'
+  ...
+# Subtest: Ally then Shield then Ward is legal right-to-left; each hit resets its position
+ok 445 - Ally then Shield then Ward is legal right-to-left; each hit resets its position
+  ---
+  duration_ms: 4.1341
+  type: 'test'
+  ...
+# Subtest: equipment can be chosen first and closes the grid; Take hit preserves every unused defense
+ok 446 - equipment can be chosen first and closes the grid; Take hit preserves every unused defense
+  ---
+  duration_ms: 2.5543
+  type: 'test'
+  ...
+# Subtest: save/load preserves position, and previous-version lastNode infers the same restrictions
+ok 447 - save/load preserves position, and previous-version lastNode infers the same restrictions
+  ---
+  duration_ms: 6.7745
+  type: 'test'
+  ...
+# Subtest: Pierce/Cull/status bypasses and reachable Taunt/weakest remain explicit exceptions
+ok 448 - Pierce/Cull/status bypasses and reachable Taunt/weakest remain explicit exceptions
+  ---
+  duration_ms: 5.6223
+  type: 'test'
+  ...
+# Subtest: mixed Shield portions stay independently selectable at the same location
+ok 449 - mixed Shield portions stay independently selectable at the same location
+  ---
+  duration_ms: 1.3866
+  type: 'test'
+  ...
+# Subtest: AI recognizes Wards and prefers the farther defender when absorption is equal
+ok 450 - AI recognizes Wards and prefers the farther defender when absorption is equal
+  ---
+  duration_ms: 2.7982
+  type: 'test'
+  ...
+# Subtest: Opening Rite positions and following random state reproduce from the same seed
+ok 451 - Opening Rite positions and following random state reproduce from the same seed
+  ---
+  duration_ms: 13.149
+  type: 'test'
+  ...
+# Subtest: Opening Rite can occupy every space, including corners and interior, without collisions
+ok 452 - Opening Rite can occupy every space, including corners and interior, without collisions
+  ---
+  duration_ms: 141.6338
+  type: 'test'
+  ...
+# Subtest: saved battles retain placed Rites rather than rerolling, including previous-version saves
+ok 453 - saved battles retain placed Rites rather than rerolling, including previous-version saves
+  ---
+  duration_ms: 17.23
+  type: 'test'
+  ...
+# Subtest: a full board of starting Rites never overlaps or crashes; excess copies remain drawable
+ok 454 - a full board of starting Rites never overlaps or crashes; excess copies remain drawable
+  ---
+  duration_ms: 1.1431
+  type: 'test'
+  ...
+# Subtest: Resonance converts zero Channel into one exactly once, and cannot Recall or gain uses
+ok 455 - Resonance converts zero Channel into one exactly once, and cannot Recall or gain uses
+  ---
+  duration_ms: 34.8189
+  type: 'test'
+  ...
+# Subtest: unused, covered Resonance expires without destroying the covering card
+ok 456 - unused, covered Resonance expires without destroying the covering card
+  ---
+  duration_ms: 2.3771
+  type: 'test'
+  ...
+# Subtest: unequip and re-equip retain ownership, socketed Gems, and movement allowance
+ok 457 - unequip and re-equip retain ownership, socketed Gems, and movement allowance
+  ---
+  duration_ms: 4.6986
+  type: 'test'
+  ...
+# Subtest: Cursed equipment cannot be dragged out through the unequip action
+ok 458 - Cursed equipment cannot be dragged out through the unequip action
+  ---
+  duration_ms: 1.7428
+  type: 'test'
+  ...
+# Subtest: Tide snapshots 0-4 connected orthogonal neighbors; covers, diagonals and Sever do not add Insight
+ok 459 - Tide snapshots 0-4 connected orthogonal neighbors; covers, diagonals and Sever do not add Insight
+  ---
+  duration_ms: 34.2438
+  type: 'test'
+  ...
+# Subtest: Specific status upgrades preserve Corrode 1 and add a direct Water hit; previews and AI effects agree
+ok 460 - Specific status upgrades preserve Corrode 1 and add a direct Water hit; previews and AI effects agree
+  ---
+  duration_ms: 14.1261
+  type: 'test'
+  ...
+# Subtest: Healing gear has two persistent triggers each, wastes none at full HP and resets only next battle
+ok 461 - Healing gear has two persistent triggers each, wastes none at full HP and resets only next battle
+  ---
+  duration_ms: 11.2844
+  type: 'test'
+  ...
+# Subtest: Nearly-full healing spends only the item that actually heals; healing resolves before existing status damage
+ok 462 - Nearly-full healing spends only the item that actually heals; healing resolves before existing status damage
+  ---
+  duration_ms: 1.4194
+  type: 'test'
+  ...
+# Subtest: Husk converts all Corrode once on turn five before ticking; later corrosion remains independent
+ok 463 - Husk converts all Corrode once on turn five before ticking; later corrosion remains independent
+  ---
+  duration_ms: 2.2779
+  type: 'test'
+  ...
+# Subtest: Approved equipment prices and actual Solitude damage
+ok 464 - Approved equipment prices and actual Solitude damage
+  ---
+  duration_ms: 1.1889
+  type: 'test'
+  ...
+# Subtest: card rewards exclude starting cards except Focus Energy; owned decks retain them
+ok 465 - card rewards exclude starting cards except Focus Energy; owned decks retain them
+  ---
+  duration_ms: 54.3745
+  type: 'test'
+  ...
+# Subtest: Tavern markets in both Strata exclude starters except Focus Energy
+ok 466 - Tavern markets in both Strata exclude starters except Focus Energy
+  ---
+  duration_ms: 39.4331
+  type: 'test'
+  ...
+# Subtest: Saved market replaces only excluded starters without rerolling stock or RNG
+ok 467 - Saved market replaces only excluded starters without rerolling stock or RNG
+  ---
+  duration_ms: 27.562
+  type: 'test'
+  ...
+# Subtest: old pending rewards replace only the banned entries, deterministically and without rerolling
+ok 468 - old pending rewards replace only the banned entries, deterministically and without rerolling
+  ---
+  duration_ms: 4.8054
+  type: 'test'
+  ...
+# Subtest: Reveal presentation captures the drawn order without changing game state or RNG
+ok 469 - Reveal presentation captures the drawn order without changing game state or RNG
+  ---
+  duration_ms: 6.2523
+  type: 'test'
+  ...
+# Subtest: pure next-turn economy Objects place for zero Focus and still cost Channel
+ok 470 - pure next-turn economy Objects place for zero Focus and still cost Channel
+  ---
+  duration_ms: 12.1517
+  type: 'test'
+  ...
+# Subtest: offense follows forward/backward cycles, Chaos/Light, rounding
+ok 471 - offense follows forward/backward cycles, Chaos/Light, rounding
+  ---
+  duration_ms: 1.9093
+  type: 'test'
+  ...
+# Subtest: elemental block converts leftovers back per portion
+ok 472 - elemental block converts leftovers back per portion
+  ---
+  duration_ms: 1.3841
+  type: 'test'
+  ...
+# Subtest: Wards are selectable and exhausted activations do not prevent absorption
+ok 473 - Wards are selectable and exhausted activations do not prevent absorption
+  ---
+  duration_ms: 27.4352
+  type: 'test'
+  ...
+# Subtest: Melded Lattice has no independent Guard pool; the exposed Ward supplies defense
+ok 474 - Melded Lattice has no independent Guard pool; the exposed Ward supplies defense
+  ---
+  duration_ms: 8.6398
+  type: 'test'
+  ...
+# Subtest: Shield portions and Allies are optional choices sharing one defensive position
+ok 475 - Shield portions and Allies are optional choices sharing one defensive position
+  ---
+  duration_ms: 3.239
+  type: 'test'
+  ...
+# Subtest: Ally interception spills excess; Guardian swallows it
+ok 476 - Ally interception spills excess; Guardian swallows it
+  ---
+  duration_ms: 8.2319
+  type: 'test'
+  ...
+# Subtest: Taunt forces the latest taunting Ally
+ok 477 - Taunt forces the latest taunting Ally
+  ---
+  duration_ms: 5.8592
+  type: 'test'
+  ...
+# Subtest: Pierce and player status bypass grid but meet Bracelet and Armor
+ok 478 - Pierce and player status bypass grid but meet Bracelet and Armor
+  ---
+  duration_ms: 6.5371
+  type: 'test'
+  ...
+# Subtest: Recall restores activations, Charge, and Ward on subsequent placement
+ok 479 - Recall restores activations, Charge, and Ward on subsequent placement
+  ---
+  duration_ms: 12.2783
+  type: 'test'
+  ...
+# Subtest: locked stack cannot Recall, Sever satisfies Isolated
+ok 480 - locked stack cannot Recall, Sever satisfies Isolated
+  ---
+  duration_ms: 1.6087
+  type: 'test'
+  ...
+# Subtest: activation gains never reopen placement; Focus goes to next turn
+ok 481 - activation gains never reopen placement; Focus goes to next turn
+  ---
+  duration_ms: 3.0417
+  type: 'test'
+  ...
+# Subtest: enemy statuses add and follow their independent tick schedules
+ok 482 - enemy statuses add and follow their independent tick schedules
+  ---
+  duration_ms: 2.3683
+  type: 'test'
+  ...
+# Subtest: victory clears player statuses, Curse reapplies next battle
+ok 483 - victory clears player statuses, Curse reapplies next battle
+  ---
+  duration_ms: 1.9424
+  type: 'test'
+  ...
+# Subtest: fullest column ties use reading order, whole stacks destroyed
+ok 484 - fullest column ties use reading order, whole stacks destroyed
+  ---
+  duration_ms: 1.2564
+  type: 'test'
+  ...
+# Subtest: Pack arrival chains before the single enemy-phase encounter
+ok 485 - Pack arrival chains before the single enemy-phase encounter
+  ---
+  duration_ms: 2.518
+  type: 'test'
+  ...
+# Subtest: enemy battles on player entry are immediate
+ok 486 - enemy battles on player entry are immediate
+  ---
+  duration_ms: 1.6382
+  type: 'test'
+  ...
+# Subtest: Archons cannot evade past sixth Field round
+ok 487 - Archons cannot evade past sixth Field round
+  ---
+  duration_ms: 2.8377
+  type: 'test'
+  ...
+# Subtest: battle saves restart the same opening and random state
+ok 488 - battle saves restart the same opening and random state
+  ---
+  duration_ms: 7.898
+  type: 'test'
+  ...
+# Subtest: public observation hides random state, future decks and Archon
+ok 489 - public observation hides random state, future decks and Archon
+  ---
+  duration_ms: 2.9322
+  type: 'test'
+  ...
+# Subtest: unfamiliar actions stay selectable, policy survives changed rule numbers
+ok 490 - unfamiliar actions stay selectable, policy survives changed rule numbers
+  ---
+  duration_ms: 112.2869
+  type: 'test'
+  ...
+# Subtest: seed plus choices replay identically through a full run
+ok 491 - seed plus choices replay identically through a full run
+  ---
+  duration_ms: 256.1373
+  type: 'test'
+  ...
+# Subtest: Plasma meld produces 16+8+4+2 before gear
+ok 492 - Plasma meld produces 16+8+4+2 before gear
+  ---
+  duration_ms: 1.0626
+  type: 'test'
+  ...
+# Subtest: Undertow cannot bypass unrecallable Focus Energy
+ok 493 - Undertow cannot bypass unrecallable Focus Energy
+  ---
+  duration_ms: 0.4368
+  type: 'test'
+  ...
+# Subtest: Shift carries a full stack; Transmute changes future Attune choices
+ok 494 - Shift carries a full stack; Transmute changes future Attune choices
+  ---
+  duration_ms: 3.173
+  type: 'test'
+  ...
+# Subtest: upgraded Sapling gets initial HP once, not bonus damage twice
+ok 495 - upgraded Sapling gets initial HP once, not bonus damage twice
+  ---
+  duration_ms: 0.4399
+  type: 'test'
+  ...
+# Subtest: item choice pauses before enemy movement when Armor carry limit is reached
+ok 496 - item choice pauses before enemy movement when Armor carry limit is reached
+  ---
+  duration_ms: 0.5314
+  type: 'test'
+  ...
+# Subtest: Storm Opal sockets into Gold Bracelet; cursed equipment remains mandatory
+ok 497 - Storm Opal sockets into Gold Bracelet; cursed equipment remains mandatory
+  ---
+  duration_ms: 1.3642
+  type: 'test'
+  ...
+# Subtest: repeated mid-battle save and resume always restarts the same battle opening
+ok 498 - repeated mid-battle save and resume always restarts the same battle opening
+  ---
+  duration_ms: 2.8104
+  type: 'test'
+  ...
+# Subtest: gossip predicts the next Tavern healer truthfully and only once per visit
+ok 499 - gossip predicts the next Tavern healer truthfully and only once per visit
+  ---
+  duration_ms: 0.9697
+  type: 'test'
+  ...
+# Subtest: Wanderer stops on the player instead of completing its rolled path
+ok 500 - Wanderer stops on the player instead of completing its rolled path
+  ---
+  duration_ms: 0.9894
+  type: 'test'
+  ...
+# Subtest: All Wards start at one, activation adds value, and Recall resets to one
+ok 501 - All Wards start at one, activation adds value, and Recall resets to one
+  ---
+  duration_ms: 9.2085
+  type: 'test'
+  ...
+# Subtest: Spending a Ward's initial point before activation depletes it until recalled
+ok 502 - Spending a Ward's initial point before activation depletes it until recalled
+  ---
+  duration_ms: 5.1272
+  type: 'test'
+  ...
+# Subtest: Old untouched zero-value Wards gain their initial point without refilling used or depleted Wards
+ok 503 - Old untouched zero-value Wards gain their initial point without refilling used or depleted Wards
+  ---
+  duration_ms: 2.3189
+  type: 'test'
+  ...
+# Subtest: more than ten runs and repeated seeds retain independent results, with idempotent finalization
+ok 504 - more than ten runs and repeated seeds retain independent results, with idempotent finalization
+  ---
+  duration_ms: 636.9595
+  type: 'test'
+  ...
+# Subtest: resume records retain original build and all previous attempts
+ok 505 - resume records retain original build and all previous attempts
+  ---
+  duration_ms: 58.1335
+  type: 'test'
+  ...
+# Subtest: forfeit preserves latest actual state rather than rewound Continue checkpoint
+ok 506 - forfeit preserves latest actual state rather than rewound Continue checkpoint
+  ---
+  duration_ms: 54.307
+  type: 'test'
+  ...
+# Subtest: legacy history import retains known versions without inventing missing provenance
+ok 507 - legacy history import retains known versions without inventing missing provenance
+  ---
+  duration_ms: 28.0222
+  type: 'test'
+  ...
+# Subtest: decision record keeps all emitted messages beyond short UI log, exact state and effects without affecting observation
+ok 508 - decision record keeps all emitted messages beyond short UI log, exact state and effects without affecting observation
+  ---
+  duration_ms: 0.7346
+  type: 'test'
+  ...
+# Subtest: run IDs cannot escape archive directory
+ok 509 - run IDs cannot escape archive directory
+  ---
+  duration_ms: 1.0427
+  type: 'test'
+  ...
+# Subtest: legacy import preserves an explicitly recorded executable version
+ok 510 - legacy import preserves an explicitly recorded executable version
+  ---
+  duration_ms: 26.8602
+  type: 'test'
+  ...
+# Subtest: Sapling attacks first, then grows from any adjacent card, with no passive growth
+ok 511 - Sapling attacks first, then grows from any adjacent card, with no passive growth
+  ---
+  duration_ms: 29.8417
+  type: 'test'
+  ...
+# Subtest: growth uses exposed orthogonal spaces once, respecting Sever and the cap
+ok 512 - growth uses exposed orthogonal spaces once, respecting Sever and the cap
+  ---
+  duration_ms: 1.2324
+  type: 'test'
+  ...
+# Subtest: Flicker wastes growth too, while a blocked or killing attack still resolves before growth
+ok 513 - Flicker wastes growth too, while a blocked or killing attack still resolves before growth
+  ---
+  duration_ms: 5.087
+  type: 'test'
+  ...
+# Subtest: Sapling's hard cap applies to healing and upgrades, and to legacy saves/checkpoints
+ok 514 - Sapling's hard cap applies to healing and upgrades, and to legacy saves/checkpoints
+  ---
+  duration_ms: 5.8803
+  type: 'test'
+  ...
+# Subtest: growth links exist only while an activation can still grant HP; Grove Titan remains passive
+ok 515 - growth links exist only while an activation can still grant HP; Grove Titan remains passive
+  ---
+  duration_ms: 1.9628
+  type: 'test'
+  ...
+# Subtest: exact-state reload preserves post-attack growth and cannot grant a second activation that turn
+ok 516 - exact-state reload preserves post-attack growth and cannot grant a second activation that turn
+  ---
+  duration_ms: 5.232
+  type: 'test'
+  ...
+# Subtest: Jeweler charges each gem service, refuses unaffordable work and occupied socket replacement
+ok 517 - Jeweler charges each gem service, refuses unaffordable work and occupied socket replacement
+  ---
+  duration_ms: 18.0484
+  type: 'test'
+  ...
+# Subtest: Amber unsocket costs 35 whether its Setting is equipped or in the Satchel
+ok 518 - Amber unsocket costs 35 whether its Setting is equipped or in the Satchel
+  ---
+  duration_ms: 2.0541
+  type: 'test'
+  ...
+# Subtest: Mirror returns original attack element through matchup and enemy Guard, once per battle
+ok 519 - Mirror returns original attack element through matchup and enemy Guard, once per battle
+  ---
+  duration_ms: 37.6064
+  type: 'test'
+  ...
+# Subtest: weakness bonus is absorbed first and never becomes player damage
+ok 520 - weakness bonus is absorbed first and never becomes player damage
+  ---
+  duration_ms: 9.9448
+  type: 'test'
+  ...
+# Subtest: successive weak Allies share only the remaining weakness bonus, including after save/load
+ok 521 - successive weak Allies share only the remaining weakness bonus, including after save/load
+  ---
+  duration_ms: 23.3692
+  type: 'test'
+  ...
+# Subtest: weak to resistant drops the old bonus and converts resistance overflow back to base
+ok 522 - weak to resistant drops the old bonus and converts resistance overflow back to base
+  ---
+  duration_ms: 1.5881
+  type: 'test'
+  ...
+# Subtest: resistant to weak applies the new weakness to remaining base only
+ok 523 - resistant to weak applies the new weakness to remaining base only
+  ---
+  duration_ms: 1.81
+  type: 'test'
+  ...
+# Subtest: odd damage resistance rounds locally and never increases the incoming base
+ok 524 - odd damage resistance rounds locally and never increases the incoming base
+  ---
+  duration_ms: 1.721
+  type: 'test'
+  ...
+# Subtest: surviving Allies and Guardian swallow finish the hit, Chaos/Light remain mutually weak
+ok 525 - surviving Allies and Guardian swallow finish the hit, Chaos/Light remain mutually weak
+  ---
+  duration_ms: 2.9898
+  type: 'test'
+  ...
+# Subtest: leftover bonus is discarded before equipment, while Bracelet and Armor still apply
+ok 526 - leftover bonus is discarded before equipment, while Bracelet and Armor still apply
+  ---
+  duration_ms: 7.6966
+  type: 'test'
+  ...
+# Subtest: each hit gets fresh weakness and automatic Taunt uses the same handoff calculation
+ok 527 - each hit gets fresh weakness and automatic Taunt uses the same handoff calculation
+  ---
+  duration_ms: 1.1919
+  type: 'test'
+  ...
+# Subtest: a row of three matching Blasts or Shields has +1/+2/+1, with symmetric pair bonuses
+ok 528 - a row of three matching Blasts or Shields has +1/+2/+1, with symmetric pair bonuses
+  ---
+  duration_ms: 9.2572
+  type: 'test'
+  ...
+# Subtest: matching bonuses exclude diagonals, row wrapping, covered cards, and Sever but include exposed spent neighbors
+ok 529 - matching bonuses exclude diagonals, row wrapping, covered cards, and Sever but include exposed spent neighbors
+  ---
+  duration_ms: 1.3714
+  type: 'test'
+  ...
+# Subtest: matching Blast damage is included before elemental multipliers and reflected in legal actions
+ok 530 - matching Blast damage is included before elemental multipliers and reflected in legal actions
+  ---
+  duration_ms: 5.8611
+  type: 'test'
+  ...
+# Subtest: Shield previews and stored block include adjacency at activation time, with ordinary attuned defense
+ok 531 - Shield previews and stored block include adjacency at activation time, with ordinary attuned defense
+  ---
+  duration_ms: 1.6839
+  type: 'test'
+  ...
+# Subtest: Husk Corrode hurts on the opening turn, then grows through leftover bracelet block
+ok 532 - Husk Corrode hurts on the opening turn, then grows through leftover bracelet block
+  ---
+  duration_ms: 16.1117
+  type: 'test'
+  ...
+# Subtest: burn bypasses all attack defenses without consuming them
+ok 533 - burn bypasses all attack defenses without consuming them
+  ---
+  duration_ms: 33.2844
+  type: 'test'
+  ...
+# Subtest: poison bypasses all attack defenses without consuming them
+ok 534 - poison bypasses all attack defenses without consuming them
+  ---
+  duration_ms: 2.2003
+  type: 'test'
+  ...
+# Subtest: corrode bypasses all attack defenses without consuming them
+ok 535 - corrode bypasses all attack defenses without consuming them
+  ---
+  duration_ms: 1.6447
+  type: 'test'
+  ...
+# Subtest: Husk has only two total block across enemy attacks before its next refill
+ok 536 - Husk has only two total block across enemy attacks before its next refill
+  ---
+  duration_ms: 8.7522
+  type: 'test'
+  ...
+# Subtest: Bracelet block can precede selected armor for enemy attacks
+ok 537 - Bracelet block can precede selected armor for enemy attacks
+  ---
+  duration_ms: 2.2915
+  type: 'test'
+  ...
+# Subtest: Elemental armor and reflection apply only to attacks, not ongoing statuses
+ok 538 - Elemental armor and reflection apply only to attacks, not ongoing statuses
+  ---
+  duration_ms: 2.9555
+  type: 'test'
+  ...
+# Subtest: poison cast emits one explicit source-to-target status frame, including immunity
+ok 539 - poison cast emits one explicit source-to-target status frame, including immunity
+  ---
+  duration_ms: 34.8054
+  type: 'test'
+  ...
+# Subtest: burn cast emits one explicit source-to-target status frame, including immunity
+ok 540 - burn cast emits one explicit source-to-target status frame, including immunity
+  ---
+  duration_ms: 4.744
+  type: 'test'
+  ...
+# Subtest: corrode cast emits one explicit source-to-target status frame, including immunity
+ok 541 - corrode cast emits one explicit source-to-target status frame, including immunity
+  ---
+  duration_ms: 3.0844
+  type: 'test'
+  ...
+# Subtest: Kiln area Burn emits one impact per target; status ticks carry their type
+ok 542 - Kiln area Burn emits one impact per target; status ticks carry their type
+  ---
+  duration_ms: 4.1553
+  type: 'test'
+  ...
+# Subtest: battle curses record their actual equipment source before typed player ticks and Reveal
+ok 543 - battle curses record their actual equipment source before typed player ticks and Reveal
+  ---
+  duration_ms: 3.9822
+  type: 'test'
+  ...
+# Subtest: enemy applications target the player or the actual oldest Ally
+ok 544 - enemy applications target the player or the actual oldest Ally
+  ---
+  duration_ms: 3.2082
+  type: 'test'
+  ...
+# Subtest: status attached to an enemy hit retains its source even when blocked
+ok 545 - status attached to an enemy hit retains its source even when blocked
+  ---
+  duration_ms: 1.0162
+  type: 'test'
+  ...
+# Subtest: legacy pending player status jobs receive typed stationary effects
+ok 546 - legacy pending player status jobs receive typed stationary effects
+  ---
+  duration_ms: 1.064
+  type: 'test'
+  ...
+# Subtest: Storm column rule exhaustively excludes above, own space and other columns across the grid
+ok 547 - Storm column rule exhaustively excludes above, own space and other columns across the grid
+  ---
+  duration_ms: 2.425
+  type: 'test'
+  ...
+# Subtest: Storm simultaneously damages every main enemy and only lower same-column Ideons; upgrade and Transmute retain shape
+ok 548 - Storm simultaneously damages every main enemy and only lower same-column Ideons; upgrade and Transmute retain shape
+  ---
+  duration_ms: 45.865
+  type: 'test'
+  ...
+# Subtest: Storm on bottom row still hits main enemies, not Ideons; Continue and description gating preserve behavior
+ok 549 - Storm on bottom row still hits main enemies, not Ideons; Continue and description gating preserve behavior
+  ---
+  duration_ms: 6.4104
+  type: 'test'
+  ...
+# Subtest: Every normal Loom enemy has an opening Corruption warning or a mixed-element move
+ok 550 - Every normal Loom enemy has an opening Corruption warning or a mixed-element move
+  ---
+  duration_ms: 1.3151
+  type: 'test'
+  ...
+# Subtest: Mixed Mote attacks resolve in advertised order, including after an exact-state reload
+ok 551 - Mixed Mote attacks resolve in advertised order, including after an exact-state reload
+  ---
+  duration_ms: 43.035
+  type: 'test'
+  ...
+# Subtest: Mixed Mote hits scale individually with age, cycle and buffs without mutating content
+ok 552 - Mixed Mote hits scale individually with age, cycle and buffs without mutating content
+  ---
+  duration_ms: 4.0698
+  type: 'test'
+  ...
+# Subtest: Equipment Guard spent on the first element is unavailable against the second
+ok 553 - Equipment Guard spent on the first element is unavailable against the second
+  ---
+  duration_ms: 2.5905
+  type: 'test'
+  ...
+# Subtest: Stratum 1 excludes all Loom enemies, cards, companions and drops
+ok 554 - Stratum 1 excludes all Loom enemies, cards, companions and drops
+  ---
+  duration_ms: 60.5488
+  type: 'test'
+  ...
+# Subtest: Stratum transition grants the companion only on Enter the Unfinished Loom
+ok 555 - Stratum transition grants the companion only on Enter the Unfinished Loom
+  ---
+  duration_ms: 20.2666
+  type: 'test'
+  ...
+# Subtest: Rest restores 50 HP for 50 Gold between Strata, 20 for 20 at Field Taverns, once per visit
+ok 556 - Rest restores 50 HP for 50 Gold between Strata, 20 for 20 at Field Taverns, once per visit
+  ---
+  duration_ms: 6.1131
+  type: 'test'
+  ...
+# Subtest: Legacy transition saves defer the exact Elves copy through reload without duplicating acquisition
+ok 557 - Legacy transition saves defer the exact Elves copy through reload without duplicating acquisition
+  ---
+  duration_ms: 3.7311
+  type: 'test'
+  ...
+# Subtest: Legacy Elves already removed at the Tavern are not resurrected
+ok 558 - Legacy Elves already removed at the Tavern are not resurrected
+  ---
+  duration_ms: 2.1579
+  type: 'test'
+  ...
+# Subtest: Memory Hole blocks ordinary placement and Shift; Machine Elves can enter at either upgrade level
+ok 559 - Memory Hole blocks ordinary placement and Shift; Machine Elves can enter at either upgrade level
+  ---
+  duration_ms: 1.7923
+  type: 'test'
+  ...
+# Subtest: Nausea halves live damage and newly generated Guard; cover/recall switches it immediately
+ok 560 - Nausea halves live damage and newly generated Guard; cover/recall switches it immediately
+  ---
+  duration_ms: 1.6508
+  type: 'test'
+  ...
+# Subtest: Mend waits, survives reload, repairs and discards; dead Elves do not repair
+ok 561 - Mend waits, survives reload, repairs and discards; dead Elves do not repair
+  ---
+  duration_ms: 5.2452
+  type: 'test'
+  ...
+# Subtest: Freeze delays repairs; repaired Elves cannot be covered or shifted while working
+ok 562 - Freeze delays repairs; repaired Elves cannot be covered or shifted while working
+  ---
+  duration_ms: 1.7219
+  type: 'test'
+  ...
+# Subtest: Insanity escalates, resets when covered, and lethal loss floors HP
+ok 563 - Insanity escalates, resets when covered, and lethal loss floors HP
+  ---
+  duration_ms: 1.2356
+  type: 'test'
+  ...
+# Subtest: Mine gives three full response turns and destroys only top card when covered
+ok 564 - Mine gives three full response turns and destroys only top card when covered
+  ---
+  duration_ms: 0.9412
+  type: 'test'
+  ...
+# Subtest: Uncovered Mine queues 18 Arcane through ordinary defenses
+ok 565 - Uncovered Mine queues 18 Arcane through ordinary defenses
+  ---
+  duration_ms: 1.4351
+  type: 'test'
+  ...
+# Subtest: Hypnosis spends normal allowance, obeys once per turn, wastes charging, and can grant enemy Guard
+ok 566 - Hypnosis spends normal allowance, obeys once per turn, wastes charging, and can grant enemy Guard
+  ---
+  duration_ms: 1.1977
+  type: 'test'
+  ...
+# Subtest: Hypnosis wastes utility uses without resource, healing, repair or charge benefits
+ok 567 - Hypnosis wastes utility uses without resource, healing, repair or charge benefits
+  ---
+  duration_ms: 4.1821
+  type: 'test'
+  ...
+# Subtest: Hypnosis can target utility cards and displacement wastes a fresh use after normal activation
+ok 568 - Hypnosis can target utility cards and displacement wastes a fresh use after normal activation
+  ---
+  duration_ms: 1.4878
+  type: 'test'
+  ...
+# Subtest: Hypnosis releases a ready Kiln and suppresses Sapling growth while retaining damage
+ok 569 - Hypnosis releases a ready Kiln and suppresses Sapling growth while retaining damage
+  ---
+  duration_ms: 1.2157
+  type: 'test'
+  ...
+# Subtest: Anger still grants Wild Conduit and Focus Energy benefits
+ok 570 - Anger still grants Wild Conduit and Focus Energy benefits
+  ---
+  duration_ms: 1.639
+  type: 'test'
+  ...
+# Subtest: Unchanged telegraphs persist across reload; resolution never silently retargets
+ok 571 - Unchanged telegraphs persist across reload; resolution never silently retargets
+  ---
+  duration_ms: 1.6921
+  type: 'test'
+  ...
+# Subtest: Covering a Corruption tell immediately relocates only that tell, visibly and deterministically
+ok 572 - Covering a Corruption tell immediately relocates only that tell, visibly and deterministically
+  ---
+  duration_ms: 22.3564
+  type: 'test'
+  ...
+# Subtest: Hypnosis stays on its space through Recall, replacement, reload and application
+ok 573 - Hypnosis stays on its space through Recall, replacement, reload and application
+  ---
+  duration_ms: 5.1977
+  type: 'test'
+  ...
+# Subtest: Full-grid coverage cancels a tell; unrelated placement leaves Hypnosis on its occupied target
+ok 574 - Full-grid coverage cancels a tell; unrelated placement leaves Hypnosis on its occupied target
+  ---
+  duration_ms: 2.6492
+  type: 'test'
+  ...
+# Subtest: Enemy corruption caps prevent filling the entire grid; removal frees capacity
+ok 575 - Enemy corruption caps prevent filling the entire grid; removal frees capacity
+  ---
+  duration_ms: 1.0481
+  type: 'test'
+  ...
+# Subtest: Each boss has a signature Corruption, while several motes never corrupt
+ok 576 - Each boss has a signature Corruption, while several motes never corrupt
+  ---
+  duration_ms: 0.3894
+  type: 'test'
+  ...
+# Subtest: All new boss rotations resolve legally, including Purify and corruption jobs
+ok 577 - All new boss rotations resolve legally, including Purify and corruption jobs
+  ---
+  duration_ms: 41.2273
+  type: 'test'
+  ...
+# Subtest: Borrowed Choir keeps Hypnosis across cycles; upgraded Elves repair it
+ok 578 - Borrowed Choir keeps Hypnosis across cycles; upgraded Elves repair it
+  ---
+  duration_ms: 3.5517
+  type: 'test'
+  ...
+# Subtest: Entire deterministic Loom tutorial survives reload at every step and completes
+ok 579 - Entire deterministic Loom tutorial survives reload at every step and completes
+  ---
+  duration_ms: 124.859
+  type: 'test'
+  ...
+# Subtest: Anger uses weakest legal neighbor, native element, first enemy and exactly one Channel
+ok 580 - Anger uses weakest legal neighbor, native element, first enemy and exactly one Channel
+  ---
+  duration_ms: 1.4239
+  type: 'test'
+  ...
+# Subtest: Anger skips frozen, spent and Channel-starved situations
+ok 581 - Anger skips frozen, spent and Channel-starved situations
+  ---
+  duration_ms: 0.9001
+  type: 'test'
+  ...
+# Subtest: Covered Anger forces only its cover, with no fallback to adjacent cards
+ok 582 - Covered Anger forces only its cover, with no fallback to adjacent cards
+  ---
+  duration_ms: 0.9343
+  type: 'test'
+  ...
+# Subtest: Covered Nausea halves its own card, releases neighbors, and never compounds
+ok 583 - Covered Nausea halves its own card, releases neighbors, and never compounds
+  ---
+  duration_ms: 0.6467
+  type: 'test'
+  ...
+# Subtest: Anger preview tracks the next eligible target without mutating game state
+ok 584 - Anger preview tracks the next eligible target without mutating game state
+  ---
+  duration_ms: 0.6627
+  type: 'test'
+  ...
+# Subtest: Anger retains permanent element and utility cards can be forced at one Channel
+ok 585 - Anger retains permanent element and utility cards can be forced at one Channel
+  ---
+  duration_ms: 0.4271
+  type: 'test'
+  ...
+# Subtest: Practice Spoolkeeper alternates attacks with warned, taught Corruptions
+ok 586 - Practice Spoolkeeper alternates attacks with warned, taught Corruptions
+  ---
+  duration_ms: 3.5543
+  type: 'test'
+  ...
+# Subtest: Spoolkeeper lesson becomes independent without resetting enemy, cards or repairs
+ok 587 - Spoolkeeper lesson becomes independent without resetting enemy, cards or repairs
+  ---
+  duration_ms: 22.2454
+  type: 'test'
+  ...
+# Subtest: Old Spoolkeepers adopt the new cycle without losing HP, warnings or retry progress
+ok 588 - Old Spoolkeepers adopt the new cycle without losing HP, warnings or retry progress
+  ---
+  duration_ms: 17.8043
+  type: 'test'
+  ...
+# Subtest: Multiple Angers respect once per turn, and Mend removes Anger immediately
+ok 589 - Multiple Angers respect once per turn, and Mend removes Anger immediately
+  ---
+  duration_ms: 0.8181
+  type: 'test'
+  ...
+# Subtest: Elves can Recall early for Focus, cancel pending repair, and automatically Recall after final success for free
+ok 590 - Elves can Recall early for Focus, cancel pending repair, and automatically Recall after final success for free
+  ---
+  duration_ms: 1.7209
+  type: 'test'
+  ...
+# Subtest: Anger spends one Channel even on a normally free activation and handles lethal attacks
+ok 591 - Anger spends one Channel even on a normally free activation and handles lethal attacks
+  ---
+  duration_ms: 0.6653
+  type: 'test'
+  ...
+# Subtest: Version 1.3.50 saves load as Stratum 1 without Corruptions or Elves
+ok 592 - Version 1.3.50 saves load as Stratum 1 without Corruptions or Elves
+  ---
+  duration_ms: 0.7346
+  type: 'test'
+  ...
+# Subtest: Companion challenge disqualification persists after use and replacement
+ok 593 - Companion challenge disqualification persists after use and replacement
+  ---
+  duration_ms: 2.5344
+  type: 'test'
+  ...
+# Subtest: Second Archon reward opens the transition Tavern after card, Gem and Setting
+ok 594 - Second Archon reward opens the transition Tavern after card, Gem and Setting
+  ---
+  duration_ms: 1.1555
+  type: 'test'
+  ...
+# Subtest: Tendrils Splash distant Allies while swapping Constructs, preserving Guard and space hazards
+ok 595 - Tendrils Splash distant Allies while swapping Constructs, preserving Guard and space hazards
+  ---
+  duration_ms: 10.5963
+  type: 'test'
+  ...
+# Subtest: Tendrils hit only the weakest adjacent Ally, with stable ties and no move on an attack
+ok 596 - Tendrils hit only the weakest adjacent Ally, with stable ties and no move on an attack
+  ---
+  duration_ms: 1.7986
+  type: 'test'
+  ...
+# Subtest: Tendrils respect holes, other Ideons and row edges; Splash replaces Poison when an Ally exists
+ok 597 - Tendrils respect holes, other Ideons and row edges; Splash replaces Poison when an Ally exists
+  ---
+  duration_ms: 1.7209
+  type: 'test'
+  ...
+# Subtest: Existing tendrils and their Continue checkpoint gain swapping without resetting combat progress
+ok 598 - Existing tendrils and their Continue checkpoint gain swapping without resetting combat progress
+  ---
+  duration_ms: 18.0834
+  type: 'test'
+  ...
+# Subtest: Each surviving tendril grows both attacks on the same clock, rounding Splash upward
+ok 599 - Each surviving tendril grows both attacks on the same clock, rounding Splash upward
+  ---
+  duration_ms: 2.6408
+  type: 'test'
+  ...
+# Subtest: Replacement tendrils reset both damage values while survivors retain their age
+ok 600 - Replacement tendrils reset both damage values while survivors retain their age
+  ---
+  duration_ms: 2.263
+  type: 'test'
+  ...
+# Subtest: Splash still fires if movement is obstructed and respects the Ally activation attunement
+ok 601 - Splash still fires if movement is obstructed and respects the Ally activation attunement
+  ---
+  duration_ms: 1.3067
+  type: 'test'
+  ...
+# Subtest: Player Splash starts at the post-movement column and cannot travel backwards through defenses
+ok 602 - Player Splash starts at the post-movement column and cannot travel backwards through defenses
+  ---
+  duration_ms: 9.4216
+  type: 'test'
+  ...
+# Subtest: Obstructed tendrils Splash the player; starting at the left edge uses Poison instead
+ok 603 - Obstructed tendrils Splash the player; starting at the left edge uses Poison instead
+  ---
+  duration_ms: 1.4967
+  type: 'test'
+  ...
+# Subtest: Tendrils pursue their Splash target in all four directions, even from the player edge
+ok 604 - Tendrils pursue their Splash target in all four directions, even from the player edge
+  ---
+  duration_ms: 4.7931
+  type: 'test'
+  ...
+# Subtest: Vertical pursuit swaps the entire Construct and Guard; reaching adjacency uses a full strike
+ok 605 - Vertical pursuit swaps the entire Construct and Guard; reaching adjacency uses a full strike
+  ---
+  duration_ms: 1.0485
+  type: 'test'
+  ...
+# Subtest: Pursuit chooses the weakest Ally and a closer legal step, using horizontal then reading order ties
+ok 606 - Pursuit chooses the weakest Ally and a closer legal step, using horizontal then reading order ties
+  ---
+  duration_ms: 0.8909
+  type: 'test'
+  ...
+# Subtest: Post-move intent and combat agree: full scaled strike on arrival, Splash if the closer step is blocked
+ok 607 - Post-move intent and combat agree: full scaled strike on arrival, Splash if the closer step is blocked
+  ---
+  duration_ms: 1.4221
+  type: 'test'
+  ...
+# Subtest: Kill warns its source immediately, skips the current enemy turn and destroys the whole Construct on return
+ok 608 - Kill warns its source immediately, skips the current enemy turn and destroys the whole Construct on return
+  ---
+  duration_ms: 16.9151
+  type: 'test'
+  ...
+# Subtest: Recall/movement cannot redirect warning; Continue preserves its countdown and a different occupant is destroyed
+ok 609 - Recall/movement cannot redirect warning; Continue preserves its countdown and a different occupant is destroyed
+  ---
+  duration_ms: 19.1603
+  type: 'test'
+  ...
+# Subtest: Clearing the warning saves the card, while the return still occupies the original space
+ok 610 - Clearing the warning saves the card, while the return still occupies the original space
+  ---
+  duration_ms: 1.4795
+  type: 'test'
+  ...
+# Subtest: Multiplying returns warn distinct nearest spaces, including simultaneous kills by one source
+ok 611 - Multiplying returns warn distinct nearest spaces, including simultaneous kills by one source
+  ---
+  duration_ms: 1.7591
+  type: 'test'
+  ...
+# Subtest: Owner death cancels returns; a Hole or Ideon on a warned space prevents eruption
+ok 612 - Owner death cancels returns; a Hole or Ideon on a warned space prevents eruption
+  ---
+  duration_ms: 4.0973
+  type: 'test'
+  ...
+# Subtest: Non-card kills fall back to the dead tendril space; old pending counts receive a warning instead of immediate spawning
+ok 613 - Non-card kills fall back to the dead tendril space; old pending counts receive a warning instead of immediate spawning
+  ---
+  duration_ms: 1.2823
+  type: 'test'
+  ...
+# Subtest: Status kills use the applying card space and receive the same full-turn reprieve
+ok 614 - Status kills use the applying card space and receive the same full-turn reprieve
+  ---
+  duration_ms: 1.5693
+  type: 'test'
+  ...
+# Subtest: Choir counts damaging activations, not utility, defense, or status-only neighbors
+ok 615 - Choir counts damaging activations, not utility, defense, or status-only neighbors
+  ---
+  duration_ms: 10.4358
+  type: 'test'
+  ...
+# Subtest: Choir only counts connected orthogonal top cards, once per space
+ok 616 - Choir only counts connected orthogonal top cards, once per space
+  ---
+  duration_ms: 1.4271
+  type: 'test'
+  ...
+# Subtest: Choir connection lines distinguish attack support from Shield attunement
+ok 617 - Choir connection lines distinguish attack support from Shield attunement
+  ---
+  duration_ms: 4.4637
+  type: 'test'
+  ...
+# Subtest: Transmuted Choir preview and actual damage share the restricted count, including resumed saves
+ok 618 - Transmuted Choir preview and actual damage share the restricted count, including resumed saves
+  ---
+  duration_ms: 28.8704
+  type: 'test'
+  ...
+# Subtest: Loom supplies are two distinct potions and Tools; Weald remains three potions
+ok 619 - Loom supplies are two distinct potions and Tools; Weald remains three potions
+  ---
+  duration_ms: 73.1015
+  type: 'test'
+  ...
+# Subtest: Tools occupy a Satchel slot, cannot equip or drink, and one copy plus 100 Gold upgrades one Elves
+ok 620 - Tools occupy a Satchel slot, cannot equip or drink, and one copy plus 100 Gold upgrades one Elves
+  ---
+  duration_ms: 1.9484
+  type: 'test'
+  ...
+# Subtest: Tools pickup respects full Satchel and can be left for later
+ok 621 - Tools pickup respects full Satchel and can be left for later
+  ---
+  duration_ms: 1.4701
+  type: 'test'
+  ...
+# Subtest: Additional Machine Elves occur naturally in Loom card rewards, unupgraded, but not Weald or shops
+ok 622 - Additional Machine Elves occur naturally in Loom card rewards, unupgraded, but not Weald or shops
+  ---
+  duration_ms: 16.9957
+  type: 'test'
+  ...
+# Subtest: Transmute overrides Blast Attune and deals Water weakness damage despite a Fire neighbor
+ok 623 - Transmute overrides Blast Attune and deals Water weakness damage despite a Fire neighbor
+  ---
+  duration_ms: 33.1295
+  type: 'test'
+  ...
+# Subtest: Transmuted Shield creates Water block without changing an existing Fire portion
+ok 624 - Transmuted Shield creates Water block without changing an existing Fire portion
+  ---
+  duration_ms: 3.5525
+  type: 'test'
+  ...
+# Subtest: Transmute persists across live state reload, supports explicit Arcane, and resets on fresh placement
+ok 625 - Transmute persists across live state reload, supports explicit Arcane, and resets on fresh placement
+  ---
+  duration_ms: 6.6691
+  type: 'test'
+  ...
+# Subtest: Legacy changed-element cards activate with their existing element
+ok 626 - Legacy changed-element cards activate with their existing element
+  ---
+  duration_ms: 2.1131
+  type: 'test'
+  ...
+# Subtest: Between-Strata Traveler takes a voluntary gift once, with no material reward or gossip
+ok 627 - Between-Strata Traveler takes a voluntary gift once, with no material reward or gossip
+  ---
+  duration_ms: 23.2409
+  type: 'test'
+  ...
+# Subtest: Declining and insufficient Gold work; old pending intermission saves adopt donation, field Taverns keep gossip
+ok 628 - Declining and insufficient Gold work; old pending intermission saves adopt donation, field Taverns keep gossip
+  ---
+  duration_ms: 1.8657
+  type: 'test'
+  ...
+# Subtest: Kindness needs donations at three distinct intermissions in one normal run and remains earned
+ok 629 - Kindness needs donations at three distinct intermissions in one normal run and remains earned
+  ---
+  duration_ms: 4.6885
+  type: 'test'
+  ...
+# Subtest: Idle hints prioritize legal phase arrows when no placement or activation remains
+ok 630 - Idle hints prioritize legal phase arrows when no placement or activation remains
+  ---
+  duration_ms: 8.1903
+  type: 'test'
+  ...
+# Subtest: Defense hints use current positional eligibility and do not mutate or play the game
+ok 631 - Defense hints use current positional eligibility and do not mutate or play the game
+  ---
+  duration_ms: 18.7425
+  type: 'test'
+  ...
+# Subtest: Hints remain confined to the independent tutorial battle
+ok 632 - Hints remain confined to the independent tutorial battle
+  ---
+  duration_ms: 0.7968
+  type: 'test'
+  ...
+# Subtest: Every guided lesson is legal, deterministic and preserves actual costs, inventory and combat math
+ok 633 - Every guided lesson is legal, deterministic and preserves actual costs, inventory and combat math
+  ---
+  duration_ms: 256.845
+  type: 'test'
+  ...
+# Subtest: Exact-step save/resume works at every guided decision and preserves legal choices without checkpoint nesting
+ok 634 - Exact-step save/resume works at every guided decision and preserves legal choices without checkpoint nesting
+  ---
+  duration_ms: 138.8656
+  type: 'test'
+  ...
+# Subtest: Independent Eidolon is beatable with real legal choices, marks tutorial only, and supports a genuine retry after loss
+ok 635 - Independent Eidolon is beatable with real legal choices, marks tutorial only, and supports a genuine retry after loss
+  ---
+  duration_ms: 76.829
+  type: 'test'
+  ...
+# Subtest: Tutorial content stays outside normal enemy decks and spawn refills
+ok 636 - Tutorial content stays outside normal enemy decks and spawn refills
+  ---
+  duration_ms: 17.4289
+  type: 'test'
+  ...
+# Subtest: Tutorial starts and completions are durable, idempotent and never credited for abandoned or lost attempts
+ok 637 - Tutorial starts and completions are durable, idempotent and never credited for abandoned or lost attempts
+  ---
+  duration_ms: 0.9805
+  type: 'test'
+  ...
+# Subtest: Earlier tutorial saves remap lesson IDs and preserve a reachable item after the longer chase
+ok 638 - Earlier tutorial saves remap lesson IDs and preserve a reachable item after the longer chase
+  ---
+  duration_ms: 355.576
+  type: 'test'
+  ...
+# Subtest: Palimpsest banks Focus, discounts stack Recall to zero, and does not alter host allowance
+ok 639 - Palimpsest banks Focus, discounts stack Recall to zero, and does not alter host allowance
+  ---
+  duration_ms: 24.8911
+  type: 'test'
+  ...
+# Subtest: Palimpsest needs a host and cannot bypass Cannot Recall or Locked
+ok 640 - Palimpsest needs a host and cannot bypass Cannot Recall or Locked
+  ---
+  duration_ms: 2.2678
+  type: 'test'
+  ...
+# Subtest: Undertow pays 1 Focus plus stack Recall, returns reset separate cards to hand and discards itself
+ok 641 - Undertow pays 1 Focus plus stack Recall, returns reset separate cards to hand and discards itself
+  ---
+  duration_ms: 4.4855
+  type: 'test'
+  ...
+# Subtest: Undertow still costs 1 Focus for a free Recall; expensive and unrecallable targets remain illegal
+ok 642 - Undertow still costs 1 Focus for a free Recall; expensive and unrecallable targets remain illegal
+  ---
+  duration_ms: 2.8245
+  type: 'test'
+  ...
+# Subtest: Undertow plus Kiln replay costs four Focus, with placement taxes added once
+ok 643 - Undertow plus Kiln replay costs four Focus, with placement taxes added once
+  ---
+  duration_ms: 3.3498
+  type: 'test'
+  ...
+# Subtest: Previous rules saves remain loadable after the balance update
+ok 644 - Previous rules saves remain loadable after the balance update
+  ---
+  duration_ms: 2.6771
+  type: 'test'
+  ...
+# Subtest: Lattice offers every element before placement; standalone stores1 and adds5 twice with persistent choice
+ok 645 - Lattice offers every element before placement; standalone stores1 and adds5 twice with persistent choice
+  ---
+  duration_ms: 6.3868
+  type: 'test'
+  ...
+# Subtest: Melded Lattice immediately revives and recolors the whole Ward without adding uses or bypassing isolation
+ok 646 - Melded Lattice immediately revives and recolors the whole Ward without adding uses or bypassing isolation
+  ---
+  duration_ms: 11.9717
+  type: 'test'
+  ...
+# Subtest: Lattice does not let an isolated Ward activate beside another card; melds are destroyed together
+ok 647 - Lattice does not let an isolated Ward activate beside another card; melds are destroyed together
+  ---
+  duration_ms: 3.2333
+  type: 'test'
+  ...
+# Subtest: Legacy covering Lattice transfers existing Guard without granting a second placement bonus
+ok 648 - Legacy covering Lattice transfers existing Guard without granting a second placement bonus
+  ---
+  duration_ms: 1.9917
+  type: 'test'
+  ...
+1..648
+# tests 648
+# suites 0
+# pass 648
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2371.1109

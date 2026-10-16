@@ -1,0 +1,120 @@
+TAP version 13
+# Subtest: S3 victory reward leads through full transition Tavern and Apex introduction, without another companion
+ok 1 - S3 victory reward leads through full transition Tavern and Apex introduction, without another companion
+  ---
+  duration_ms: 8.2377
+  type: 'test'
+  ...
+# Subtest: all four floors enter center, shrink and reset local rounds; summit has no movement or spawning
+ok 2 - all four floors enter center, shrink and reset local rounds; summit has no movement or spawning
+  ---
+  duration_ms: 9.0363
+  type: 'test'
+  ...
+# Subtest: pair four replaces both slots with distinct corresponding Archons at fixed marked spaces
+ok 3 - pair four replaces both slots with distinct corresponding Archons at fixed marked spaces
+  ---
+  duration_ms: 2.0214
+  type: 'test'
+  ...
+# Subtest: floor three starts Tavern plus ordinary spawn and offers full services with 50/50 rest
+ok 4 - floor three starts Tavern plus ordinary spawn and offers full services with 50/50 rest
+  ---
+  duration_ms: 0.8612
+  type: 'test'
+  ...
+# Subtest: S4 Motes never flee; Wanderers have one-space base movement; S3 Archons retain stats
+ok 5 - S4 Motes never flee; Wanderers have one-space base movement; S3 Archons retain stats
+  ---
+  duration_ms: 0.3695
+  type: 'test'
+  ...
+# Subtest: Archons are stationary through round seven and hunt together only after round eight movement
+ok 6 - Archons are stationary through round seven and hunt together only after round eight movement
+  ---
+  duration_ms: 1.7993
+  type: 'test'
+  ...
+# Subtest: map enemies can join deadline hunt; entire encounter must die before ascent
+ok 7 - map enemies can join deadline hunt; entire encounter must die before ascent
+  ---
+  duration_ms: 3.4032
+  type: 'test'
+  ...
+# Subtest: first victory reveals central stairs; voluntary entry abandons survivor and disqualifies full clear
+ok 8 - first victory reveals central stairs; voluntary entry abandons survivor and disqualifies full clear
+  ---
+  duration_ms: 1.2338
+  type: 'test'
+  ...
+# Subtest: second voluntary victory forces ascent before round eight, after both reward offers if paired
+ok 9 - second voluntary victory forces ascent before round eight, after both reward offers if paired
+  ---
+  duration_ms: 0.9758
+  type: 'test'
+  ...
+# Subtest: event-only enemies do not enter full-clear ledger; all six map Archons and map Motes are required
+ok 10 - event-only enemies do not enter full-clear ledger; all six map Archons and map Motes are required
+  ---
+  duration_ms: 1.3626
+  type: 'test'
+  ...
+# Subtest: final victory grants completed S4 and durable I Stand Alone only with a complete ledger
+ok 11 - final victory grants completed S4 and durable I Stand Alone only with a complete ledger
+  ---
+  duration_ms: 3.3537
+  type: 'test'
+  ...
+# Subtest: Apex save/load retains layout, deadline, ledger, scaled HP and reward offers without RNG changes
+ok 12 - Apex save/load retains layout, deadline, ledger, scaled HP and reward offers without RNG changes
+  ---
+  duration_ms: 3.8139
+  type: 'test'
+  ...
+# Subtest: each existing Archon pair can initialize, command and survive a save/load without double-commanding Ideons
+ok 13 - each existing Archon pair can initialize, command and survive a save/load without double-commanding Ideons
+  ---
+  duration_ms: 16.1554
+  type: 'test'
+  ...
+# Subtest: Predator has readable destruction warnings, bounded owned Ideons, Purify commands and explicit damage scaling
+not ok 14 - Predator has readable destruction warnings, bounded owned Ideons, Purify commands and explicit damage scaling
+  ---
+  duration_ms: 7.9475
+  type: 'test'
+  location: 'C:\\Users\\black\\Jonathan\\DEV\\blackfractal\\astrata\\tests\\apex.test.mjs:91:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(livingIdeons(b).filter(x=>x.owner===e.uid).length<=6)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/black/Jonathan/DEV/blackfractal/astrata/tests/apex.test.mjs:96:83)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+    Test.postRun (node:internal/test_runner/test:1235:19)
+    Test.run (node:internal/test_runner/test:1163:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+  ...
+# Subtest: movement actions and enemy steps remain inside each smaller floor
+ok 15 - movement actions and enemy steps remain inside each smaller floor
+  ---
+  duration_ms: 0.4331
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 14
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 142.6542

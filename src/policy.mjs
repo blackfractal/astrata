@@ -247,6 +247,8 @@ export class WeightedPolicy {
       }
       case "chooseClass":
       case "begin":
+      case "enterApex":
+      case "fightApex":
       case "continueReward":
         return [10, "Advance the journey."];
       case "startGem":
@@ -275,6 +277,12 @@ export class WeightedPolicy {
       }
       case "move": {
         const p = { x: a.x, y: a.y };
+        if (o.apex) {
+          const f=o.field, stairs=f.entities.find(e=>e.type === "Ascend");
+          const boss=f.entities.filter(e=>e.type === "Archon").sort((a,b)=>enemies[a.enemy].hp-enemies[b.enemy].hp)[0];
+          const target=stairs || (f.round >= 5 ? boss : null);
+          if(target) return [35 + 10*(dist(f,target)-dist(p,target)) - dist(p,target), stairs ? "Take Ascend before the survivor hunts." : "Engage one Archon with time to reach Ascend."];
+        }
         const targets = o.field.entities
           .filter((e) => !o.field.leftSupplies?.includes(e.uid))
           .map((e) => {

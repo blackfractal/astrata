@@ -1,3 +1,9 @@
+# Latest: The Apex — 4.0.0
+
+[Full S4 evaluation](reports/apex-ai-report.md): five declared carry-in ascents and five direct Predator trials; all completed, none won. Two ascents reached floor 3. Balance remains provisional. Exact initial states, actions, outcomes and frozen sources are retained.
+
+---
+
 # Lucent Depths first playable evaluation — package 3.0.0
 
 Rules/content3.0.0, actions8, weighted-druid-v3. The shared legal-action interface now includes Ideon targeting, guardians, projectile fields, positional interception and Lucid Guide movement/attacks. Policy changes are heuristics, not learned training. Exact sources and replayable action traces are retained in `reports/depths-evaluation`.

@@ -2,8 +2,8 @@ from pathlib import Path
 import zipfile
 root=Path('release/Astrata').resolve()
 assert root.parent == Path('release').resolve()
-target=Path('release/Astrata-v3.zip').resolve()
-temporary=Path('release/Astrata-v3.new.zip').resolve()
+target=Path('release/Astrata-v4.zip').resolve()
+temporary=Path('release/Astrata-v4.new.zip').resolve()
 assert target.parent == root.parent and temporary.parent == root.parent
 with zipfile.ZipFile(temporary,'w',zipfile.ZIP_DEFLATED,compresslevel=6,strict_timestamps=False) as z:
  for p in sorted(root.rglob('*')):
@@ -15,5 +15,8 @@ with zipfile.ZipFile(temporary) as z:
  assert 'Astrata/resources/app/src/ideons.mjs' in z.namelist()
  assert 'Astrata/resources/app/assets/enemy-refractionCannon.png' in z.namelist()
  assert 'Astrata/reports/stratum3-build-report.md' in z.namelist()
+ assert 'Astrata/resources/app/src/apex.mjs' in z.namelist()
+ assert 'Astrata/resources/app/assets/enemy-apex.png' in z.namelist()
+ assert 'Astrata/reports/stratum4-build-report.md' in z.namelist()
 temporary.replace(target)
 print('Refreshed ZIP:',round(target.stat().st_size/1024/1024,1),'MiB')

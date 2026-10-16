@@ -10,6 +10,8 @@ const expected = [
   "location-loom-mind",
   "location-depths-field",
   "location-depths-mind",
+  "location-apex-field",
+  "location-apex-mind",
   "location-field-topdown",
   "location-weald-topdown",
   "location-tavern-interior",

@@ -1,3 +1,4 @@
+import { apexFieldSummary, apexIntroMarkup, apexSummitMarkup, apexMarks } from "./apex-ui.mjs";
 import { GUIDE_STORY } from "./depths-content.mjs";
 import { barrierAt } from "./depths-field.mjs";
 import { ELVES_STORY, CORRUPTIONS } from "./strata.mjs";
@@ -313,10 +314,10 @@ function sidebar(o) {
 }
 function menu() {
   clearTutorialUI();
-  app.classList.remove("battle-scene", "in-loom", "in-depths");
+  app.classList.remove("battle-scene", "in-loom", "in-depths", "in-apex");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATA 1–3 · v3 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATA 1–4 · v4 · Mouse / Enter / Escape</div></div></section>`;
   bind();
 }
 async function persist() {
@@ -417,7 +418,7 @@ async function stepBot() {
 }
 function render(frame = null) {
   if (!game) return menu();
-  app.classList.remove("battle-scene", "in-loom", "in-depths");
+  app.classList.remove("battle-scene", "in-loom", "in-depths", "in-apex");
   const o = frame || game.observe(),
     actions = frame ? [] : game.legal();
   if (o.tutorial && o.mode === "tavern")
@@ -443,6 +444,10 @@ function render(frame = null) {
       .join("")}</div></section>`;
   } else if (o.pendingArmor) {
     body = `<div class="result"><h2>Three Armors, one traveler</h2><p>Choose what to keep.</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div></div>`;
+  } else if (o.mode === "apexIntro") {
+    body = apexIntroMarkup(actions, actionButton);
+  } else if (o.mode === "field" && o.apex?.floor === 4) {
+    body = apexSummitMarkup(o, actions, actionButton);
   } else if (o.mode === "depthsIntro") {
     body = `<section class="scene companion-intro"><div class="scene-art" style="background-image:url('assets/location-depths-field.png')"><figure class="companion-portrait">${img("card-lucidGuide")}<figcaption>Lucid Guide <span>A light of your own</span></figcaption></figure></div><div class="scene-copy"><div class="eyebrow">Stratum three</div><h2>The Lucent Grotto</h2><div class="rule"></div><p class="companion-story">${GUIDE_STORY}</p><div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "loomIntro") {
@@ -463,17 +468,17 @@ function render(frame = null) {
     body = `<section class="scene ${o.mode === "intro" ? "companion-intro" : ""}"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')">${o.mode === "intro" ? `<figure class="companion-portrait">${img("card-sapling")}<figcaption>Sapling <span>Your first companion</span></figcaption></figure>` : ""}</div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div>${o.mode === "intro" ? `<p class="companion-story">${DRUID_COMPANION_STORY}</p>` : ""}<p${o.mode === "intro" ? ' class="companion-world"' : ""}>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum " + o.stratum + " tutorial" : "Stratum " + o.stratum}</div><h2>${o.tutorial ? o.tutorial.name : o.stratumName}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / 32 spawns · Pair ${Math.ceil(f.spawned / 2)} / 16`}</small></div></div><div class="field-wrap"><div class="field ${o.stratum === 3 ? "depths-field" : o.stratum === 2 ? "loom-field" : o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
-      { length: 121 },
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum " + o.stratum + " tutorial" : "Stratum " + o.stratum}</div><h2>${o.tutorial ? o.tutorial.name : o.stratumName}${o.apex ? " · Floor " + o.apex.floor : ""}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / ${o.apex ? 16 : 32} spawns · Pair ${Math.ceil(f.spawned / 2)} / ${o.apex ? 8 : 16}`}</small></div></div><div class="field-wrap">${o.apex ? apexFieldSummary(o) : ""}<div style="grid-template-columns:repeat(${f.size || 11},1fr)" class="field ${o.stratum === 4 ? "apex-field" : o.stratum === 3 ? "depths-field" : o.stratum === 2 ? "loom-field" : o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
+      { length: (f.size || 11) ** 2 },
       (_, i) => {
-        const x = i % 11,
-          y = Math.floor(i / 11),
+        const x = i % (f.size || 11),
+          y = Math.floor(i / (f.size || 11)),
           entities = fieldEntitiesAt(f, x, y),
           foe = entities.find((e) => e.enemy),
           player = x === f.x && y === f.y,
           a = actions.find((a) => a.type === "move" && a.x === x && a.y === y),
           e = foe || entities[0];
-        return `<button class="tile ${barrierAt(f, x, y) ? "barrier" : ""} ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe && !(items[e?.item]?.consumable || ["tools", "liquidCrystal"].includes(e?.item)) ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : items[e.item]?.consumable || ["tools", "liquidCrystal"].includes(e.item) ? items[e.item].name + ": " + items[e.item].text : e.type)).join(", ") : ""}`)}"><span class="coord">${x === 5 && y === 5 ? "✧" : ""}</span>${foe ? img("enemy-" + foe.enemy) : items[e?.item]?.consumable || ["tools", "liquidCrystal"].includes(e?.item) ? `<span class="field-supply" data-field-supply="${e.item}">${img("item-" + e.item)}<small>${{ healingSap: "+5 HP", focusDraught: "+Focus", channelDraught: "+Channel", insightDew: "+Draw", starFlask: "6 Arcane", tools: "Tools", liquidCrystal: "Liquid Crystal" }[e.item]}</small></span>` : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
+        return `<button class="tile ${barrierAt(f, x, y) ? "barrier" : ""} ${player ? "player" : ""} ${a ? "reachable" : ""}" ${a && !foe && !(items[e?.item]?.consumable || ["tools", "liquidCrystal"].includes(e?.item)) ? `data-action="${esc(a.key)}"` : `data-tile="${i}"`} title="${esc(`${x + 1}, ${y + 1}${entities.length ? ": " + entities.map((e) => (e.enemy ? enemies[e.enemy].name + ((e.count || 1) > 1 ? " ×" + e.count : "") : items[e.item]?.consumable || ["tools", "liquidCrystal"].includes(e.item) ? items[e.item].name + ": " + items[e.item].text : e.type)).join(", ") : ""}`)}"><span class="coord">${x === Math.floor((f.size || 11)/2) && y === Math.floor((f.size || 11)/2) ? "✧" : ""}</span>${o.apex ? apexMarks(f,x,y) : ""}${foe ? img("enemy-" + foe.enemy) : items[e?.item]?.consumable || ["tools", "liquidCrystal"].includes(e?.item) ? `<span class="field-supply" data-field-supply="${e.item}">${img("item-" + e.item)}<small>${{ healingSap: "+5 HP", focusDraught: "+Focus", channelDraught: "+Channel", insightDew: "+Draw", starFlask: "6 Arcane", tools: "Tools", liquidCrystal: "Liquid Crystal" }[e.item]}</small></span>` : e ? `<span class="glyph">${{ Gold: '<span class="gold-symbol" aria-label="Gold"></span>', Item: "◇", Event: "?", Tavern: "♜", Ascend: "⇧" }[e.type]}</span>` : ""}${player ? `<span class="player-mark" aria-label="Druid">${img("location-druid")}</span>` : ""}${entities.reduce((n, e) => n + (e.count || 1), 0) > 1 ? `<span class="count">${entities.reduce((n, e) => n + (e.count || 1), 0)}</span>` : ""}</button>`;
       },
     ).join("")}</div><div class="row spread"><div class="queue">${
       Array.from(
@@ -535,7 +540,7 @@ function render(frame = null) {
       .map(([k, v]) => k + " " + v)
       .join(" · ")}</small></div></section>${sidebar(o)}</div>`;
   } else if (o.mode === "event") {
-    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/event-${o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
+    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/${o.stratum === 4 ? "location-apex-field" : "event-" + o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
   } else if (o.mode === "tavern") {
     body = `<div class="layout tavern-layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {
@@ -581,7 +586,7 @@ function render(frame = null) {
       })
       .join("")}</div><div class="row" style="margin-top:30px">${actions
       .filter((a) =>
-        ["skipReward", "continueReward", "leaveItem"].includes(a.type),
+        ["skipReward", "continueReward", "leaveItem", "leaveRewardItem"].includes(a.type),
       )
       .map((a) => actionButton(a))
       .join("")}</div></section>${sidebar(o)}</div>`;
@@ -600,7 +605,7 @@ function render(frame = null) {
               .join("")
       }<button data-ui="home">Return to Start</button><small>Tutorial results are recorded separately from normal Stratum victories.</small></div></section>`;
     } else if (!resultsShown) {
-      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum " + (o.stratum || 1) + " Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? "For a moment, the intruding voices fall silent. You have survived the Lucent Grotto." : esc(deathMessage(o))}</p><button class="primary" data-ui="results">View results →</button></div></section>`;
+      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">${o.outcome === "win" ? "The gatekeeper has fallen" : "The Weald remembers"}</div><h1 style="font-size:52px;letter-spacing:.03em">${o.outcome === "win" ? "Stratum " + (o.stratum || 1) + " Complete" : "You Died"}</h1><div class="rule" style="width:280px"></div><p>${o.outcome === "win" ? o.stratum === 4 ? "The Apex Predator has fallen. For a moment, Astrata is still." : "For a moment, the intruding voices fall silent. You have survived the Lucent Grotto." : esc(deathMessage(o))}</p><button class="primary" data-ui="results">View results →</button>${o.outcome === "win" && o.stratum === 4 ? "<p class=apex-ending>… but Astrata is still restless …</p>" : ""}</div></section>`;
     } else
       body = resultMarkup(data.history?.find((h) => h.runId === runId) || o);
   }
@@ -641,6 +646,7 @@ function render(frame = null) {
   });
   paintCorruptions(o, app);
   app.classList.toggle("in-depths", o.stratum === 3);
+  app.classList.toggle("in-apex", o.stratum === 4);
   app.classList.toggle("presenting", !!frame);
   paintTutorial(
     {
@@ -1079,18 +1085,18 @@ function bind(root = app) {
     (el) =>
       (el.onclick = () => {
         const i = Number(el.dataset.tile),
-          entities = fieldEntitiesAt(game.s.field, i % 11, Math.floor(i / 11));
+          entities = fieldEntitiesAt(game.s.field, i % (game.s.field.size || 11), Math.floor(i / (game.s.field.size || 11)));
         if (entities.length) {
           const move = game
             .legal()
             .find(
               (a) =>
                 a.type === "move" &&
-                a.x === i % 11 &&
-                a.y === Math.floor(i / 11),
+                a.x === i % (game.s.field.size || 11) &&
+                a.y === Math.floor(i / (game.s.field.size || 11)),
             );
           dialog(
-            `<h2>Across the Weald</h2>${entities
+            `<h2>Across ${game.observe().stratumName}</h2>${entities
               .map((e) => {
                 if (!e.enemy)
                   return items[e.item]?.consumable || ["tools", "liquidCrystal"].includes(e.item)
