@@ -16,7 +16,7 @@ test('Cannon exit from columns 1 and 2 disappears at column 1 then queues exactl
  for(const slot of [21,22]){const {g,b,e}=fixture(slot);commandIdeon(g,e.uid);
   const frame=g.presentation[0];assert.equal(frame.kind,'ideonTravel');assert.equal(frame.exiting,true);assert.deepEqual(frame.path,slot===21?[]:[21]);
   assert.equal(frame.projectile.hp,18);assert.equal(e.hp,0);assert.equal(e.removed,true);assert.equal(b.jobs.length,1);
-  assert.equal(b.jobs[0].damage,12);assert.equal(b.jobs[0].pierce,true);assert.equal(b.jobs[0].gridSourceSlot,21);
+  assert.equal(b.jobs[0].damage,14);assert.equal(b.jobs[0].pierce,true);assert.equal(b.jobs[0].gridSourceSlot,21);
  }
 });
 test('Cannon odd/even paths retain their original command count and never deal damage before exit',()=>{

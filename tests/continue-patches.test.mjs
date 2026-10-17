@@ -26,7 +26,8 @@ test('Continue accepts every released 3.0 patch and migrates tendrils without re
 
 test('Continue still rejects future, malformed and unknown save versions',()=>{
   const current=31,s=new Game(73).s;
-  for(const rules of [`3.0.${current+1}`,'3.1.0','4.0.2','3.0.011','3.0.-1','3.0.11beta','',null]){
+  const futurePatch=VERSION.rules.replace(/\d+$/,n=>Number(n)+1);
+  for(const rules of [`3.0.${current+1}`,'3.1.0',futurePatch,'3.0.011','3.0.-1','3.0.11beta','',null]){
     const saved={...structuredClone(s),version:{...VERSION,rules}};
     assert.throws(()=>new Game(0,saved),/incompatible rules/);
   }

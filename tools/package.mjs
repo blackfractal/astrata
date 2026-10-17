@@ -53,6 +53,20 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "depths-encounter-roles-report.md",
+  "depths-encounter-roles-tests.txt",
+  "depths-encounter-roles-ui.json",
+  "depths-encounter-roles-evaluation",
+  "cannon-mine-clearance-report.md",
+  "cannon-mine-clearance-tests.txt",
+  "cannon-mine-clearance-ui.json",
+  "depths-tutorial-report.md",
+  "depths-tutorial-tests.txt",
+  "depths-tutorial-ui-verification.json",
+  "pressure-pass-report.md",
+  "pressure-pass-tests.txt",
+  "market-sold-ui-verification.json",
+  "apex-art-4.0.2.json",
   "apex-nightmare-report.md",
   "apex-nightmare-prompt.txt",
   "apex-nightmare-tests.txt",
@@ -364,6 +378,12 @@ for (const name of [
   "boss-pressure-verification.json",
   "boss-pressure-evaluation",
   "content-audit.json",
+  "growth-expansion-report.md",
+  "growth-card-reference.md",
+  "growth-art-prompts.json",
+  "growth-ui-verification.json",
+  "growth-tests.txt",
+  "growth-evaluation",
   "art-manifest.json",
   "asset-selections.json",
 ]) {

@@ -126,7 +126,7 @@ test("floor three starts Tavern plus ordinary spawn and offers full services wit
   g.act(heal);
   assert.equal(g.s.hp, 60);
 });
-test("S4 Motes never flee; Wanderers have one-space base movement; S3 Archons retain stats", () => {
+test("S4 Motes never flee; Wanderers have one-space base movement; S3 Archons gain rematch durability except the Hive timer", () => {
   for (const d of Object.values(enemies).filter((d) => d.tier === "Mote")) {
     const m = apexMovement(d, { apexMap: true });
     assert.ok(["Hunter", "Stalker", "Wanderer"].includes(m.movement));
@@ -134,7 +134,7 @@ test("S4 Motes never flee; Wanderers have one-space base movement; S3 Archons re
   }
   for (const id of ["mindHive", "cnidarian", "refractionCannon"])
     assert.deepEqual(apexStats(enemies[id], { apexMap: true, apexFloor: 3 }), {
-      hp: enemies[id].hp,
+      hp: id === "mindHive" ? 15 : Math.ceil(enemies[id].hp * 1.1),
       damageBonus: 0,
     });
   assert.ok(
@@ -376,7 +376,7 @@ test("Rift Boar uses native Apex stats and can spawn only in the Apex", () => {
   assert.equal(d.tier, "Eidolon");
   for (let n = 1; n <= 3; n++) {
     assert.deepEqual(apexStats(d, { apexMap: true, apexFloor: n }), {
-      hp: 135,
+      hp: 162,
       damageBonus: 0,
     });
     const g = floor(n);
@@ -388,16 +388,16 @@ test("Rift Boar uses native Apex stats and can spawn only in the Apex", () => {
       { uid: g.uid(), enemy: "riftBoar", apexMap: true, apexFloor: n },
     ]);
     const e = g.s.battle.enemies[0];
-    assert.equal(e.hp, 135);
-    assert.equal(g.tell(e).damage, 18);
+    assert.equal(e.hp, 162);
+    assert.equal(g.tell(e).damage, 22);
     e.cycle = 1;
     assert.deepEqual(
       g.tell(e).sequence.map((h) => h.damage),
-      [12, 12],
+      [14, 14],
     );
     e.cycle = 2;
     assert.equal(g.tell(e).pierce, true);
-    assert.equal(g.tell(e).damage, 22);
+    assert.equal(g.tell(e).damage, 26);
   }
 });
 
@@ -408,7 +408,7 @@ test("Rift Chimera is a native Apex Eidolon with a three-element breath", () => 
   assert.equal(d.tier, "Eidolon");
   assert.equal(d.flying, true);
   assert.deepEqual(apexStats(d, { apexMap: true, apexFloor: 1 }), {
-    hp: 145,
+    hp: 174,
     damageBonus: 0,
   });
   g.beginBattle([
@@ -417,8 +417,8 @@ test("Rift Chimera is a native Apex Eidolon with a three-element breath", () => 
   const e = g.s.battle.enemies[0];
   e.cycle = 1;
   assert.deepEqual(g.tell(e).sequence, [
-    { damage: 9, element: "Fire" },
-    { damage: 9, element: "Earth" },
-    { damage: 9, element: "Chaos" },
+    { damage: 11, element: "Fire" },
+    { damage: 11, element: "Earth" },
+    { damage: 11, element: "Chaos" },
   ]);
 });

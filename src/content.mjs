@@ -1,4 +1,6 @@
 import { registerApex } from "./apex-content.mjs";
+import { registerGrowth } from "./growth-content.mjs";
+import { tuneEnemyHealth } from "./difficulty.mjs";
 import { registerDepths, ideonDefs } from "./depths-content.mjs";
 import { registerStratum2 } from "./strata.mjs";
 export const DRUID_COMPANION_STORY =
@@ -7,10 +9,10 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.1",
-  content: "4.0.1",
+  rules: "4.0.7",
+  content: "4.0.7",
   observation: 2,
-  actions: 9,
+  actions: 10,
 };
 export const TRAVELER_DONATION = 15;
 export const TRAVELER_STORIES = [
@@ -364,7 +366,7 @@ card(
   1,
   2,
   { transmute: true },
-  "Change one placed card to any element.",
+  "Change one orthogonally adjacent placed card to any element.",
 );
 card(
   "quicksilver",
@@ -1662,10 +1664,13 @@ export const locations = [
   },
 ];
 export const glossary = {
+  "Player Guard": "Temporary Arcane defense on the Druid, independent of equipment. Select it to intercept an ordinary enemy attack; you may save it and take the hit instead. It cannot stop Pierce, Cull or status damage. Expires at your next turn; survives the source card being Destroyed.",
+  "Projected Insight": "Your next Reveal estimate using current equipment, queued bonuses/debts, a Memory Acorn currently in Draw and Fog currently in Discard. Borrowed Dawn requires at least 4 before its -3 debt. Later changes can alter the forecast; Insight never falls below 1.",
+  "Chaos Fracture": "A non-Archon is additionally weak to Chaos for the next card attack activation that hits it. Any attacking element consumes it; all direct hits from that activation share it. Gear and status ticks do not consume or benefit. Existing Chaos weakness does not double up.",
   Conduit:
     "Familiar activation: choose an adjacent element or remain Arcane. Until the next player turn, defend in that element, relay it to adjacent Attune cards, and provide +1 damage to each adjacent Blast and +1 Guard to each adjacent Shield when they activate. Costs 1 Channel; two uses, once per turn. No attack or Shield Guard is created by Conduit itself. Spent Familiar still supplies the committed effect; Sever or covering stops neighbor connections. Existing Shield Guard is not changed retroactively.",
   Transmute:
-    "Change a placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
+    "Change an orthogonally adjacent placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
     "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. Double-click keeps the current choice, including Arcane. For Shield, clicking Activate after choosing an element confirms it; Cancel or clicking away clears only the pending choice. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
@@ -1818,6 +1823,8 @@ export const glossary = {
 
 // Defeat epigraphs appear only when this enemy delivers the lethal attack.
 export const enemyDeathLines = {
+  whisperTutor: "A quiet voice found a way inside. You can learn to silence it.",
+  whisperWarden: "The borrowed voices grew too loud. Take a breath and try again.",
   apex: "The mountain was only the beginning of its hunger.",
   riftBoar: "The mountain shook. Then the tusks found you.",
   riftChimera: "The shadow had wings. The hunger had teeth.",
@@ -1854,6 +1861,7 @@ export const enemyDeathLines = {
 registerStratum2(card, enemy, glossary);
 
 registerDepths(card, enemy, glossary, events);
+registerGrowth(card);
 for (const [kind, d] of Object.entries(ideonDefs))
   enemies["ideon_" + kind] = {
     ...d,
@@ -1875,3 +1883,4 @@ export function cardText(definition, stratum = 1) {
 }
 
 registerApex(enemy);
+tuneEnemyHealth(enemies);

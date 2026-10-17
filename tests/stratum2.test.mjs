@@ -61,7 +61,7 @@ test("Stratum 1 excludes all Loom enemies, cards, companions and drops", () => {
           !id.startsWith("card:") || (cards[id.slice(5)].stratum || 1) === 1,
       ),
     );
-    assert.ok(g.pool("common").every((c) => !c.stratum));
+    assert.ok(g.pool("common").every((c) => (c.stratum || 1) === 1));
     for (let i = 0; i < 16; i++) {
       g.s.field.entities = [];
       g.beginRound();

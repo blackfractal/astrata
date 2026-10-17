@@ -15,23 +15,7 @@ function archive() {
   return (runArchive ||= createArchive(base(), {
     packageVersion: require("./package.json").version,
     sources: Object.fromEntries(
-      [
-        "engine.mjs",
-        "apex.mjs",
-        "apex-content.mjs",
-        "depths-content.mjs",
-        "ideons.mjs",
-        "depths-field.mjs",
-        "strata.mjs",
-        "corruptions.mjs",
-        "loom-bosses.mjs",
-        "content.mjs",
-        "policy.mjs",
-        "death.mjs",
-        "tutorial.mjs",
-        "loom-tutorial.mjs",
-        "consumables.mjs",
-      ].map((name) => [
+      fs.readdirSync(path.join(__dirname,"src")).filter(name=>name.endsWith(".mjs")).map((name) => [
         name,
         fs.readFileSync(path.join(__dirname, "src", name), "utf8"),
       ]),

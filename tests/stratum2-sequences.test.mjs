@@ -78,7 +78,7 @@ test("Mixed Mote attacks resolve in advertised order, including after an exact-s
     assert.equal(e.cycle, cycle);
     assert.deepEqual(
       g.tell(e).sequence.map((h) => [h.damage, h.element]),
-      expected,
+      expected.map(([d, el]) => [Math.round(d * 1.15), el]),
     );
     g.endTurn();
     const hits = [];
@@ -88,8 +88,8 @@ test("Mixed Mote attacks resolve in advertised order, including after an exact-s
       assert.ok(hits.length <= 2);
       pass(g);
     }
-    assert.deepEqual(hits, expected, id);
-    assert.equal(g.s.hp, 1000 - expected.reduce((n, [d]) => n + d, 0));
+    assert.deepEqual(hits, expected.map(([d, el]) => [Math.round(d * 1.15), el]), id);
+    assert.equal(g.s.hp, 1000 - expected.reduce((n, [d]) => n + Math.round(d * 1.15), 0));
   }
 });
 test("Mixed Mote hits scale individually with age, cycle and buffs without mutating content", () => {
@@ -101,7 +101,7 @@ test("Mixed Mote hits scale individually with age, cycle and buffs without mutat
     e.buff = 1;
     assert.deepEqual(
       g.tell(e).sequence.map((h) => [h.damage, h.element]),
-      expected.map(([d, el]) => [d + 6, el]),
+      expected.map(([d, el]) => [Math.round((d + 6) * 1.15), el]),
     );
     assert.deepEqual(
       enemies[id].rotation[cycle].sequence.map((h) => [h.damage, h.element]),
@@ -130,5 +130,5 @@ test("Equipment Guard spent on the first element is unavailable against the seco
     !g.legal().some((a) => a.type === "bracelet" && a.uid === first.uid),
   );
   pass(g);
-  assert.equal(g.s.hp, 995);
+  assert.equal(g.s.hp, 994);
 });

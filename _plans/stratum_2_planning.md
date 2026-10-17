@@ -1,3 +1,5 @@
+**4.0.7 balance update:** Trickster direct attacks now use base18 damage (21 after current S2 pressure scaling), retaining fixed damage, original rotation and telegraphs. See [Druid expansion evaluation](../reports/growth-expansion-report.md). Earlier numeric proposals below are historical.
+
 # Stratum 2 planning — The Unfinished Loom
 
 Implementation baseline 0.9 · 2026-10-04 · Jonathan / Codex

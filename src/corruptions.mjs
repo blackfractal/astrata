@@ -1,4 +1,5 @@
 import { cards } from "./content.mjs";
+import { wardGain } from "./growth-rules.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
 const top = (stack) => stack.at(-1);
 const neighbors = (i) =>
@@ -186,7 +187,9 @@ export function prepareCorruption(g, e, t) {
         (Math.floor(slot / 7) + 1) +
         ", column " +
         ((slot % 7) + 1) +
-        (t.immediate ? ". Mind Mine laid; one player turn before detonation." : ". One player turn to respond."),
+        (t.immediate
+          ? kind === "mine" ? ". Mind Mine laid; one player turn before detonation." : ". Present at the start of battle."
+          : ". One player turn to respond."),
     );
   }
   if (e.corruptionPlan.length && !t.immediate)
@@ -422,11 +425,11 @@ export function compelCard(g, i, q, forced = false) {
       source: q.source,
       gridSourceSlot: i,
     });
-  if (f.shield || f.ward)
+  if (f.shield || f.ward || f.bodyGuard)
     source.guard += f.shield
       ? g.shieldPower(c, i)
-      : corruptionPower(b, i, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0));
-  if (!damage && !f.shield && !f.ward)
+      : f.ward ? wardGain(b,c,i) : corruptionPower(b,i,f.bodyGuard);
+  if (!damage && !f.shield && !f.ward && !f.bodyGuard)
     g.log(
       "Hypnosis wastes a use of " + d.name + "; utility effects suppressed.",
     );

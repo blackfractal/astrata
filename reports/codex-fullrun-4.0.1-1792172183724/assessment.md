@@ -46,7 +46,7 @@ The player entered S4 with **10 Insight, 4 Focus, 4 Channel**, two Gold Bracelet
 
 1. **Mirror Armor deserves the first focused review.** Its repeatable value across battles canceled many opening ambush hits, and reflecting the Cannon's 40-damage Final Blast provided both substantial prevention and offense. The item mattered before the second Gold Bracelet existed. Review its price and per-battle value before concluding that Gold Bracelets explain everything.
 2. **Equipment plus healing erased attrition.** Two Gold Bracelets were powerful, but Bloomcall, Soothe, Necklace of Dew and healing supplies turned several imperfect battles into equal-HP finishes. A heal being single-use within each battle still permits substantial recovery across many easy encounters. Avoid labeling all 70→70 fights flawless.
-3. **Transmute plus a large attack is broadly strong.** Titan and Plasma could exploit weaknesses across different bosses. Transmute currently targets any placed card; it is not limited to adjacency. Jonathan's adjacency question suggests a potentially useful restriction to test, but none was applied. The final boss destroyed both Transmutes and both Titans, so this run did not demonstrate that the pair solves the whole game.
+3. **Transmute plus a large attack is broadly strong.** Titan and Plasma could exploit weaknesses across different bosses. In the assessed build, Transmute targets any placed card; it is not limited to adjacency. Jonathan subsequently approved adjacent-only targeting (see Approved changes); it was not applied during this run. The final boss destroyed both Transmutes and both Titans, so this run did not demonstrate that the pair solves the whole game.
 4. **Plasma Ball has unusually efficient damage per Focus and Channel.** Its 16-damage base attack and meld scaling were valuable through several strata. Random selection can hit an Ideon instead of the main enemy, which was a real drawback in the final battle. Test it with and without Transmute rather than evaluating only favorable elemental shots.
 5. **Conduits, Rites and resource gems compound.** Multiple Conduits let one turn include damage, defense, repair and healing. Frequent resource-gem opportunities helped establish the engine early. However, by late Predator turns all four Conduits were sitting spent on the grid; I failed to recycle them soon enough. They are not automatically infinite resources.
 6. **Living Lattice plus Ward plus Undertow is a strong recovery package.** It repeatedly revived depleted defenses and changed their element. It still required Focus, Channel, positioning and suitable destruction targets. Nausea halved several planned Ward gains, and the final boss eventually overwhelmed it. This evidence supports testing the package, not declaring it a game-solving exploit.
@@ -80,11 +80,31 @@ The fight was not simply a larger HP target: on destruction turns, a freshly str
 
 These errors mean the Predator result is a lower bound on what this build could accomplish. They do not explain away the observed contrast between the comfortable climb and the final endurance test.
 
+## Approved changes
+
+Approved by Jonathan after reviewing this run. **All four changes are implemented in 4.0.2; the second assessment is in `../codex-fullrun-4.0.2-second/`.** This section records decisions; the experiment proposals below are not additional approvals.
+
+1. **Increase enemy difficulty throughout S2, S3 and S4, excluding the Apex Predator.** This includes Motes, Eidolons and Archons, not just ordinary encounters. Balance against an expected player engine of approximately **3 Focus / 3 Channel in S2**, **4–5 Focus / 4–5 Channel in S3**, and **around 5 Focus / 5 Channel or more in S4**. These are tuning assumptions, not guaranteed starting resources or resource caps. Implemented numerical changes are recorded in the second assessment. Account for existing S4 scaling when tuning returning enemies. Leave the Apex Predator unchanged in this pass.
+2. **Keep shop inventory slots fixed after purchases.** A purchased card or item leaves its original slot showing **Sold**; remaining offers retain their positions instead of shifting to fill the gap.
+3. **Restrict Transmute activation to adjacent cards.** Only orthogonally adjacent placed cards are legal targets, following the game's normal adjacency rule. Update its description and target highlighting to match; distant cards must no longer be selectable.
+4. **Revise S4 environment art.** Give the Apex overworld different background images between floors, using a **top-down view** rather than the current three-quarter perspective. Rework the S4 mind-grid background as a **small meditation space overlooking a cliff**, rather than a huge battlefield.
+
 ## Suggested next balance experiments
 
 Keep the current Predator rules until a cleaner attempt establishes how much of the loss was execution. First test the same pre-Predator build with earlier recall/recycling, protected Transmute access, and deliberate Nausea repair. Treat that as a separate experiment; this run remains the unrewound baseline.
 
 For the broader ramp, prioritize the S2/S3 ordinary encounters and S4 gate approach. Many individual enemies died before their mechanics developed. Test opening pressure, mixed-element sequences and encounter composition before applying a blanket HP increase to everything. Preserve the satisfying elemental defense puzzles in Bombadier.
+
+### Tuning rationale for the approved difficulty increase
+
+Jonathan judged S2, S3 and most of S4 clearly too easy in this playthrough. The approved scope above includes all enemies in those strata except the Apex Predator. The following notes guide that work; implemented values and observations are recorded in the second assessment.
+
+- **S2:** increase ordinary encounter durability and pressure enough that the established engine cannot routinely end fights before their Corruption or elemental sequences matter. Favor an additional meaningful enemy action over merely extending a harmless fight.
+- **S3:** build on that increase with stronger sustained pressure from main enemies and Ideons together. Keep opportunities to counter individual threats, while requiring more than a single opening burst to resolve the encounter.
+- **S4 gate floors:** increase the cost of reaching and defeating a gate Archon. Ending every gate-floor encounter at full HP should not be the routine result for a well-developed build. Assess the existing floor scaling together with any changes to the underlying S1–S3 enemies, rather than accidentally applying both increases twice.
+- **Apex Predator:** do not increase it as part of this first pass. Strengthening the approach will make reaching it at full strength less reliable; retest its difficulty afterward. Reduced healing access remains a separate proposal below.
+
+The intended outcome is a gradual rise in decisions and resource pressure: setup has a cost, enemy mechanics get time to operate, and recovery competes with other tavern spending. Strong combinations should still earn easy individual fights. Use net HP, healing consumed, turns survived by ordinary enemies, and whether signature mechanics actually resolve to assess the change; raw damage taken alone is insufficient. Test enemy scaling and healing availability separately before combining them.
 
 Then test Mirror Armor value, resource-gem availability, and repeatable between-fight healing separately. Changing all three simultaneously would make the cause of improvement difficult to identify. No single-card or two-card combination in this run defeated the entire game.
 
@@ -96,8 +116,8 @@ The relevant issue is repeated recovery across encounters, even when each card i
 
 ## UI observations
 
-- Keeping purchased shop slots in place with a Sold placeholder would reduce target movement and selection mistakes. This was discussed, not implemented.
-- Transmute's global range is easy to confuse with adjacent Attunement. Make the targeting distinction explicit in its details/target highlight.
+- Keeping purchased shop slots in place with a Sold placeholder would reduce target movement and selection mistakes. Implemented in 4.0.2.
+- Transmute's global range was easy to confuse with adjacent Attunement. Adjacent-only targeting, details and target highlights were updated in 4.0.2.
 - Display effective, reduced Ward/Guard values consistently when Nausea applies. The penalty mattered repeatedly in this fight.
 - The existing no-backtracking defense rule worked. My failed Shield selection after a leftmost Ward was a play error, not a rule bug.
 
@@ -112,3 +132,7 @@ The relevant issue is repeated recovery across encounters, even when each card i
 - `profile/`: isolated run profile. Keep separate from the normal player's save.
 
 No gameplay, balance, design-document or shop-layout changes were made as part of this assessment.
+
+## Second-run follow-up
+
+Approved changes shipped in 4.0.2. The headless second attempt won 27 encounters, cleared S2, then lost to the Cannon on turn 15 with 128/360 boss HP remaining. Ordinary S3 fights were still mostly comfortable; the new S4 ramp was not reached. See [the second assessment](../codex-fullrun-4.0.2-second/assessment.md) for discoveries, mistakes, exact numbers and replay evidence. No further nerfs are implied by that report.

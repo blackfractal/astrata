@@ -1,3 +1,4 @@
+import {growthScore} from "./growth-policy.mjs";
 import { areaHits } from "./area-targets.mjs";
 import { cards, items, enemies, VERSION } from "./content.mjs";
 import {
@@ -36,6 +37,7 @@ export class WeightedPolicy {
         why = "Fallback for a legal choice with unfamiliar effects.";
       try {
         [score, why] = this.score(o, a);
+        score += growthScore(o,a);
         const b = o.battle,
           q = b?.corruptions?.[a.slot];
         if (a.type === "place" && b) {
@@ -607,6 +609,7 @@ export class WeightedPolicy {
         ];
       case "block":
       case "bracelet":
+      case "playerGuard":
         return [
           Math.min(
             b.reaction.damage,

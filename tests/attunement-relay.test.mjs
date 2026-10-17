@@ -140,14 +140,14 @@ test("Transmute overrides a relay immediately and remains a source on later turn
   put(g, "thorn", 7);
   const a = put(g, "shield", 8);
   put(g, "blast", 9);
-  put(g, "transmute", 20);
+  put(g, "transmute", 15);
   activate(g, 8, "Earth");
   const trans = g
     .legal()
     .find(
       (a) =>
         a.type === "activate" &&
-        a.slot === 20 &&
+        a.slot === 15 &&
         a.cardTarget === 8 &&
         a.newElement === "Water",
     );

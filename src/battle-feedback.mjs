@@ -37,7 +37,7 @@ export function targetPreview(ctx, source, slot, actionFor) {
       (e) => e.uid === action.target,
     );
     if (!enemy) return;
-    const v = attackPreview(b, c, slot, enemy, action.element);
+    const v = attackPreview(b, c, slot, enemy, action.element, action);
     if (!v) return;
     target = choice;
     const tone = v.delta > 0 ? "damage-up" : v.delta < 0 ? "damage-down" : "";

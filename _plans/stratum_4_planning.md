@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.9 · 2026-10-16 · Jonathan / Codex
+Design draft 0.10 · 2026-10-16 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -177,3 +177,10 @@ Rift Chimera first-pass implementation:145HPWind,flying Stalker; Wing Buffet20Wi
 
 
 Presentation preference: Apex Predator, Rift Boar and Rift Chimera artwork is mirrored horizontally in game, facing toward the player on the left. Mirror the art only, including previews; do not reverse card text or interface layout.
+
+
+## Approved pressure and environment refinement — 4.0.2
+
+Returning enemies receive an additional 10% HP and direct damage over the prior rematch modifiers; S2/S3 source tuning is inherited once. Native Rift Boar and Rift Chimera receive 20% HP/damage (162 and 174 HP). Mind Hive stays a 15-round survival timer. The Apex Predator and its owned Ideons remain unchanged. Target roughly 5 Focus and 5 Channel or more by S4; do not grant resources automatically.
+
+Four distinct top-down field images now distinguish the floors. The battle background depicts a small candlelit meditation mat at a cliff, overlooking lava and crystals. Original art remains archived alongside these selections.

@@ -76,8 +76,11 @@ function targets(ctx, guide, suggested = null) {
       if (a.type === "place")
         selectors.push(`[data-hand="${a.uid}"], [data-slot="${a.slot}"]`);
       if (a.type === "consume") selectors.push(".consumable-tray");
-      if (a.type === "activate")
+      if (a.type === "activate") {
         selectors.push(`[data-activate-slot="${a.slot}"]`);
+        if(a.target != null) selectors.push(`[data-enemy-uid="${a.target}"]`);
+        if(a.destination != null) selectors.push(`[data-slot="${a.destination}"]`);
+      }
       if (["ward", "block", "intercept", "recall"].includes(a.type))
         selectors.push(`[data-slot="${a.slot}"]`);
       if (["bracelet", "armor"].includes(a.type))

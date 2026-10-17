@@ -10,23 +10,23 @@ img[src$="enemy-riftChimera.png"] {
 .apex-summit .scene-art {
   background:
     linear-gradient(90deg, #17141ddd, #17141d33),
-    url("../assets/location-apex-field.png") center/cover;
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
 }
 .field.apex-field {
   background:
     linear-gradient(#211a2433, #211a2433),
-    url("../assets/location-apex-field.png") center/cover;
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
 }
 .in-apex .mind {
   background-image:
     linear-gradient(#17142135, #17142135),
-    url("../assets/location-apex-mind.png") !important;
+    url("../assets/location-apex-mind-v2.png") !important;
   background-size: cover;
 }
 .in-apex .enemy-line {
   background:
     linear-gradient(#17142199, #171421cc),
-    url("../assets/location-apex-field.png") center/cover;
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
   border-radius: 12px;
 }
 .apex-deadline {

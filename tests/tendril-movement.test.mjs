@@ -29,7 +29,7 @@ test('Tendrils hit only the weakest adjacent Ally, with stable ties and no move 
   const far=put(g,'sapling',0);far.hp=1;
   const a=put(g,'sapling',13),z=put(g,'sapling',19);a.hp=z.hp=20;
   assert.deepEqual(tendrilTargets(b,e).map(x=>x.i),[13,19]);
-  commandIdeon(g,e.uid);assert.equal(a.hp,16);assert.equal(z.hp,20);assert.equal(far.hp,1);assert.equal(e.slot,20);
+  commandIdeon(g,e.uid);assert.equal(a.hp,15);assert.equal(z.hp,20);assert.equal(far.hp,1);assert.equal(e.slot,20);
   z.hp=2;assert.equal(tendrilTargets(b,e)[0].i,19);commandIdeon(g,e.uid);
   assert.equal(b.grid[19].length,0);assert.equal(e.slot,20);
 });
@@ -50,7 +50,7 @@ test('Existing tendrils and their Continue checkpoint gain swapping without rese
   const loaded=new Game(0,structuredClone(g.s)),q=loaded.s.battle.ideons[0];
   assert.equal(q.swap,true);assert.match(q.text,/adjacent/);
   assert.equal(q.damage,4);
-  assert.deepEqual(tendrilDamage(q),{strike:18,splash:5});
+  assert.deepEqual(tendrilDamage(q),{strike:22,splash:6});
   assert.deepEqual([q.hp,q.age,q.slot,q.element],[3,7,20,'Fire']);
   assert.equal(loaded.s.checkpoint.battle.ideons[0].swap,true);
   commandIdeon(loaded,q.uid);assert.equal(q.slot,19);
@@ -62,7 +62,7 @@ test('Each surviving tendril grows both attacks on the same clock, rounding Spla
     b.corruptions[19]={kind:'hole'};b.corruptions[13]={kind:'hole'};
     const ally=put(g,'familiar',adjacent?13:0);ally.hp=100;
     if(adjacent)delete b.corruptions[13];
-    const expected=adjacent?[4,6,8,10,12,14]:[1,2,2,3,3,4];
+    const expected=adjacent?[5,7,10,12,14,17]:[1,2,2,4,4,5];
     for(const loss of expected){
       assert.equal(tendrilDamage(e)[adjacent?'strike':'splash'],loss);
       const before=ally.hp;commandIdeon(g,e.uid);assert.equal(before-ally.hp,loss);
@@ -70,7 +70,7 @@ test('Each surviving tendril grows both attacks on the same clock, rounding Spla
     // Switching between Splash and adjacent strike does not restart either growth.
     b.grid[adjacent?0:13]=b.grid[adjacent?13:0];b.grid[adjacent?13:0]=[];
     const before=ally.hp;commandIdeon(g,e.uid);
-    assert.equal(before-ally.hp,adjacent?4:16);
+    assert.equal(before-ally.hp,adjacent?5:19);
   }
 });
 
@@ -81,11 +81,11 @@ test('Replacement tendrils reset both damage values while survivors retain their
   b.turn++; // Full player turn before the warned return.
   depthsJob(g,{kind:'tentacleReplace',owner:owner.uid});
   const replacement=b.ideons.find(e=>e.uid!==survivor.uid);
-  assert.equal(replacement.age,0);assert.deepEqual(tendrilDamage(replacement),{strike:4,splash:1});
-  assert.deepEqual(tendrilDamage(survivor),{strike:22,splash:6});
+  assert.equal(replacement.age,0);assert.deepEqual(tendrilDamage(replacement),{strike:5,splash:1});
+  assert.deepEqual(tendrilDamage(survivor),{strike:26,splash:7});
   assert.equal(owner.pendingTentacles,0);
   replacement.slot=20;const ally=put(g,'familiar',13);ally.hp=30;
-  commandIdeon(g,replacement.uid);assert.equal(ally.hp,26);
+  commandIdeon(g,replacement.uid);assert.equal(ally.hp,25);
 });
 
 test('Splash still fires if movement is obstructed and respects the Ally activation attunement',()=>{
@@ -103,18 +103,18 @@ test('Player Splash starts at the post-movement column and cannot travel backwar
   commandIdeon(g,e.uid);
   assert.equal(e.slot,3);
   assert.deepEqual({damage:b.jobs[0].damage,slot:b.jobs[0].gridSourceSlot,name:b.jobs[0].name,visual:b.jobs[0].attackVisual},
-    {damage:9,slot:3,name:'Splash',visual:'splash'});
+    {damage:11,slot:3,name:'Splash',visual:'splash'});
   g.pump();
   assert.deepEqual(g.defenseChoices().wards.map(x=>x.i),[8,10]);
   g.act(g.legal().find(a=>a.type==='ward'&&a.slot===8));
-  assert.equal(g.s.hp,63); // 9 Water minus 2 neutral Ward; farther-right Ward cannot defend.
+  assert.equal(g.s.hp,61); // 9 Water minus 2 neutral Ward; farther-right Ward cannot defend.
   assert.equal(b.grid[10][0].ward,2);assert.equal(b.grid[12][0].ward,2);
 });
 
 test('Obstructed tendrils Splash the player; starting at the left edge uses Poison instead',()=>{
   const g=arena(),b=g.s.battle,e=spawnIdeon(g,b.enemies[0],'tentacle',{slot:20});
   b.jobs=[];b.corruptions[19]={kind:'hole'};e.age=3;
-  commandIdeon(g,e.uid);assert.equal(e.slot,20);assert.equal(b.jobs[0].damage,3);
+  commandIdeon(g,e.uid);assert.equal(e.slot,20);assert.equal(b.jobs[0].damage,4);
   assert.equal(b.jobs[0].gridSourceSlot,20);
   b.jobs=[];e.slot=0;commandIdeon(g,e.uid);
   assert.equal(b.jobs.length,0);assert.equal(g.s.status.poison,2);
@@ -126,7 +126,7 @@ test('Tendrils pursue their Splash target in all four directions, even from the 
     const g=arena(),b=g.s.battle,e=spawnIdeon(g,b.enemies[0],'tentacle',{slot:from});
     const ally=put(g,'familiar',target);ally.hp=30;
     commandIdeon(g,e.uid);
-    assert.equal(e.slot,to);assert.equal(ally.hp,30-(Math.abs(to%7-target%7)+Math.abs(Math.floor(to/7)-Math.floor(target/7))===1?4:1));
+    assert.equal(e.slot,to);assert.equal(ally.hp,30-(Math.abs(to%7-target%7)+Math.abs(Math.floor(to/7)-Math.floor(target/7))===1?5:1));
     assert.equal(g.s.status.poison||0,0);
   }
 });
@@ -138,10 +138,10 @@ test('Vertical pursuit swaps the entire Construct and Guard; reaching adjacency 
   meld.attachedTo=ward.uid;b.grid[10].unshift(meld);b.shields=[{slot:10,value:7}];
   b.corruptions[10]={kind:'nausea'};
   commandIdeon(g,e.uid);
-  assert.equal(e.slot,10);assert.equal(ally.hp,26);
+  assert.equal(e.slot,10);assert.equal(ally.hp,25);
   assert.deepEqual(b.grid[17].map(c=>c.uid),[meld.uid,ward.uid]);
   assert.equal(b.shields[0].slot,17);assert.equal(b.corruptions[10].kind,'nausea');
-  commandIdeon(g,e.uid);assert.equal(e.slot,10);assert.equal(ally.hp,20);
+  commandIdeon(g,e.uid);assert.equal(e.slot,10);assert.equal(ally.hp,18);
 });
 
 test('Pursuit chooses the weakest Ally and a closer legal step, using horizontal then reading order ties',()=>{
@@ -162,7 +162,7 @@ test('Post-move intent and combat agree: full scaled strike on arrival, Splash i
     if(blocked)b.corruptions[10]={kind:'hole'};
     const plan=tendrilPlan(b,e);assert.equal(plan.destination,blocked?17:10);
     assert.equal(plan.adjacent,!blocked);assert.equal(plan.target.c.uid,ally.uid);
-    commandIdeon(g,e.uid);assert.equal(ally.hp,blocked?47:40);
+    commandIdeon(g,e.uid);assert.equal(ally.hp,blocked?46:38);
     assert.match(g.s.log.at(-1),blocked?/Splash/:/Tendril strike/);
   }
 });

@@ -102,6 +102,14 @@ for (const kind of [
       await p.locator(".apex-field").waitFor();
       assert.equal(await p.locator(".tile").count(), [0, 121, 81, 49][n]);
       assert.equal(await p.locator(".apex-seal").count(), 2);
+      const background = await p.locator('.apex-field').evaluate(async el => {
+        const css = getComputedStyle(el).backgroundImage;
+        const url = [...css.matchAll(/url\("?([^"\)]+)"?\)/g)].at(-1)?.[1];
+        const im = new Image(); im.src = url;
+        await im.decode(); return {css,width:im.naturalWidth};
+      });
+      assert.ok(background.css.includes(`location-apex-floor${n}.png`));
+      assert.ok(background.width > 1000);
       assert.ok((await p.locator(".apex-roster").innerText()).length > 10);
       // Exercise map coordinates on resized rooms through their real UI actions.
       const move = p.locator(".tile.reachable[data-action]").first();

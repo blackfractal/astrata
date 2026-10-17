@@ -127,7 +127,7 @@ export async function playFrames(before, frames, after, renderView, isFast) {
         ? card(node.slot)
         : node?.kind === "item"
           ? item(node.uid)
-          : node?.kind === "player"
+          : ["player","bodyGuard"].includes(node?.kind)
             ? player()
             : null;
   function floating(el, label, cls = "") {

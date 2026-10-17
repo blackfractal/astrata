@@ -9,7 +9,7 @@ function setup(id = "blast") {
   b.phase = "activate";
   b.channel = 20;
   for (const [name, i] of [
-    ["transmute", 9],
+    ["transmute", 13],
     [id, 6],
     ["thorn", 5],
   ])
@@ -33,7 +33,7 @@ const act = (g, slot, extra = {}) => {
 };
 test("Transmute overrides Blast Attune and deals Water weakness damage despite a Fire neighbor", () => {
   const g = setup();
-  act(g, 9, { cardTarget: 6, newElement: "Water" });
+  act(g, 13, { cardTarget: 6, newElement: "Water" });
   assert.equal(g.s.battle.grid[6][0].element, "Water");
   assert.deepEqual(
     [
@@ -53,7 +53,7 @@ test("Transmuted Shield creates Water block without changing an existing Fire po
   const g = setup("shield");
   act(g, 6, { element: "Fire" });
   assert.equal(g.s.battle.shields[0].element, "Fire");
-  act(g, 9, { cardTarget: 6, newElement: "Water" });
+  act(g, 13, { cardTarget: 6, newElement: "Water" });
   g.s.battle.turn++;
   act(g, 6);
   assert.deepEqual(
@@ -63,14 +63,14 @@ test("Transmuted Shield creates Water block without changing an existing Fire po
 });
 test("Transmute persists across live state reload, supports explicit Arcane, and resets on fresh placement", () => {
   const g = setup();
-  act(g, 9, { cardTarget: 6, newElement: "Water" });
+  act(g, 13, { cardTarget: 6, newElement: "Water" });
   const h = new Game(0, JSON.parse(JSON.stringify(g.s)));
   assert.equal(
     h.legal().find((a) => a.type === "activate" && a.slot === 6).element,
     "Water",
   );
   h.s.battle.turn++;
-  act(h, 9, { cardTarget: 6, newElement: "Arcane" });
+  act(h, 13, { cardTarget: 6, newElement: "Arcane" });
   assert.equal(
     h.legal().find((a) => a.type === "activate" && a.slot === 6).element,
     "Arcane",

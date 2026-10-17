@@ -11,6 +11,7 @@ const expected = [
   "location-depths-field",
   "location-depths-mind",
   "location-apex-field",
+  ...[1,2,3,4].map(n => "location-apex-floor" + n),
   "location-apex-mind",
   "location-field-topdown",
   "location-weald-topdown",

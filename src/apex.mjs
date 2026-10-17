@@ -19,11 +19,11 @@ export function apexStats(d, e) {
   const floor = e.apexFloor;
   if (d.tier === "Archon")
     return {
-      hp: floor === 3 ? d.hp : Math.ceil(d.hp * (floor === 1 ? 1.35 : 1.2)),
+      hp: d.id === "mindHive" ? d.hp : Math.ceil(d.hp * (floor === 3 ? 1.1 : floor === 1 ? 1.485 : 1.32)),
       damageBonus: floor === 3 ? 0 : floor === 1 ? 3 : 2,
     };
   return {
-    hp: Math.ceil(d.hp * [0, 1.6, 1.35, 1.15][floor]),
+    hp: Math.ceil(d.hp * [0, 1.76, 1.485, 1.265][floor]),
     damageBonus: [0, 4, 3, 2][floor],
   };
 }

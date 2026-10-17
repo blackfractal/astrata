@@ -10,7 +10,7 @@ test('Larva moves and swaps silently, then makes one heavy exit attack and disap
  commandIdeon(g,e.uid);assert.equal(e.slot,1);assert.equal(b.grid[2][0].uid,c.uid);assert.equal(b.jobs.length,0);
  commandIdeon(g,e.uid);assert.equal(e.slot,0);assert.equal(b.jobs.length,0);
  commandIdeon(g,e.uid);assert.equal(e.hp,0);assert.equal(e.removed,true);
- assert.deepEqual(b.jobs.map(j=>[j.damage,j.element,j.gridSourceSlot]),[[18,'Water',0]]);
+ assert.deepEqual(b.jobs.map(j=>[j.damage,j.element,j.gridSourceSlot]),[[22,'Water',0]]);
  commandIdeon(g,e.uid);assert.equal(b.jobs.length,1);
 });
 
@@ -22,7 +22,7 @@ test('Hatched crawlers attack once after moving and still attack when movement i
   b.jobs=[];b.corruptions[4]={kind:'hole'};commandIdeon(g,e.uid);
   assert.equal(e.slot,5);assert.equal(b.jobs.length,1);assert.equal(b.jobs[0].damage,1);
   b.jobs=[];e.slot=0;commandIdeon(g,e.uid);
-  assert.equal(b.jobs.length,1);assert.equal(b.jobs[0].damage,kind==='runner'?9:12);assert.equal(e.removed,true);
+  assert.equal(b.jobs.length,1);assert.equal(b.jobs[0].damage,kind==='runner'?11:14);assert.equal(e.removed,true);
  }
 });
 

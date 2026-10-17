@@ -16,23 +16,7 @@ const packageVersion = JSON.parse(
 ).version;
 const sources = Object.fromEntries(
   await Promise.all(
-    [
-      "engine.mjs",
-      "apex.mjs",
-      "apex-content.mjs",
-      "depths-content.mjs",
-      "depths-field.mjs",
-      "ideons.mjs",
-      "strata.mjs",
-      "corruptions.mjs",
-      "loom-bosses.mjs",
-      "content.mjs",
-      "policy.mjs",
-      "death.mjs",
-      "tutorial.mjs",
-      "loom-tutorial.mjs",
-      "consumables.mjs",
-    ].map(async (name) => [
+    (await fs.readdir(new URL("../src",import.meta.url))).filter(name=>name.endsWith(".mjs")).map(async (name) => [
       name,
       await fs.readFile(new URL("../src/" + name, import.meta.url), "utf8"),
     ]),

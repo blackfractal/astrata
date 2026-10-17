@@ -1,3 +1,5 @@
+import {sourceSlots,growthGuard,wardGain,growthReason} from "./growth-rules.mjs";
+import {attackPreview} from "./combat-preview.mjs";
 import { enhanceIdeons } from "./ideons-ui.mjs";
 import { coveredByIdeon, fieldIdeons } from "./ideons.mjs";
 import { corruptionPower, cardFrozen, cardSevered, insanityCover } from "./corruptions.mjs";
@@ -106,14 +108,13 @@ function effect(c, slot, ctx) {
     return `Charge ${c.charge}/${d.charge} · +${chargeGain(ctx.o.battle, c, slot)}`;
   const matching = matchingNeighbors(ctx.o.battle, c, slot);
   const shieldBase =
-    (f.shield || 0) +
-    (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+    growthGuard(ctx.o.battle,c,slot) +
     (f.matchingShield || 0) * matching;
   const shieldGear =
     corruptionPower(ctx.o.battle, slot, shieldBase + ctx.o.bonuses.shield) -
     corruptionPower(ctx.o.battle, slot, shieldBase);
   return (
-    (d.charge ? "Release · " : "") +
+    (activationCost(ctx.o.battle,c,slot) !== 1 ? `${activationCost(ctx.o.battle,c,slot)} Channel · ` : "") + (d.charge ? "Release · " : "") +
     ([
       f.damage || f.hpDamage
         ? damageMarkup(ctx.o.battle, c, slot) +
@@ -124,10 +125,10 @@ function effect(c, slot, ctx) {
           ? "Deal 1–" + f.randomDamage
           : null,
       f.shield
-        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${corruptionPower(ctx.o.battle, slot, f.shield + (c.upgrade ? d.upgrade?.bonus || 0 : 0) + (f.matchingShield || 0) * matching)}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear})</span>` : ""}`
+        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${corruptionPower(ctx.o.battle, slot, growthGuard(ctx.o.battle,c,slot) + (f.matchingShield || 0) * matching)}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear})</span>` : ""}`
         : null,
       f.ward
-        ? `Ward +${corruptionPower(ctx.o.battle, slot, f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0))}`
+        ? `Ward +${wardGain(ctx.o.battle,c,slot)}`
         : null,
       f.mend
         ? c.mending
@@ -156,6 +157,16 @@ function effect(c, slot, ctx) {
         ? `Insight +${insightGain(ctx.o.battle, c, slot)} next turn`
         : null,
       f.channel ? `Channel +${f.channel}` : null,
+      f.bodyGuard ? `Player Guard +${corruptionPower(ctx.o.battle,slot,f.bodyGuard)}` : null,
+      f.borrowInsight ? `−${f.borrowInsight} Insight next turn` : null,
+      f.spendFocus ? `Spend ${f.spendFocus} Focus` : null,
+      f.loseFocus ? `−${f.loseFocus} recurring Focus` : null,
+      f.focusPermanent ? `+${f.focusPermanent} recurring Focus` : null,
+      f.focus ? `+${f.focus} Focus next turn` : null,
+      f.fracture ? "Chaos weakness · next attack" : null,
+      f.ashesBuff ? `Adjacent attacks +${Math.min(6,ctx.o.battle.destroyed.length)}` : null,
+      f.focusDamage ? "+8 per Focus spent" : null,
+      f.seasonGuard ? "+8 Guard if element changes" : null,
     ]
       .filter(Boolean)
       .join(" · ") || d.type)
@@ -185,7 +196,7 @@ function whyDisabled(ctx, c, i) {
     return `Needs ${d.channel} Channel; ${b.channel} remaining`;
   if (fieldIdeons(b, i).length)
     return "Refraction field: choose a matching activation element, or defeat the projectile. Shared-use fields allow only their first chosen card this turn.";
-  return "Card condition or target unavailable";
+  return growthReason(ctx.game,c,i) || "Card condition or target unavailable";
 }
 let targetingCleanup = null;
 let targetingSlot = null;
@@ -296,7 +307,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
       bar.querySelector(".target-elements").append(neutral);
       mark(neutral, "element", "Arcane");
     }
-    for (const i of ctx.game.neighbors(slot)) {
+    for (const i of sourceSlots(ctx.o.battle,ctx.o.battle.grid[slot].at(-1),slot)) {
       const neighbor = ctx.o.battle.grid[i].at(-1);
       const offered = attunementSourceElement(ctx.o.battle, neighbor);
       if (offered !== "Arcane" && elements.includes(offered))
@@ -494,7 +505,7 @@ function activationChooser(ctx, slot, dragging = false) {
     .legal()
     .filter((a) => a.type === "activate" && a.slot === slot);
   if (!choices.length) return;
-  if (cards[ctx.o.battle.grid[slot].at(-1).id].attune)
+  if (cards[ctx.o.battle.grid[slot].at(-1).id].attune && !cards[ctx.o.battle.grid[slot].at(-1).id].effects.braided)
     return attunedActivationChooser(ctx, slot, choices, dragging);
   clearTargeting();
   targetingSlot = slot;
@@ -548,15 +559,18 @@ function activationChooser(ctx, slot, dragging = false) {
     stage = null;
     for (const field of [
       "element",
+      "secondaryElement",
+      "focusSpend",
       "cardTarget",
       "repairKind",
       "newElement",
       "destination",
       "target",
+      "mainTarget",
     ]) {
       if (selected.has(field)) continue;
       const values = [...new Set(filtered.map((a) => a[field]))].filter(
-        (v) => v != null,
+        (v) => v != null || (field === "secondaryElement" && filtered.some(a => Object.hasOwn(a,field))),
       );
       if (
         !values.length ||
@@ -579,12 +593,28 @@ function activationChooser(ctx, slot, dragging = false) {
     inspectLinks(ctx, slot);
     if (!stage) {
       const action = filtered[0];
+      if (action?.effects.forked) {
+        const route = action.effects.route || [];
+        const c=ctx.o.battle.grid[slot].at(-1), b=ctx.o.battle;
+        bar.innerHTML = `<strong>Forked Current route</strong><span>${route.map(p=>{
+          const e=[...b.enemies,...(b.ideons||[])].find(e=>e.uid===p.uid);
+          const preview=attackPreview(b,c,slot,e,action.element,action);
+          ctx.app.querySelector(`[data-enemy-uid="${p.uid}"]`)?.classList.add("target-selected");
+          return `${ctx.esc(e.name)}: ${preview.damage} damage (${preview.hpLoss} HP)`;
+        }).join(" → ")}</span><button data-route-confirm>Fire along this route</button><button data-target-cancel>Cancel</button>`;
+        bar.querySelector('[data-route-confirm]').onclick=()=>{clearTargeting();run(ctx,action);};
+        bar.querySelector('[data-target-cancel]').onclick=clearTargeting;
+        return;
+      }
       clearTargeting();
       if (action && !dragging) run(ctx, action);
       return;
     }
     const label = {
       element: "Choose an attunement card",
+      secondaryElement: "Choose a second element, or use only the first",
+      focusSpend: "Choose Focus expenditure",
+      mainTarget: "Choose the enemy at the end of the chain",
       target: "Choose an enemy",
       cardTarget: cards[ctx.o.battle.grid[slot].at(-1).id].effects.mend
         ? "Choose a Corruption on this or an adjacent space"
@@ -606,19 +636,19 @@ function activationChooser(ctx, slot, dragging = false) {
       options.set(el, value);
     };
     if (stage === "element") {
-      for (const i of ctx.game.neighbors(slot)) {
+      for (const i of sourceSlots(ctx.o.battle,ctx.o.battle.grid[slot].at(-1),slot)) {
         const neighbor = ctx.o.battle.grid[i].at(-1);
         const offered = attunementSourceElement(ctx.o.battle, neighbor);
         if (values.includes(offered))
           mark(ctx.app.querySelector(`[data-slot="${i}"]`), offered);
       }
-    } else if (stage === "target") {
+    } else if (stage === "target" || stage === "mainTarget") {
       for (const value of values)
         mark(ctx.app.querySelector(`[data-enemy-uid="${value}"]`), value);
-    } else if (stage === "newElement" || stage === "repairKind") {
+    } else if (["newElement", "repairKind", "secondaryElement", "focusSpend"].includes(stage)) {
       for (const value of values) {
         const el = document.createElement("button");
-        el.textContent = value;
+        el.textContent = stage === "focusSpend" ? `${value} Focus → ${6+8*value} damage` : value == null ? "Only first element" : value;
         bar.querySelector(".target-elements").append(el);
         mark(el, value);
       }
@@ -674,7 +704,7 @@ function activationChooser(ctx, slot, dragging = false) {
           (a) => a.target === Number(topEnemy.dataset.enemyUid),
         );
       }
-      if (candidates.length !== 1) return;
+      if (candidates.length !== 1 || candidates[0].effects.forked) return;
       // Revalidate the complete decision, including any chosen attunement.
       const action = ctx.game.legal().find((a) => a.key === candidates[0].key);
       if (!action) return;
@@ -824,7 +854,7 @@ function gearMarkup(ctx, editable = false) {
     .join("")}</div>`;
 }
 function playerMarkup(ctx, battle = false) {
-  return `<section class="player-panel ${battle ? "battle-player" : ""}"><button class="player-portrait" data-player-detail title="Druid · ${ctx.o.hp} / ${ctx.o.maxHp} HP">${ctx.img("location-druid")}<span>Druid <b>${ctx.o.hp}/${ctx.o.maxHp} HP</b></span></button>${gearMarkup(ctx)}<div class="player-status">${Object.entries(
+  return `<section class="player-panel ${battle ? "battle-player" : ""}"><button class="player-portrait" data-player-detail title="Druid · ${ctx.o.hp} / ${ctx.o.maxHp} HP">${ctx.img("location-druid")}<span>Druid <b>${ctx.o.hp}/${ctx.o.maxHp} HP</b></span></button>${gearMarkup(ctx)}${battle && ctx.o.battle.bodyGuard > 0 ? `<div class="player-guard">${ctx.game.legal().some(a=>a.type==="playerGuard") ? button(ctx,ctx.game.legal().find(a=>a.type==="playerGuard"),"next-choice") : `<span>Player Guard ${ctx.o.battle.bodyGuard} · Arcane</span>`}</div>` : ""}<div class="player-status">${Object.entries(
     ctx.o.status,
   )
     .filter(([k, v]) => v)
@@ -1132,7 +1162,7 @@ function tavern(ctx) {
         d = isCard ? cards[id.slice(5)] : items[id],
         price = d.worth || CARD_BUY_PRICES[d.rarity],
         a = actions.find((a) => a.type === "buy" && a.index === index);
-      return { id, index, isCard, d, price, a };
+      return { id, index, isCard, d, price, a, sold: o.shop.soldIndices?.includes(index) };
     });
     const cat = marketCategory.buy;
     const entries = stock.filter((x) =>
@@ -1149,6 +1179,7 @@ function tavern(ctx) {
       ["Cards", "Gems", "Equipment", "Consumables"],
       entries
         .map((x) => {
+          if (x.sold) return `<article class="market-item market-sold" data-stock-slot="${x.index}" aria-label="${x.d.name}: Sold">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.isCard ? cardText(x.d, ctx.o.stratum) : x.d.text)}</p><div class="store-controls"><button disabled>Sold</button></div></article>`;
           const restricted = x.d.cursed || x.d.type === "Hex";
           return `<article class="market-item ${restricted ? "healer-only" : x.a ? "" : "unavailable"}">${ctx.img((x.isCard ? "card-" : "item-") + (x.isCard ? x.id.slice(5) : x.id))}<h4>${x.d.name}</h4><p>${ctx.text(x.isCard ? cardText(x.d, ctx.o.stratum) : x.d.text)}</p>${restricted ? `<p class="healer-required" data-tooltip="${healerRequired}">${healerRequired}</p>` : ""}<div class="store-controls"><button data-stock-view="${x.index}">View</button>${!restricted && x.a ? button(ctx, { ...x.a, label: "Buy · " + x.price + " Gold" }) : `<button disabled title="${restricted ? healerRequired : `Needs ${x.price} Gold; ${o.gold} available`}">${restricted ? "Buy unavailable" : `Buy · ${x.price} Gold`}</button>`}</div></article>`;
         })
@@ -1485,7 +1516,7 @@ export function enhance(ctx) {
       el.classList.toggle("resource-active", active);
       if (active) el.setAttribute("aria-current", "step");
     });
-    const placement = actions.some((a) => a.type === "place"),
+    const placement = actions.some((a) => ["place","placeStrike"].includes(a.type)),
       activation = actions.some((a) => a.type === "activate");
     app.querySelectorAll("[data-action]").forEach((el) => {
       const a = actions.find((a) => a.key === el.dataset.action);
@@ -1499,7 +1530,7 @@ export function enhance(ctx) {
     app.querySelectorAll("[data-hand]").forEach((el) => {
       const c = b.hand.find((c) => c.uid === Number(el.dataset.hand)),
         d = cards[c.id],
-        legal = actions.some((a) => a.type === "place" && a.uid === c.uid),
+        legal = actions.some((a) => ["place","placeStrike"].includes(a.type) && a.uid === c.uid),
         cost = d.focus + (b.milky ? 1 : 0);
       el.classList.toggle("unavailable", !legal);
       el.dataset.placementDisabled = String(!legal);
@@ -1525,7 +1556,7 @@ export function enhance(ctx) {
         if (ctx.busy()) return;
         ctx.select(legal ? c.uid : null);
         ctx.render();
-        showCard(ctx, c);
+        if (!d.effects.placementStrike) showCard(ctx, c);
       };
       el.ondragstart = (e) => {
         drag = { card: c.uid };
@@ -1778,6 +1809,16 @@ export function enhance(ctx) {
   if (o.mode === "battle") {
     arrangeBattle(ctx);
     enhanceIdeons(ctx);
+    bindActions(ctx,app.querySelector('.battle-player'));
+    const strikeFor=el=>game.legal().find(a=>a.type==='placeStrike'&&a.target===Number(el.dataset.enemyUid)&&(a.uid===drag?.card||app.querySelector(`[data-hand="${a.uid}"]`)?.classList.contains('selected')));
+    app.querySelectorAll('[data-enemy-uid]').forEach(el=>{
+      const selected=strikeFor(el);el.classList.toggle('target-option',!!selected);
+      el.addEventListener('click',e=>{const a=strikeFor(el);if(a){e.preventDefault();e.stopImmediatePropagation();run(ctx,a);}},{capture:true});
+      el.addEventListener('dragover',e=>{if(strikeFor(el)){e.preventDefault();el.classList.add('target-option');}},{capture:true});
+      el.addEventListener('drop',e=>{const a=strikeFor(el);if(a){e.preventDefault();e.stopImmediatePropagation();drag=null;run(ctx,a);}},{capture:true});
+      const enemy=[...o.battle.enemies,...(o.battle.ideons||[])].find(x=>x.uid===Number(el.dataset.enemyUid));
+      if(enemy?.chaosFracture)el.insertAdjacentHTML('beforeend','<span class="fracture-status" data-tooltip="Additionally weak to Chaos for the next attack activation that hits. A different element consumes this too.">Chaos Fracture</span>');
+    });
     boardInteractions(ctx);
     gridTelegraphs(ctx);
     if (o.battle.reaction) {

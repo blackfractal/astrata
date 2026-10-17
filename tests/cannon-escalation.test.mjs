@@ -15,7 +15,7 @@ function arena() {
   return g;
 }
 
-test('ordinary Cannon attacks escalate 14, 7+7, 16, 8+8 across Final Blast turns', () => {
+test('ordinary Cannon attacks scale their 14, 7+7, 16, 8+8 base sequence across Final Blast turns', () => {
   const g = arena(), b = g.s.battle, e = b.enemies[0];
   let ordinary = 0;
   for (let turn = 1; turn <= 16; turn++) {
@@ -25,11 +25,11 @@ test('ordinary Cannon attacks escalate 14, 7+7, 16, 8+8 across Final Blast turns
     if (!tell.finalBlast) {
       const hits = tell.sequence || [{ damage: tell.damage, element: tell.element }];
       const total = 14 + 2 * Math.floor(ordinary / 2);
-      assert.deepEqual(hits.map(h => h.damage), ordinary % 2 ? [total / 2, total / 2] : [total]);
+      assert.deepEqual(hits.map(h => h.damage), (ordinary % 2 ? [total / 2, total / 2] : [total]).map(n => Math.round(n * 1.2)));
       if (hits.length === 2) assert.notEqual(hits[0].element, hits[1].element);
       for (const hit of hits) assert.ok(ELEMENTS.includes(hit.element));
       g.endTurn();
-      assert.equal(hp - g.s.hp, total);
+      assert.equal(hp - g.s.hp, hits.reduce((n,h)=>n+h.damage,0));
       assert.deepEqual(g.presentation.filter(f => f.kind === 'incoming').map(f => [f.amount, f.element]),
         hits.map(h => [h.damage, h.element]));
       ordinary++;
@@ -42,7 +42,7 @@ test('mixed elemental intent is stable, counters its first element and survives 
   e.cycle = 1;
   b.grid[20] = [g.instance(g.newCard('grove'))];
   const before = JSON.stringify(g.s), tell = g.tell(e);
-  assert.deepEqual(tell.sequence, [{ damage: 7, element: 'Fire' }, { damage: 7, element: 'Water' }]);
+  assert.deepEqual(tell.sequence, [{ damage: 8, element: 'Fire' }, { damage: 8, element: 'Water' }]);
   for (let n = 0; n < 5; n++) assert.deepEqual(g.tell(e), tell);
   assert.equal(JSON.stringify(g.s), before);
   const loaded = new Game(0, JSON.parse(before));
@@ -50,7 +50,7 @@ test('mixed elemental intent is stable, counters its first element and survives 
 });
 
 test('Final Blast warning and pending intent escalate, including old saved pending blasts', () => {
-  for (const [completed, expected] of [[3, 40], [8, 50], [13, 60], [18, 70]]) {
+  for (const [completed, expected] of [[3, 48], [8, 60], [13, 72], [18, 84]]) {
     const g = arena(), b = g.s.battle, e = b.enemies[0];
     e.cannonTurns = completed;
     assert.match(g.tell(e).name, new RegExp(`\\(${expected} damage\\)`));
@@ -74,10 +74,10 @@ test('Purify preserves ordinary alternation; explicitly scaled attacks ignore ha
   assert.equal(g.tell(e).name, 'Purify');
   g.endTurn();
   assert.equal(e.cycle, 7);
-  assert.deepEqual(g.tell(e).sequence.map(h => h.damage), [10, 10]);
+  assert.deepEqual(g.tell(e).sequence.map(h => h.damage), [12, 12]);
   b.ideons = []; b.corruptions = {};
   const hp = g.s.hp;
   g.endTurn();
-  assert.equal(hp - g.s.hp, 20);
-  assert.equal(g.tell(e).damage, 22);
+  assert.equal(hp - g.s.hp, 24);
+  assert.equal(g.tell(e).damage, 26);
 });

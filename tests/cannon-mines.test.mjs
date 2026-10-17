@@ -1,18 +1,19 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {Game} from '../src/engine.mjs';
-function arena(){const g=new Game(731);g.s.stratum=3;g.s.equipment={};g.s.hp=g.s.maxHp=10000;
+import {spawnIdeon} from '../src/ideons.mjs';
+function arena(seed=731){const g=new Game(seed);g.s.stratum=3;g.s.equipment={};g.s.hp=g.s.maxHp=10000;
  g.beginBattle([{uid:900,enemy:'refractionCannon',restless:0}]);delete g.s.checkpoint;
  g.s.battle.grid=Array.from({length:42},()=>[]);g.s.battle.enemies[0].cannonTurns=3;
  g.capturePresentation=true;g.presentation=[];return g;}
-test('charging lays two distinct empty-space mines with a full response turn, then 20+20 Fire before 40 Final Blast',()=>{
+test('charging lays two distinct empty-space mines with a full response turn, then 20+20 Fire before 48 Final Blast',()=>{
  const g=arena(),b=g.s.battle;b.grid[0]=[g.instance(g.newCard('blast'))];
  assert.match(g.tell(b.enemies[0]).name,/2 Mind Mines/);g.endTurn();
  const mines=Object.entries(b.corruptions);assert.equal(mines.length,2);
  for(const [i,q]of mines){assert.notEqual(Number(i),0);assert.equal(q.createdTurn,b.turn-1);assert.equal(q.damage,20);assert.equal(q.element,'Fire');}
  assert.match(g.tell(b.enemies[0]).name,/Mines detonate, then Final Blast/);
  const hp=g.s.hp;g.presentation=[];g.endTurn();
- assert.equal(hp-g.s.hp,80);assert.equal(Object.keys(b.corruptions).length,0);
- const hits=g.presentation.filter(f=>f.kind==='incoming');assert.deepEqual(hits.map(f=>f.amount),[20,20,40]);
+ assert.equal(hp-g.s.hp,88);assert.equal(Object.keys(b.corruptions).length,0);
+ const hits=g.presentation.filter(f=>f.kind==='incoming');assert.deepEqual(hits.map(f=>f.amount),[20,20,48]);
  assert.deepEqual(hits.slice(0,2).map(f=>f.element),['Fire','Fire']);
  assert.equal(g.presentation.filter(f=>f.kind==='mineExplosion').length,2);
 });
@@ -20,7 +21,7 @@ test('mine covers are destroyed before Final Blast can select them as defenses',
  const g=arena(),b=g.s.battle;g.endTurn();
  for(const i of Object.keys(b.corruptions)){const c=g.instance(g.newCard('ward'));c.ward=40;b.grid[i]=[c];}
  const hp=g.s.hp;g.presentation=[];g.endTurn();
- assert.equal(hp-g.s.hp,40);assert.equal(b.grid.flat().length,0);
+ assert.equal(hp-g.s.hp,48);assert.equal(b.grid.flat().length,0);
  const frames=g.presentation;assert.equal(frames.filter(f=>f.kind==='mineExplosion'&&f.covered).length,2);
  assert.ok(frames.findLastIndex(f=>f.kind==='mineExplosion')<frames.findIndex(f=>f.kind==='incoming'));
 });
@@ -40,5 +41,51 @@ test('defused mines stay absent across Continue and do not detonate with Final B
  }
  assert.equal(Object.keys(b.corruptions).length,0);
  const resumed=new Game(0,structuredClone(g.s));resumed.s.battle.grid=Array.from({length:42},()=>[]);
- const hp=resumed.s.hp;resumed.endTurn();assert.equal(hp-resumed.s.hp,40);
+ const hp=resumed.s.hp;resumed.endTurn();assert.equal(hp-resumed.s.hp,48);
+});
+
+test('charging mines avoid moved bullets and newborn volleys, including five-bullet volleys',()=>{
+ for(const seed of [3,24]) for(const counter of [3,18,63]) {
+  const g=arena(seed),b=g.s.battle,e=b.enemies[0];
+  e.cannonTurns=counter;
+  spawnIdeon(g,e,'bullet',{slot:6,field:'element',element:'Fire'});
+  g.endTurn();
+  const mines=Object.keys(b.corruptions).map(Number);
+  assert.equal(mines.length,2);
+  assert.ok(mines.every(slot=>!b.ideons.some(i=>i.hp>0 && i.slot===slot)));
+  // A basic card can cover either mine immediately, regardless of field color.
+  b.hand=[g.newCard('blast')]; b.focus=1;
+  for(const slot of mines) assert.ok(g.legal().some(a=>a.type==='place'&&a.slot===slot));
+ }
+});
+
+test('mine placement waits for all owners in a combined Cannon encounter',()=>{
+ const g=arena();g.beginBattle([{uid:900,enemy:'refractionCannon'},{uid:901,enemy:'refractionCannon'}]);
+ const b=g.s.battle;b.grid=Array.from({length:42},()=>[]);
+ for(const e of b.enemies) {e.cannonTurns=18;spawnIdeon(g,e,'bullet',{slot:e.uid===900?6:41,field:'element',element:'Fire'});}
+ g.endTurn();
+ assert.equal(Object.keys(b.corruptions).length,4);
+ for(const slot of Object.keys(b.corruptions)) assert.ok(!b.ideons.some(e=>e.hp>0&&e.slot===Number(slot)));
+});
+
+test('deferred charging mines survive a save during the incoming attack',()=>{
+ const g=arena(),b=g.s.battle;
+ const bracelet=g.addItem('bronze');g.s.equipment.wrist2=bracelet.uid;
+ g.endTurn();assert.ok(b.reaction);
+ assert.ok(b.jobs.some(j=>j.kind==='cannonLayMines'));
+ const resumed=new Game(0,structuredClone(g.s));
+ for(const game of [g,resumed]) {
+  for(let n=0;n<20 && game.s.battle.reaction;n++) game.act(game.legal().find(a=>a.type==='skipEquipment'));
+  assert.equal(Object.keys(game.s.battle.corruptions).length,2);
+ }
+ assert.deepEqual(resumed.s.battle.corruptions,b.corruptions);
+ assert.equal(resumed.s.rng,g.s.rng);
+});
+
+test('bullet diamonds allow off-element placement; only the occupied center remains unavailable',()=>{
+ const g=arena(),b=g.s.battle;
+ spawnIdeon(g,b.enemies[0],'bullet',{slot:17,field:'element',element:'Fire'});
+ b.hand=[g.newCard('blast')];b.focus=1;
+ assert.ok(g.legal().some(a=>a.type==='place'&&a.slot===16));
+ assert.ok(!g.legal().some(a=>a.type==='place'&&a.slot===17));
 });

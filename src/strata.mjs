@@ -456,11 +456,11 @@ export function registerStratum2(card, enemy, glossary) {
     [
       {
         ...mark("hypnosis", 2),
-        ...hit("False face", 15, "Chaos", { fixedDamage: true }),
+        ...hit("False face", 18, "Chaos", { fixedDamage: true }),
       },
       {
         ...apply("hypnosis"),
-        ...hit("Dazzle", 15, "Light", { fixedDamage: true }),
+        ...hit("Dazzle", 18, "Light", { fixedDamage: true }),
       },
       {
         ...mark("hole", 2),
@@ -470,7 +470,7 @@ export function registerStratum2(card, enemy, glossary) {
       },
       {
         ...apply("hole"),
-        ...hit("Anti-elemental", 15, "Arcane", {
+        ...hit("Anti-elemental", 18, "Arcane", {
           antiElemental: true,
           fixedDamage: true,
         }),

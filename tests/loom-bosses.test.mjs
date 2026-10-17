@@ -93,7 +93,7 @@ test("New bosses replace the Archon pool; former bosses are weaker Eidolons", ()
     ["borrowedChoir", 100],
   ]) {
     assert.equal(enemies[id].tier, "Eidolon");
-    assert.equal(enemies[id].hp, hp);
+    assert.equal(enemies[id].hp, Math.ceil(hp * 1.2));
   }
   const g = arena("censer");
   g.s.battle.enemies[0].hp = 0;
@@ -300,7 +300,7 @@ test("Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse 
   assert.equal(b.jobs.find((x) => x.name === "Mind Mine").damage, 20);
   assert.equal(b.jobs.find((x) => x.name === "Mind Mine").element, "Fire");
 });
-test("Steam preserves ordered independent elements and exact8/10/12 damage", () => {
+test("Steam preserves ordered independent elements and scaled9/12/14 damage", () => {
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
@@ -315,9 +315,9 @@ test("Steam preserves ordered independent elements and exact8/10/12 damage", () 
     act(g, "skipEquipment");
   }
   assert.deepEqual(hits, [
-    [8, "Fire"],
-    [10, "Water"],
-    [12, "Wind"],
+    [9, "Fire"],
+    [12, "Water"],
+    [14, "Wind"],
   ]);
 });
 
@@ -482,10 +482,10 @@ test("Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, 
   bracelet.gem = gem.uid;
   g.s.equipment.wrist1 = bracelet.uid;
   assert.equal(antiElement(g).element, "Water");
-  assert.equal(g.tell(e).damage, 15);
+  assert.equal(g.tell(e).damage, 21);
   e.cycle = 13;
   e.hp = 1;
-  assert.equal(g.tell(e).damage, 15);
+  assert.equal(g.tell(e).damage, 21);
 });
 test("Anti-elemental ignores covered or destroyed Shield owners", () => {
   const g = arena("trickster"),

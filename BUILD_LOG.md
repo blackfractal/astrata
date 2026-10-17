@@ -1875,3 +1875,46 @@ Jonathan liked the boar but requested using it as an Eidolon and making the Pred
 
 
 Round204 follow-up: mirror Apex Predator, Rift Boar and Rift Chimera artwork horizontally in every image view so their composition faces the player. Display-only CSS preserves original PNGs exactly and leaves text/controls unchanged. Approximately3additional minutes including packaged visual verification and archive refresh.
+
+
+## Approved pressure pass, fixed shop slots, adjacent Transmute and second run — round205
+
+2026-10-16. Jonathan requested applying the four approved assessment changes and a second manual headless run, recording discoveries. Version4.0.2/design4.224/S4draft0.10: S2 main HP+20%, direct damage+15%; S3 main HP/damage+20%, owned Ideon attacks and Mind Eggs+20% while retaining Ideon HP thresholds and Hive15timer; native Apex Eidolons+20%; returning Apex enemies another10%HP/damage after source and prior rematch scaling. Predator and its owned Ideons, tutorials and S1 enemy numbers unchanged. Nearest-integer damage, upward-rounded HP. Active save HP preserved. Fixed shop slots with Sold persistence; Transmute NESW-only with matching text/targets. Generated four distinct top-down Apex maps and small cliffside meditation background using built-in imagegen; originals preserved, prompts/provenance recorded. Corrected scaled enemy/Ideon descriptions and egg impact label.
+
+Second seed885553835 attempt:1230manual legal decisions, first245 reused from prior run until distantTransmute became illegal, then manually adapted.27victories, S1/S2complete; Cannon lossT15 to72ChaosFinal,128/360bossHPremaining. No rewinds, no live-profile access, no built-in AI decisions. Independent frozen-source replay matches every action's HP/gold and final RNG/state/statistics. S2 ninefights37turns28netHPlost; S3preboss eightfights24turns7netHPlost; Cannon15turns70netHPlost. Cannot validate S4balance from this run. Report separates smaller economy and play mistakes from tuning effects. No extra Mirror/healing/Plasma/Rite nerfs.
+
+651rules tests pass,213required assets/222selections auditclean;10packagedApexUIcases and5shopUIchecks pass. Shop fixture initially used an invalid item ID, corrected before passing all four categories and Continue. Packaged app/ZIP refreshed. Full assessment reports/pressure-pass-report.md; raw run and sources reports/codex-fullrun-4.0.2-second. Additional implementation/art/playtest/documentation/verification approximately1hour (estimate; no exact start timer). No commit or push.
+
+
+## The Listening Hollow, Stratum 3 Ideon tutorial — round206
+
+2026-10-17. Jonathan requested the final tutorial: enemies invade the mind with their own whispering thoughts, Lucid Guide can fight them, and their interior attack origin bypasses defenses farther right. Version4.0.3/design4.225/S3draft0.49 adds23 steps, real Guide movement/18Arcane, nearby Needle15, and a6Chaos column3 attack that cannot use charged column6Ward/column7Shield but is stopped by column2Shield4 plus Bronze2. Same40HP Borrowed Oracle becomes independent practice without resetting HP/board. Tutorial-only variants reuse its art; normal pressure/balance unchanged. First-entry auto launch preserves normal save/Guide grant; replay, exact resume, retry, completion and15-second idle hints supported.
+
+655 tests and215required assets pass. Packaged UI covers real guided controls, source-column defense, resume, normal-save isolation, idle hints and independent completion persistence (QA-only hidden AI handler). Added tutorial enemy defeat prose; made future-version regression fixture derive its future patch instead of treating now-current4.0.3 as invalid. Runtime/ZIP refreshed. Approximately30minutes additional implementation/verification/documentation (estimate). No live-profile changes, commit or push. Report: reports/depths-tutorial-report.md.
+
+
+### Round206 refinement — teach formations with the guaranteed Guide
+
+2026-10-17. Version4.0.4/design4.226/S3draft0.50/tutorialschema2. Jonathan noted Lucid Needle is not guaranteed. Removed its tutorial lesson and fresh deck copy, replaced with a basic Blast, and added formation explanation (row/column/adjacency) before demonstrating the Guide. Guide now moves right to defeat the first thought, then down to defeat the second after the defense lesson. Preserve 23steps, same actual defense math, independent practice and save isolation. Legacy guided saves map by lesson IDs and remove retired Needle steps/cards; independent saves remain intact. 656tests and packaged walkthrough pass; app/ZIP refreshed. Approximately10additional minutes. No live-save changes or commit.
+
+QA note: ordinary board-aware AI lost revised practice at turn16 with6OracleHP; action-effects baseline has a verified legal win. Guided steps tested through UI; legal headless terminal state resumed to verify completion/profile. No difficulty reduction to fit the bot.
+
+
+## Cannon mines leave a usable response space — round207
+
+2026-10-17. Jonathan chose to prevent Cannon mines starting beneath bullets instead of allowing placement onto occupied bullet centers. Version4.0.5/design4.227/S3draft0.51 queues mine placement after all enemy actions/Ideon movement/launches but before end-of-round Corruptions and the next player turn. It selects actual empty spaces, so stopped bullets, newborn volleys, and combined encounters are handled without predicting movement or changing bullets. Mines keep their one-turn fuse and20Fire; fields still allow placement, occupied Ideon centers do not. Queued jobs survive exact-state saves. Existing already-laid mines are not relocated retroactively. Added four regressions for movement/launch overlap, five-bullet volleys, combined owners, mid-attack save/resume, and field-versus-center placement. Normal balance numbers unchanged. Approximately10additional minutes including verification, docs and packaging. No live-save edits/commit.
+
+Round207 validation:660tests pass. Isolated packaged UI confirms two clear mines and successful Blast cover placement, no renderer errors. Report cannon-mine-clearance-report.md. App/portableZIP refreshed.
+
+## Selective S3 ordinary encounter roles — round208
+
+2026-10-17. Jonathan approved opening board disruptions for some S3 enemies and HP/damage increases for others, testing immediate maneuvering versus engine development. Version4.0.6/design4.228/S3draft0.52: NerveWeaver opens with1Shuttle, PaleGrazer1Leech, HollowDrifter1Sentinel, Knotkeeper2Binders, EchoPolyp2activeNauseas. Seeded legal columns4–5 for Ideons; passive traits immediate, commands wait through an opening ambush. Subsequent summon/telegraph cycles remain. GlassBrood72HP, BlindSeer82, KindlyHunger180, BorrowedOracle173, with stronger direct damage. No new boss/tutorial/S2 changes. S4 source-enemy rematches inherit updates. Continue preserves saved HP/board; no retroactive setup. Fixed opening Echo preview and outdated Nausea/Anger counter prose.
+
+670rules tests,215requiredassets/224selections audit clean,3isolatedpackagedUIcases pass. Controlled weighted-policy diagnostic:18encounters,9before/9after, all exactreplays verified; same developed3Focus/4Channel fixture. Before9wins; after7wins (lossesHunger/Knotkeeper, Oraclewon4HP). Motes remainmanageable; Eidolons needhumanfollow-up, notanotherblanketbuff. New openings advanceRNG and can change draws; no causalwinrateclaim. Sources/states/decisionsretained. Report reports/depths-encounter-roles-report.md. Approximately20additionalminutesimplementation/docs/tests/diagnostic/packaging (estimate). Runtime/ZIP refreshed; liveprofile untouched, no commit/push.
+
+
+## Druid engines, resource conversions and formations — round209
+
+2026-10-17. Jonathan approved twenty proposed cards plus Chaos Fracture; Rooted Concentration uses temporary player Guard and Borrowed Dawn checks projected next-turn Insight. Version4.0.7/design4.229/actions10:21 cards,79 playable+5Hex, unique generated artwork for each. New pile passives, resource payments/debt, formations/diagonal sources, multi-element choices, placement strike, Ideon chains and Fracture are integrated with legal actions, UI previews, policy, saves and replay archives. Base card versions only; no invented upgrade effects. Card reference and exact decisions appended to main design. All source modules now archived for reproducible runs.
+
+691tests;236requiredassets/245selections clean;6isolatedpackagedUI cases pass. Two fresh WeightedPolicy campaigns both diedS1;24fixed-build encounters coverS1–4, all26 exactreplays verified. No claim of a completed campaign or definitive human balance. Only enemy adjustment:Tricksterbase15→18directdamage (21afterS2pressure); before/after paired results support a modest increase. S3/Apex fixtures remain difficult, no blanket buff. Full report reports/growth-expansion-report.md and raw growth-evaluation. Approximately45minutes additional implementation/art/verification/evaluation/package work (estimate). Runtime/ZIP refreshed; no live-save edits, commit or push.

@@ -220,18 +220,26 @@ export function registerDepths(card, enemy, glossary, events) {
       stratum: 3,
       ...options,
     });
+  add("whisperTutor", "Borrowed Oracle", "Eidolon", "Arcane", 40, "Sentinel",
+    [command("Listen to the voices", 0, "Arcane")],
+    "Waits while you learn. Commands its invading thoughts from within your mind grid.",
+    "Watch each Ideon's space: defenses to its right cannot intercept its attack.", {tutorialOnly:true});
+  add("whisperWarden", "Borrowed Oracle", "Eidolon", "Arcane", 40, "Sentinel",
+    [summon("A little voice", "runner", 1, 5, "Arcane"), command("Answering whispers", 5, "Arcane")],
+    "Alternates 5 Arcane damage plus a Glass Skitter with 5 Arcane damage plus commands to its Ideons.",
+    "Use targeted attacks to silence intruders. Defend from their column or farther left.", {tutorialOnly:true});
   add(
     "glassBrood",
     "Glass Brood",
     "Mote",
     "Wind",
-    48,
+    60,
     "Stalker",
     [
-      summon("Lay a thought", "runner", 1, 9, "Wind"),
-      command("Scuttle", 12, "Earth"),
+      summon("Lay a thought", "runner", 1, 12, "Wind"),
+      command("Scuttle", 15, "Earth"),
     ],
-    "Spawns a Glass Skitter, then commands its advance while alternating Wind and Earth attacks.",
+    "A durable brood: spawns a Glass Skitter, then commands its advance while alternating strong Wind and Earth attacks.",
     "Remove the skitter before it gets behind your guards.",
   );
   add(
@@ -245,8 +253,9 @@ export function registerDepths(card, enemy, glossary, events) {
       summon("Loose nerve", "shuttle", 1, 10, "Light"),
       command("Twitch", 11, "Chaos"),
     ],
-    "Creates a Nerve Shuttle that swaps adjacent player stacks on command.",
+    "Starts with a Nerve Shuttle in the enemy half of the grid, then creates more. Shuttles swap adjacent player stacks on command; the opening Shuttle waits until after your first turn.",
     "Keep key formations away from the shuttle or kill it before Twitch.",
+    { openingIdeons: { kind: "shuttle", count: 1 } },
   );
   add(
     "paleGrazer",
@@ -259,8 +268,9 @@ export function registerDepths(card, enemy, glossary, events) {
       summon("Drink the stillness", "leech", 1, 10, "Water"),
       command("Return the light", 12, "Wind"),
     ],
-    "Glass Leeches drain adjacent Wards as you build and act, then heal the Grazer.",
+    "Starts with a Glass Leech in the enemy half of the grid. Leeches drain adjacent Wards as you build and act, then heal the Grazer on command.",
     "Kill the leech before its owner drinks the reserve.",
+    { openingIdeons: { kind: "leech", count: 1 } },
   );
   add(
     "echoPolyp",
@@ -273,11 +283,11 @@ export function registerDepths(card, enemy, glossary, events) {
       hit("Sickening pulse", 10, "Chaos", { applyCorruption: true }),
       hit("Cold echo", 12, "Water", { markCorruption: "nausea", count: 2 }),
     ],
-    "Spreads two Nauseas while attacking in Chaos and Water.",
-    "Cover Nausea or send the Elves while preparing both elements.",
+    "Starts with two active Nausea spaces, even when you initiate battle. Later Nauseas are telegraphed while it attacks in Chaos and Water.",
+    "Nausea weakens the covering card or uncovered neighbors. Build around it or send the Elves while preparing both elements.",
     {
       corruptionCap: 6,
-      openingCorruption: { markCorruption: "nausea", count: 2 },
+      openingCorruption: { markCorruption: "nausea", count: 2, immediate: true },
     },
   );
   add(
@@ -285,17 +295,17 @@ export function registerDepths(card, enemy, glossary, events) {
     "Blind Seer",
     "Mote",
     "Light",
-    54,
+    68,
     "Stalker",
     [
-      hit("Unseeing gaze", 11, "Light", { applyCorruption: true }),
-      hit("Splintered sight", 9, "Chaos", {
+      hit("Unseeing gaze", 14, "Light", { applyCorruption: true }),
+      hit("Splintered sight", 12, "Chaos", {
         markCorruption: "anger",
         count: 2,
       }),
     ],
-    "Telegraphs Anger while alternating Light and Chaos attacks.",
-    "Cover the marked spaces before your engine wastes Channel.",
+    "Resists a quick defeat and telegraphs Anger while alternating strong Light and Chaos attacks.",
+    "Repair Anger or manage which card it compels; covering it redirects Anger to the covering card.",
     {
       corruptionCap: 6,
       openingCorruption: { markCorruption: "anger", count: 2 },
@@ -312,29 +322,29 @@ export function registerDepths(card, enemy, glossary, events) {
       summon("Hollow shell", "guardian", 1, 8, "Earth"),
       command("Resonant fracture", 13, "Fire"),
     ],
-    "A Hollow Sentinel protects it until destroyed. The Drifter flies over map barriers.",
+    "Starts protected by a Hollow Sentinel in the enemy half of the grid. Its opening Sentinel waits until after your first turn to attack. The Drifter flies over map barriers.",
     "Arcane attacks efficiently break the sentinel. Elemental attacks still work.",
-    { flying: true },
+    { flying: true, openingIdeons: { kind: "guardian", count: 1 } },
   );
   add(
     "kindlyHunger",
     "The Kindly Hunger",
     "Eidolon",
     "Water",
-    125,
+    150,
     "Stalker",
     [
-      summon("A gentle thirst", "leech", 2, 13, "Water"),
-      command("Drink Deep", 16, "Wind"),
+      summon("A gentle thirst", "leech", 2, 16, "Water"),
+      command("Drink Deep", 20, "Wind"),
       hit("Empty Embrace", 0, "Water", {
         sequence: [
-          { damage: 12, element: "Water" },
-          { damage: 12, element: "Earth" },
+          { damage: 14, element: "Water" },
+          { damage: 14, element: "Earth" },
         ],
         markCorruption: "insanity",
         count: 2,
       }),
-      hit("Leave nothing", 15, "Chaos", { applyCorruption: true }),
+      hit("Leave nothing", 18, "Chaos", { applyCorruption: true }),
     ],
     "Creates two Ward-draining leeches, commands their healing, then threatens Insanity and mixed-element damage.",
     "Protect stored Ward by removing parasites before developing the engine.",
@@ -355,27 +365,27 @@ export function registerDepths(card, enemy, glossary, events) {
       }),
       command("Pull tight", 16, "Earth", { applyCorruption: true }),
     ],
-    "Binders lock nearby Recall; a Shuttle moves stacks while Memory Holes threaten their landing places.",
+    "Starts with two Clinging Thoughts in the enemy half of the grid, locking nearby Recall. A Shuttle moves stacks while Memory Holes threaten their landing places. Opening thoughts wait until after your first turn to attack.",
     "Kill the Binder or Shuttle before the committed disruption.",
-    { corruptionCap: 8 },
+    { corruptionCap: 8, openingIdeons: { kind: "binder", count: 2 } },
   );
   add(
     "borrowedOracle",
     "Borrowed Oracle",
     "Eidolon",
     "Light",
-    120,
+    144,
     "Sentinel",
     [
-      summon("Another face", "guardian", 1, 12, "Light", {
+      summon("Another face", "guardian", 1, 15, "Light", {
         markCorruption: "hypnosis",
         count: 2,
       }),
-      command("Your hands remember", 15, "Chaos", { applyCorruption: true }),
+      command("Your hands remember", 18, "Chaos", { applyCorruption: true }),
       hit("Foreign sensation", 0, "Wind", {
         sequence: [
-          { damage: 12, element: "Wind" },
-          { damage: 14, element: "Fire" },
+          { damage: 14, element: "Wind" },
+          { damage: 16, element: "Fire" },
         ],
       }),
     ],
@@ -446,7 +456,7 @@ export function registerDepths(card, enemy, glossary, events) {
         { cannon: true, destructionShot: n === 3, fixedDamage: true },
       ),
     ),
-    "Fires three counter-element volleys then a destruction volley. Launches one bullet per ordinary move on turns 1–15, two on 16–30, three on 31–45, four on 46–60, and five on 61 onward (maximum five). Bullets appear together in distinct spaces; larger volleys can overlap fields when separated lanes do not fit. The normal direct attack is not multiplied. Ordinary attacks alternate one hit and two different-element hits, escalating after each pair: 14, then 7+7, then 16, then 8+8, then 18, then 9+9, and so on. Final Blast and Purify pause this sequence. Both hits are shown in its intent. The first element follows its field; the second counters the first, or rotates through elemental partners when the first is Arcane. Bullets move two columns left; arrival is 12 Pierce. Covering disables a card. Radius-2 Manhattan diamond fields restrict activations; destroying the bullet removes its field. On turns 4, 9, 14 and so on, it charges Final Blast, revealing its random element, and lays two Mind Mines on empty spaces. Cover or defuse the mines during your next turn: they detonate before Final Blast, each dealing 20 Fire if uncovered or destroying its cover. After the mines detonate, the next turn fires Final Blast: 40 damage the first time, then 50, 60 and +10 each later cycle, of the announced element, blockable by normal defenses anywhere on the grid. No bullets launch or act on that turn.",
+    "Fires three counter-element volleys then a destruction volley. Launches one bullet per ordinary move on turns 1–15, two on 16–30, three on 31–45, four on 46–60, and five on 61 onward (maximum five). Bullets appear together in distinct spaces; larger volleys can overlap fields when separated lanes do not fit. The normal direct attack is not multiplied. Ordinary attacks alternate one hit and two different-element hits, escalating after each pair: 14, then 7+7, then 16, then 8+8, then 18, then 9+9, and so on. Final Blast and Purify pause this sequence. Both hits are shown in its intent. The first element follows its field; the second counters the first, or rotates through elemental partners when the first is Arcane. Bullets move two columns left; arrival is 12 Pierce. Covering disables a card. Radius-2 Manhattan diamond fields restrict activations; destroying the bullet removes its field. On turns 4, 9, 14 and so on, it charges Final Blast, revealing its random element, and lays two Mind Mines on empty spaces after the enemy round's bullet movement and launches, so neither starts beneath a bullet. Cover or defuse the mines during your next turn: they detonate before Final Blast, each dealing 20 Fire if uncovered or destroying its cover. After the mines detonate, the next turn fires Final Blast: 40 damage the first time, then 50, 60 and +10 each later cycle, of the announced element, blockable by normal defenses anywhere on the grid. No bullets launch or act on that turn.",
     "Kill or work around each moving field. Equipment is the only defense against a bullet that reaches you. Prepare matching Guard for the telegraphed escalating Final Blast; it can be defended normally.",
     { bossMode: "sentinel" },
   );

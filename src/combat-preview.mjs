@@ -1,3 +1,5 @@
+import {corruptionPower} from "./corruptions.mjs";
+import {growthDamage} from "./growth-rules.mjs";
 import { areaHits } from "./area-targets.mjs";
 import { protectedOwner } from "./ideons.mjs";
 import { cards } from "./content.mjs";
@@ -26,7 +28,7 @@ export function attackElements(b, c, i, element = c.element) {
     : [element];
 }
 // A read-only preview of this card's direct hits; gear and secondary effects are separate.
-export function attackPreview(b, c, i, enemy, element = c.element) {
+export function attackPreview(b, c, i, enemy, element = c.element, action = {}) {
   const d = cards[c.id],
     f = cardEffects(c);
   if (
@@ -38,8 +40,9 @@ export function attackPreview(b, c, i, enemy, element = c.element) {
   )
     return null;
   const power =
-      cardPower(b, c, i, enemy) * (f.ideonDouble && enemy.ideon ? 2 : 1),
-    elements = attackElements(b, c, i, element);
+      (f.forked ? corruptionPower(b,i,(action.effects?.route?.find(x=>x.uid===enemy.uid)?.damage||f.damage)+growthDamage(b,c,i,0)) :
+       f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0))) : cardPower(b, c, i, enemy)) * (f.ideonDouble && enemy.ideon ? 2 : 1),
+    elements = f.braided ? [element,action.secondaryElement].filter(Boolean) : attackElements(b, c, i, element);
   const base = power * elements.length;
   const damage =
     enemy.flicker || (!enemy.ideon && protectedOwner(b, enemy.uid))

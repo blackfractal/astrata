@@ -1,3 +1,4 @@
+import {sourceSlots,formationSlots} from "./growth-rules.mjs";
 import { cards, MIND_COLUMNS } from "./content.mjs";
 import { cardSevered } from "./corruptions.mjs";
 import {
@@ -26,7 +27,7 @@ export function cardInteraction(b, c, i) {
   const neighbors = gridNeighbors(b, i);
   const attunes = !!(d.attune && !c.transmuted && c.element === d.element);
   const providers = attunes
-    ? neighbors.filter(
+    ? sourceSlots(b,c,i).filter(
         (j) => attunementSourceElement(b, b.grid[j].at(-1)) !== "Arcane",
       )
     : [];
@@ -77,6 +78,12 @@ export function boardConnections(b) {
     const d = cards[c.id],
       m = cardInteraction(b, c, i),
       active = live(c, i);
+    if (active && (d.formation || d.effects.diagonalDamage))
+      for (const j of d.effects.diagonalDamage ? sourceSlots(b,c,i) : formationSlots(b,c,i))
+        if(b.grid[j]?.length) add(j,i,"benefit",c.element,"Formation bonus");
+    if(c.ashesUntil===b.turn && c.ashesPower>0)
+      for(const j of m.neighbors) if(cards[b.grid[j].at(-1).id].effects.damage || cards[b.grid[j].at(-1).id].effects.hpDamage)
+        add(i,j,"benefit","Earth",`Ashen Roots +${c.ashesPower} damage`);
     if (active)
       for (const j of m.providers)
         add(

@@ -1,4 +1,5 @@
 import { cards, cycle, enemies, ELEMENTS } from "./content.mjs";
+import { pressureFactor, pressureDamage } from "./difficulty.mjs";
 import { compelCard, resetCoveredInsanity, prepareCorruption, applyCorruptions } from "./corruptions.mjs";
 import { ideonDefs } from "./depths-content.mjs";
 import { adjacent, offense, stackValue } from "./engine.mjs";
@@ -6,11 +7,25 @@ import { forcedDiscardOutcome, forcedDiscardLabel } from "./card-removal.mjs";
 const top = (s) => s?.at(-1);
 export const REFRACTION_RADIUS = 2;
 export const livingIdeons = (b) => (b?.ideons || []).filter((e) => e.hp > 0);
+export const ideonDamage = (e, damage) => Math.round(damage * (e.pressure || 1));
+export function ideonText(e) {
+  const text = e.text || "", n = value => ideonDamage(e, value);
+  if ((e.pressure || 1) === 1) return text;
+  if (e.kind === "drone") return text
+    .replace("5 damage", `${n(5)} damage`)
+    .replace("10, 15, 20", `${n(10)}, ${n(15)}, ${n(20)}`)
+    .replace("increasing by 5", `increasing by approximately ${n(5)}`);
+  if (e.kind === "tentacle") return text
+    .replace("4 Water, gaining 2 damage each successive command", `${n(4)} Water, growing each successive command`)
+    .replace("1 Water, gains 0.5 each successive command, rounded up", `${n(1)} Water and grows more slowly each successive command`);
+  return text.replace(/\b(\d+) (damage|Pierce|Arcane|Chaos)\b/g,
+    (_, value, unit) => `${n(Number(value))} ${unit}`);
+}
 // Age counts completed commands in previews; resolution has already incremented it.
 // New/replacement tendrils start at age zero and never inherit a dead tendril's growth.
 export const tendrilDamage = (e, completed = e.age || 0) => ({
-  strike: e.damage + 2 * Math.max(0, completed),
-  splash: Math.ceil(1 + 0.5 * Math.max(0, completed)),
+  strike: ideonDamage(e, e.damage + 2 * Math.max(0, completed)),
+  splash: ideonDamage(e, Math.ceil(1 + 0.5 * Math.max(0, completed))),
 });
 // Share the exact current target with the intent preview. Diagonals do not count.
 export const tendrilTargets = (b, e, distant = false) => (distant ? b.grid.map((_, i) => i) : adjacent(e.slot))
@@ -46,6 +61,10 @@ export function normalizeInsectMovement(state) {
     }
   for (const e of b?.ideons || [])
     if (e.behavior === "bullet") e.text = ideonDefs.bullet.text;
+  for (const e of b?.ideons || []) {
+    const owner = b.enemies.find(o => o.uid === e.owner);
+    if (owner) e.pressure = pressureFactor(owner);
+  }
   if (state.checkpoint) normalizeInsectMovement(state.checkpoint);
 }
 export function hiveBrood(e) {
@@ -78,7 +97,7 @@ export function layMindEggs(g, owner) {
     const element = owner.broodOrder[(owner.eggsLaid || 0) % broodElements.length];
     const insect = broodKinds[(owner.eggsLaid || 0) % broodKinds.length];
     owner.eggsLaid = (owner.eggsLaid || 0) + 1;
-    b.corruptions[slot] = { kind: "egg", uid: g.uid(), source: owner.uid, createdTurn: b.turn, remaining: 1, damage: 8, element, insect };
+    b.corruptions[slot] = { kind: "egg", uid: g.uid(), source: owner.uid, createdTurn: b.turn, remaining: 1, damage: pressureDamage(8, owner), element, insect };
     slots.push(slot);
     g.log(`Mind Hive lays a ${element} Mind Egg in column ${slot % 7 + 1}, row ${Math.floor(slot / 7) + 1}; hatches next Hive turn.`);
   }
@@ -107,7 +126,7 @@ export function hatchMindEgg(g, owner, slot, uid) {
     if (destroyed.length) sent.push(`${destroyed.map(c => cards[c.id].name).join(" + ")} to Destroyed`);
     g.log(`Mind Egg sends ${sent.join("; ")}; no damage.`);
   } else g.log(`Uncovered Mind Egg hatches: ${egg.damage} ${egg.element} damage.`);
-  g.present("eggHatch", { slot, covered, destination, destroyed: destroyed.map(c => c.uid), element: egg.element, name: "Mind Egg hatches · " + (covered ? "cover to " + destination : "8 " + egg.element) });
+  g.present("eggHatch", { slot, covered, destination, destroyed: destroyed.map(c => c.uid), element: egg.element, name: "Mind Egg hatches · " + (covered ? "cover to " + destination : egg.damage + " " + egg.element) });
   spawnIdeon(g, owner, egg.insect, { slot, element: egg.element });
   (g.s.stats.mindEggs ||= []).push({ turn: b.turn, slot, element: egg.element, insect: egg.insect, covered, discarded: discarded.map(c => c.uid), destroyed: destroyed.map(c => c.uid), damage: covered ? 0 : egg.damage });
   if (!covered) b.jobs.unshift({ kind: "hit", name: "Mind Egg", damage: egg.damage, element: egg.element, source: owner.uid, gridSourceSlot: slot });
@@ -259,6 +278,7 @@ export function spawnIdeon(g, owner, kind, options = {}) {
     uid: g.uid(),
     owner: owner.uid,
     ownerName: owner.name,
+    pressure: pressureFactor(owner),
     slot: spaces[0],
     hp: d.hp,
     maxHp: d.hp,
@@ -287,6 +307,19 @@ export function initializeIdeons(g) {
   const b = g.s.battle;
   b.ideons ||= [];
   for (const e of b.enemies) {
+    // Ordinary encounter setups exist before either side acts. Keep intruders
+    // in the enemy half, with seeded positions and without overwriting Opening Rite.
+    const opening = enemies[e.id]?.openingIdeons;
+    if (opening) {
+      for (let n = 0; n < opening.count; n++) {
+        const occupied = new Set(livingIdeons(b).map(i => i.slot));
+        const spaces = b.grid.flatMap((s, slot) =>
+          !s.length && !occupied.has(slot) && slot % 7 >= 3 && slot % 7 <= 4 &&
+          b.corruptions?.[slot]?.kind !== "hole" ? [slot] : []);
+        if (!spaces.length) break;
+        spawnIdeon(g, e, opening.kind, { slot: g.pick(spaces), opening: true });
+      }
+    }
     if (e.id === "refractionCannon") e.cannonTurns = 0;
     if (e.id === "cnidarian")
       for (let n = 0; n < 3; n++) spawnIdeon(g, e, "tentacle");
@@ -435,7 +468,7 @@ function cannonAttack(e, t) {
 export function depthsTell(g, e, t) {
   if (e.id === "refractionCannon" && !t.finalBlast && g.s.mode === "battle" &&
       ((e.cannonTurns ?? e.cycle ?? 0) + 1) % 5 === 4)
-    t.name += ` · Charging Final Blast... (${cannonBlastDamage(e)} damage) + 2 Mind Mines`;
+    t.name += ` · Charging Final Blast... (${pressureDamage(cannonBlastDamage(e), e)} damage) + 2 Mind Mines`;
   if (t.cannon && (!g.s.battle || g.s.mode !== "battle")) {
     t.name += " · field chosen from your battle formation";
     cannonAttack(e, t);
@@ -523,14 +556,17 @@ export function commandIdeon(g, uid) {
   const b = g.s.battle,
     e = livingIdeons(b).find((e) => e.uid === uid);
   if (!e) return;
+  // Opening defenders/parasites are present immediately, but an ambush cannot
+  // command them before the player has had their first turn.
+  if (e.opening && b.turn === 0) return;
   const owner = b.enemies.find((o) => o.uid === e.owner && o.hp > 0);
   if (!owner) return;
   e.age++;
-  const hit = (damage, more = {}) =>
+  const hit = (damage, more = {}, scaled = false) =>
     b.jobs.unshift({
       kind: "hit",
       name: e.name,
-      damage,
+      damage: scaled ? damage : ideonDamage(e, damage),
       element: e.element,
       source: owner.uid,
       gridSourceSlot: e.slot,
@@ -598,7 +634,7 @@ export function commandIdeon(g, uid) {
         gridSourceSlot: e.slot,
       });
     } else {
-      hit(damage.splash, { name: "Splash", attackVisual: "splash" });
+      hit(damage.splash, { name: "Splash", attackVisual: "splash" }, true);
     }
     return;
   }
@@ -633,11 +669,14 @@ export function scheduleDepths(g, owner, t) {
     if (t.finalBlast) delete owner.finalBlastElement;
     else if (owner.cannonTurns % 5 === 4) {
       owner.finalBlastElement = g.pick(ELEMENTS);
-      const name = `Charging Final Blast... Next move: ${cannonBlastDamage(owner)} ${owner.finalBlastElement} damage`;
+      const name = `Charging Final Blast... Next move: ${pressureDamage(cannonBlastDamage(owner), owner)} ${owner.finalBlastElement} damage`;
       g.log(`${owner.name}: ${name}.`);
       g.present("status", { target: "enemy", uid: owner.uid, name });
-      prepareCorruption(g, owner, {markCorruption:"mine", count:2, emptyOnly:true, immediate:true});
-      applyCorruptions(g, owner);
+      // Commit mine spaces after this enemy round's movements and launches.
+      // Wait for other owners too, but stay before end-of-round/next-turn jobs.
+      // Otherwise a bullet can land/spawn on a newly laid mine before Placement.
+      const end = b.jobs.findIndex(j => ["corruptionRound", "nextTurn"].includes(j.kind));
+      b.jobs.splice(end < 0 ? b.jobs.length : end, 0, { kind: "cannonLayMines", owner: owner.uid });
     }
   }
   if (t.commandIdeons)
@@ -671,6 +710,13 @@ export function scheduleDepths(g, owner, t) {
 export function depthsJob(g, j) {
   const b = g.s.battle,
     owner = b.enemies.find((e) => e.uid === j.owner && e.hp > 0);
+  if (j.kind === "cannonLayMines") {
+    if (owner) {
+      prepareCorruption(g, owner, {markCorruption:"mine", count:2, emptyOnly:true, immediate:true});
+      applyCorruptions(g, owner);
+    }
+    return true;
+  }
   if (j.kind === "cannonVolley") {
     if (owner) {
       const start = g.presentation?.length || 0;

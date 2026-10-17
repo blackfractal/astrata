@@ -3,6 +3,7 @@ import { GUIDE_STORY } from "./depths-content.mjs";
 import { barrierAt } from "./depths-field.mjs";
 import { ELVES_STORY, CORRUPTIONS } from "./strata.mjs";
 import { startLoomTutorial, LOOM_TUTORIAL } from "./loom-tutorial.mjs";
+import { startDepthsTutorial, DEPTHS_TUTORIAL, depthsTutorialUnlocked } from "./depths-tutorial.mjs";
 import { paintCorruptions } from "./corruptions-ui.mjs";
 import { showArchives } from "./archives-ui.mjs";
 import { discover, emptyCollection } from "./archive-profile.mjs";
@@ -336,7 +337,7 @@ async function persist() {
 async function act(a, controller = { kind: "human" }) {
   if (busy) return;
   busy = true;
-  let startLoom = false;
+  let startLoom = false, startDepths = false;
   try {
     const before = game.observe();
     game.capturePresentation = true;
@@ -379,6 +380,8 @@ async function act(a, controller = { kind: "human" }) {
       !data.tutorialStats?.stratum2?.firstCompletedAt
     )
       startLoom = true;
+    if (action.type === "enterDepths" && !data.tutorialStats?.stratum3?.firstCompletedAt)
+      startDepths = true;
   } catch (e) {
     toast(e.message);
     console.error(e);
@@ -386,6 +389,7 @@ async function act(a, controller = { kind: "human" }) {
     busy = false;
   }
   if (startLoom) await ui("loomTutorial");
+  if (startDepths) await ui("depthsTutorial");
   if (auto) schedule();
 }
 function schedule() {
@@ -540,7 +544,7 @@ function render(frame = null) {
       .map(([k, v]) => k + " " + v)
       .join(" · ")}</small></div></section>${sidebar(o)}</div>`;
   } else if (o.mode === "event") {
-    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/${o.stratum === 4 ? "location-apex-field" : "event-" + o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
+    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/${o.stratum === 4 ? "location-apex-floor" + (o.apex?.floor || 1) : "event-" + o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
   } else if (o.mode === "tavern") {
     body = `<div class="layout tavern-layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {
@@ -594,9 +598,9 @@ function render(frame = null) {
     auto = false;
     clearTimeout(autoTimer);
     if (o.tutorial) {
-      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">Stratum ${o.stratum} tutorial</div><h1 style="font-size:48px">${o.outcome === "win" ? o.tutorial.name + " Complete" : "The Warden awaits another try"}</h1><p>${o.outcome === "win" ? "Your journey is ready when you are." : "Retry this final fight with your restored starting equipment, cards and health."}</p>${
+      body = `<section class="hero"><div class="hero-copy"><div class="eyebrow">Stratum ${o.stratum} tutorial</div><h1 style="font-size:48px">${o.outcome === "win" ? o.tutorial.name + " Complete" : o.stratum === 3 ? "The Oracle awaits another try" : "The Warden awaits another try"}</h1><p>${o.outcome === "win" ? "Your journey is ready when you are." : "Retry this final fight with your restored starting equipment, cards and health."}</p>${
         o.outcome === "win"
-          ? o.stratum === 2 && data.save
+          ? o.stratum >= 2 && data.save
             ? '<button class="primary" data-ui="continue">Continue your journey →</button>'
             : '<button class="primary" data-ui="new">Begin a normal journey →</button>'
           : actions
@@ -647,6 +651,7 @@ function render(frame = null) {
   paintCorruptions(o, app);
   app.classList.toggle("in-depths", o.stratum === 3);
   app.classList.toggle("in-apex", o.stratum === 4);
+  app.style.setProperty("--apex-field-art", `url("${new URL(`assets/location-apex-floor${o.apex?.floor || 1}.png`, document.baseURI).href}")`);
   app.classList.toggle("presenting", !!frame);
   paintTutorial(
     {
@@ -767,8 +772,11 @@ async function ui(name) {
       } else await ui("newConfirmed");
       break;
     case "loomTutorial":
+    case "depthsTutorial":
       close();
-      game = startLoomTutorial(new Game(LOOM_TUTORIAL.seed));
+      game = name === "depthsTutorial"
+        ? startDepthsTutorial(new Game(DEPTHS_TUTORIAL.seed))
+        : startLoomTutorial(new Game(LOOM_TUTORIAL.seed));
       service = "shop";
       runId = crypto.randomUUID();
       started = Date.now();
@@ -782,7 +790,7 @@ async function ui(name) {
     case "tutorialMenu": {
       const t = data.tutorialStats?.stratum1;
       dialog(
-        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.save?.stratum >= 2 || data.history?.some((r) => r.stratum >= 2) || data.tutorialStats?.stratum2 ? '<button data-ui="loomTutorial">Stratum 2 tutorial · The Mending Ground</button>' : ""}${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p>`,
+        `<h2>Tutorial</h2><button class="primary" data-ui="tutorialStart">Stratum 1 tutorial · The First Clearing</button>${data.save?.stratum >= 2 || data.history?.some((r) => r.stratum >= 2) || data.tutorialStats?.stratum2 ? '<button data-ui="loomTutorial">Stratum 2 tutorial · The Mending Ground</button>' : ""}${depthsTutorialUnlocked(data) ? '<button data-ui="depthsTutorial">Stratum 3 tutorial · The Listening Hollow</button>' : ""}${data.tutorialSave ? '<button data-ui="continueTutorial">Resume current tutorial</button>' : ""}<p>${t?.starts?.length || 0} starts · ${t?.completions?.length || 0} completions</p>`,
       );
       break;
     }
@@ -1104,7 +1112,7 @@ function bind(root = app) {
                     : `<p>${e.type}${e.value ? " · " + e.value + " Gold" : ""}</p>`;
                 const d = enemies[e.enemy],
                   preview = game.fieldEnemyPreview(e);
-                return `<article class="field-enemy-preview"><div class="row">${img("enemy-" + e.enemy)}<div><h3>${d.name}${preview.count > 1 ? " ×" + preview.count : ""}</h3><p>${d.element} · ${preview.hp} HP each · ${d.tier}</p><p class="enemy-age">${preview.age == null ? "Spawn age unavailable for this older save" : `Spawned in pair ${preview.born} · ${preview.age === 0 ? "Just appeared" : `${preview.age} movement rounds old`}`}</p><p class="enemy-restless">Restless ${preview.restless} · +${preview.restless} damage per attack hit</p><p>${preview.movement}</p>${preview.openingLarvae != null ? `<p class="hive-opening-count">Opening swarm: ${preview.openingLarvae} Hive Larvae · +1 per movement round since spawning (space permitting).</p>` : ""}<p>${d.signature}</p></div></div><h4>If fought now · first cycle</h4>${preview.rotation.map((t) => `<p>${text(tellText(t))}</p>`).join("")}</article>`;
+                return `<article class="field-enemy-preview"><div class="row">${img("enemy-" + e.enemy)}<div><h3>${d.name}${preview.count > 1 ? " ×" + preview.count : ""}</h3><p>${d.element} · ${preview.hp} HP each · ${d.tier}</p><p class="enemy-age">${preview.age == null ? "Spawn age unavailable for this older save" : `Spawned in pair ${preview.born} · ${preview.age === 0 ? "Just appeared" : `${preview.age} movement rounds old`}`}</p><p class="enemy-restless">Restless ${preview.restless} · +${preview.restless} damage per attack hit</p><p>${preview.movement}</p>${preview.openingLarvae != null ? `<p class="hive-opening-count">Opening swarm: ${preview.openingLarvae} Hive Larvae · +1 per movement round since spawning (space permitting).</p>` : ""}<p>${preview.signature}</p></div></div><h4>If fought now · first cycle</h4>${preview.rotation.map((t) => `<p>${text(tellText(t))}</p>`).join("")}</article>`;
               })
               .join(
                 "",

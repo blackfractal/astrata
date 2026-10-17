@@ -328,7 +328,7 @@ test("Shift carries a full stack; Transmute changes future Attune choices", () =
   put(g, "plasma", 0);
   put(g, "plasma", 0);
   put(g, "quicksilver", 4);
-  put(g, "transmute", 9);
+  put(g, "transmute", 5);
   put(g, "blast", 13);
   g.s.battle.phase = "activate";
   g.s.battle.channel = 3;
@@ -341,7 +341,7 @@ test("Shift carries a full stack; Transmute changes future Attune choices", () =
   act(
     g,
     "activate",
-    (a) => a.slot === 9 && a.cardTarget === 6 && a.newElement === "Water",
+    (a) => a.slot === 5 && a.cardTarget === 6 && a.newElement === "Water",
   );
   assert.ok(
     g

@@ -17,7 +17,7 @@ test('every thought field uses a clipped radius-two Manhattan diamond',()=>{
   e.slot=0;assert.deepEqual(Array.from({length:42},(_,i)=>i).filter(i=>fieldIdeons(b,i).includes(e)),[0,1,2,7,8,14]);
  }
 });
-test('Cannon charges on actual turns 4/9/14 and fires escalating 40/50/60 on 5/10/15',()=>{
+test('Cannon charges on actual turns 4/9/14 and fires escalating 48/60/72 on 5/10/15',()=>{
  const g=arena(),b=g.s.battle,e=b.enemies[0];
  for(let turn=1;turn<=15;turn++){
   b.corruptions={}; // Test the blast itself; mine pressure has separate integration coverage.
@@ -25,7 +25,7 @@ test('Cannon charges on actual turns 4/9/14 and fires escalating 40/50/60 on 5/1
   assert.equal(!!t.finalBlast,blast);assert.equal(t.name.includes('Charging Final Blast'),turn%5===4);
   const before=structuredClone(b.ideons),hp=g.s.hp,cycle=e.cycle;
   g.endTurn();assert.equal(e.cannonTurns,turn);
-  if(blast){assert.equal(hp-g.s.hp,40+10*(turn/5-1));assert.equal(e.cycle,cycle);assert.deepEqual(b.ideons,before);}
+  if(blast){assert.equal(hp-g.s.hp,48+12*(turn/5-1));assert.equal(e.cycle,cycle);assert.deepEqual(b.ideons,before);}
   assert.equal(b.turn,turn+1);
  }
  assert.equal(g.presentation.filter(f=>f.kind==='status'&&f.name?.startsWith('Charging Final Blast')).length,3);
@@ -51,7 +51,7 @@ test('Final Blast takes priority over Purify; Purify still counts toward the fiv
 test('Final Blast starts at the enemy edge and permits Wards across the entire grid',()=>{
  const g=arena(),b=g.s.battle,e=b.enemies[0];e.finalBlastElement='Fire';e.hp=1;e.cycle=100;
  for(let i=0;i<7;i++){const c=g.instance(g.newCard('ward'));c.ward=5;c.zeroWard=false;b.grid[i]=[c];}
- g.endTurn();assert.equal(b.reaction.damage,40);assert.equal(b.reaction.column,6);assert.ok(!b.reaction.pierce);
+ g.endTurn();assert.equal(b.reaction.damage,48);assert.equal(b.reaction.column,6);assert.ok(!b.reaction.pierce);
  assert.deepEqual(g.defenseChoices().wards.map(x=>x.i),[0,1,2,3,4,5,6]);
  g.act(g.legal().find(a=>a.type==='ward'&&a.slot===3));
  assert.deepEqual(g.defenseChoices().wards.map(x=>x.i),[0,1,2]);

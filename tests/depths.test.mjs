@@ -242,7 +242,7 @@ test("Scouring Gale is a rightward row beam with one ordinary enemy hit", () => 
   assert.equal(right.hp, 2);
   assert.equal(left.hp, 10);
   assert.equal(other.hp, 10);
-  assert.equal(o.hp, 44);
+  assert.equal(o.hp, o.maxHp - 4); // Wind is resisted by the Earth Brood.
 });
 test("Guide moves and attacks as one activation, then a different card consumes its mark", () => {
   const g = arena(),

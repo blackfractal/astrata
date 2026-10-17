@@ -1,7 +1,10 @@
 import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete } from "./apex.mjs";
+import { pressureDamage, pressureTell, pressureSignature } from "./difficulty.mjs";
+import { sourceSlots, growthDamage, growthGuard, wardGain, growthReason, acornIn, projectedInsight, growthTarget, growthVariants, growthActionEffects, forkedRoute, forkedShares } from "./growth-rules.mjs";
 import { areaHits } from "./area-targets.mjs";
 import {
   livingIdeons,
+  ideonText,
   hostiles,
   legalHostiles,
   protectedOwner,
@@ -146,7 +149,7 @@ export function attunementElements(b, c, i) {
       ? [
           "Arcane",
           ...new Set(
-            gridNeighbors(b, i)
+            sourceSlots(b, c, i)
               .map((j) => attunementSourceElement(b, top(b.grid[j])))
               .filter((element) => element !== "Arcane"),
           ),
@@ -229,6 +232,7 @@ export function enemyDamage(n, element, enemy) {
   let damage = enemy.arcaneWeak
     ? Math.ceil(n * (element === "Arcane" ? 1.5 : 0.5))
     : offense(n, element, enemy.element);
+  if (enemy.chaosFracture && element === "Chaos" && enemies[enemy.id]?.tier !== "Archon") damage = Math.max(damage, Math.ceil(n * 1.5));
   if (enemy.resist === element) damage = Math.ceil(damage / 2);
   if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
   return damage;
@@ -373,7 +377,7 @@ export function cardPower(b, c, i, target = null) {
   if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square && squarePattern(b, c, i).length) n *= 2;
-  return corruptionPower(b, i, n);
+  return corruptionPower(b, i, growthDamage(b, c, i, n));
 }
 
 // Resolve elemental damage locally; only unmodified base damage travels onward.
@@ -631,6 +635,7 @@ function bypassOpeningCorruption(b, e, d, t) {
     b.turn === 0 &&
     e.cycle === 0 &&
     d.openingCorruption &&
+    !d.openingCorruption.immediate &&
     t.applyCorruption
   );
 }
@@ -1430,6 +1435,7 @@ export class Game {
       restless,
       movement,
       hp: apexStats(d, e).hp,
+      signature: pressureSignature(d.signature, {...d, ...e}),
       count: e.count || 1,
       ...(e.enemy === "mindHive" ? { openingLarvae: hiveOpeningCount(this.s.field, e) } : {}),
       rotation: d.rotation.map((_, cycle) =>
@@ -1796,6 +1802,9 @@ export class Game {
       used: 0,
       lastActivatedTurn: 0,
       lastActivationElement: null,
+      previousActivationElement: null,
+      ashesUntil: null,
+      ashesPower: 0,
       charge: 0,
       hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       maxHp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
@@ -1903,9 +1912,13 @@ export class Game {
       }
     initializeIdeons(this);
     this.log("Battle: " + b.enemies.map((e) => e.name).join(", "));
-    for (const e of b.enemies)
-      if (enemies[e.id].openingCorruption)
-        prepareCorruption(this, e, enemies[e.id].openingCorruption);
+    for (const e of b.enemies) {
+      const opening = enemies[e.id].openingCorruption;
+      if (opening) {
+        prepareCorruption(this, e, opening);
+        if (opening.immediate) applyCorruptions(this, e);
+      }
+    }
     s.stats.encounters.push({
       stratum: s.stratum || 1,
       round: s.field.round,
@@ -1972,6 +1985,7 @@ export class Game {
     );
   }
   condition(c, i) {
+    if (growthReason(this, c, i)) return false;
     const d = cards[c.id],
       ns = this.neighbors(i);
     return (
@@ -2143,14 +2157,9 @@ export class Game {
   refillResources() {
     const b = this.s.battle,
       bonus = this.bonuses();
-    b.focus = bonus.focus + b.permanent.focus + b.next.focus;
+    b.focus = bonus.focus + b.permanent.focus + b.next.focus + (acornIn(b, "destroyed") ? 1 : 0);
     b.channel = Math.max(0, bonus.channel - (b.next.channelLoss || 0));
-    b.insight = Math.max(
-      1,
-      bonus.insight +
-        b.next.insight -
-        (b.discard.some((x) => x.id === "fog") ? 1 : 0),
-    );
+    b.insight = projectedInsight(this);
     if (b.discard.some((c) => c.id === "bone"))
       b.focus = Math.max(1, Math.floor(b.focus / 2));
     b.focus = Math.max(0, Math.max(1, b.focus) - (b.next.focusLoss || 0));
@@ -2174,6 +2183,7 @@ export class Game {
         : Math.floor(this.rand() * b.deck.length);
       b.hand.push(b.deck.splice(at, 1)[0]);
     }
+    b.revealedCount = b.hand.length;
     b.milky = b.hand.some((c) => c.id === "milky");
     this.log(
       `Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`,
@@ -2188,12 +2198,15 @@ export class Game {
   tell(e) {
     if (e.id === "refractionCannon" && e.finalBlastElement)
       return { name: Object.values(this.s.battle?.corruptions || {}).some(q => q.kind === "mine" && q.source === e.uid)
-        ? "Mind Mines detonate, then Final Blast" : "Final Blast", damage: cannonBlastDamage(e), element: e.finalBlastElement,
+        ? "Mind Mines detonate, then Final Blast" : "Final Blast", damage: pressureDamage(cannonBlastDamage(e), e), element: e.finalBlastElement,
         fixedDamage: true, finalBlast: true };
     if (enemies[e.id].tier === "Archon" && e.purifyPending)
       return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex" });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    // An already-active opening has no pending cast on the first move.
+    if (d.openingCorruption?.immediate && e.cycle === 0 && !e.corruptionPlan?.length)
+      t.applyCorruption = false;
     // The warning at cycle 15 precedes the fifth full cycle; both waves escalate thereafter.
     if (e.id === "bombadier" && t.markCorruption === "mine" && e.cycle >= 15)
       t.count = 3;
@@ -2251,7 +2264,7 @@ export class Game {
       if(t.damage) t.damage -= ordinary;
       if(t.sequence) t.sequence = t.sequence.map(h => ({...h,damage:h.damage-ordinary}));
     }
-    return depthsTell(this, e, t);
+    return pressureTell(depthsTell(this, e, t), e);
   }
   armorCapacity() {
     return (
@@ -2328,6 +2341,7 @@ export class Game {
       }
       if (j.kind === "nextTurn") {
         b.shields = [];
+        b.bodyGuard = 0;
         this.beginTurn();
         return;
       }
@@ -2534,6 +2548,7 @@ export class Game {
       allies: [],
       bracelets: [],
       armors: [],
+      playerGuards: [],
     };
     if (!h || h.statusHit || h.stage === "player") return empty;
     // Older saved reactions infer position from their last actual impact.
@@ -2550,6 +2565,7 @@ export class Game {
     const reachable = (i) =>
       !h.pierce && !coveredByIdeon(b, i) && i % MIND_COLUMNS <= frontier;
     return {
+      playerGuards: !h.cull && !h.pierce && b.bodyGuard > 0 ? [{ block: b.bodyGuard, element: "Arcane" }] : [],
       wards: h.cull ? [] : this.activeWards().filter((x) => reachable(x.i)),
       shields: h.cull
         ? []
@@ -2589,7 +2605,7 @@ export class Game {
         (h.source != null ? { kind: "enemy", uid: h.source } : null);
     h.lastNode = node;
     if (node.kind === "card") h.column = node.slot % MIND_COLUMNS;
-    else if (node.kind === "item") {
+    else if (node.kind === "item" || node.kind === "bodyGuard") {
       h.column = -1;
       h.stage = "bracelet";
     }
@@ -2887,7 +2903,13 @@ export class Game {
       activation.marked.add(e.uid);
       delete e.mark;
     }
-    let d = enemyDamage(n, element, e);
+    const fractureHit = activation.card != null && sourceItem == null;
+    if (fractureHit && e.chaosFracture) {
+      activation.fractures ??= new Set();
+      activation.fractures.add(e.uid);
+      delete e.chaosFracture;
+    }
+    let d = enemyDamage(n, element, fractureHit && activation.fractures?.has(e.uid) ? {...e, chaosFracture: true} : {...e,chaosFracture:false});
     const guard = Math.min(d, e.guard);
     e.guard -= guard;
     d -= guard;
@@ -2935,8 +2957,7 @@ export class Game {
     return corruptionPower(
       this.s.battle,
       i,
-      (d.effects.shield || 0) +
-        (c.upgrade ? d.upgrade?.bonus || 0 : 0) +
+      growthGuard(this.s.battle, c, i) +
         (d.effects.matchingShield || 0) * this.matchingNeighbors(c, i) +
         (d.name.includes("Shield") ? this.bonuses().shield : 0),
     );
@@ -2951,8 +2972,10 @@ export class Game {
       f = cardEffects(c),
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
     if (!this.activationAvailable(c, i)) return;
+    const previousElement = c.previousActivationElement;
     c.lastActivatedTurn = b.turn;
-    c.lastActivationElement = element || c.element;
+    c.lastActivationElement = a.secondaryElement || element || c.element;
+    c.previousActivationElement = c.lastActivationElement;
     c.used++;
     if (f.guide && a.destination != null && a.destination !== i) {
       const from = i;
@@ -3015,7 +3038,15 @@ export class Game {
     if (f.mend) mend(this, c, i, a.cardTarget ?? i, a.repairKind);
     if (f.stitch && ["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
       delete b.corruptions[i];
-    if (f.ward) c.ward += corruptionPower(b, i, f.ward + bonus);
+    if (f.ward) c.ward += wardGain(b, c, i);
+    if (f.bodyGuard) b.bodyGuard = (b.bodyGuard || 0) + corruptionPower(b,i,f.bodyGuard);
+    if (f.borrowInsight) b.next.insight -= f.borrowInsight;
+    if (f.spendFocus || f.focusDamage) b.focus -= f.spendFocus || a.focusSpend || 0;
+    if (f.loseFocus) b.permanent.focus -= f.loseFocus;
+    if (f.ashesBuff) { c.ashesUntil = b.turn; c.ashesPower = Math.min(6, b.destroyed.length); }
+    if (f.fracture) { const victim = hostiles(b).find(e=>e.uid===target); if(victim) victim.chaosFracture = true; }
+    if (f.seasonGuard && previousElement && previousElement !== element)
+      b.shields.push({uid:this.uid(), slot:i, owner:c.uid, block:corruptionPower(b,i,f.seasonGuard), element});
     if (f.shield) {
       b.shields.push({
         uid: this.uid(),
@@ -3071,6 +3102,8 @@ export class Game {
               ? this.pick(legalHostiles(b))
               : hostiles(b).find((x) => x.uid === target),
           ];
+      if (f.forked) targets.splice(0, targets.length, ...forkedRoute(b,i,target,a.mainTarget).map(uid=>hostiles(b).find(e=>e.uid===uid)));
+      const routeShares = f.forked ? forkedShares(b, targets.map(e=>e.uid)) : [];
       if (f.beam)
         targets.unshift(
           ...livingIdeons(b).filter(
@@ -3112,6 +3145,9 @@ export class Game {
         let n = f.randomDamage
           ? 1 + Math.floor(this.rand() * f.randomDamage)
           : cardPower(b, c, i, e);
+        if (f.focusDamage) n = corruptionPower(b,i, growthDamage(b,c,i,f.damage + f.focusDamage * (a.focusSpend || 0)));
+        if (f.forked) n = corruptionPower(b,i,routeShares.find(x=>x.uid===e.uid).damage + growthDamage(b,c,i,0));
+        if (f.ivy) n = corruptionPower(b,i,growthDamage(b,c,i,f.damage + targets.indexOf(e)*4));
         if (f.ideonDouble && e.ideon) n *= 2;
         if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus);
         if (n) {
@@ -3120,7 +3156,7 @@ export class Game {
             ["Fire", "Earth", "Wind", "Water"].every((el) =>
               this.neighbors(i).some((j) => top(b.grid[j]).element === el),
             );
-          for (const el of f.concord
+          for (const el of f.braided ? [element, a.secondaryElement].filter(Boolean) : f.concord
             ? [
                 ...new Set(
                   this.neighbors(i)
@@ -3156,6 +3192,10 @@ export class Game {
         for (const k of ["burn", "poison", "corrode"])
           if (f[k]) this.applyEnemyStatus(e, k, f[k] + bonus, i);
         if (heatBurn) this.applyEnemyStatus(e, "burn", heatBurn, i);
+        if (f.ivy && e.hp <= 0 && targets.length < 3) {
+          const next = livingIdeons(b).filter(z=>!targets.includes(z)&&adjacent(e.slot).includes(z.slot)).sort((x,y)=>x.hp-y.hp||x.slot-y.slot||x.uid-y.uid)[0];
+          if (next) targets.push(next);
+        }
         if (old > 0 && e.hp <= 0 && f.killChannel) b.channel += f.killChannel;
       }
       if (f.all) this.markAreaPresentation(areaStart, i);
@@ -3275,7 +3315,7 @@ export class Game {
     }
     const deathJobs = [];
     for (const e of b.enemies) {
-      const effect = enemies[e.id].onDeath;
+      const effect = enemies[e.id].onDeath && pressureTell(enemies[e.id].onDeath, e);
       if (e.hp <= 0 && effect && !e.deathTriggered) {
         e.deathTriggered = true;
         deathJobs.push({
@@ -3518,6 +3558,7 @@ export class Game {
         const card = b.deck.splice(Math.floor(this.rand() * b.deck.length), 1)[0];
         b.hand.push(card);
         drawn.push(card.uid);
+        b.revealedCount=(b.revealedCount??b.revealInsight??0)+1;
       }
       b.milky = b.hand.some((c) => c.id === "milky");
       this.present("reveal", {
@@ -3846,6 +3887,7 @@ export class Game {
           { gold: 15 },
         );
       for (let index = 0; index < shop.stock.length; index++) {
+        if (shop.soldIndices?.includes(index)) continue;
         const id = shop.stock[index],
           d = id.startsWith("card:") ? cards[id.slice(5)] : items[id],
           price = d.worth || CARD_BUY_PRICES[d.rarity];
@@ -4037,6 +4079,8 @@ export class Game {
             { uid: p.uid },
             { block: p.block, element: p.element, column: -1 },
           );
+        for (const p of choices.playerGuards)
+          add("playerGuard", `Player Guard · ${p.block} Arcane`, {}, {block:p.block,element:"Arcane",column:-1});
         for (const armor of choices.armors)
           add(
             "armor",
@@ -4062,6 +4106,12 @@ export class Game {
         for (const c of b.hand) {
           const d = cards[c.id];
           if (d.unplaceable) continue;
+          if (d.effects.placementStrike) {
+            const cost = d.focus + (b.milky ? 1 : 0);
+            if (cost <= b.focus) for (const e of legalHostiles(b))
+              add("placeStrike", `${d.name} → ${e.name} · ${cost} Focus`, {uid:c.uid,target:e.uid}, {card:c.id,damage:e.ideon?20:10,element:c.element||d.element}, {focus:cost});
+            continue;
+          }
           for (let i = 0; i < b.grid.length; i++) {
             const recall = d.recallPlacement ? this.recallCost(b.grid[i]) : 0;
             const baseCost = recall == null ? null : d.focus + recall;
@@ -4189,19 +4239,19 @@ export class Game {
             f.all ||
             f.randomDamage ||
             d.stack === "plasmaMeld" ||
-            !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode)
+            !(f.damage || f.hpDamage || f.burn || f.poison || f.corrode || f.fracture)
               ? [null]
               : (f.beam
                   ? b.enemies.filter(
                       (e) => e.hp > 0 && !protectedOwner(b, e.uid),
                     )
                   : legalHostiles(b)
-                ).map((e) => e.uid);
+                ).filter(e=>growthTarget(b,c,i,e)).map((e) => e.uid);
           if (f.beam && !targets.length) targets.push(null);
           let extras = f.mend ? repairTargets(this, c, i) : [{}];
           if (f.transmute)
             extras = b.grid.flatMap((slot, j) =>
-              top(slot)
+              top(slot) && adjacent(i).includes(j)
                 ? ELEMENTS.filter((el) => el !== top(slot).element).map(
                     (newElement) => ({ cardTarget: j, newElement }),
                   )
@@ -4265,10 +4315,11 @@ export class Game {
             (el) => !ideonActivationReason(b, i, el),
           ))
             for (const target of targets)
-              for (const ex of extras)
+              for (const baseExtra of extras)
+               for (const ex of growthVariants(b,c,i,element,target,baseExtra))
                 add(
                   "activate",
-                  `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + hostiles(b).find((e) => e.uid === target)?.name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
+                  `${d.name}${charging ? " · Charge" : d.charge ? " · Release" : d.effects.conduit ? " · Conduit" : ""} · ${element}${target ? " → " + hostiles(b).find((e) => e.uid === target)?.name : ""}${ex.cardTarget != null ? " · slot " + (ex.cardTarget + 1) : ""}${ex.focusSpend != null ? " · spend " + ex.focusSpend + " Focus" : ""}${ex.secondaryElement ? " + " + ex.secondaryElement : ""}${ex.newElement ? " → " + ex.newElement : ""}${ex.destination != null ? " → slot " + (ex.destination + 1) : ""}`,
                   { slot: i, target, element, ...ex },
                   {
                     heatBurn: charging ? 0 : attachedBurn(b, c, i),
@@ -4283,7 +4334,9 @@ export class Game {
                         }
                       : f),
                     damage: charging ? 0 : cardPower(b, c, i,
-                      hostiles(b).find(e => e.uid === (ex.target ?? target))),
+                      hostiles(b).find(e => e.uid === (ex.target ?? target))) + (f.focusDamage ? corruptionPower(b,i,f.focusDamage*(ex.focusSpend||0)) : 0),
+                    ...growthActionEffects(b,c,i,target,{...ex,element}),
+                    ...(f.bodyGuard?{bodyGuard:corruptionPower(b,i,f.bodyGuard)}:{}),
                     ...Object.fromEntries(
                       ["burn", "poison", "corrode"]
                         .filter((k) => f[k])
@@ -4298,11 +4351,7 @@ export class Game {
                     ...(f.shield ? { shield: this.shieldPower(c, i) } : {}),
                     ...(f.ward
                       ? {
-                          ward: corruptionPower(
-                            b,
-                            i,
-                            f.ward + (c.upgrade ? d.upgrade?.bonus || 0 : 0),
-                          ),
+                          ward: wardGain(b,c,i),
                         }
                       : {}),
                     card: c.id,
@@ -4311,7 +4360,7 @@ export class Game {
                       ? { charges: c.charge, chargeRequired: d.charge }
                       : {}),
                   },
-                  { channel: activationCost(b, c, i) },
+                  { channel: activationCost(b, c, i), ...((f.spendFocus || f.focusDamage) ? {focus:f.spendFocus || ex.focusSpend || 0} : {}) },
                 );
         }
         add("endTurn", "End turn", {}, { progress: 1 });
@@ -4576,7 +4625,8 @@ export class Game {
         this.log("The Traveler nods and looks back into his cup.");
         break;
       case "buy": {
-        const id = s.shop.stock.splice(a.index, 1)[0];
+        const id = s.shop.stock[a.index];
+        (s.shop.soldIndices ||= []).push(a.index);
         this.spend(a.price);
         s.stats.purchases.push(id);
         if (id.startsWith("card:")) this.addCard(id.slice(5));
@@ -4662,6 +4712,17 @@ export class Game {
         delete s.loomIntro;
         this.beginRound();
         break;
+      case "placeStrike": {
+        const c = b.hand.find(c=>c.uid===a.uid), e = hostiles(b).find(e=>e.uid===a.target);
+        b.focus -= a.costs.focus;
+        b.hand = b.hand.filter(x=>x.uid!==c.uid);
+        b.discard.push(c);
+        this.present("activate", {name:cards[c.id].name, card:c.uid, slot:e.ideon?e.slot:null});
+        this.damageEnemy(e,a.effects.damage,c.element||cards[c.id].element,{});
+        this.log(`${cards[c.id].name} strikes and returns to Discard.`);
+        drainLeeches(this); this.checkBattle(); if(s.mode==="battle") this.pump();
+        break;
+      }
       case "place": {
         const c = b.hand.find((x) => x.uid === a.uid),
           d = cards[c.id];
@@ -4858,6 +4919,14 @@ export class Game {
         this.pump();
         break;
       }
+      case "playerGuard": {
+        const h = b.reaction, before = b.bodyGuard;
+        const r = blockHit(before,"Arcane",h.damage,h.element);
+        const stopped = h.damage-r.remaining;
+        b.bodyGuard=r.block; h.damage=r.remaining; h.weaknessBonus=0; h.weaknessElement=null;
+        this.presentIncomingNode("defend",{target:"player", amount:stopped, loss:before-r.block,name:"Player Guard"},{kind:"bodyGuard"});
+        this.advanceHit(); this.pump(); break;
+      }
       case "armor": {
         const h = b.reaction;
         const armor = this.defenseChoices().armors.find((x) => x.uid === a.uid);
@@ -4998,6 +5067,7 @@ export class Game {
     };
     if (s.mode === "battle") {
       o.battle = clone(s.battle);
+      o.battle.ideons = (o.battle.ideons || []).map(e => ({ ...e, text: ideonText(e) }));
       delete o.battle.jobs;
       o.battle.telegraphs = this.gridTelegraphs();
       o.battle.angerTargets = Object.entries(s.battle.corruptions || {}).flatMap(([slot, q]) => {
@@ -5014,17 +5084,17 @@ export class Game {
           statusImmunity: enemyStatusImmunity(e),
           statusImmunities: enemyStatusImmunities(e),
           signature:
-            enemies[e.id].signature +
+            pressureSignature(enemies[e.id].signature, e) +
             (enemyStatusImmunity(e)
               ? ` Immune to ${statusName(enemyStatusImmunity(e))} while ${e.element}.`
               : ""),
           counter: enemies[e.id].counter,
           rotation: enemies[e.id].rotation.map((t) => ({
-            ...clone(t),
+            ...pressureTell(clone(t), e),
             ...(t.currentElement ? { element: e.element } : {}),
           })),
-          onDeath: clone(enemies[e.id].onDeath),
-          tell: e.hp <= 0 ? clone(enemies[e.id].onDeath) : this.tell(e),
+          onDeath: enemies[e.id].onDeath && pressureTell(enemies[e.id].onDeath, e),
+          tell: e.hp <= 0 ? pressureTell(enemies[e.id].onDeath, e) : this.tell(e),
         }));
     }
     if (s.mode === "event") o.event = events.find((e) => e.id === s.event);

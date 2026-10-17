@@ -1,5 +1,5 @@
 import { adjacent } from "./engine.mjs";
-import { coveredByIdeon, fieldIdeons, stickyAt, tendrilPlan, tendrilDamage } from "./ideons.mjs";
+import { coveredByIdeon, fieldIdeons, stickyAt, tendrilPlan, tendrilDamage, ideonDamage } from "./ideons.mjs";
 import { artPaths } from "./art-paths.mjs";
 import { cards } from "./content.mjs";
 const tones = {
@@ -72,11 +72,11 @@ export function enhanceIdeons(ctx) {
       ? "Acts on the upcoming enemy turn."
       : "Waits; its owner is not commanding it this turn.";
     if (e.kind === "drone")
-      command += ` Next attack: ${e.damage + (e.damageGrowth || 0) * e.age} ${e.element} damage. Does not move.`;
+      command += ` Next attack: ${ideonDamage(e, e.damage + (e.damageGrowth || 0) * e.age)} ${e.element} damage. Does not move.`;
     if (e.behavior === "crawl")
       command += e.slot % 7 === 0
-        ? ` Next: ${e.damage} ${e.element} damage, then disappears.`
-        : ` Next: move${e.turnDamage ? `, then ${e.turnDamage} ${e.element} damage` : "; no attack"}.`;
+        ? ` Next: ${ideonDamage(e, e.damage)} ${e.element} damage, then disappears.`
+        : ` Next: move${e.turnDamage ? `, then ${ideonDamage(e, e.turnDamage)} ${e.element} damage` : "; no attack"}.`;
     if (owner?.tell?.commandIdeons && e.behavior === "tentacle") {
       const plan = tendrilPlan(b, e), damage = tendrilDamage(e);
       if (plan.target) {
@@ -96,14 +96,14 @@ export function enhanceIdeons(ctx) {
     if (e.kind === "drone") {
       const intent = document.createElement("span");
       intent.className = "ideon-field-name";
-      intent.textContent = `Next: ${e.damage + (e.damageGrowth || 0) * e.age} ${e.element}`;
+      intent.textContent = `Next: ${ideonDamage(e, e.damage + (e.damageGrowth || 0) * e.age)} ${e.element}`;
       el.append(intent);
     }
     if (e.behavior === "crawl") {
       const intent = document.createElement("span");
       intent.className = "ideon-field-name";
-      intent.textContent = e.slot % 7 === 0 ? `Exit: ${e.damage} ${e.element}`
-        : e.turnDamage ? `Move + ${e.turnDamage} ${e.element}` : `Move · exit ${e.damage}`;
+      intent.textContent = e.slot % 7 === 0 ? `Exit: ${ideonDamage(e, e.damage)} ${e.element}`
+        : e.turnDamage ? `Move + ${ideonDamage(e, e.turnDamage)} ${e.element}` : `Move · exit ${ideonDamage(e, e.damage)}`;
       el.append(intent);
     }
     el.onclick = (ev) => {
@@ -137,7 +137,7 @@ export function enhanceIdeons(ctx) {
         dest?.append(mark);
       } else
         el.dataset.tooltip +=
-          " Next command: leaves the grid and deals 12 Pierce damage.";
+          ` Next command: leaves the grid and deals ${ideonDamage(e, e.damage)} Pierce damage.`;
     }
   }
   for (const owner of b.enemies) {

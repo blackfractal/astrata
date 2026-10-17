@@ -43,7 +43,7 @@ export function paintCorruptions(o, app) {
         d.name +
         " · " +
           (q.kind === "egg"
-            ? `${q.element} · hatches next Hive turn: ${c ? "cover to " + forcedDiscardLabel(b.grid[i]) : "8 damage"}; then ${q.insect === "drone" ? "Drone" : q.insect === "runner" ? "Glass Skitter" : "Thought Burrower"}. `
+            ? `${q.element} · hatches next Hive turn: ${c ? "cover to " + forcedDiscardLabel(b.grid[i]) : (q.damage || 8) + " damage"}; then ${q.insect === "drone" ? "Drone" : q.insect === "runner" ? "Glass Skitter" : "Thought Burrower"}. `
           : q.kind === "mine"
           ? q.remaining +
             " turns left; " +
@@ -56,7 +56,7 @@ export function paintCorruptions(o, app) {
           : suppressed
             ? "Covered. "
             : "") +
-        d.text;
+        (q.kind === "egg" ? d.text.replace("8 damage", (q.damage || 8) + " damage") : d.text);
       el.insertAdjacentHTML(
         "beforeend",
         `<span class="corruption-card" aria-hidden="true"><img class="corruption-art" src="${artPaths["corruption-" + q.kind]}" alt=""><span class="corruption-motion">${Array.from({ length: q.kind === "hole" ? 8 : 3 }, (_, n) => `<i style="--particle:${n};--angle:${n * 45}deg;--delay:${-n * 0.37}s"></i>`).join("")}</span><span class="corruption-name">${d.name}</span></span><span class="corruption-seal" tabindex="0" aria-label="${esc(title)}" data-tooltip="${esc(title)}"><b>${d.symbol}</b><small>${q.kind === "egg" ? q.element + " · 1 turn" : q.kind === "mine" ? q.remaining + " turns" : q.kind === "insanity" && !c ? q.value + " HP" : suppressed ? "covered" : ""}</small></span>`,

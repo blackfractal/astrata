@@ -889,3 +889,8 @@ Rules1.3.50/content1.1.57/actions4; weighted-druid-v1.21. Route scoring recogniz
 |825687|Loss|19|189|Void fist|Focus Draught; Healing Sap directly from pickup|
 
 All five finish without errors, stalls or invalid actions; two reach Void-Colossus. Four runs exercise supplies (eight uses total). Complete states/actions/versioned sources and starting-supply locations are retained in reports/field-supplies-evaluation. These are integration runs, not a paired balance experiment or estimate of human difficulty. Rules and dedicated UI checks validate placement, pickup, capacity and persistence; the deterministic mouse tutorial completes its new fixed pickup route and final independent encounter.
+
+
+## Druid expansion — 4.0.7
+
+Two fresh WeightedPolicy campaigns (885553835,17102026) lost in S1 after118/335decisions. Additional24 fixed-build encounters cover3enemies perStratum with foundation/growth decks. All26 exactreplays pass; no stalls or illegal actions. These are heuristic evaluations, not training or manual play. Later encounters are constructed fixtures, not earned campaign progress. Only Trickster damage changed, base15→18. See [full method, results and limitations](reports/growth-expansion-report.md), especially insufficient evidence for broad enemy buffs and unvalidated human formation engines. Raw states/actions/source snapshots: reports/growth-evaluation.
