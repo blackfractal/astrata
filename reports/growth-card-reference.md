@@ -1,6 +1,6 @@
 # Druid engine expansion — card reference
 
-Game 4.0.7. Follows the cumulative Stratum pools.
+Game 4.0.8. Follows the cumulative Stratum pools.
 
 | Card | From S | Element / type | Focus | Channel | Uses | Recall | Effect |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
@@ -23,5 +23,5 @@ Game 4.0.7. Follows the cumulative Stratum pools.
 | Prismatic Sap | 2 | Arcane / Spell | 1 | 1 | 3 | 1 | Attune. Deal 10 damage and gain 4 Guard in that element through this enemy phase. Relay the chosen element after activation. |
 | Season’s Turn | 2 | Arcane / Spell | 1 | 2 | 3 | 1 | Attune. Deal 20 damage. If the chosen element differs from its previous activation, gain 8 Guard in the new element through this enemy phase. No Guard on its first activation. |
 | Braided Seasons | 3 | Arcane / Spell | 2 | 2 | 2 | 1 | Choose up to two distinct adjacent non-Arcane source elements. Deal 12 of each to one target. With no elemental source, deal 12 Arcane. Relay the last chosen element this turn. |
-| Forked Current | 3 | Wind / Spell | 2 | 2 | 2 | 2 | Chain from an adjacent Ideon east/NE/SE through Ideons. Reaching column 7 can hit a main enemy. Share 40 +8 per Ideon (maximum 80) across all targets. From column 7, may hit a main enemy directly. Preview the committed route before firing. |
+| Forked Current | 3 | Wind / Spell | 2 | 2 | 2 | 2 | Start at an adjacent Ideon, then chain east/NE/SE through Ideons. Reaching column 7 can hit a main enemy. Share 40 +8 per Ideon (maximum 80) across all targets. From column 7, may instead hit a main enemy directly for 24 damage. Preview the committed route before firing. |
 | Predatory Ivy | 3 | Arcane / Spell | 1 | 2 | 3 | 1 | Attune. Hit an adjacent Ideon for 12. If killed, jump to its weakest orthogonally adjacent Ideon for 16; on another kill, jump once more for 20. No repeated targets. Ties use reading order. |

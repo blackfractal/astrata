@@ -1,3 +1,19 @@
+## Latest: Trickster cycle rework and requested rewind — 4.0.9 / 2026-10-20
+
+BUILD_LOG211/design4.231. Approved cycle Dazzle20Light+applyNausea/markHoles2(4below60); Anti20counter+applyHoles/warnH; H7Chaos+7Light/shift/markHypnosis2; FalseFace20Chaos/applyHypnosis/warnV; V7Light+7Chaos/shift/markNausea2. +2single/+1eachsplit per completedcycle; +Restless perhit; nohalfHP/S2multiplier; S4rematchbonusretained. Corruptioncap42 actuallegalspaces, sharedpendingreservations. DazzleapplyBEFOREmark. Savedwarningcountneverupgradesatapplication. OldrotationmigrationmovesphasePlan.cyclewithcycle, keepspending/HP/RNG. 700tests. Existingdisplacementbeforeincomingattacks andHypnosis/Purifyunchanged.
+
+Requested restore prepared in reports/trickster-rework/restored-save.json from archive a9fb5123-ce9e-44f3-9d46-b3afeae2d57a event790 + original Leave action791 undernewrules.70HP/37cards/4Gold/originalequipment/Trickster264HP, ambushDazzle20Light,2Holewarnings. Separate runID in restore-manifest.json preserves original fulltrace. Liveprofile save installed/hashverified after backup to reports/trickster-rework/before-rewind-save.json (S3GlassBrood60HP); originalarchiveuntouched. TwoisolatedpackagedUIchecks passed; runtime/ZIPrefreshed. No fullbalanceplaythrough claimed.
+
+## Latest: Manual balance review — 4.0.8 / 2026-10-17
+
+BUILD_LOG210/design4.230. Jonathan authorized own manual headless runs and tuning. 1,896 exact-replay-verified legal decisions across seeds17101701(197,S1Dervish+Sharddeath),17101702(288,VoiddeathT17boss38HP),17101703(1411,29wins,S1–S3clear20HP). Third is NOT terminal; checkpoint reports/codex-growth-manual-17101703/stratum3-cleared.json, next reward/Tavern/S4. No S4 evidence, no claim of three completecampaigns. Driver tools/codex-growth-manual.mjs now imports frozen archived sources; preserve4.0.7baseline continuation unless deliberately starting a separate4.0.8comparison. NoAI/search/rewinds/hiddenstate/live-save edits.
+
+Applied4.0.8: S2MoteHPfactor1.20→1.35 (~+12.5%,ceil); no other enemy/damage/boss/tutorial changes. MirrorArmor110→180Gold(effectunchanged,resale90). ForkedCurrentdirectmain24instead40; chain40+8/Ideon/max80 unchanged. FixedS2/S3itemdeck startercardleak, legacyunseenfilterwithoutRNG; existingoffers/decksunchanged. CrosswindReed16,Rootwall16,Mindfireandallothergrowthcardsunchanged. Driver Bile/bodyGuard projectionfixed, NOT engineobservationbug.
+
+Findings: S2sixMoteencounters1netHPloss+BlackBile10; Mirror19uses/240rawincomingS2–3 (NOT240HPsaved); S3doubleambushes37+11loss,othersnet5. Hive20→20 (heal2/lost2avoidable equipment-firsterror),73Bastion+35CompostWardremaining; Guide/Elves/Gale/Ivy/Mindfire+draw contributed. NoTitan/GoldBracelet/Eclipse/StormCanopyinbuild. Tuningthresholdchecks: oldS2actions leave3/6fightsalive3–5HP,other3stillwin; noadaptednewcampaignyet. ForkedactualWaterhit60→36. Read reports/growth-manual-balance-report.md and growth-manual-diagnostics.json.
+
+695tests,236requiredart/245selections clean, noUIlaunched, runtimeZIPrefreshed. Verification tools/verify-growth-manual.mjs materializes frozen modules; then tools/growth-manual-diagnostics.mjs. Allstates/actions/sourcessaved; current.json is ongoingS3reward forseed3, terminalforseed1/2. No commits/pushes.
+
 ## Windows garbled directories — 2026-10-17
 
 A removed repo-root directory (UTF-16 units49304,55884,579) contained only empty Microsoft/Spelling/neutral folders. APPDATA/LOCALAPPDATA/USERPROFILE were valid. This exactly matches the reported native Windows spellchecker/Codex sandbox issue https://github.com/openai/codex/issues/41889. The upstream report reproduces it without Electron and says spellcheck:false alone does not prevent it; exact native root cause remains unproven. Do not claim game-state corruption or a confirmed native fix.

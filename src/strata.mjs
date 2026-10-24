@@ -455,31 +455,37 @@ export function registerStratum2(card, enemy, glossary) {
     "Archon",
     [
       {
-        ...mark("hypnosis", 2),
-        ...hit("False face", 18, "Chaos", { fixedDamage: true }),
-      },
-      {
-        ...apply("hypnosis"),
-        ...hit("Dazzle", 18, "Light", { fixedDamage: true }),
-      },
-      {
+        ...apply("nausea"),
         ...mark("hole", 2),
-        name: "Phase disruption H",
-        disrupt: "H",
-        element: "Chaos",
+        ...hit("Dazzle", 20, "Light", { fixedDamage: true }),
       },
       {
         ...apply("hole"),
-        ...hit("Anti-elemental", 18, "Arcane", {
-          antiElemental: true,
-          fixedDamage: true,
+        ...hit("Anti-elemental", 20, "Arcane", {
+          antiElemental: true, fixedDamage: true, warnDisruption: "H",
         }),
       },
-      { name: "Phase disruption V", disrupt: "V", element: "Chaos" },
+      {
+        ...mark("hypnosis", 2),
+        name: "Phase disruption H",
+        disrupt: "H",
+        element: "Chaos",
+        fixedDamage: true,
+        sequence: [{ damage: 7, element: "Chaos" }, { damage: 7, element: "Light" }],
+      },
+      {
+        ...apply("hypnosis"),
+        ...hit("False face", 20, "Chaos", { fixedDamage: true, warnDisruption: "V" }),
+      },
+      {
+        ...mark("nausea", 2), name: "Phase disruption V", disrupt: "V", element: "Chaos",
+        fixedDamage: true,
+        sequence: [{ damage: 7, element: "Light" }, { damage: 7, element: "Chaos" }],
+      },
     ],
-    "Creates Hypnosis and Memory Holes (eight active spaces maximum). Phase disruption moves the committed fullest row right two or column down two, wrapping whole stacks. Holes destroy arriving stacks; Hypnosis compels immediately. Anti-elemental counters the unique largest elemental Guard total, including equipment; ties use Arcane.",
+    "Dazzle: 20 Light, apply pending Nausea and mark two Memory Holes (four below 60 HP). Anti-elemental: 20 counter damage, apply Holes and warn of H. H: 7 Chaos then 7 Light, shift a row right two and mark two Hypnoses. False face: 20 Chaos, apply Hypnosis and warn of V. V: 7 Light then 7 Chaos, shift a column down two and mark two Nauseas. Whole stacks wrap; Holes destroy arriving stacks and Hypnosis compels immediately. Corruptions can fill the entire grid. Each completed cycle adds 2 to single attacks and 1 to each split hit; Restless adds 1 per level to each hit. Anti-elemental counters the unique largest elemental Guard total, including equipment; ties use Arcane.",
     "Read the committed line and landing spaces. Balance elemental Guard before Anti-elemental; its live Tell updates. Ordinary once-per-turn activation does not protect a card forcibly moved onto Hypnosis.",
-    { corruptionCap: 8, bossMode: "hunter" },
+    { corruptionCap: 42, bossMode: "hunter" },
   );
   add(
     "mendingTutor",

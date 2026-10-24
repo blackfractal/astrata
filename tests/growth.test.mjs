@@ -234,6 +234,25 @@ test("Predatory Ivy follows at most two kill-triggered adjacent jumps and stops 
   assert.equal(h.b.ideons.length, 2);
   assert.equal(insect.hp, 38);
 });
+
+test("Forked Current direct fallback is 24, with matching elemental preview and committed damage", () => {
+  for (const [element, expected] of [["Arcane", 24], ["Water", 36], ["Earth", 12]]) {
+    const {g,b,c,e}=setup("forkedCurrent",13);
+    e.element=element;
+    const a=opts(g,13).find(a=>a.target===e.uid);
+    assert.ok(a);
+    assert.equal(a.effects.route[0].damage,24);
+    assert.equal(attackPreview(b,c,13,e,a.element,a).damage,expected);
+    const hp=e.hp;
+    g.act(a);
+    assert.equal(hp-e.hp,expected);
+    assert.equal(b.channel,18);
+  }
+  const {b,e}=setup("forkedCurrent");
+  b.ideons=[{uid:701,slot:11,hp:30,ideon:true}];
+  assert.deepEqual(forkedShares(b,[701]),[{uid:701,damage:48}]);
+  assert.deepEqual(forkedShares(b,[701,e.uid]),[{uid:701,damage:24},{uid:e.uid,damage:24}]);
+});
 test("Full row/column formations accept spent player cards but not a missing or Ideon-covered space", () => {
   for (const [id, slots] of [
     ["canopyBreak", [7, 8, 9, 11, 12, 13]],

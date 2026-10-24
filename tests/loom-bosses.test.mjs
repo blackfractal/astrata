@@ -463,7 +463,7 @@ test("Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, 
   const g = arena("trickster"),
     b = g.s.battle,
     e = b.enemies[0];
-  e.cycle = 3;
+  e.cycle = 1;
   assert.equal(antiElement(g).element, "Arcane");
   const c = put(g, "shield", 6);
   b.shields = [{ slot: 6, owner: c.uid, block: 5, element: "Fire" }];
@@ -482,10 +482,10 @@ test("Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, 
   bracelet.gem = gem.uid;
   g.s.equipment.wrist1 = bracelet.uid;
   assert.equal(antiElement(g).element, "Water");
-  assert.equal(g.tell(e).damage, 21);
-  e.cycle = 13;
+  assert.equal(g.tell(e).damage, 20);
+  e.cycle = 11;
   e.hp = 1;
-  assert.equal(g.tell(e).damage, 21);
+  assert.equal(g.tell(e).damage, 24);
 });
 test("Anti-elemental ignores covered or destroyed Shield owners", () => {
   const g = arena("trickster"),

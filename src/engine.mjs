@@ -673,10 +673,11 @@ function normalizeLoomRotations(s) {
       e.cycle =
         Math.floor(e.cycle / old.length) * d.rotation.length +
         Math.max(0, next);
+      if (e.phasePlan) e.phasePlan.cycle = e.cycle;
       e.rotation = clone(d.rotation);
     }
     e.corruptionCap = d.corruptionCap;
-    if (e.id === "spoolkeeper") e.signature = d.signature;
+    if (e.id === "spoolkeeper" || e.id === "trickster") e.signature = d.signature;
   }
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
   if (s.tutorial?.finalStart?.battle)
@@ -1115,6 +1116,8 @@ export class Game {
   }
   normalizeRewards() {
     const s = this.s;
+    if (s.itemDeck) s.itemDeck = s.itemDeck.filter(id =>
+      !id.startsWith("card:") || !excludedStarterOffers.has(id.slice(5)));
     if (s.reward?.cards) {
       if (
         s.reward.boss && !s.reward.apexReward &&
@@ -2204,6 +2207,17 @@ export class Game {
       return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex" });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    if (e.id === "trickster") {
+      const completed = Math.floor(e.cycle / d.rotation.length);
+      const restless = e.restless || 0;
+      if (t.damage) t.damage += 2 * completed + restless;
+      if (t.sequence) t.sequence = t.sequence.map(hit => ({
+        ...hit, damage: hit.damage + completed + restless,
+      }));
+      if (t.markCorruption === "hole") t.count = e.hp < 60 ? 4 : 2;
+      // Only execute existing warnings; the opening Dazzle has no Nausea yet.
+      if (t.applyCorruption && !e.corruptionPlan?.length) t.applyCorruption = false;
+    }
     // An already-active opening has no pending cast on the first move.
     if (d.openingCorruption?.immediate && e.cycle === 0 && !e.corruptionPlan?.length)
       t.applyCorruption = false;
@@ -2436,8 +2450,9 @@ export class Game {
           );
         if (enemies[e.id].bile) resolveBile(this, { ...e, cycle: actionCycle });
         if (t.disrupt) disrupt(this, e, t.phasePlan);
-        if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.applyCorruption) applyCorruptions(this, e);
+        // Dazzle resolves the previous Nausea warning before selecting new Holes.
+        if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.nextCorruption && !t.openingWarning)
           prepareCorruption(this, e, { markCorruption: t.nextCorruption });
         if (t.grid) this.gridAttack(t, e);
@@ -3434,8 +3449,8 @@ export class Game {
     s.enemyDecks = {};
     s.itemDeck = this.shuffle([
       ...Object.keys(items).filter((id) => !items[id].fieldOnly),
-      ...this.pool("common").map((c) => "card:" + c.id),
-      ...this.pool("rare").map((c) => "card:" + c.id),
+      ...this.pool("common").filter(c => !excludedStarterOffers.has(c.id)).map((c) => "card:" + c.id),
+      ...this.pool("rare").filter(c => !excludedStarterOffers.has(c.id)).map((c) => "card:" + c.id),
     ]);
     s.status = blankStatus();
     if (next === 3) {

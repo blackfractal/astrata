@@ -9,8 +9,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.7",
-  content: "4.0.7",
+  rules: "4.0.9",
+  content: "4.0.9",
   observation: 2,
   actions: 10,
 };
@@ -968,7 +968,7 @@ item(
   "Mirror Armor",
   "torso",
   { reflect: true },
-  110,
+  180,
   "Choose to reflect an incoming attack in its original element, applying the normal elemental matchup against its source and enemy Guard. Once per battle; you may skip it and save reflection for a later hit.",
 );
 item(

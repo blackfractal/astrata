@@ -2,7 +2,8 @@
 export function pressureFactor(enemy) {
   if (enemy.tutorialOnly || enemy.id === "apex") return 1;
   const source = enemy.stratum || 1;
-  const base = source === 2 ? 1.15 : source >= 3 ? 1.2 : 1;
+  // Trickster's reworked numbers are final S2 values, not pre-pressure values.
+  const base = enemy.id === "trickster" ? 1 : source === 2 ? 1.15 : source >= 3 ? 1.2 : 1;
   return base * (enemy.apexMap && !enemy.apexNative ? 1.1 : 1);
 }
 export const pressureDamage = (damage, enemy) =>
@@ -20,7 +21,9 @@ export function tuneEnemyHealth(definitions) {
   for (const enemy of Object.values(definitions)) {
     if (enemy.tutorialOnly || enemy.tier === "Ideon" || enemy.id === "apex" ||
         enemy.id === "mindHive" || (enemy.stratum || 1) < 2) continue;
-    enemy.hp = Math.ceil(enemy.hp * 1.2);
+    // S2 Motes need room for a second decision against developed engines.
+    // Keep their damage, Eidolons, Archons and tutorial thresholds unchanged.
+    enemy.hp = Math.ceil(enemy.hp * (enemy.stratum === 2 && enemy.tier === "Mote" ? 1.35 : 1.2));
   }
 }
 

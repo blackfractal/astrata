@@ -191,6 +191,7 @@ function tellText(t) {
       ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + " + (t.alsoCount || 1) + " " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
       : "",
     t.applyCorruption ? "Corrupt marked spaces" : "",
+    t.warnDisruption ? `Telegraph next ${t.warnDisruption === "H" ? "row" : "column"} shift · one turn to respond` : "",
     t.releaseCorruption ? "Remove its Corruptions" : "",
     t.damagePerEmpty
       ? `${t.damagePerEmpty} per empty space before Collapse; hit after destruction${t.emptySpaces != null ? ` (${t.emptySpaces} empty)` : ""}`

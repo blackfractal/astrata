@@ -299,7 +299,7 @@ export function registerGrowth(card) {
     2,
     2,
     { damage: 40, forked: true },
-    "Chain from an adjacent Ideon east/NE/SE through Ideons. Reaching column 7 can hit a main enemy. Share 40 +8 per Ideon (maximum 80) across all targets. From column 7, may hit a main enemy directly. Preview the committed route before firing.",
+    "Start at an adjacent Ideon, then chain east/NE/SE through Ideons. Reaching column 7 can hit a main enemy. Share 40 +8 per Ideon (maximum 80) across all targets. From column 7, may instead hit a main enemy directly for 24 damage. Preview the committed route before firing.",
     { rarity: "rare" },
   );
   add(

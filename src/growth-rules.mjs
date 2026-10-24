@@ -191,7 +191,7 @@ export function forkedShares(b, route) {
   const count = route.filter((uid) =>
       (b.ideons || []).some((e) => e.uid === uid),
     ).length,
-    pool = Math.min(80, 40 + count * 8),
+    pool = count ? Math.min(80, 40 + count * 8) : 24,
     share = Math.floor(pool / route.length),
     remainder = pool % route.length;
   return route.map((uid, i) => ({
