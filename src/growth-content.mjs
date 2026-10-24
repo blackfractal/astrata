@@ -256,8 +256,8 @@ export function registerGrowth(card) {
     1,
     3,
     1,
-    { damage: 10, shield: 4 },
-    "Attune. Deal 10 damage and gain 4 Guard in that element through this enemy phase. Relay the chosen element after activation.",
+    { damage: 8, shield: 4 },
+    "Attune. Deal 8 damage and gain 4 Guard in that element through this enemy phase. Relay the chosen element after activation.",
     { attune: true },
   );
   add(

@@ -1,5 +1,19 @@
 import { enemies } from "./content.mjs";
 import { artPaths } from "./art-paths.mjs";
+const enteredFloors = new WeakMap();
+export function animateApexFloor(app, o, runId) {
+  if (o.stratum !== 4 || o.mode !== "field") return;
+  const field = app.querySelector(".field");
+  if (!field) return;
+  const key = `${runId}:${o.apex?.floor || 1}`;
+  if (enteredFloors.get(app) === key) return;
+  enteredFloors.set(app, key);
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  field.animate(
+    [{ opacity: 0.3, transform: "scale(0.98)" }, { opacity: 1, transform: "scale(1)" }],
+    { duration: 350, easing: "ease-out" },
+  );
+}
 export function apexFieldSummary(o) {
   const f = o.field,
     remaining = f.archons.filter((a) => !f.defeatedArchons.includes(a.id));

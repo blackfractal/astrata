@@ -1,3 +1,13 @@
+## Latest: Apex Predator 500 HP — 4.0.13 / 2026-10-24
+
+Jonathan explicitly approved 500 maximum HP, then ten new attempts. Completed exactly ten, 0 wins; closest loss 70 boss HP (attempt 1). Search-assisted candidate lines with reused manually planned prefixes; same original seed1428779120, decision1834, 66/70HP,51cards,equipment/inventory/RNG. Only opening bossHP/maxHP changed. All 2522 actions legal and exact-replay verified (HP/mode/RNG/full battle). Frozen rules and traces at reports/apex-500-review-4.0.13; report reports/apex-500-report.md. No live-profile edits. Existing saved battles retain HP. Do not claim general win probability or optimal play. 711 rules tests and packaged engine HP/threshold check pass. Design4.235 / BUILD_LOG215. No other balance changes.
+
+## Latest: Destruction warning lock and Prismatic Sap — 4.0.12 / 2026-10-24
+
+Jonathan approved locking destruction targets at End Turn and Sap 8 damage / 4 Guard. Design4.234 / BUILD_LOG214. engine.destructionPlan is shared by previews and serialized enemyAction.gridPlan; snapshot before expiry/statuses/Corruptions/earlier enemies. Target spaces, no replacement when emptied; whole rows/columns remain fixed. Collapse also commits displayed empty count/damage/origins. Legacy in-flight jobs lock before own effects. Sap costs/allowance/attunement unchanged. 711 rules tests pass, including Fangs applying Nausea before destruction, expiry, multi-boss empty targets, save/Continue and Collapse.
+
+Do NOT resume the paused Apex retry without a new request. reports/codex-apex-retry-1792817277105/paused-turn9.json preserves T9 Activation, 16HP, boss413/640; assessment.md compares original T9 63HP/boss418. Retry used frozen4.0.11, not these changes. Early Titan aggression cost defense; this is not proof the starting fight was impossible. Frozen watch sources/profile and live user save remain unchanged. Full campaign analysis: reports/codex-fullrun-4.0.11-1792807101187/analysis.md. Current change report: reports/destruction-lock-report.md.
+
 ## Latest: Black Bile / Bombadier iterative review — 4.0.11 / 2026-10-23
 
 BUILD_LOG213/design4.233. Ten manual/adapted encounter lines: baseline4, tuned4, finalBile2; 1,208 legal actions exactverified at every intermediate state with frozen sources. Twoactualarchivedbuilds,70HPfresh/noambush/noRestless,seeds231001/02; notfullcampaigns orindependentsamples. FinalBomb35HP/T13(engine),30HP/T11(mixed) in tuned-*; finalBile54HP/T11,52HP/T8 in final-*. final-Bomb dirs containAIonly, nomanualcompletion. Twelve WeightedPolicychecksseparate; finalengineBilelossT11boss20HP/mixedwin18HP; bothBombAIlossbeforebuffthreshold.

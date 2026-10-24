@@ -92,7 +92,7 @@ test("all four floors enter center, shrink and reset local rounds; summit has no
   assert.ok(!g.legal().some((a) => ["move", "wait"].includes(a.type)));
   act(g, "fightApex");
   assert.equal(g.s.battle.enemies[0].id, "apex");
-  assert.equal(g.s.battle.enemies[0].hp, 640);
+  assert.equal(g.s.battle.enemies[0].hp, 500);
 });
 test("pair four replaces both slots with distinct corresponding Archons at fixed marked spaces", () => {
   for (let n = 1; n <= 3; n++) {
@@ -341,7 +341,9 @@ test("Predator has readable destruction warnings, bounded owned Ideons, Purify c
   assert.equal(g.tell(e).damage, 24);
   e.cycle = 6;
   assert.equal(g.tell(e).damage, 27);
-  e.hp = 320;
+  e.hp = 251;
+  assert.equal(g.tell(e).damage, 27);
+  e.hp = 250;
   assert.equal(g.tell(e).damage, 31);
   e.cycle = 1;
   b.grid[10] = [g.instance(g.newCard("ward"))];

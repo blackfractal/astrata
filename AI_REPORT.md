@@ -1,3 +1,9 @@
+# Latest: Apex Predator at 500 HP — 4.0.13
+
+[Ten-attempt review](reports/apex-500-report.md): 0/10 search-assisted candidate lines won from the same archived 66/70-HP, 51-card opening. Closest loss left 70 boss HP. All 2,522 actions independently replayed as legal with matching final states. These reuse planned openings and bounded search; they are not independent campaign runs, a general win-rate estimate, or evidence that the fight is impossible. The only balance change is Predator HP 640 → 500.
+
+---
+
 # Latest: The Apex — 4.0.0
 
 [Full S4 evaluation](reports/apex-ai-report.md): five declared carry-in ascents and five direct Predator trials; all completed, none won. Two ascents reached floor 3. Balance remains provisional. Exact initial states, actions, outcomes and frozen sources are retained.

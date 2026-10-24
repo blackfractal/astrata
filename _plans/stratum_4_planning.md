@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.10 · 2026-10-16 · Jonathan / Codex
+Design draft 0.11 · 2026-10-24 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -17,7 +17,7 @@ Jonathan authorized implementation. The four-floor ascent, paired rematches, dea
 
 ### Predator first-pass moves
 
-640 HP, Chaos; six-move cycle. Commands surviving owned Ideons on every move, including conditional cycle-end Purify. At most six owned Ideons and ten owned Corruptions. Destruction targets and Corruptions are telegraphed through the existing systems.
+500 HP, Chaos; six-move cycle. Updated in 4.0.13 from 640 HP to shorten attrition while preserving the destruction puzzle. Direct attacks retain +3 damage per completed cycle and +4 per hit at 250 HP or lower. Commands surviving owned Ideons on every move, including conditional cycle-end Purify. At most six owned Ideons and ten owned Corruptions. Destruction targets and Corruptions are telegraphed through the existing systems.
 
 | Move | Direct attack | Additional effect |
 | --- | --- | --- |

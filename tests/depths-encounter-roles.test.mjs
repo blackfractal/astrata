@@ -79,7 +79,7 @@ test('Tutorials and bosses do not receive ordinary opening metadata',()=>{
   for(const e of Object.values(enemies).filter(e=>e.tutorialOnly||e.tier==='Archon'))
     assert.equal(e.openingIdeons,undefined);
   assert.equal(enemies.mindHive.hp,15);assert.equal(enemies.refractionCannon.hp,360);
-  assert.equal(enemies.cnidarian.hp,324);assert.equal(enemies.apex.hp,640);
+  assert.equal(enemies.cnidarian.hp,324);assert.equal(enemies.apex.hp,500);
   assert.equal(arena(['whisperWarden']).s.battle.enemies[0].hp,40);
 });
 

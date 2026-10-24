@@ -36,6 +36,21 @@ const use = (g, filter = () => true) => {
   g.act(a);
   return a;
 };
+
+test("Prismatic Sap deals 8 damage, retains 4 Guard, and relays its chosen element", () => {
+  for (const [element, expected] of [["Arcane", 8], ["Light", 12]]) {
+    const { g, b, e } = setup("prismaticSap");
+    e.element = "Chaos";
+    put(g, "solitude", 11);
+    put(g, "blast", 9);
+    const hp = e.hp;
+    use(g, a => a.element === element);
+    assert.equal(hp - e.hp, expected);
+    assert.equal(b.shields.at(-1).block, 4);
+    assert.equal(b.shields.at(-1).element, element);
+    if (element === "Light") assert.ok(attunementElements(b, b.grid[9][0], 9).includes("Light"));
+  }
+});
 test("Growth registry adds twenty-one distinct cards with explicit costs and gated pools", () => {
   const all = Object.values(cards).filter((c) => c.expansion === "growth");
   assert.equal(all.length, 21);

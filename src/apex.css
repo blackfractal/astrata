@@ -147,21 +147,3 @@ img[src$="enemy-riftChimera.png"] {
   color: #b6a6bd;
   margin-top: 20px;
 }
-.in-apex .field {
-  animation: apex-room 0.35s ease-out;
-}
-@keyframes apex-room {
-  from {
-    opacity: 0.3;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .in-apex .field {
-    animation: none;
-  }
-}

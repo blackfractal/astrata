@@ -4,16 +4,21 @@ import path from 'node:path';
 import {randomInt} from 'node:crypto';
 import {_electron as electron} from '@playwright/test';
 import {Game} from '../src/engine.mjs';
-const dir=path.resolve('reports/codex-fullrun-4.0.1-'+Date.now());
-const appDir=path.join(dir,'app'),profile=path.join(dir,'profile'),queue=path.join(dir,'commands');
-await fs.mkdir(queue,{recursive:true});await fs.mkdir(profile,{recursive:true});
+const version=JSON.parse(await fs.readFile('package.json','utf8')).version;
+const stamp=Date.now();
+const dir=path.resolve('reports/codex-fullrun-'+version+'-'+stamp);
+const session=path.resolve('.tmp/codex-watch-'+stamp);
+const appDir=path.join(session,'app'),profile=path.join(session,'profile'),queue=path.join(session,'commands');
+await fs.mkdir(dir,{recursive:true});await fs.mkdir(queue,{recursive:true});await fs.mkdir(profile,{recursive:true});
 await fs.cp('release/Astrata/resources/app',appDir,{recursive:true});
 const seed=randomInt(1,2147483647),g=new Game(seed);
 await fs.writeFile(path.join(dir,'initial.json'),JSON.stringify(g.s));
+const sources={};for(const name of (await fs.readdir('src')).filter(n=>n.endsWith('.mjs')))sources[name]=await fs.readFile(path.join('src',name),'utf8');
+await fs.writeFile(path.join(dir,'sources.json'),JSON.stringify(sources));
 await fs.writeFile(path.join(profile,'save.json'),JSON.stringify(g.s));
-await fs.writeFile(path.join(profile,'settings.json'),JSON.stringify({width:1440,fast:true,music:25,effects:45}));
+await fs.writeFile(path.join(profile,'settings.json'),JSON.stringify({width:1440,fast:false,music:25,effects:45}));
 // Skip teaching interruptions in this separate assessment profile, not game rules.
-await fs.writeFile(path.join(profile,'tutorial-stats.json'),JSON.stringify({firstCompletedAt:new Date().toISOString(),stratum2:{firstCompletedAt:new Date().toISOString()}}));
+await fs.writeFile(path.join(profile,'tutorial-stats.json'),JSON.stringify({firstCompletedAt:new Date().toISOString(),stratum2:{firstCompletedAt:new Date().toISOString()},stratum3:{firstCompletedAt:new Date().toISOString()}}));
 await fs.appendFile(path.join(appDir,'src/ui.mjs'),`
 const manualBar=document.createElement('div');manualBar.style.cssText='position:fixed;bottom:3px;right:8px;z-index:999999;background:#111c24ed;border:1px solid #c4ab74;color:#eee;padding:4px 10px;font:12px system-ui';
 manualBar.textContent='Codex manual play · waiting for decision';document.body.append(manualBar);
@@ -34,7 +39,7 @@ window.codexManual={
  }
 };
 `);
-const app=await electron.launch({executablePath:path.resolve('node_modules/electron/dist/electron.exe'),args:[appDir,'--disable-gpu','--user-data-dir='+profile],timeout:30000});
+const app=await electron.launch({executablePath:path.resolve('node_modules/electron/dist/electron.exe'),args:[appDir,'--disable-gpu','--user-data-dir='+profile],cwd:profile,timeout:30000});
 const page=await app.firstWindow();page.on('pageerror',e=>console.log('PAGE ERROR '+e.message));
 await page.locator('[data-ui="continue"]').click();
 await app.evaluate(({BrowserWindow})=>{const w=BrowserWindow.getAllWindows()[0];w.show();w.focus();});

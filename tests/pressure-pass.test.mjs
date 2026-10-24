@@ -24,7 +24,7 @@ test('Transmute offers only NESW placed targets, never itself, diagonals or dist
  assert.equal(b.grid[a.cardTarget][0].element,a.newElement);
 });
 test('Tutorials, S1 and Predator retain damage; S3 Ideon pressure excludes Predator ownership',()=>{
- assert.equal(enemies.apex.hp,640);assert.equal(enemies.mindHive.hp,15);
+ assert.equal(enemies.apex.hp,500);assert.equal(enemies.mindHive.hp,15);
  for(const [id,expected]of [['beetle',4],['tutorialMosswing',3]]){
   const g=new Game(4);g.beginBattle([{uid:900,enemy:id,restless:0}]);
   assert.equal(g.tell(g.s.battle.enemies[0]).damage,expected);

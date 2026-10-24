@@ -1,0 +1,30 @@
+import fs from 'node:fs';import zlib from 'node:zlib';import {Game} from '../src/engine.mjs';import {cards} from '../src/content.mjs';
+import {defend,setConfig} from './apex-search.mjs';
+const dir='reports/apex-line-search-4.0.12';fs.mkdirSync(dir,{recursive:true});
+const mode=process.argv[2]||'view';let g;
+if(mode==='original'){
+ const ev=zlib.gunzipSync(fs.readFileSync('.tmp/codex-watch-1792807101187/profile/runs/4182e1f0-e0ce-4dcb-8622-225400b4c4b1/events.jsonl.gz')).toString().trim().split('\n').map(JSON.parse);
+ const start=JSON.parse(fs.readFileSync('reports/codex-apex-retry-1792817277105/initial.json'));
+ const actions=ev.filter(e=>e.action&&e.state?.steps>start.steps).map(e=>({action:e.action,turn:e.state?.battle?.turn,phase:e.state?.battle?.phase,hp:e.state?.hp,boss:e.state?.battle?.enemies?.[0]?.hp}));
+ fs.writeFileSync(dir+'/original-actions.json',JSON.stringify(actions));
+ g=new Game(0,start);fs.writeFileSync(dir+'/initial.json',JSON.stringify(g.s));fs.writeFileSync(dir+'/current.json',JSON.stringify(g.s));fs.writeFileSync(dir+'/line.json','[]');
+}
+g??=new Game(0,JSON.parse(fs.readFileSync(dir+'/current.json')));
+let line=JSON.parse(fs.readFileSync(dir+'/line.json'));
+const play=a=>{line.push(a);g.act(a);fs.writeFileSync(dir+'/current.json',JSON.stringify(g.s));fs.writeFileSync(dir+'/line.json',JSON.stringify(line));fs.writeFileSync(dir+'/step-'+g.s.steps+'.json',JSON.stringify(g.s));};
+if(mode==='defend'){setConfig({hp:4,keep:1,guard:1});const r=defend(g);for(const a of r.actions){play(a);console.log(a.label);}}
+if(mode==='replay'||mode==='follow'){
+ const old=JSON.parse(fs.readFileSync(dir+'/original-actions.json'));const count=Number(process.argv[mode==='follow'?4:3]||999);
+ for(let k=mode==='follow'?Number(process.argv[3]):line.length;k<Math.min(old.length,count);k++){
+ const wanted=old[k].action,legal=g.legal();let a=legal.find(a=>a.key===wanted.key);
+ if(!a&&wanted.type==='block')a=legal.find(a=>a.type==='block'&&a.slot===wanted.slot);
+ if(!a&&['activate','placeStrike'].includes(wanted.type)&&wanted.target!==542){const m=legal.filter(a=>a.type===wanted.type&&a.slot===wanted.slot&&a.label===wanted.label);if(m.length===1)a=m[0]}
+ if(!a){console.log('DIVERGED at '+k+' '+JSON.stringify(old[k]));break}play(a);}
+}
+if(mode==='act'||mode==='query'){
+ const input=JSON.parse(fs.readFileSync(0,'utf8'));
+ for(const sel of input.selectors||input){const matches=g.legal().filter(a=>Object.entries(sel).every(([k,v])=>JSON.stringify(a[k])===JSON.stringify(v)));if(mode==='query'){console.log(JSON.stringify(matches));continue}if(matches.length!==1){console.log('ILLEGAL '+JSON.stringify({sel,matches}));break}play(matches[0]);console.log(matches[0].label)}
+}
+if(mode==='query')process.exit();
+const s=g.s,b=s.battle,o=g.observe().battle;
+console.log(JSON.stringify({step:s.steps,mode:s.mode,hp:s.hp,turn:b.turn,phase:b.phase,focus:b.focus,channel:b.channel,hand:b.hand.map(c=>[c.id,c.uid]),enemies:o.enemies.map(e=>({uid:e.uid,hp:e.hp,tell:e.tell})),grid:o.grid.flatMap((slot,i)=>slot.length?[[i,...slot.map(c=>[c.id,g.allowance(c,i),c.hp||c.ward||0,c.element])]]:[]),shields:b.shields,telegraphs:o.telegraphs,ideons:b.ideons,corruptions:b.corruptions,reaction:b.reaction,actions:g.legal().filter(a=>!['place','activate','equip','unequip','recall'].includes(a.type)),log:s.log.slice(-5)}));

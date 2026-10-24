@@ -52,7 +52,7 @@ export function registerApex(enemy) {
     "The Apex Predator",
     "Archon",
     "Chaos",
-    640,
+    500,
     "Sentinel",
     [
       {

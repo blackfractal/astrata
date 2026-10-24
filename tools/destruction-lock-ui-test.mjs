@@ -1,0 +1,38 @@
+import { _electron as electron, expect } from '@playwright/test';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { Game } from '../src/engine.mjs';
+const root = path.resolve(import.meta.dirname, '..');
+const profile = path.join(root, '.tmp/destruction-lock-ui-' + Date.now());
+await fs.mkdir(profile, { recursive: true });
+const g = new Game(8);
+g.s.equipment = {}; g.s.hp = g.s.maxHp = 1000;
+g.beginBattle([{ uid: 900, enemy: 'apex', restless: 0 }]);
+const b = g.s.battle; b.phase = 'activate'; b.hand = []; b.enemies[0].cycle = 1;
+b.grid[0] = [g.instance(g.newCard('grove'))];
+b.grid[10] = [g.instance(g.newCard('prismaticSap'))];
+const shield = g.instance(g.newCard('shield')); shield.used = 2;
+b.grid[20] = [shield];
+b.shields = [{ uid: g.uid(), slot: 20, owner: shield.uid, block: 7, element: 'Water' }];
+b.enemies[0].corruptionPlan = [{ slot: 9, kind: 'nausea' }];
+await fs.writeFile(path.join(profile, 'save.json'), JSON.stringify(g.s));
+await fs.writeFile(path.join(profile, 'settings.json'), JSON.stringify({ width: 1280, fast: true }));
+const app = await electron.launch({ executablePath: path.join(root, 'release/Astrata/Astrata.exe'), args: ['--user-data-dir=' + profile], cwd: profile, timeout: 20000 });
+const errors = [];
+try {
+  const p = await app.firstWindow(); p.on('pageerror', e => errors.push(e.message));
+  await p.locator('[data-ui="continue"]').click();
+  await expect(p.locator('[data-slot="10"]')).toContainText('Prismatic Sap');
+  await expect(p.locator('[data-slot="10"] button')).toContainText('Deal 8');
+  await expect(p.locator('[data-slot="10"] button')).toContainText('Shield 4');
+  await expect(p.locator('[data-slot="10"]')).toHaveClass(/grid-threat/);
+  await expect(p.locator('[data-slot="20"]')).not.toHaveClass(/grid-threat/);
+  await p.getByRole('button', { name: 'End turn', exact: true }).click();
+  await expect(p.locator('[data-slot="0"]')).not.toContainText('Grove Titan');
+  await expect(p.locator('[data-slot="10"]')).not.toContainText('Prismatic Sap');
+  await expect(p.locator('[data-slot="20"]')).toContainText('Shield');
+  assert.deepEqual(errors, []);
+  await fs.writeFile(path.join(root, 'reports/destruction-lock-ui.json'), JSON.stringify({ passed: true, version: '4.0.12', sapText: '8 damage / 4 Guard', fangsDestroyedWarnedTargets: [0,10], unwarnedShieldSurvives: 20, errors }, null, 2));
+  console.log('Packaged Continue, Sap description and Fangs/Nausea resolution passed.');
+} finally { await app.close(); }

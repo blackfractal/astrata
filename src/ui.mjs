@@ -1,4 +1,4 @@
-import { apexFieldSummary, apexIntroMarkup, apexSummitMarkup, apexMarks } from "./apex-ui.mjs";
+import { apexFieldSummary, apexIntroMarkup, apexSummitMarkup, apexMarks, animateApexFloor } from "./apex-ui.mjs";
 import { GUIDE_STORY } from "./depths-content.mjs";
 import { barrierAt } from "./depths-field.mjs";
 import { ELVES_STORY, CORRUPTIONS } from "./strata.mjs";
@@ -652,6 +652,7 @@ function render(frame = null) {
   paintCorruptions(o, app);
   app.classList.toggle("in-depths", o.stratum === 3);
   app.classList.toggle("in-apex", o.stratum === 4);
+  animateApexFloor(app, o, runId);
   app.style.setProperty("--apex-field-art", `url("${new URL(`assets/location-apex-floor${o.apex?.floor || 1}.png`, document.baseURI).href}")`);
   app.classList.toggle("presenting", !!frame);
   paintTutorial(

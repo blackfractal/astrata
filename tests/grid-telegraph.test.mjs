@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game, gridTargets } from "../src/engine.mjs";
+import { applyCorruptions } from "../src/corruptions.mjs";
 function base(id, cycle) {
   const g = new Game(8);
   g.s.equipment = {};
@@ -142,4 +143,102 @@ test("Choir prioritizes defense over height, excludes spent output, and handles 
   assert.deepEqual(gridTargets(b, tell), [1]);
   b.grid[1] = [];
   assert.deepEqual(gridTargets(b, tell), []);
+});
+
+function nauseaFangs() {
+  const g = base("apex", 1), b = g.s.battle;
+  g.s.hp = g.s.maxHp = 1000;
+  b.phase = "activate";
+  b.grid[0] = [g.instance(g.newCard("grove"))];
+  b.grid[10] = [g.instance(g.newCard("prismaticSap"))];
+  const shield = g.instance(g.newCard("shield"));
+  shield.used = 2;
+  b.grid[20] = [shield];
+  b.shields = [{ uid: g.uid(), slot: 20, owner: shield.uid, block: 7, element: "Water" }];
+  b.enemies[0].corruptionPlan = [{ slot: 9, kind: "nausea" }];
+  return g;
+}
+
+test("Fangs honors the committed warning when its own Nausea changes card values", () => {
+  const g = nauseaFangs(), b = g.s.battle;
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [0, 10]);
+  const changed = new Game(0, structuredClone(g.s));
+  applyCorruptions(changed, changed.s.battle.enemies[0]);
+  assert.deepEqual(gridTargets(changed.s.battle, changed.tell(changed.s.battle.enemies[0])), [0, 20]);
+  const threatened = [b.grid[0][0].uid, b.grid[10][0].uid];
+  act(g, "endTurn");
+  assert.deepEqual(b.destroyed.map(c => c.uid), threatened);
+  assert.equal(b.corruptions[9].kind, "nausea");
+  assert.ok(g.legal().some(a => a.type === "block" && a.slot === 20));
+});
+
+test("Legacy queued destruction locks before applying its own Corruptions", () => {
+  const g = nauseaFangs(), b = g.s.battle;
+  b.phase = "enemy";
+  b.jobs = [{ kind: "enemyAction", uid: b.enemies[0].uid }];
+  g.pump();
+  assert.equal(b.grid[0].length, 0);
+  assert.equal(b.grid[10].length, 0);
+  assert.equal(b.grid[20].length, 1);
+});
+
+test("End-of-turn expiry cannot redirect a committed row warning", () => {
+  const g = base("hart", 2), b = g.s.battle;
+  b.grid[0] = [g.instance(g.newCard("resonance"))];
+  for (const i of [1, 7, 8]) put(g, i);
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [0, 1]);
+  act(g, "activatePhase");
+  act(g, "endTurn");
+  assert.equal(b.grid[1].length, 0);
+  assert.equal(b.grid[7].length, 1);
+  assert.equal(b.grid[8].length, 1);
+});
+
+test("Two bosses do not redirect destruction when an earlier boss empties their shared targets", () => {
+  const g = base("hart", 2), b = g.s.battle;
+  b.enemies.push({ ...structuredClone(b.enemies[0]), id: "choir", uid: 901, cycle: 0 });
+  for (const i of [0, 1, 7]) put(g, i);
+  assert.deepEqual(g.observe().battle.telegraphs.map(t => t.targets), [[0, 1], [0, 1]]);
+  act(g, "activatePhase");
+  act(g, "endTurn");
+  assert.equal(b.destroyed.length, 2);
+  assert.equal(b.grid[7].length, 1);
+});
+
+test("Queued targets survive save/Continue and earlier defense spending", () => {
+  const g = base("hart", 0), b = g.s.battle;
+  g.s.hp = g.s.maxHp = 1000;
+  b.enemies.push({ ...structuredClone(b.enemies[0]), id: "choir", uid: 901, cycle: 0 });
+  const ward = g.instance(g.newCard("ward")); ward.ward = 2;
+  b.grid[0] = [ward];
+  b.grid[1] = [g.instance(g.newCard("prismaticSap"))];
+  b.grid[2] = [g.instance(g.newCard("familiar"))];
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [0, 1]);
+  act(g, "activatePhase"); act(g, "endTurn");
+  assert.deepEqual(b.jobs.find(j => j.uid === 901).gridPlan.targets, [0, 1]);
+  const resumed = new Game(0, JSON.parse(JSON.stringify(g.s)));
+  for (const game of [g, resumed]) {
+    act(game, "ward", a => a.slot === 0);
+    while (game.s.battle.reaction) act(game, "skipEquipment");
+    assert.equal(game.s.battle.grid[0].length, 0);
+    assert.equal(game.s.battle.grid[1].length, 0);
+    assert.equal(game.s.battle.grid[2].length, 1);
+  }
+  assert.deepEqual(resumed.s.battle.grid, g.s.battle.grid);
+});
+
+test("Collapse retains its warned column, empty-space damage and visual origins after another boss acts", () => {
+  const g = base("hart", 2), b = g.s.battle;
+  g.s.hp = g.s.maxHp = 1000;
+  g.capturePresentation = true;
+  b.enemies.push({ ...structuredClone(b.enemies[0]), id: "colossus", uid: 901, cycle: 2 });
+  for (const i of [0, 1, 7]) put(g, i);
+  const warning = g.observe().battle.telegraphs[1];
+  assert.equal(warning.damage, 20);
+  act(g, "activatePhase"); act(g, "endTurn");
+  const incoming = g.presentation.find(e => e.kind === "incoming" && e.name === "Collapse");
+  assert.equal(incoming.amount, 20);
+  const effect = g.presentation.find(e => e.kind === "gridDestruction" && e.visual === "collapse");
+  assert.deepEqual(effect.spaces, warning.spaces);
+  assert.deepEqual(effect.empty, [14, 21, 28, 35]);
 });

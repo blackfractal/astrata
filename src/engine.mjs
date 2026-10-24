@@ -608,6 +608,30 @@ export function gridTargets(b, t) {
   return targets.map((x) => x.i);
 }
 
+// Shared by the live warning and the plan committed when the player ends the turn.
+function destructionPlan(b, t) {
+  if (!["row", "column", "destroy"].includes(t.grid)) return null;
+  const targets = gridTargets(b, t);
+  const line = targets.length
+    ? t.grid === "row"
+      ? Math.floor(targets[0] / MIND_COLUMNS)
+      : targets[0] % MIND_COLUMNS
+    : t.damagePerEmpty ? t.collapsedColumn : null;
+  const spaces = line !== null && ["row", "column"].includes(t.grid)
+    ? b.grid.map((_, i) => i).filter((i) => t.grid === "row"
+      ? Math.floor(i / MIND_COLUMNS) === line : i % MIND_COLUMNS === line)
+    : targets;
+  return {
+    grid: t.grid, targets, spaces,
+    ...(t.damagePerEmpty ? {
+      collapsedColumn: line,
+      collapseOrigins: spaces.filter((i) => !b.grid[i].length),
+      emptySpaces: t.emptySpaces,
+      damage: t.damage,
+    } : {}),
+  };
+}
+
 // Expand older 5×4 saves by coordinates, preserving complete stacks and block owners.
 export function normalizeMindGrid(state) {
   const b = state.battle;
@@ -2288,6 +2312,10 @@ export class Game {
   }
   endTurn() {
     const b = this.s.battle;
+    // Commit every enemy's displayed targets before expiry, statuses, Corruptions,
+    // or another enemy can change card values/occupancy. Jobs persist this on save.
+    const destructionPlans = new Map(b.enemies.filter((e) => e.hp > 0)
+      .map((e) => [e.uid, destructionPlan(b, this.tell(e))]));
     b.discard.push(...b.hand);
     b.hand = [];
     for (const [i, slot] of b.grid.entries())
@@ -2330,7 +2358,9 @@ export class Game {
                 ? e.status[k] + 1
                 : e.status[k];
         }
-      if (!e.ideon) b.jobs.push({ kind: "enemyAction", uid: e.uid });
+      if (!e.ideon) b.jobs.push({ kind: "enemyAction", uid: e.uid,
+        ...(destructionPlans.get(e.uid) ? { gridPlan: destructionPlans.get(e.uid) } : {}),
+      });
     }
     b.jobs.push({ kind: "corruptionRound" }, { kind: "nextTurn" });
     this.pump();
@@ -2388,6 +2418,14 @@ export class Game {
         if (!e) continue;
         const t = this.tell(e),
           actionCycle = e.cycle;
+        // Older in-flight saves have no committed plan: lock before this move's
+        // effects rather than recomputing after its Corruptions have landed.
+        const gridPlan = j.gridPlan ?? destructionPlan(b, t);
+        if (gridPlan && t.damagePerEmpty) {
+          t.collapsedColumn = gridPlan.collapsedColumn;
+          t.emptySpaces = gridPlan.emptySpaces;
+          t.damage = gridPlan.damage;
+        }
         if (!t.purify && !t.openingWarning && !t.finalBlast) e.cycle++;
         this.log(
           e.name +
@@ -2455,7 +2493,7 @@ export class Game {
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.nextCorruption && !t.openingWarning)
           prepareCorruption(this, e, { markCorruption: t.nextCorruption });
-        if (t.grid) this.gridAttack(t, e);
+        if (t.grid) this.gridAttack(t, e, gridPlan);
         if (t.insight) b.next.insight += t.insight;
         if (t.focus) b.next.focusLoss = (b.next.focusLoss || 0) - t.focus;
         if (t.channel)
@@ -2767,24 +2805,7 @@ export class Game {
       .flatMap((e) => {
         const tell = this.tell(e);
         if (!["row", "column", "destroy"].includes(tell.grid)) return [];
-        const targets = gridTargets(b, tell);
-        const line = targets.length
-          ? tell.grid === "row"
-            ? Math.floor(targets[0] / MIND_COLUMNS)
-            : targets[0] % MIND_COLUMNS
-          : tell.damagePerEmpty
-            ? tell.collapsedColumn
-            : null;
-        const spaces =
-          line !== null && ["row", "column"].includes(tell.grid)
-            ? b.grid
-                .map((_, i) => i)
-                .filter((i) =>
-                  tell.grid === "row"
-                    ? Math.floor(i / MIND_COLUMNS) === line
-                    : i % MIND_COLUMNS === line,
-                )
-            : targets;
+        const { targets, spaces } = destructionPlan(b, tell);
         return [
           {
             source: e.uid,
@@ -2804,9 +2825,12 @@ export class Game {
         ];
       });
   }
-  gridAttack(t, source = null) {
+  gridAttack(t, source = null, plan = null) {
     const b = this.s.battle;
-    const targets = gridTargets(b, t).map((i) => ({
+    const committed = plan?.grid === t.grid ? plan : null;
+    const targetSpaces = committed
+      ? committed.spaces : gridTargets(b, t);
+    const targets = targetSpaces.filter((i) => b.grid[i]?.length).map((i) => ({
       i,
       slot: b.grid[i],
       c: top(b.grid[i]),
@@ -2824,7 +2848,7 @@ export class Game {
         ? Math.floor(targets[0].i / MIND_COLUMNS)
         : targets[0].i % MIND_COLUMNS
       : 0;
-    const spaces =
+    const spaces = committed ? committed.spaces :
       visual === "wildfire"
         ? Array.from(
             { length: MIND_COLUMNS },
@@ -2834,7 +2858,7 @@ export class Game {
           ? Array.from({ length: MIND_ROWS }, (_, i) => i * MIND_COLUMNS + line)
           : targets.map((x) => x.i);
     if (visual === "collapse")
-      t.collapseOrigins = spaces.filter((i) => !b.grid[i].length);
+      t.collapseOrigins = committed?.collapseOrigins ?? spaces.filter((i) => !b.grid[i].length);
     if (visual === "wildfire") t.gridSourceSlot = spaces[0];
     for (const x of targets) {
       if (["destroy", "row", "column"].includes(t.grid)) {
