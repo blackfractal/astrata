@@ -9,6 +9,7 @@ import { upgradeBadge, statBreakdowns, statHelp } from "./card-upgrade-ui.mjs";
 import { fieldEntitiesAt } from "./field-display.mjs";
 import { attackOrb } from "./impact-effects.mjs";
 import { eventTrades } from "./trade-ui.mjs";
+import { disabledChoice, unavailableTavernChoices } from "./choice-feedback.mjs";
 import {
   boardInteractions,
   previewElement,
@@ -1215,7 +1216,8 @@ function tavern(ctx) {
       types
         .map((type) => {
           const entries = list.filter((a) => a.type === type);
-          return `<details open><summary>${{ heal: "Recover HP", gossip: "Ask about the road", removeHex: "Remove Hex", sell: "Remove Cursed object", upgrade: "Upgrade a card", remove: "Remove a card" }[type]}</summary><div class="choices">${entries.map((a) => button(ctx, a)).join("") || `<p>${service === "healer" && !o.shop.healer ? "No healer is visiting." : "No eligible or affordable choices."}</p>`}</div></details>`;
+          const unavailable = unavailableTavernChoices(o, type, actions);
+          return `<details open><summary>${{ heal: "Recover HP", gossip: "Ask about the road", removeHex: "Remove Hex", sell: "Remove Cursed object", upgrade: "Upgrade a card", remove: "Remove a card" }[type]}</summary><div class="choices">${entries.map((a) => button(ctx, a)).join("")}${unavailable.map(x => disabledChoice(ctx.esc, x.label, x.reason)).join("")}</div></details>`;
         })
         .join("");
   }

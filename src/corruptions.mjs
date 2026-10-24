@@ -132,7 +132,11 @@ export function prepareCorruption(g, e, t) {
       kind === "mine" &&
       e.mineCap &&
       Object.values(b.corruptions).filter(
-        (q) => q.source === e.uid && q.kind === "mine",
+        // Bombadier's old one-turn mines detonate at the end of this round,
+        // before the newly warned wave is applied. Do not let those expiring
+        // mines silently trim a three-mine warning down to one or two.
+        (q) => q.source === e.uid && q.kind === "mine" &&
+          (e.id !== "bombadier" || q.remaining > 1 || q.createdTurn >= b.turn),
       ).length +
         e.corruptionPlan.filter((p) => p.kind === "mine").length >=
         e.mineCap

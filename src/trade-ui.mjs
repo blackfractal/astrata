@@ -1,5 +1,6 @@
 import { cards, items, cardText } from "./content.mjs";
 import { tradeAssets } from "./engine.mjs";
+import { disabledChoice, eventChoiceReason } from "./choice-feedback.mjs";
 const slots = {
   wrist1: "Left wrist",
   wrist2: "Right wrist",
@@ -126,12 +127,13 @@ function tradeChooser(ctx, index) {
 }
 export function eventTrades(ctx) {
   const choices = ctx.app.querySelector(".scene-copy .choices");
-  if (!choices || !ctx.o.event.choices.some((c) => c.trade)) return;
+  if (!choices) return;
   choices.innerHTML = ctx.o.event.choices
     .map((c, index) => {
       const legal = ctx.actions.filter(
         (a) => a.type === "eventChoice" && a.index === index,
       );
+      if (!legal.length) return disabledChoice(ctx.esc, c.label, eventChoiceReason(ctx.o, c));
       return c.trade
         ? `<button data-event-trade="${index}" ${legal.length ? "" : "disabled"}>${ctx.esc(c.label)}</button>`
         : legal.map((a) => ctx.actionButton(a)).join("");

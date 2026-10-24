@@ -1936,3 +1936,19 @@ Round207 validation:660tests pass. Isolated packaged UI confirms two clear mines
 700rules tests pass, including new cycle integration/ambush, split scaling, threshold commitments, all42spaces/reservations and legacy migration. Jonathan requested restoring his original Trickster opening from run a9fb5123-ce9e-44f3-9d46-b3afeae2d57a; prepare a separate archive branch at the same encounter with70HP,37cards,4Gold and original equipment. New opening Dazzle20Light plus two Hole warnings; no invented post-ambush HP allowance. Back up live continuation before replacing save. Prior archive remains intact. Approximately15additional minutes including tests/docs/packaging/rewind (estimate).
 
 Round211 final: two isolated packaged UI checks pass, no renderer errors. Continue save installed and hash-verified after backup; original S3 save and archive retained. Packaged app and portable ZIP refreshed.
+
+
+## Visible unavailable event and Tavern choices — round212
+
+2026-10-23. Jonathan requested keeping unaffordable event options visible and explaining why Tavern healing is unavailable. Version4.0.10/design4.232 retains all event choices in declared order, with disabled offers and readable reasons for insufficient Gold, missing trade belongings, or restricted trades. Recovery and individual Hex/Curse treatments explain actual missing requirements, including HP or sacrifice costs, absent Healer, full HP, and used rest. Legal actions and payment rules are unchanged. No live-save edits. Approximately15additional minutes for implementation, verification, documentation and packaging (estimate).
+
+Validation:700rules tests pass; isolated packaged UI covers unaffordable and affordable Lucid Needle offers, missing Bracelet trade, 50-Gold rest, and separate Hex/Curse removals. Additional reason checks cover full health, used rest, absent Healer, missing Ally/item and insufficient HP. No renderer errors. Report reports/choice-feedback-report.md. Packaged runtime and portable ZIP refreshed.
+
+
+## Black Bile and King Bombadier manual tuning — round213
+
+2026-10-23. Jonathan requested two fights per boss and iterative tuning/replays. Version4.0.11/design4.233. Ten complete manually chosen/adapted encounter lines, two actual archived builds, all fresh70HP/noRestless/noambush. Final Bombadier wins35HP/turn13 and30HP/turn11; final Bile54HP/turn11 and52HP/turn8. These are repeated fixed-build encounters, not independent campaigns or optimal-play claims. Reused unchanged prefixes/lines; adapted when revised mechanics required it. Twelve supplemental WeightedPolicy fights are separately labeled. All1,208manual legal actions and intermediate states replay exactly from frozen sources.
+
+BileChurn now base10Earth+6Fire(initial12+7afterS2pressure), normal perhit escalation retained. Two-glob fresh casts afteronecompletecycle, spreadingstilloneglob. First trial usedtwocompletecycles, too late forfastbuild. Bombadier3minesfromthirdcycle, warningonprecedingmove. Fixedexpiringmines incorrectlyconsumingnextwavewarningcapacity; longfuse/newminesstillcount. HP, openings,Steam,card/equipment valuesunchanged. SavedHP/RNG/committedtargets preserved; signatures refresh.
+
+704rules tests pass; twoisolatedpackagedUI checks pass forChurnsequenceand3minewarnings, norenderererrors. Report reports/loom-boss-balance-report.md; compact replayverificationandUIresults plus rawstates/actions/sources in reports/loom-balance-20261023. Raw~172MiBarchive retainedoutsideportablepackage. RuntimeandZIPrefreshed. Liveprofile untouched; no commit/push. Approximately25additionalminutesforplay/tuning/replayverification/docs/packaging(estimate).

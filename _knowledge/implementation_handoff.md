@@ -1,3 +1,13 @@
+## Latest: Black Bile / Bombadier iterative review — 4.0.11 / 2026-10-23
+
+BUILD_LOG213/design4.233. Ten manual/adapted encounter lines: baseline4, tuned4, finalBile2; 1,208 legal actions exactverified at every intermediate state with frozen sources. Twoactualarchivedbuilds,70HPfresh/noambush/noRestless,seeds231001/02; notfullcampaigns orindependentsamples. FinalBomb35HP/T13(engine),30HP/T11(mixed) in tuned-*; finalBile54HP/T11,52HP/T8 in final-*. final-Bomb dirs containAIonly, nomanualcompletion. Twelve WeightedPolicychecksseparate; finalengineBilelossT11boss20HP/mixedwin18HP; bothBombAIlossbeforebuffthreshold.
+
+BileChurnbase10Earth+6Fire(initial12+7), genericperhitcycle/halfHP/Restlesskept. Fresh2globsafter1completecycle(e.cycle>=4), spreadstillone. Bomb3minesfromcycle3(warninge.cycle>=7); expiringoldminesdonotconsumefuturewarningcapacity, longfuse/newonesdo. HP/Steam/openings/cardsunchanged. Savewarningspreserved, descriptionsrefresh. Baseline→betterBileHPreflectsimprovedchoices, notcausalbuffeasing. Report reports/loom-boss-balance-report.md recordsstrategy/errors/limitations. 704tests,2packagedUIpass,norenderererrors. RuntimeZIPupdated; liveprofileuntouched,nocommit/push. Raw~172MiBpreservedbutnotnewlyincludedinportablepackage. tools/verify-loom-review.mjs verifiesallmanualstates. Driversloadfrozenmodules; donotmixcurrentenginewitholdphasefixtures.
+
+## Latest: Visible unavailable choices — 4.0.10 / 2026-10-23
+
+BUILD_LOG212/design4.232. Event choices now stay visible, disabled with actual unmet-requirement text. All events pass through eventTrades presentation hook; legal API remains unchanged. New choice-feedback.mjs provides event/trade and per-treatment Tavern reasons, used by trade-ui/polish-ui. Rest distinguishes money/fullHP/used; Healer distinguishes Gold/HP/sacrifices/absence/no ailments. Disabled text remains readable. 700rules tests plus tools/choice-feedback-ui-test.mjs isolated packaged checks passed. Runtime/ZIP refreshed; Jonathan live save untouched, no commit/push.
+
 ## Latest: Trickster cycle rework and requested rewind — 4.0.9 / 2026-10-20
 
 BUILD_LOG211/design4.231. Approved cycle Dazzle20Light+applyNausea/markHoles2(4below60); Anti20counter+applyHoles/warnH; H7Chaos+7Light/shift/markHypnosis2; FalseFace20Chaos/applyHypnosis/warnV; V7Light+7Chaos/shift/markNausea2. +2single/+1eachsplit per completedcycle; +Restless perhit; nohalfHP/S2multiplier; S4rematchbonusretained. Corruptioncap42 actuallegalspaces, sharedpendingreservations. DazzleapplyBEFOREmark. Savedwarningcountneverupgradesatapplication. OldrotationmigrationmovesphasePlan.cyclewithcycle, keepspending/HP/RNG. 700tests. Existingdisplacementbeforeincomingattacks andHypnosis/Purifyunchanged.

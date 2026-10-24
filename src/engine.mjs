@@ -677,7 +677,7 @@ function normalizeLoomRotations(s) {
       e.rotation = clone(d.rotation);
     }
     e.corruptionCap = d.corruptionCap;
-    if (e.id === "spoolkeeper" || e.id === "trickster") e.signature = d.signature;
+    if (["spoolkeeper", "trickster", "blackBile", "bombadier"].includes(e.id)) e.signature = d.signature;
   }
   if (s.checkpoint) normalizeLoomRotations(s.checkpoint);
   if (s.tutorial?.finalStart?.battle)
@@ -2221,8 +2221,8 @@ export class Game {
     // An already-active opening has no pending cast on the first move.
     if (d.openingCorruption?.immediate && e.cycle === 0 && !e.corruptionPlan?.length)
       t.applyCorruption = false;
-    // The warning at cycle 15 precedes the fifth full cycle; both waves escalate thereafter.
-    if (e.id === "bombadier" && t.markCorruption === "mine" && e.cycle >= 15)
+    // The warning at cycle 7 precedes the third full cycle; both waves escalate thereafter.
+    if (e.id === "bombadier" && t.markCorruption === "mine" && e.cycle >= 7)
       t.count = 3;
     // Even an ambush must leave a first player turn to respond to opening marks.
     if (bypassOpeningCorruption(this.s.battle, e, d, t)) {

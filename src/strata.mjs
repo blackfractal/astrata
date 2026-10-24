@@ -391,10 +391,13 @@ export function registerStratum2(card, enemy, glossary) {
     [
       { ...mark("nausea", 4), ...hit("Sickening flood", 10, "Earth") },
       { ...apply("nausea"), ...hit("Burning bile", 12, "Fire", { burn: 2 }) },
-      hit("Churn", 15, "Earth"),
+      { name: "Churn", element: "Earth", sequence: [
+        { damage: 10, element: "Earth" },
+        { damage: 6, element: "Fire" },
+      ] },
       hit("Acrid breath", 10, "Fire", { burn: 1 }),
     ],
-    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. After four complete cycles, fresh casts throw two globs instead of one; spreading still moves one glob. Nausea spreads four spaces per cast, maximum twelve.",
+    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. After one complete cycle, fresh casts throw two globs instead of one; spreading still moves one glob. Churn hits Earth, then Fire. Nausea spreads four spaces per cast, maximum twelve.",
     "Read Bile's moving warning. Break the route, spend a threatened activation, or intercept with Machine Elves. Bile may share a Nausea space.",
     { corruptionCap: 12, bile: true, bossMode: "stalker" },
   );
@@ -431,7 +434,7 @@ export function registerStratum2(card, enemy, glossary) {
         ...hit("Light the fuses", 12, "Fire"),
       },
     ],
-    "Alternates two Memory Holes + two bombs with two Anger spaces + two bombs. The first wave is telegraphed at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. After four full cycles, both waves cast three bombs instead of two. Machine Elves defuse immediately. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
+    "Alternates two Memory Holes + two bombs with two Anger spaces + two bombs. The first wave is telegraphed at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. From the third full cycle, both waves cast three bombs instead of two; the preceding warning shows all three. Machine Elves defuse immediately. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
     "Defuse or cover the bombs; prepare different elements for each Steam hit. Memory Holes take two turns to Mend, one when upgraded.",
     {
       corruptionCap: 10,

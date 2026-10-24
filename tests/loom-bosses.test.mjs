@@ -358,11 +358,11 @@ test("Bombadier alternates paired Hole and Anger waves with a full mine response
   ]);
 });
 
-test("both Bombadier waves escalate only after four complete cycles; secondary counts stay two", () => {
+test("both Bombadier waves escalate for the third complete cycle; secondary counts stay two", () => {
   for (const [cycle, mines, secondary] of [
-    [13, 2, "anger"],
-    [15, 3, "hole"],
-    [17, 3, "anger"],
+    [5, 2, "anger"],
+    [7, 3, "hole"],
+    [9, 3, "anger"],
   ]) {
     const g = arena("bombadier"),
       e = g.s.battle.enemies[0];
@@ -522,7 +522,7 @@ test("New boss full cycles and Purify stay legal with seeded reloads", () => {
   }
 });
 
-test("Black Bile escalates only after four completed cycles, forecasts distinct fresh targets, and still spreads once", () => {
+test("Black Bile escalates after its first completed cycle, forecasts distinct fresh targets, and still spreads once", () => {
   const g = arena(),
     b = g.s.battle,
     e = b.enemies[0];
@@ -530,9 +530,9 @@ test("Black Bile escalates only after four completed cycles, forecasts distinct 
   const a = put(g, "blast", 6),
     c = put(g, "blast", 20),
     d = put(g, "blast", 34);
-  e.cycle = 15;
+  e.cycle = 3;
   assert.deepEqual(bilePlan(g, e), { from: null, to: 6 });
-  e.cycle = 16;
+  e.cycle = 4;
   assert.deepEqual(bilePlan(g, e), { from: null, to: 6, additional: [20] });
   resolveBile(g, e);
   assert.equal(a.used, 1);
@@ -547,28 +547,28 @@ test("Black Bile escalates only after four completed cycles, forecasts distinct 
   assert.equal(d.used, 0);
 });
 
-test("fourth-cycle final Bile action still uses the single-glob forecast", () => {
+test("first-cycle final Bile action still uses the single-glob forecast", () => {
   const g = arena(),
     b = g.s.battle,
     e = b.enemies[0];
   b.grid = Array.from({ length: 42 }, () => []);
   put(g, "blast", 6);
   put(g, "blast", 20);
-  e.cycle = 15;
+  e.cycle = 3;
   b.phase = "activate";
   g.endTurn();
   assert.equal(Object.keys(b.biles).length, 1);
 });
 
-test("Bombadier telegraphs three mines for its fifth full cycle, with ordinary caps retained", () => {
+test("Bombadier telegraphs three mines for its third full cycle, with ordinary caps retained", () => {
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
   e.corruptionPlan = [];
   b.corruptions = {};
-  e.cycle = 11;
+  e.cycle = 3;
   assert.equal(g.tell(e).count, 2);
-  e.cycle = 15;
+  e.cycle = 7;
   assert.equal(g.tell(e).count, 3);
   prepareCorruption(g, e, g.tell(e));
   assert.equal(e.corruptionPlan.length, 5);
@@ -640,4 +640,57 @@ test("Bombadier retains room for three late mines even with its full Memory Hole
     Object.values(b.corruptions).filter((q) => q.kind === "mine").length,
     3,
   );
+});
+
+test("Bombadier reserves all three next-wave mines while the previous wave is due to expire", () => {
+  const g = arena("bombadier"), b = g.s.battle, e = b.enemies[0];
+  b.turn = 8; e.cycle = 7; b.corruptions = {}; e.corruptionPlan = [];
+  hazard(g, 0, "mine", { remaining: 1, createdTurn: 7, damage: 20, element: "Fire" });
+  hazard(g, 1, "mine", { remaining: 1, createdTurn: 7, damage: 20, element: "Fire" });
+  prepareCorruption(g, e, g.tell(e));
+  assert.equal(e.corruptionPlan.filter(q => q.kind === "mine").length, 3);
+  assert.equal(new Set(e.corruptionPlan.map(q => q.slot)).size, 5);
+  assert.ok(e.corruptionPlan.every(q => q.slot !== 0 && q.slot !== 1));
+  corruptionRound(g);
+  assert.ok(!b.corruptions[0] && !b.corruptions[1]);
+  b.turn++;
+  applyCorruptions(g, e);
+  const mines = Object.values(b.corruptions).filter(q => q.kind === "mine");
+  assert.equal(mines.length, 3);
+  corruptionRound(g);
+  assert.ok(mines.every(q => q.remaining === 1)); // Still a full response turn.
+});
+
+test("Bombadier still counts long-fuse or newly placed mines toward reserved capacity", () => {
+  for (const extra of [{ remaining: 2, createdTurn: 7 }, { remaining: 1, createdTurn: 8 }]) {
+    const g = arena("bombadier"), b = g.s.battle, e = b.enemies[0];
+    b.turn = 8; e.cycle = 7; b.corruptions = {}; e.corruptionPlan = [];
+    for (let i = 0; i < 3; i++) hazard(g, i, "mine", extra);
+    prepareCorruption(g, e, g.tell(e));
+    assert.equal(e.corruptionPlan.filter(q => q.kind === "mine").length, 1);
+  }
+});
+
+test("Black Bile Churn presents and executes an Earth hit followed by Fire with normal scaling", () => {
+  const g = arena(), b = g.s.battle, e = b.enemies[0];
+  e.cycle = 2;
+  assert.deepEqual(g.tell(e).sequence, [{damage:12,element:"Earth"},{damage:7,element:"Fire"}]);
+  e.cycle = 6; e.hp = e.maxHp / 2;
+  assert.deepEqual(g.tell(e).sequence, [{damage:16,element:"Earth"},{damage:12,element:"Fire"}]);
+  b.phase = "activate"; g.endTurn();
+  assert.equal(b.reaction.element, "Earth"); assert.equal(b.reaction.damage, 16);
+  act(g, "skipEquipment");
+  assert.equal(b.reaction.element, "Fire"); assert.equal(b.reaction.damage, 12);
+});
+
+test("saved Bile and Bombadier fights adopt descriptions without replacing committed targets or HP", () => {
+  for (const id of ["blackBile", "bombadier"]) {
+    const g = arena(id), e = g.s.battle.enemies[0];
+    e.signature = "old escalation"; e.hp = 101; e.cycle = 7;
+    e.corruptionPlan = [{kind:"mine",slot:3},{kind:"mine",slot:4}];
+    const r = new Game(0, structuredClone(g.s)), next = r.s.battle.enemies[0];
+    assert.equal(next.hp, 101); assert.equal(next.cycle, 7);
+    assert.deepEqual(next.corruptionPlan, e.corruptionPlan);
+    assert.equal(next.signature, enemies[id].signature);
+  }
 });

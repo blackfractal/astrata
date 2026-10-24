@@ -38,7 +38,7 @@ export function bilePlan(g, e) {
     ? {
         from: null,
         to: fresh[0],
-        ...(e.cycle >= 16 && fresh.length > 1
+        ...(e.cycle >= 4 && fresh.length > 1
           ? { additional: [fresh[1]] }
           : {}),
       }
