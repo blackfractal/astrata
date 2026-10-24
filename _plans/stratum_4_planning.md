@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.11 · 2026-10-24 · Jonathan / Codex
+Design draft 0.14 · 2026-10-24 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -22,11 +22,13 @@ Jonathan authorized implementation. The four-floor ascent, paired rematches, dea
 | Move | Direct attack | Additional effect |
 | --- | --- | --- |
 | Riven Earth | 24 Earth | Telegraph two Nauseas; summon one Hollow Sentinel |
-| Rending Fangs | 28 Fire | Apply pending Corruptions; destroy two most valuable Constructs |
+| Rending Fangs | 28 Fire | Apply pending Corruptions; destroy the single most valuable Construct (4.0.17) |
 | Hollow Hunger | 16 Chaos, then 16 Light | Telegraph two Insanities; summon one Ward Leech |
-| Unmake | 26 Arcane | Apply pending Corruptions; destroy the fullest row |
+| Unmake H / V | 26 Arcane | Apply pending Corruptions; alternate fullest row (first cycle) and fullest column (next cycle) |
 | Brood of the Summit | 18 Water, then 18 Wind | Telegraph two Hypnoses; summon two Glass Skitters |
 | World Eater | 42 Chaos | Apply pending Corruptions; destroy two most valuable Constructs |
+
+Unmake chooses the line with the most cards, including melded cards, regardless of card value; ties choose the topmost row or leftmost column. This restores count-based targeting in 4.0.19 while retaining H/V alternation. The live warning commits at End Turn. Purify does not advance H/V alternation.
 
 Each direct hit gains +3 per completed six-move cycle and +4 at or below half HP. This explicit scaling replaces generic Archon damage scaling for the Predator. Conditional Purify removes Burn/Poison/Corrode before resuming the cycle, while still commanding its Ideons. Chaos immunity follows the normal elemental status rules. Victory completes S4 and retains the closing line “… but Astrata is still restless …”. Hidden S5 and its secret recipes remain unimplemented.
 

@@ -1,15 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
+import {socketServiceCost,gemServiceCost} from '../src/content.mjs';
 
 test("Jeweler charges each gem service, refuses unaffordable work and occupied socket replacement", () => {
-  for (const [id, price] of [
+  for (const [id] of [
     ["sapphire", 20],
     ["ruby", 20],
     ["focusGem", 35],
     ["channelGem", 35],
     ["insightGem", 35],
   ]) {
+    const price=socketServiceCost(id,'bronze');
     const g = new Game(12);
     g.openTavern();
     const setting = g.addItem("bronze"),
@@ -43,7 +45,7 @@ test("Jeweler charges each gem service, refuses unaffordable work and occupied s
         ),
     );
     g.act(action("unsocket"));
-    assert.equal(g.s.gold, 100 - price);
+    assert.equal(g.s.gold, 100 - gemServiceCost(id));
     assert.equal(setting.gem, null);
     assert.ok(g.getItem(gem.uid));
     g.s.mode = "field";

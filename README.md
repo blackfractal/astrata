@@ -1,6 +1,6 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 4.0.13** contains four playable Strata: **The Whispering Weald**, **The Unfinished Loom**, **The Lucent Grotto**, and **The Apex**. S3 introduces enemy-owned Ideons inside your Mind Grid, a crystal-cavern overworld with barriers, five new cards, and three new Archons: Mind Hive, Cnidarian, and the Refraction Cannon.
+A spatial deckbuilding roguelike by Jonathan. **Version 4.0.21** contains four playable Strata: **The Whispering Weald**, **The Unfinished Loom**, **The Lucent Grotto**, and **The Apex**. S3 introduces enemy-owned Ideons inside your Mind Grid, a crystal-cavern overworld with barriers, five new cards, and three new Archons: Mind Hive, Cnidarian, and the Refraction Cannon.
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v4.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
@@ -11,6 +11,7 @@ Corruptions belong to **spaces**, not cards. Contain Nausea or Anger beneath a c
 The original First Clearing tutorial remains available. Archives retains discoveries and achievements; the latest 20 runs are displayed while full versioned run data is retained. Normal Continue restarts a battle from its checkpoint; tutorials resume their exact lesson. Saves remain in **%APPDATA%/astrata**.
 
 - [Main design](_plans/astrata_design.md), especially §10.12 for implemented Stratum 2 rules.
+- [New consumables, equipment, socket prices and balance evaluation](reports/supplies-expansion-report.md).
 - [Stratum 2 planning](_plans/stratum_2_planning.md).
 - [Stratum 3 rules and implementation decisions](_plans/stratum_3_planning.md), [S3 build report](reports/stratum3-build-report.md), and [new art/prompts](reports/s3-art-provenance.json).
 - [Apex Predator 500-HP retry results](reports/apex-500-report.md).

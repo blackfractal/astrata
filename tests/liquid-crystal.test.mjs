@@ -43,7 +43,7 @@ test('Combination consumes only the Crystal, frees one slot, persists, and canno
  assert.equal(loaded.s.stats.potionsEnhanced.length,1);
 });
 for(const [id,key,value,phase] of [['healingSap','heal',10,'place'],['focusDraught','focus',2,'place'],['channelDraught','channel',2,'activate'],['insightDew','draw',2,'place'],['starFlask','damage',12,'activate']])
- test('Crystal doubles '+id+' while preserving one-use limit',()=>{
+ test('Crystal doubles '+id+' without limiting other bottles that turn',()=>{
   const g=battle(),b=g.s.battle,p=g.addItem(id),c=g.addItem('liquidCrystal');g.s.hp=40;
   b.phase=phase;
   act(g,'enhancePotion',{uid:c.uid,potion:p.uid});
@@ -54,7 +54,7 @@ for(const [id,key,value,phase] of [['healingSap','heal',10,'place'],['focusDraug
   if(key==='channel')assert.equal(b.channel,before.channel+2);
   if(key==='draw')assert.equal(b.hand.length,before.hand+2);
   if(key==='damage')assert.equal(b.enemies[0].hp,before.enemy-12);
-  g.addItem('channelDraught');assert.ok(!g.legal().some(a=>a.type==='consume'));
+  const extra=g.addItem('channelDraught');assert.equal(g.legal().some(a=>a.type==='consume'&&a.uid===extra.uid),phase==='activate');
   assert.equal(g.s.stats.consumablesUsed.at(-1).crystal,true);
  });
 test('Enhanced Insight crosses draw/discard boundary and tolerates only one remaining card',()=>{

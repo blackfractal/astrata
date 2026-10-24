@@ -1,0 +1,240 @@
+.archives {
+  height: 100%;
+  padding: 42px 60px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse at 85% 0%, #34453677, transparent 55%), #0e1917;
+}
+.archives-heading {
+  position: static;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gold);
+  background: none;
+  padding: 0 0 22px;
+  flex: none;
+}
+.archives h1 {
+  font-size: 46px;
+  line-height: 1.1;
+  margin: 10px 0 0;
+}
+.archive-body {
+  overflow: auto;
+  min-height: 0;
+  flex: 1;
+  padding: 24px 4px;
+}
+.archive-intro {
+  font-size: 21px;
+  color: var(--muted);
+  margin: 0 0 30px;
+}
+.archive-volumes {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+.archive-volume {
+  position: relative;
+  min-height: 330px;
+  text-align: left;
+  padding: 32px 24px;
+  background: linear-gradient(100deg, #39483255, #172a22 12%, #172a22);
+  border: 1px solid var(--line);
+  border-left: 6px double var(--gold);
+}
+.archive-volume h2 {
+  font-size: 29px;
+  margin: 60px 0 8px;
+}
+.archive-volume > span:not(.archive-numeral) {
+  color: var(--muted);
+}
+.archive-volume > b {
+  position: absolute;
+  right: 22px;
+  bottom: 24px;
+  font-size: 25px;
+  color: var(--gold);
+}
+.archive-numeral {
+  font-family: Georgia, serif;
+  font-size: 44px;
+  color: var(--gold);
+}
+.archive-volume:hover,
+.archive-entry:hover {
+  border-color: var(--gold);
+  background-color: #304632;
+}
+.archive-tabs {
+  display: flex;
+  gap: 9px;
+  margin-top: 22px;
+  flex: none;
+}
+.archive-tabs button {
+  background: transparent;
+  border-color: transparent;
+  border-bottom: 2px solid transparent;
+}
+.archive-tabs [aria-current="page"] {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+.archive-filters {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 22px;
+  color: var(--muted);
+}
+.archive-filters > span {
+  margin-right: auto;
+}
+.archive-filters label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.archive-filters input,
+.archive-filters select {
+  background: #182b24;
+  color: var(--paper);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+}
+.archive-gallery {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 20px;
+}
+.archive-entry {
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+  min-width: 0;
+  background: #182b24;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.archive-entry > img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+.archive-entry-copy {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.archive-entry-copy b {
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+.archive-entry-copy small {
+  color: var(--muted);
+}
+.archive-entry.undiscovered {
+  background: repeating-linear-gradient(
+    45deg,
+    #12221c,
+    #12221c 10px,
+    #15271f 10px,
+    #15271f 11px
+  );
+  color: #a6b6a7;
+}
+.unknown-sigil {
+  width: 100%;
+  aspect-ratio: 3/4;
+  display: grid;
+  place-items: center;
+  font:
+    72px Georgia,
+    serif;
+  color: #b5a77c;
+}
+.archive-history {
+  display: grid;
+  gap: 10px;
+}
+.archive-history > button {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  text-align: left;
+  padding: 18px 24px;
+}
+.archive-history > button > span:last-child {
+  margin-left: auto;
+}
+.archive-history small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.archive-run-number {
+  font:
+    28px Georgia,
+    serif;
+  color: var(--gold);
+}
+.archive-achievements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.archive-achievement {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  border: 1px solid var(--line);
+  padding: 25px;
+  background: #182b24;
+}
+.archive-achievement h2 {
+  font-size: 25px;
+  margin: 0 0 8px;
+}
+.achievement-seal {
+  font-size: 46px;
+  width: 65px;
+  text-align: center;
+  color: var(--muted);
+}
+.archive-achievement.earned {
+  border-color: var(--gold);
+}
+.earned .achievement-seal {
+  color: var(--gold);
+}
+.archive-detail {
+  display: grid;
+  grid-template-columns: minmax(200px, 38%) 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.archive-detail > .full-art {
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+}
+.archive-detail h2 {
+  margin: 8px 0 20px;
+}
+.archive-detail li {
+  margin: 10px 0;
+}
+.archives button:focus-visible,
+.archives input:focus-visible,
+.archives select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}

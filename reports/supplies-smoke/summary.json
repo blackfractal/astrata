@@ -1,0 +1,239 @@
+[
+  {
+    "runId": "7041fcf4-725f-46e3-aedc-fdd976b8f359",
+    "packageVersion": "4.0.13",
+    "fixture": null,
+    "stratum": 1,
+    "seed": 24102401,
+    "version": {
+      "rules": "4.0.13",
+      "content": "4.0.13",
+      "observation": 2,
+      "actions": 10
+    },
+    "policy": "weighted-druid-v3",
+    "weights": {
+      "damage": 1,
+      "survival": 1.4,
+      "economy": 4,
+      "development": 1,
+      "progress": 1
+    },
+    "outcome": "loss",
+    "cause": "Bite",
+    "death": {
+      "kind": "enemy",
+      "enemyId": "undead",
+      "enemyUid": 57,
+      "enemyName": "Undead Fire Wolf",
+      "tier": "Eidolon",
+      "attack": "Bite",
+      "flavor": "It had already cheated death. You were less fortunate.",
+      "summary": "Undead Fire Wolf killed you with Bite.",
+      "message": "It had already cheated death. You were less fortunate. Undead Fire Wolf killed you with Bite. Another traveler may find a different way."
+    },
+    "hp": 0,
+    "rounds": 13,
+    "steps": 169,
+    "elapsedMs": 2498,
+    "stats": {
+      "damageDealt": 129,
+      "damageTaken": 102,
+      "goldEarned": 266,
+      "goldSpent": 85,
+      "cardsGained": [
+        "Bitter Spore",
+        "Crosswind Reed",
+        "Terra Guard",
+        "Terra Guard"
+      ],
+      "itemsGained": [
+        "Bronze Bracelet",
+        "Rootbound Ring",
+        "Ruby",
+        "Sapphire",
+        "Star Flask",
+        "Shifting Sap",
+        "Water Tincture",
+        "Wind Tincture",
+        "Healing Sap",
+        "Channel Draught",
+        "Sturdy Metal Helmet"
+      ],
+      "purchases": [
+        "tinctureWind"
+      ],
+      "sales": [],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Veil Moth"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 70
+        },
+        {
+          "stratum": 1,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Dervish Hunter"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 7,
+          "hpEnd": 29
+        },
+        {
+          "stratum": 1,
+          "round": 9,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 41,
+          "turns": 3,
+          "hpEnd": 36
+        },
+        {
+          "stratum": 1,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Fire Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 41,
+          "turns": 2,
+          "hpEnd": 28
+        },
+        {
+          "stratum": 1,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf",
+            "Undead Fire Wolf"
+          ],
+          "outcome": "loss",
+          "hpStart": 28,
+          "hpEnd": 0,
+          "turns": 4
+        }
+      ],
+      "fieldSupplies": [
+        {
+          "uid": 18,
+          "item": "healingSap",
+          "x": 7,
+          "y": 2,
+          "round": 1
+        },
+        {
+          "uid": 19,
+          "item": "focusDraught",
+          "x": 6,
+          "y": 10,
+          "round": 1
+        },
+        {
+          "uid": 20,
+          "item": "starFlask",
+          "x": 1,
+          "y": 6,
+          "round": 1
+        }
+      ],
+      "consumablesUsed": [
+        {
+          "id": "starFlask",
+          "crystal": false,
+          "effects": {
+            "damage": 6,
+            "element": "Arcane"
+          },
+          "round": 7,
+          "turn": 1,
+          "target": 36,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 10,
+          "turn": null,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        },
+        {
+          "id": "tinctureWater",
+          "crystal": false,
+          "effects": {
+            "tincture": "Water"
+          },
+          "round": 11,
+          "turn": 1,
+          "target": null,
+          "slot": 0,
+          "destination": null,
+          "card": null,
+          "element": "Water",
+          "healed": 0
+        },
+        {
+          "id": "tinctureWind",
+          "crystal": false,
+          "effects": {
+            "tincture": "Wind"
+          },
+          "round": 13,
+          "turn": 1,
+          "target": null,
+          "slot": 0,
+          "destination": null,
+          "card": null,
+          "element": "Wind",
+          "healed": 0
+        },
+        {
+          "id": "channelDraught",
+          "crystal": false,
+          "effects": {
+            "channel": 1
+          },
+          "round": 13,
+          "turn": 4,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        }
+      ]
+    }
+  }
+]

@@ -110,7 +110,7 @@ test("direct healing works with twelve loose items, records one use, caps HP, an
   supply(used);
   used.s.field.consumableRound = 8;
   used.resolveTile();
-  assert.ok(!used.legal().some((a) => a.type === "usePickup"));
+  assert.ok(used.legal().some((a) => a.type === "usePickup"));
   const other = field();
   supply(other, "channelDraught");
   other.resolveTile();

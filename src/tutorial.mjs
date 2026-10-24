@@ -522,13 +522,13 @@ note(
 note(
   "consumable-phases",
   "One timely advantage",
-  "During battle you may use one consumable per player turn, without spending Channel. Focus Draught adds 1 Focus during Placement; Insight Dew draws 1 card immediately during Placement. Channel Draught adds 1 Channel during Activation. Healing Sap restores 5 HP in either player phase. Star Flask throws 6 Arcane damage during Activation. Phase restrictions are one-way.",
+  "Consumables cost no Channel and have no per-turn limit. Focus Draught adds 1 Focus during Placement; Insight Dew draws 1 card immediately during Placement. Channel Draught adds 1 Channel during Activation. Healing Sap restores 5 HP. Healing, cures and status protection can also be used while choosing a defense against an incoming attack. Star Flask throws 6 Arcane damage during Activation. Each bottle is used up permanently.",
   ".consumable-tray",
 );
 action(
   "consume-insight",
   "A glimpse now",
-  "Use Insight Dew. It draws one extra card now without discarding this hand or restarting Reveal. Other consumables will be unavailable until your next player turn.",
+  "Use Insight Dew. It draws one extra card now without discarding this hand or restarting Reveal. You can use more consumables in the same turn; each bottle is consumed permanently.",
   { type: "consume", itemId: "insightDew" },
   ".consumable-tray",
 );
@@ -549,7 +549,7 @@ defend(
 action(
   "consume-focus",
   "An extra placement",
-  "A new player turn makes consumables available again. Use Focus Draught now: Focus rises from 1 to 2, enough to place both Blast and a Shield this turn. The bonus is immediate, not a permanent increase.",
+  "Use Focus Draught now: Focus rises from 1 to 2, enough to place both Blast and a Shield this turn. The bonus is immediate, not a permanent increase.",
   { type: "consume", itemId: "focusDraught" },
   ".consumable-tray",
 );
@@ -686,7 +686,7 @@ action(
 action(
   "socket",
   "Imbue the Bracelet",
-  "Pay the Jeweler 20 Gold to socket the Sapphire. Drag it onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Socketing or unsocketing costs 20 Gold, or 35 for Amber, Opal and Quartz. Water defense follows the same cycle as Water attacks: this Bracelet absorbs 3 against Fire, 1 against Wind, and 2 otherwise.",
+  "Pay the Jeweler 20 Gold to socket the Sapphire. Drag it onto any part of the Bracelet Setting, or inspect the Gem and choose the Bracelet. Stronger Gems and Settings cost more to socket together; always check the price. Unsocketing costs 20 Gold, or 35 for Amber, Opal and Quartz. Water defense follows the same cycle as Water attacks: this Bracelet absorbs 3 against Fire, 1 against Wind, and 2 otherwise.",
   { type: "socket", itemId: "bronze", gemId: "sapphire" },
   '.satchel, [data-equip-slot="wrist2"]',
 );

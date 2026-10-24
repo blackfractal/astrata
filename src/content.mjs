@@ -1,3 +1,4 @@
+import {addSupplies, socketPrice} from "./supplies-content.mjs";
 import { registerApex } from "./apex-content.mjs";
 import { registerGrowth } from "./growth-content.mjs";
 import { tuneEnemyHealth } from "./difficulty.mjs";
@@ -9,8 +10,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.13",
-  content: "4.0.13",
+  rules: "4.0.21",
+  content: "4.0.21",
   observation: 2,
   actions: 10,
 };
@@ -239,8 +240,8 @@ card(
   1,
   0,
   {},
-  "Meld beneath an already placed card. Reduce the whole stack's Recall cost by 1 Focus, minimum 0. Cannot bypass Locked or Cannot Recall. No independent activation; returns separately with its host and is destroyed with it.",
-  { stack: "recallDiscount", requiresHost: true, meld: { recall: -1 } },
+  "When drawn, draw 1 additional card. Meld beneath an already placed card. Reduce the whole stack's Recall cost by 1 Focus, minimum 0. Cannot bypass Locked or Cannot Recall. No independent activation; returns separately with its host and is destroyed with it.",
+  { stack: "recallDiscount", requiresHost: true, meld: { recall: -1 }, drawOnDraw: 1 },
 );
 card(
   "undertow",
@@ -761,6 +762,7 @@ export const starter = [
   "sapling",
 ];
 export const items = {};
+export const socketServiceCost = (gem, setting) => socketPrice(items, gem, setting);
 export const gemServiceCost = (id) =>
   ["focusGem", "channelGem", "insightGem"].includes(id) ? 35 : 20;
 function item(id, name, slot, effect, worth, text, extra = {}) {
@@ -779,7 +781,7 @@ for (const [id, name, effect, worth, short] of [
     "Healing Sap",
     { heal: 5 },
     25,
-    "Restore 5 HP. Use during your turn in battle or during map movement.",
+    "Restore 5 HP. Use during your turn, while choosing a defense against an incoming attack, or during map movement.",
   ],
   [
     "focusDraught",
@@ -817,7 +819,7 @@ for (const [id, name, effect, worth, short] of [
     {},
     worth,
     short +
-      " Consumed permanently on use. No Channel cost; one consumable per player turn (one per movement round outside battle).",
+      " Consumed permanently on use. No Channel cost; no per-turn limit.",
     { consumable: effect },
   );
 item(
@@ -1760,7 +1762,7 @@ export const glossary = {
   "Mind Grid":
     "The 7-by-6 battlefield where you arrange and activate cards. Covered cards function only as their top card allows.",
   Consumable:
-    "A single-use item, removed permanently when used. Costs no Channel. One per player turn; one per movement round on the map. Phase restrictions still apply.",
+    "A single-use item, removed permanently when used. Costs no Channel. No per-turn or movement-round limit. Use when its effect and targets are available.",
   Satchel:
     "Ten shared spaces for loose items, Gems and consumables. Equipped gear and socketed Gems take no spaces. Each item uses one space; copies do not stack.",
   Pile: "A stacking rule that can activate eligible matching cards beneath the top card. Each card still respects its own activation limits.",
@@ -1882,5 +1884,6 @@ export function cardText(definition, stratum = 1) {
   return definition.text + (stratum >= 3 && definition.ideonText ? " " + definition.ideonText : "");
 }
 
+addSupplies(items, events);
 registerApex(enemy);
 tuneEnemyHealth(enemies);

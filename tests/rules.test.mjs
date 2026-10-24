@@ -376,7 +376,7 @@ test("Storm Opal sockets into Gold Bracelet; cursed equipment remains mandatory"
   const gold = g.addItem("gold"),
     gem = g.addItem("channelGem");
   g.openTavern();
-  g.s.gold = 100;
+  g.s.gold = 180;
   assert.ok(
     g
       .legal()

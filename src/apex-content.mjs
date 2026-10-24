@@ -72,7 +72,7 @@ export function registerApex(enemy) {
         applyCorruption: true,
         grid: "destroy",
         target: "valuable",
-        count: 2,
+        count: 1,
         commandIdeons: true,
       },
       {
@@ -89,12 +89,13 @@ export function registerApex(enemy) {
         commandIdeons: true,
       },
       {
-        name: "Unmake",
+        name: "Unmake H / V",
         damage: 26,
         element: "Arcane",
         applyCorruption: true,
         grid: "row",
-        target: "row",
+        target: "fullest",
+        alternateUnmake: true,
         commandIdeons: true,
       },
       {
@@ -121,7 +122,7 @@ export function registerApex(enemy) {
         commandIdeons: true,
       },
     ],
-    "Commands its surviving Ideons on every move, including Purify. Riven Earth summons a Hollow Sentinel; Hollow Hunger a Ward Leech; Brood summons two Glass Skitters. At most six owned Ideons. Corruptions are warned one move before application; destruction is telegraphed. Direct damage rises by 3 per full cycle and another 4 below half HP. Cycle-end Purify clears damage statuses when needed.",
+    "Commands its surviving Ideons on every move, including Purify. Riven Earth summons a Hollow Sentinel; Hollow Hunger a Ward Leech; Brood summons two Glass Skitters. At most six owned Ideons. Rending Fangs destroys the most valuable Construct; World Eater destroys the two most valuable Constructs. Unmake alternates each cycle: H destroys the fullest row, then V the fullest column. Count all cards, including melded cards; ties choose the topmost row or leftmost column. Corruptions are warned one move before application; destruction is telegraphed. Direct damage rises by 3 per full cycle and another 4 below half HP. Cycle-end Purify clears damage statuses when needed.",
     "Sustain and rebuild your formation. Clear the Sentinel to attack its owner, repair dangerous spaces, and Recall valuable cards before destruction. Its elemental attacks require several defenses.",
     { stratum: 4, corruptionCap: 10, ideonCap: 6, apexPredator: true },
   );

@@ -1,3 +1,4 @@
+import {destructionGuard} from './supplies.mjs';
 import { cards, cycle, enemies, ELEMENTS } from "./content.mjs";
 import { pressureFactor, pressureDamage } from "./difficulty.mjs";
 import { compelCard, resetCoveredInsanity, prepareCorruption, applyCorruptions } from "./corruptions.mjs";
@@ -118,6 +119,7 @@ export function hatchMindEgg(g, owner, slot, uid) {
   delete b.corruptions[slot];
   if (cover.length) {
     b.discard.push(...discarded.map(c => ({ uid: c.uid, id: c.id, upgrade: c.upgrade })));
+    destructionGuard(g,destroyed.length);
     b.destroyed.push(...destroyed);
     b.grid[slot] = [];
     b.shields = b.shields.filter(s => s.slot !== slot);

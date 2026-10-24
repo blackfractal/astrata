@@ -203,9 +203,9 @@ function tellText(t) {
     t.pierce ? "Pierce" : "",
     t.cull ? "Cull" : "",
     t.grid === "row"
-      ? "Destroy fullest row"
+      ? t.target === "valuable" ? "Destroy most valuable row" : "Destroy fullest row"
       : t.grid === "column"
-        ? "Destroy fullest column"
+        ? t.target === "valuable" ? "Destroy most valuable column" : "Destroy fullest column"
         : t.grid === "destroy" && t.target === "valuable"
           ? `Destroy ${t.count || 1} most valuable stacks`
           : t.grid === "destroy" && t.target === "tallest"
@@ -213,6 +213,7 @@ function tellText(t) {
             : t.grid
               ? `${t.grid} ${t.count || 1} · ${t.target}`
               : "",
+    t.alternateUnmake ? "Alternates H (row), then V (column), each cycle" : "",
     ...["burn", "poison", "corrode"]
       .filter((k) => t[k])
       .map((k) => k[0].toUpperCase() + k.slice(1) + " " + t[k]),

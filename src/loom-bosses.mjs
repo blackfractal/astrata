@@ -1,3 +1,4 @@
+import {braceletForecast} from './supplies.mjs';
 import { cards, enemies } from "./content.mjs";
 import { compelCard } from "./corruptions.mjs";
 
@@ -206,8 +207,8 @@ export function antiElement(g) {
   if (b.phase === "enemy") {
     for (const item of b.bracelets) add(item.element, item.block);
   } else {
-    for (const item of g.equipped())
-      add(item.element, item.definition.effect.block || 0);
+    for (const item of braceletForecast(g))
+      add(item.element, item.block);
   }
   const armor = g.equipped().find((x) => x.slot === "torso");
   if (armor)

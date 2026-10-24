@@ -1,3 +1,4 @@
+import {supplyPreview} from './supplies.mjs';
 import {sourceSlots,growthGuard,wardGain,growthReason} from "./growth-rules.mjs";
 import {attackPreview} from "./combat-preview.mjs";
 import { enhanceIdeons } from "./ideons-ui.mjs";
@@ -105,6 +106,7 @@ function cardName(c) {
 function effect(c, slot, ctx) {
   const d = cards[c.id],
     f = cardEffects(c);
+  const supplyBoost=supplyPreview(ctx.o.battle,c,slot);
   if (d.charge && c.charge < d.charge)
     return `Charge ${c.charge}/${d.charge} · +${chargeGain(ctx.o.battle, c, slot)}`;
   const matching = matchingNeighbors(ctx.o.battle, c, slot);
@@ -126,10 +128,10 @@ function effect(c, slot, ctx) {
           ? "Deal 1–" + f.randomDamage
           : null,
       f.shield
-        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${corruptionPower(ctx.o.battle, slot, growthGuard(ctx.o.battle,c,slot) + (f.matchingShield || 0) * matching)}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear})</span>` : ""}`
+        ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${(corruptionPower(ctx.o.battle, slot, growthGuard(ctx.o.battle,c,slot) + (f.matchingShield || 0) * matching)+supplyBoost.guardBonus)*supplyBoost.guardMultiplier}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear*supplyBoost.guardMultiplier})</span>` : ""}`
         : null,
       f.ward
-        ? `Ward +${wardGain(ctx.o.battle,c,slot)}`
+        ? `Ward +${(wardGain(ctx.o.battle,c,slot)+supplyBoost.guardBonus)*supplyBoost.guardMultiplier}`
         : null,
       f.mend
         ? c.mending
@@ -970,6 +972,7 @@ function bindEquipment(ctx, root) {
           root
             .querySelector("[data-unsocket-drop]")
             ?.classList.add("drop-ready");
+          markDrops();
         };
   });
   const current = (el) =>
@@ -1037,7 +1040,12 @@ function bindEquipment(ctx, root) {
       .querySelectorAll(
         "[data-equip-slot],[data-socket],[data-item-detail],[data-unsocket-drop]",
       )
-      .forEach((el) => el.classList.toggle("drop-ready", !!dropAction(el)));
+      .forEach((el) => {
+        const action=dropAction(el);
+        el.classList.toggle("drop-ready", !!action);
+        if(action && ['socket','unsocket'].includes(action.type)) el.dataset.servicePrice=action.costs.gold+' Gold';
+        else delete el.dataset.servicePrice;
+      });
   }
   root
     .querySelectorAll(
@@ -1080,7 +1088,7 @@ function bindEquipment(ctx, root) {
     root.classList.remove("dragging-gear");
     root
       .querySelectorAll(".drop-ready")
-      .forEach((el) => el.classList.remove("drop-ready"));
+      .forEach((el) => {el.classList.remove("drop-ready");delete el.dataset.servicePrice;});
   };
 }
 export function showEquipment(ctx) {
@@ -1137,7 +1145,7 @@ function tavern(ctx) {
     }`;
   } else if (service === "equipment") {
     content.classList.add("jeweler-content");
-    content.innerHTML = `<p class="jeweler-fees">Socket or unsocket: 20 Gold per Gem; Amber Thought, Storm Opal and Clear Quartz: 35 Gold. Unsocket first to replace a Gem. Fitted Settings sell together with their Gem.</p><h3>Equipped</h3>${equipmentBody(ctx)}`;
+    content.innerHTML = `<p class="jeweler-fees">Socketing: 20–180 Gold, based on both Gem and Setting. Inspect the Gem to see each exact price. Unsocketing: 20 Gold; Amber Thought, Storm Opal and Clear Quartz: 35 Gold. Unsocket first to replace a Gem. Fitted Settings sell together with their Gem.</p><h3>Equipped</h3>${equipmentBody(ctx)}`;
     bindEquipment(ctx, content);
   } else if (service === "market") {
     content.insertAdjacentHTML(

@@ -50,4 +50,5 @@ console.log(JSON.stringify({step:o.steps,mode:o.mode,stratum:o.stratum,floor:o.a
  enemies:b.enemies.map(e=>({uid:e.uid,name:e.name,id:e.id,hp:e.hp,maxHp:e.maxHp,guard:e.guard,el:e.element,tell:e.tell,status:e.status,plans:Object.fromEntries(Object.entries(e).filter(([k])=>/plan|pending|mark/i.test(k)))})),
  grid:b.grid.flatMap((s,i)=>s.length?[{slot:i,cards:s.map(c=>({id:c.id,uid:c.uid,el:c.attuned||c.element,hp:c.hp,ward:c.ward,charge:c.charge,left:g.allowance(c,i),usedTurn:c.lastActivatedTurn,up:c.upgrade}))}]:[]),
  ideons:b.ideons?.map(({uid,kind,slot,hp,element,damage,turnDamage,age,owner})=>({uid,kind,slot,hp,element,damage,turnDamage,age,owner})),biles:b.biles,bodyGuard:b.bodyGuard,corruptions:b.corruptions,telegraphs:b.telegraphs,reaction:b.reaction,shields:b.shields}}:{field:o.field,shop:o.shop,reward:o.reward,event:o.event}),
- actions:g.legal().filter(a=>!['place','activate','recall','equip','unequip','discardItem','move','upgrade','remove','socket','unsocket'].includes(a.type)).map(({key,effects,costs,...a})=>a),log:o.log.slice(-6)}));
+ supplies:o.inventory.filter(x=>g.legal().some(a=>a.type==='consume'&&a.uid===x.uid)),
+ actions:g.legal().filter(a=>!['consume','place','activate','recall','equip','unequip','discardItem','move','upgrade','remove','socket','unsocket'].includes(a.type)).map(({key,effects,costs,...a})=>a),log:o.log.slice(-6)}));

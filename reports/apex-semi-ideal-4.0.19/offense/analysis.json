@@ -1,0 +1,386 @@
+{
+  "summary": {
+    "variant": "revised",
+    "trial": "offense",
+    "cfg": {
+      "hp": 2,
+      "keep": 2,
+      "guard": 1.5,
+      "titan": 3,
+      "draw": 2,
+      "insanity": 10,
+      "grovePlacement": 12
+    },
+    "win": false,
+    "terminal": true,
+    "hp": 0,
+    "boss": 188,
+    "turn": 10,
+    "destroyed": 15,
+    "actions": 173,
+    "death": {
+      "kind": "enemy",
+      "enemyId": "apex",
+      "enemyUid": 71,
+      "enemyName": "The Apex Predator",
+      "tier": "Archon",
+      "attack": "Unmake V",
+      "flavor": "The mountain was only the beginning of its hunger.",
+      "summary": "The Apex Predator killed you with Unmake V.",
+      "message": "The mountain was only the beginning of its hunger. The Apex Predator killed you with Unmake V. Another traveler may find a different way."
+    },
+    "replayVerified": true
+  },
+  "fullActions": 173,
+  "fullReplayVerified": true,
+  "damageToBoss": {
+    "Grove Titan": 40,
+    "Corner Flame": 27,
+    "Cinder Snap": 12,
+    "Solitude": 60,
+    "Plasma Ball": 56,
+    "Water Blast": 10,
+    "Sapling": 4,
+    "Prismatic Sap": 32,
+    "Mindfire": 60,
+    "Blast": 11
+  },
+  "activations": {
+    "Grove Titan": 2,
+    "Corner Flame": 5,
+    "Cinder Snap": 3,
+    "Lucid Guide": 1,
+    "Magnifier Ward": 1,
+    "Ward": 3,
+    "Water Blast": 2,
+    "Solitude": 4,
+    "Plasma Ball": 4,
+    "Sapling": 1,
+    "Prismatic Sap": 4,
+    "Focus Energy": 2,
+    "Tide Memory": 2,
+    "Clear Mind": 2,
+    "Mindfire": 3,
+    "Rain Lantern": 2,
+    "Machine Elves": 1,
+    "Heartwood Bastion": 1,
+    "Rootwall": 1,
+    "Shield": 6,
+    "Blast": 3
+  },
+  "placements": {
+    "Grove Titan": 1,
+    "Lucid Guide": 1,
+    "Corner Flame": 2,
+    "Cinder Snap": 2,
+    "Ward": 2,
+    "Magnifier Ward": 2,
+    "Living Lattice": 2,
+    "Water Blast": 1,
+    "Wild Conduit": 2,
+    "Solitude": 2,
+    "Plasma Ball": 4,
+    "Familiar": 1,
+    "Sapling": 1,
+    "Shield": 4,
+    "Prismatic Sap": 2,
+    "Focus Energy": 2,
+    "Clear Mind": 1,
+    "Tide Memory": 1,
+    "Lucid Needle": 1,
+    "Blast": 4,
+    "Transmute": 2,
+    "Eclipse Seed": 1,
+    "Mindfire": 2,
+    "Machine Elves": 1,
+    "Rain Lantern": 1,
+    "Heartwood Bastion": 1,
+    "Rootwall": 1
+  },
+  "recalls": {
+    "Magnifier Ward": 1,
+    "Corner Flame": 2,
+    "Solitude": 1,
+    "Plasma Ball": 1,
+    "Prismatic Sap": 1,
+    "Mindfire": 1,
+    "Cinder Snap": 1,
+    "Shield": 1
+  },
+  "potionEvents": [
+    {
+      "turn": 1,
+      "item": "Fury Sap",
+      "hp": 70
+    },
+    {
+      "turn": 2,
+      "item": "Channel Draught",
+      "hp": 70
+    },
+    {
+      "turn": 5,
+      "item": "Healing Sap",
+      "hp": 68
+    }
+  ],
+  "enemyPlans": [
+    {
+      "turn": 1,
+      "hp": 70,
+      "boss": 445,
+      "move": "Riven Earth",
+      "warnings": []
+    },
+    {
+      "turn": 2,
+      "hp": 70,
+      "boss": 445,
+      "move": "Rending Fangs",
+      "warnings": [
+        {
+          "name": "Rending Fangs",
+          "spaces": [
+            0
+          ],
+          "cards": [
+            "Grove Titan"
+          ]
+        }
+      ]
+    },
+    {
+      "turn": 3,
+      "hp": 70,
+      "boss": 386,
+      "move": "Hollow Hunger",
+      "warnings": []
+    },
+    {
+      "turn": 4,
+      "hp": 70,
+      "boss": 342,
+      "move": "Unmake H",
+      "warnings": [
+        {
+          "name": "Unmake H",
+          "spaces": [
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "cards": [
+            "Water Blast",
+            "Wild Conduit",
+            "Sapling",
+            "Shield"
+          ]
+        }
+      ]
+    },
+    {
+      "turn": 5,
+      "hp": 70,
+      "boss": 334,
+      "move": "Brood of the Summit",
+      "warnings": []
+    },
+    {
+      "turn": 6,
+      "hp": 49,
+      "boss": 296,
+      "move": "World Eater",
+      "warnings": [
+        {
+          "name": "World Eater",
+          "spaces": [
+            33,
+            3
+          ],
+          "cards": [
+            "Eclipse Seed",
+            "Machine Elves"
+          ]
+        }
+      ]
+    },
+    {
+      "turn": 7,
+      "hp": 24,
+      "boss": 237,
+      "move": "Riven Earth",
+      "warnings": []
+    },
+    {
+      "turn": 8,
+      "hp": 24,
+      "boss": 237,
+      "move": "Rending Fangs",
+      "warnings": [
+        {
+          "name": "Rending Fangs",
+          "spaces": [
+            3
+          ],
+          "cards": [
+            "Heartwood Bastion"
+          ]
+        }
+      ]
+    },
+    {
+      "turn": 9,
+      "hp": 18,
+      "boss": 237,
+      "move": "Hollow Hunger",
+      "warnings": []
+    },
+    {
+      "turn": 10,
+      "hp": 7,
+      "boss": 188,
+      "move": "Unmake V",
+      "warnings": [
+        {
+          "name": "Unmake V",
+          "spaces": [
+            0,
+            7,
+            14,
+            21,
+            28,
+            35
+          ],
+          "cards": [
+            "Blast",
+            "Wild Conduit",
+            "Living Lattice",
+            "Magnifier Ward",
+            "Ward"
+          ]
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "damageDealt": 390,
+    "damageTaken": 98,
+    "goldEarned": 0,
+    "goldSpent": 0,
+    "cardsGained": [],
+    "itemsGained": [
+      "Bronze Bracelet",
+      "Rootbound Ring",
+      "Topaz",
+      "Mothlight Crown",
+      "Lantern Necklace",
+      "Storm Opal",
+      "Armor of Remembrance",
+      "Silver Bracelet",
+      "Storm Opal",
+      "Gold Bracelet",
+      "Storm Opal",
+      "Ring of Patience",
+      "Amber Thought",
+      "Ring of Patience",
+      "Amber Thought",
+      "Healing Sap",
+      "Channel Draught",
+      "Fury Sap"
+    ],
+    "purchases": [],
+    "sales": [],
+    "encounters": [
+      {
+        "stratum": 4,
+        "round": 0,
+        "apexFloor": 4,
+        "mapEntityUids": [],
+        "enemies": [
+          "The Apex Predator"
+        ],
+        "outcome": "loss",
+        "hpStart": 70,
+        "hpEnd": 0,
+        "turns": 10
+      }
+    ],
+    "consumablesUsed": [
+      {
+        "id": "furySap",
+        "crystal": false,
+        "effects": {
+          "fury": true
+        },
+        "round": 0,
+        "turn": 1,
+        "target": null,
+        "slot": null,
+        "destination": null,
+        "card": null,
+        "element": null,
+        "healed": 0
+      },
+      {
+        "id": "channelDraught",
+        "crystal": false,
+        "effects": {
+          "channel": 1
+        },
+        "round": 0,
+        "turn": 2,
+        "target": null,
+        "slot": null,
+        "destination": null,
+        "card": null,
+        "element": null,
+        "healed": 0
+      },
+      {
+        "id": "healingSap",
+        "crystal": false,
+        "effects": {
+          "heal": 5
+        },
+        "round": 0,
+        "turn": 5,
+        "target": null,
+        "slot": null,
+        "destination": null,
+        "card": null,
+        "element": null,
+        "healed": 2
+      }
+    ],
+    "repairs": [
+      {
+        "stratum": 4,
+        "turn": 6,
+        "slot": 3,
+        "kind": "nausea",
+        "card": 28
+      }
+    ]
+  },
+  "destroyed": [
+    "Lucid Guide",
+    "Grove Titan",
+    "Familiar",
+    "Water Blast",
+    "Wild Conduit",
+    "Sapling",
+    "Shield",
+    "Eclipse Seed",
+    "Machine Elves",
+    "Heartwood Bastion",
+    "Blast",
+    "Wild Conduit",
+    "Living Lattice",
+    "Magnifier Ward",
+    "Ward"
+  ]
+}

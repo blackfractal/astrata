@@ -1,3 +1,4 @@
+import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
 import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete } from "./apex.mjs";
 import { pressureDamage, pressureTell, pressureSignature } from "./difficulty.mjs";
 import { sourceSlots, growthDamage, growthGuard, wardGain, growthReason, acornIn, projectedInsight, growthTarget, growthVariants, growthActionEffects, forkedRoute, forkedShares } from "./growth-rules.mjs";
@@ -80,6 +81,7 @@ import {
   cards,
   CARD_BUY_PRICES,
   gemServiceCost,
+  socketServiceCost,
   TRAVELER_DONATION,
   items,
   enemies,
@@ -558,13 +560,26 @@ export function gridTargets(b, t) {
     const col = t.grid === "column",
       count = col ? MIND_COLUMNS : MIND_ROWS;
     let best = 0,
-      max = -1;
+      max = -1,
+      bestValue = null;
     for (let k = 0; k < count; k++) {
-      const n = occupied
+      const line = occupied
         .filter((x) =>
           col ? x.i % MIND_COLUMNS === k : Math.floor(x.i / MIND_COLUMNS) === k,
-        )
-        .reduce((n, x) => n + x.slot.length, 0);
+        );
+      if (t.target === "valuable") {
+        const value = line.reduce((sum, x) => {
+          const v = stackValue(b, x.i);
+          return [sum[0] + v.power, sum[1] + v.focus, sum[2] + v.activations];
+        }, [0, 0, 0]);
+        const firstDifference = bestValue && value.findIndex((v, i) => v !== bestValue[i]);
+        if (!bestValue || (firstDifference >= 0 && value[firstDifference] > bestValue[firstDifference])) {
+          bestValue = value;
+          best = k;
+        }
+        continue;
+      }
+      const n = line.reduce((n, x) => n + x.slot.length, 0);
       if (n > max) {
         max = n;
         best = k;
@@ -1119,7 +1134,7 @@ export class Game {
       events.filter((e) => e.id !== "shrine").map((e) => e.id),
     ).filter(id => this.eventPool().includes(id));
     this.s.itemDeck = this.shuffle([
-      ...Object.keys(items).filter((id) => !items[id].fieldOnly),
+      ...Object.keys(items).filter((id) => !items[id].fieldOnly && suppliesAvailable(this.s,id)),
       ...Object.keys(cards)
         .filter(
           (id) =>
@@ -1165,7 +1180,7 @@ export class Game {
     if (s.mode === "item" && s.itemOffer?.length > 1)
       s.itemOffer = [s.itemOffer[0]];
     if (s.reward?.gem === true)
-      s.reward.gem = this.pick([
+      s.reward.gem = this.pick(this.rand()<0.25 ? Object.keys(items).filter(id=>items[id].consumable&&suppliesAvailable(s,id)) : [
         "ruby",
         "emerald",
         "topaz",
@@ -1175,7 +1190,7 @@ export class Game {
         "insightGem",
       ]);
     if (s.reward?.setting === true)
-      s.reward.setting = this.pick([
+      s.reward.setting = this.pick(s.stratum>=2&&this.rand()<0.5 ? Object.keys(items).filter(id=>items[id].expansion==="supplies"&&!items[id].consumable&&suppliesAvailable(s,id)) : [
         "silver",
         "channelRing",
         "focusRing",
@@ -1681,7 +1696,7 @@ export class Game {
           e.item ||
             this.drawDeck(
               "itemDeck",
-              Object.keys(items).filter((id) => !items[id].fieldOnly),
+              Object.keys(items).filter((id) => !items[id].fieldOnly && suppliesAvailable(this.s,id)),
             ),
         ];
         s.mode = "item";
@@ -1836,8 +1851,8 @@ export class Game {
       hp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       maxHp: d.hp ? d.hp + (c.upgrade ? d.upgrade?.bonus || 0 : 0) : 0,
       ward: d.ward || 0,
-      element: d.element,
-      transmuted: false,
+      element: this.s.battle?.tinctures?.[c.uid] || d.element,
+      transmuted: !!this.s.battle?.tinctures?.[c.uid],
       placed: ++this.s.battle.order,
       lock: false,
       sever: false,
@@ -2054,6 +2069,7 @@ export class Game {
   }
   applyFriendlyStatus(status, value, source = {}, slot = null, animate = true) {
     const target = slot == null ? this.s : top(this.s.battle.grid[slot]);
+    if (slot == null && this.s.battle?.statusProtection >= this.s.battle?.turn && ["burn","poison","corrode"].includes(status)) return {};
     target.status[status] += value;
     const detail = {
       target: slot == null ? "player" : "card",
@@ -2070,6 +2086,7 @@ export class Game {
     const s = this.s,
       b = s.battle;
     b.turn++;
+    equipmentStart(this);
     b.phase = "start";
     startRepairs(this);
     if (s.mode !== "battle") return;
@@ -2155,7 +2172,7 @@ export class Game {
     if (s.hp <= 0) return this.finish(false, "Burning Itch");
     b.jobs = [];
     for (const k of ["burn", "poison", "corrode"])
-      if (s.status[k]) {
+      if (s.status[k] && !(b.statusProtection >= b.turn)) {
         b.jobs.push({
           kind: "hit",
           damage: s.status[k],
@@ -2191,27 +2208,38 @@ export class Game {
       b.focus = Math.max(1, Math.floor(b.focus / 2));
     b.focus = Math.max(0, Math.max(1, b.focus) - (b.next.focusLoss || 0));
   }
+  drawCards(count, { tutorial = false, firstIndex } = {}) {
+    const b = this.s.battle, drawn = [];
+    // Only actual draws trigger replacements; direct returns to hand do not.
+    for (let n = 0, pending = count; n < pending; n++) {
+      if (!b.deck.length) {
+        b.deck = b.discard;
+        b.discard = [];
+      }
+      if (!b.deck.length) break;
+      const at = n === 0 && firstIndex != null
+        ? firstIndex
+        : tutorial ? tutorialDrawIndex(this, n) : nextDrawIndex(this);
+      const card = b.deck.splice(at, 1)[0];
+      b.hand.push(card);
+      drawn.push(card);
+      b.revealedCount = (b.revealedCount ?? b.revealInsight ?? 0) + 1;
+      pending += cards[card.id].drawOnDraw || 0;
+    }
+    b.milky = b.hand.some((c) => c.id === "milky");
+    return drawn;
+  }
   reveal() {
     const b = this.s.battle;
+    if(b.statusProtection <= b.turn) delete b.statusProtection;
     this.refillResources();
     b.phase = "place";
     refreshBossPlans(this);
     b.revealInsight = b.insight;
     b.next = { focus: 0, insight: 0 };
     b.hand = [];
-    for (let n = 0; n < b.insight; n++) {
-      if (!b.deck.length) {
-        b.deck = b.discard;
-        b.discard = [];
-      }
-      if (!b.deck.length) break;
-      const at = this.s.tutorial
-        ? tutorialDrawIndex(this, n)
-        : Math.floor(this.rand() * b.deck.length);
-      b.hand.push(b.deck.splice(at, 1)[0]);
-    }
-    b.revealedCount = b.hand.length;
-    b.milky = b.hand.some((c) => c.id === "milky");
+    b.revealedCount = 0;
+    this.drawCards(b.insight, { tutorial: !!this.s.tutorial });
     this.log(
       `Turn ${b.turn}: ${b.insight} Insight · ${b.focus} Focus · ${b.channel} Channel.`,
     );
@@ -2231,6 +2259,11 @@ export class Game {
       return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex" });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    if (t.alternateUnmake) {
+      const vertical = Math.floor(e.cycle / d.rotation.length) % 2 === 1;
+      t.grid = vertical ? "column" : "row";
+      t.name = vertical ? "Unmake V" : "Unmake H";
+    }
     if (e.id === "trickster") {
       const completed = Math.floor(e.cycle / d.rotation.length);
       const restless = e.restless || 0;
@@ -2332,14 +2365,7 @@ export class Game {
     this.refillResources();
     this.present("resources", { name: "Resources refreshed" });
     b.armorBlock = this.armorCapacity();
-    b.bracelets = this.equipped()
-      .filter((x) => x.definition.effect.block)
-      .map((x) => ({
-        uid: x.uid,
-        block: x.definition.effect.block,
-        element: x.element,
-        name: x.definition.name,
-      }));
+    equipmentEnd(this);
     b.jobs = [];
     for (const e of hostiles(b)) {
       clearImmuneStatus(e);
@@ -2418,6 +2444,11 @@ export class Game {
         if (!e) continue;
         const t = this.tell(e),
           actionCycle = e.cycle;
+        // Finish an already-committed warning, including a pre-alternation save.
+        if (t.alternateUnmake && ["row", "column"].includes(j.gridPlan?.grid)) {
+          t.grid = j.gridPlan.grid;
+          t.name = t.grid === "row" ? "Unmake H" : "Unmake V";
+        }
         // Older in-flight saves have no committed plan: lock before this move's
         // effects rather than recomputing after its Corruptions have landed.
         const gridPlan = j.gridPlan ?? destructionPlan(b, t);
@@ -2792,6 +2823,7 @@ export class Game {
             changed = true;
           }
       }
+      destructionGuard(this, b.grid[i].filter(c => removed.has(c.uid)).length);
       b.destroyed.push(...b.grid[i].filter((c) => removed.has(c.uid)));
       b.grid[i] = b.grid[i].filter((c) => !removed.has(c.uid));
     }
@@ -2862,6 +2894,7 @@ export class Game {
     if (visual === "wildfire") t.gridSourceSlot = spaces[0];
     for (const x of targets) {
       if (["destroy", "row", "column"].includes(t.grid)) {
+        destructionGuard(this,x.slot.length);
         b.destroyed.push(...x.slot);
         b.grid[x.i] = [];
       } else if (t.grid === "siphon") x.c.used++;
@@ -3011,6 +3044,7 @@ export class Game {
       f = cardEffects(c),
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
     if (!this.activationAvailable(c, i)) return;
+    const supply = activationSupply(this,c,i,element);
     const previousElement = c.previousActivationElement;
     c.lastActivatedTurn = b.turn;
     c.lastActivationElement = a.secondaryElement || element || c.element;
@@ -3077,7 +3111,7 @@ export class Game {
     if (f.mend) mend(this, c, i, a.cardTarget ?? i, a.repairKind);
     if (f.stitch && ["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
       delete b.corruptions[i];
-    if (f.ward) c.ward += wardGain(b, c, i);
+    if (f.ward) c.ward += (wardGain(b, c, i) + supply.guardBonus) * supply.guardMultiplier;
     if (f.bodyGuard) b.bodyGuard = (b.bodyGuard || 0) + corruptionPower(b,i,f.bodyGuard);
     if (f.borrowInsight) b.next.insight -= f.borrowInsight;
     if (f.spendFocus || f.focusDamage) b.focus -= f.spendFocus || a.focusSpend || 0;
@@ -3091,7 +3125,7 @@ export class Game {
         uid: this.uid(),
         slot: i,
         owner: c.uid,
-        block: this.shieldPower(c, i),
+        block: (this.shieldPower(c, i) + supply.guardBonus) * supply.guardMultiplier,
         element,
       });
       if (d.name.includes("Shield"))
@@ -3125,7 +3159,7 @@ export class Game {
     if (f.focus) b.next.focus += f.focus;
     if (f.focusPermanent) b.permanent.focus += f.focusPermanent;
     if (f.channel) b.channel += f.channel;
-    let attackResolved = false;
+    let attackResolved = false, echoVictim = null;
     if (
       f.damage ||
       f.hpDamage ||
@@ -3152,6 +3186,7 @@ export class Game {
           ),
         );
       const firstTarget = targets.find((e) => e?.hp > 0);
+      echoVictim = firstTarget;
       const damaging = !!(f.damage || f.hpDamage || f.randomDamage);
       const heats = damaging && firstTarget ? attachedHeat(b, c, i) : [];
       const heatBurn = heats.reduce(
@@ -3189,6 +3224,7 @@ export class Game {
         if (f.ivy) n = corruptionPower(b,i,growthDamage(b,c,i,f.damage + targets.indexOf(e)*4));
         if (f.ideonDouble && e.ideon) n *= 2;
         if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus);
+        n = (n + supply.damageBonus) * supply.damageMultiplier;
         if (n) {
           const prism =
             f.prism &&
@@ -3295,6 +3331,7 @@ export class Game {
         this.present("activate", { slot: j, name: "Second Spring +2 uses" });
       }
     }
+    if (attackResolved) echoAttack(this,c,i,element,echoVictim);
     if (f.guide) {
       const victim = livingIdeons(b).find((e) => e.uid === target);
       if (victim?.hp > 0) victim.mark = { card: c.uid, bonus: 3 };
@@ -3320,7 +3357,7 @@ export class Game {
           ? `${d.name} · Release`
           : d.name,
     });
-    b.channel -= channelCost ?? activationCost(b, c, a.slot);
+    b.channel -= b.inspiration ? 0 : (channelCost ?? activationCost(b, c, a.slot));
     const ctx = { card: c.uid };
     const fields = fieldIdeons(b, a.slot).map((e) => ({
       uid: e.uid,
@@ -3499,11 +3536,11 @@ export class Game {
             (id) =>
               !items[id].cursed &&
               !items[id].consumable &&
-              !items[id].fieldOnly,
+              !items[id].fieldOnly && suppliesAvailable(this.s,id),
           ),
         ).slice(0, 6),
         ...this.shuffle(
-          Object.keys(items).filter((id) => items[id].consumable),
+          Object.keys(items).filter((id) => items[id].consumable && suppliesAvailable(this.s,id)),
         ).slice(0, 2),
       ],
       healer: apexActive(this.s) || (this.s.nextTavernHealer ?? this.rand() < 0.75),
@@ -3542,6 +3579,7 @@ export class Game {
     for (const item of s.inventory) {
       const f = potionEffects(item);
       if (!f || consumableReason(s, item)) continue;
+      if (supplyChoices(this,item,add)) continue;
       const targets = f.damage ? legalHostiles(b) : [null];
       for (const target of targets)
         add(
@@ -3560,8 +3598,6 @@ export class Game {
       b = s.battle,
       item = this.getItem(a.uid),
       f = potionEffects(item);
-    if (s.mode === "battle") b.consumableTurn = b.turn;
-    else s.field.consumableRound = s.field.round;
     const healed = f.heal ? Math.min(f.heal, s.maxHp - s.hp) : 0;
     if (healed) s.hp += healed;
     if (f.focus) b.focus += f.focus;
@@ -3581,25 +3617,15 @@ export class Game {
       round: s.field.round,
       turn: s.mode === "battle" ? b.turn : null,
       target: a.target ?? null,
+      slot: a.slot ?? null, destination: a.destination ?? null, card: a.card ?? null, element: a.element ?? null,
       healed,
     });
     this.log(
       "Used " + itemName(item) + (healed ? " · restored " + healed + " HP" : "") + ".",
     );
+    useSupply(this,f,a);
     if (f.draw) {
-      const drawn = [];
-      for (let n = 0; n < f.draw; n++) {
-        if (!b.deck.length) {
-          b.deck = b.discard;
-          b.discard = [];
-        }
-        if (!b.deck.length) break;
-        const card = b.deck.splice(Math.floor(this.rand() * b.deck.length), 1)[0];
-        b.hand.push(card);
-        drawn.push(card.uid);
-        b.revealedCount=(b.revealedCount??b.revealInsight??0)+1;
-      }
-      b.milky = b.hand.some((c) => c.id === "milky");
+      const drawn = this.drawCards(f.draw).map((c) => c.uid);
       this.present("reveal", {
         name: itemName(item) + " · " + drawn.length + " Insight",
         insight: drawn.length,
@@ -3650,6 +3676,9 @@ export class Game {
     }
   }
   legal() {
+    const b=this.s.battle;
+    if (!this.projectingSupply && this.s.mode === "battle" && b?.inspiration) return inspirationLegal(this);
+    if (!this.projectingSupply && this.s.mode === "battle" && b?.confluence && !b.reaction && ["place","activate"].includes(b.phase)) return supplyResourceLegal(this);
     return tutorialActions(this, this.baseLegal());
   }
   baseLegal() {
@@ -3662,9 +3691,10 @@ export class Game {
       actions.push(a);
     };
     if (s.mode === "result") return [];
+    gearChoices(this,add);
     if (canCombinePotion(s))
       for (const crystal of s.inventory.filter(x => x.id === "liquidCrystal"))
-        for (const potion of s.inventory.filter(x => items[x.id].consumable && !x.crystal))
+        for (const potion of s.inventory.filter(x => items[x.id].consumable && items[x.id].crystalCompatible !== false && !x.crystal))
           add("enhancePotion", "Add Liquid Crystal → " + itemName(potion) + " (double effect)",
             { uid: crystal.uid, potion: potion.uid }, { enhancePotion: true, potion: potion.id }, { channel: 0 });
     const loose = satchelContents(s),
@@ -3801,8 +3831,7 @@ export class Game {
       const offered = items[s.itemOffer[0]];
       if (
         offered?.consumable?.heal &&
-        s.hp < s.maxHp &&
-        s.field.consumableRound !== s.field.round
+        s.hp < s.maxHp
       )
         add(
           "usePickup",
@@ -3881,7 +3910,7 @@ export class Game {
           {},
           { progress: 1 },
         );
-      if (s.reward.apexReward && !s.reward.cards && (s.reward.gem || s.reward.setting)) add("leaveRewardItem", "Leave item", {}, {skip:true});
+      if (!s.reward.cards && (s.reward.gem || s.reward.setting)) add("leaveRewardItem", "Leave remaining items", {}, {skip:true});
       return actions;
     }
     if (s.mode === "tavern") {
@@ -3974,7 +4003,7 @@ export class Game {
               items[x.id].slot === "gem" &&
               !s.inventory.some((i) => i.gem === x.uid),
           )) {
-            const price = gemServiceCost(looseGem.id);
+            const price = socketServiceCost(looseGem.id, inst.id);
             if (!d.forbid?.includes(looseGem.id) && s.gold >= price)
               add(
                 "socket",
@@ -4424,7 +4453,10 @@ export class Game {
     this.decisionLog = [];
     s.steps++;
     s.history.push(a.key);
+    prepareSupplyPayment(this,a);
     switch (a.type) {
+      case "inspirationKeep": break;
+      case "braceletElement": (b.prismaticChoices ||= {})[a.uid]=a.element; break;
       case "chooseClass":
         s.mode = "gem";
         break;
@@ -4878,6 +4910,8 @@ export class Game {
         break;
       }
       case "recall":
+        b.recallCount=Math.min(2,(b.recallCount||0)+1);
+        b.shields=b.shields.filter(x=>x.slot!==a.slot);
         b.focus -= a.costs.focus;
         b.discard.push(
           ...b.grid[a.slot].map((c) => ({
@@ -5051,6 +5085,7 @@ export class Game {
     }
     if (s.checkpoint && challenge)
       s.checkpoint.stats.withoutMenders = clone(challenge);
+    finishInspiration(this,a);
     refreshBossPlans(this);
     tutorialAfter(this, a);
     return this.observe();

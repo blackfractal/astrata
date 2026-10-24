@@ -23,6 +23,18 @@ function act(g, type, predicate = () => true) {
   assert.ok(a, type);
   g.act(a);
 }
+for (const [cycle, expected] of [[1, [19]], [5, [19, 4]]])
+  test(`Apex destruction move ${cycle} removes its promised number of whole Constructs`, () => {
+    const g = base("apex", cycle), b = g.s.battle;
+    put(g, 4); put(g, 7); put(g, 19, 2);
+    assert.deepEqual(g.observe().battle.telegraphs[0].targets, expected);
+    const threatened = expected.flatMap(i => b.grid[i].map(c => c.uid)).sort();
+    act(g, "activatePhase");
+    act(g, "endTurn");
+    assert.deepEqual(b.destroyed.map(c => c.uid).sort(), threatened);
+    assert.equal(b.grid[7].length, 1);
+    assert.equal(b.grid[19].length, 0);
+  });
 for (const [id, cycle, occupied, initial, after] of [
   ["hart", 2, [0, 1, 7, 8], [0, 1], [7, 8]],
   ["colossus", 2, [0, 1, 7, 8], [0, 7], [1, 8]],
@@ -145,11 +157,89 @@ test("Choir prioritizes defense over height, excludes spent output, and handles 
   assert.deepEqual(gridTargets(b, tell), []);
 });
 
+function fullestUnmake(cycle) {
+  const g = base("apex", cycle), b = g.s.battle;
+  g.s.hp = g.s.maxHp = 1000;
+  for (const i of [0, 1, 2]) put(g, i);
+  put(g, 24);
+  const ward = g.instance(g.newCard("ward")); ward.ward = 40;
+  b.grid[24].push(ward);
+  b.grid[31] = [g.instance(g.newCard("ward"))];
+  return g;
+}
+
+for (const [cycle, name, kind, targets] of [
+  [3, "Unmake H", "row", [0, 1, 2]],
+  [9, "Unmake V", "column", [24, 31]],
+  [15, "Unmake H", "row", [0, 1, 2]],
+]) test(`${name} cycle ${cycle} selects card count over value and destroys the entire warned line`, () => {
+  const g = fullestUnmake(cycle), b = g.s.battle;
+  const warning = g.observe().battle.telegraphs[0];
+  assert.equal(warning.name, name);
+  assert.equal(warning.kind, kind);
+  assert.equal(warning.target, "fullest");
+  assert.deepEqual(warning.targets, targets);
+  assert.equal(warning.spaces.length, kind === "row" ? 7 : 6);
+  const threatened = targets.flatMap(i => b.grid[i].map(c => c.uid)).sort();
+  act(g, "activatePhase"); act(g, "endTurn");
+  assert.deepEqual(b.destroyed.map(c => c.uid).sort(), threatened);
+  assert.equal(b.grid[0].length, kind === "row" ? 0 : 1);
+  assert.equal(b.grid[24].length, kind === "row" ? 2 : 0);
+});
+
+test("Unmake card-count ties use topmost row / leftmost column and empty boards threaten nothing", () => {
+  const g = base("apex", 3), e = g.s.battle.enemies[0];
+  for (const cycle of [3, 9]) {
+    e.cycle = cycle;
+    assert.deepEqual(g.gridTelegraphs()[0].targets, []);
+  }
+  put(g, 8); put(g, 24);
+  for (const cycle of [3, 9]) {
+    e.cycle = cycle;
+    assert.deepEqual(g.gridTelegraphs()[0].targets, [8]);
+  }
+});
+
+test("Unmake retargets after Recall, preserves its axis on Continue, and Purify does not advance alternation", () => {
+  const g = fullestUnmake(9), e = g.s.battle.enemies[0];
+  act(g, "recall", a => a.slot === 24);
+  assert.deepEqual(g.gridTelegraphs()[0].targets, [0]);
+  const h = new Game(0, JSON.parse(JSON.stringify(g.s)));
+  assert.deepEqual(h.gridTelegraphs(), g.gridTelegraphs());
+  e.purifyPending = true;
+  assert.equal(g.tell(e).name, "Purify");
+  act(g, "activatePhase"); act(g, "endTurn");
+  assert.equal(e.cycle, 9);
+  assert.equal(g.tell(e).name, "Unmake V");
+});
+
+test("Unmake preserves the warned fullest row when its own Insanity changes the board", () => {
+  const g = fullestUnmake(3), b = g.s.battle;
+  b.enemies[0].corruptionPlan = [{ slot: 24, kind: "insanity" }];
+  const ids = [0, 1, 2].flatMap(i => b.grid[i].map(c => c.uid)).sort();
+  act(g, "activatePhase"); act(g, "endTurn");
+  assert.deepEqual(b.destroyed.map(c => c.uid).sort(), ids);
+  assert.equal(b.grid[31].length, 1);
+});
+
+test("Continue finishes a legacy committed Unmake row even when the new cycle would be vertical", () => {
+  const g = fullestUnmake(9), b = g.s.battle;
+  b.phase = "enemy";
+  b.jobs = [{ kind: "enemyAction", uid: b.enemies[0].uid,
+    gridPlan: { grid: "row", targets: [24], spaces: [21,22,23,24,25,26,27] } }];
+  const h = new Game(0, JSON.parse(JSON.stringify(g.s)));
+  h.pump();
+  assert.equal(h.s.battle.grid[24].length, 0);
+  assert.equal(h.s.battle.grid[31].length, 1);
+});
+
 function nauseaFangs() {
   const g = base("apex", 1), b = g.s.battle;
   g.s.hp = g.s.maxHp = 1000;
   b.phase = "activate";
   b.grid[0] = [g.instance(g.newCard("grove"))];
+  b.grid[0][0].used = 3;
+  b.grid[0][0].hp = 1;
   b.grid[10] = [g.instance(g.newCard("prismaticSap"))];
   const shield = g.instance(g.newCard("shield"));
   shield.used = 2;
@@ -161,11 +251,11 @@ function nauseaFangs() {
 
 test("Fangs honors the committed warning when its own Nausea changes card values", () => {
   const g = nauseaFangs(), b = g.s.battle;
-  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [0, 10]);
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [10]);
   const changed = new Game(0, structuredClone(g.s));
   applyCorruptions(changed, changed.s.battle.enemies[0]);
-  assert.deepEqual(gridTargets(changed.s.battle, changed.tell(changed.s.battle.enemies[0])), [0, 20]);
-  const threatened = [b.grid[0][0].uid, b.grid[10][0].uid];
+  assert.deepEqual(gridTargets(changed.s.battle, changed.tell(changed.s.battle.enemies[0])), [20]);
+  const threatened = [b.grid[10][0].uid];
   act(g, "endTurn");
   assert.deepEqual(b.destroyed.map(c => c.uid), threatened);
   assert.equal(b.corruptions[9].kind, "nausea");
@@ -177,7 +267,7 @@ test("Legacy queued destruction locks before applying its own Corruptions", () =
   b.phase = "enemy";
   b.jobs = [{ kind: "enemyAction", uid: b.enemies[0].uid }];
   g.pump();
-  assert.equal(b.grid[0].length, 0);
+  assert.equal(b.grid[0].length, 1);
   assert.equal(b.grid[10].length, 0);
   assert.equal(b.grid[20].length, 1);
 });

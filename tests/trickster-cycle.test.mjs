@@ -25,13 +25,13 @@ function put(g, slot) { g.s.battle.grid[slot] = [g.instance(g.newCard('blast'))]
 
 test('Trickster new cycle: ambush marks Holes, split attacks, Nausea lands before next Holes', () => {
   const g = arena(true), b = g.s.battle, e = b.enemies[0];
-  assert.ok(g.s.log.some(line => line.includes('Dazzle') && line.includes('20 Light')));
+  assert.ok(g.s.log.some(line => line.includes('Dazzle') && line.includes('22 Light')));
   assert.equal(e.corruptionPlan.length, 2);
   assert.ok(e.corruptionPlan.every(p => p.kind === 'hole'));
   resolve(g);
-  assert.equal(g.s.hp, 9980);
+  assert.equal(g.s.hp, 9978);
   round(g); // Anti-elemental lands Holes and commits H.
-  assert.equal(g.s.hp, 9960);
+  assert.equal(g.s.hp, 9956);
   assert.equal(Object.values(b.corruptions).filter(q => q.kind === 'hole').length, 2);
   assert.equal(e.phasePlan.axis, 'H');
   for (const slot of [14, 15, 16]) put(g, slot);
@@ -39,7 +39,7 @@ test('Trickster new cycle: ambush marks Holes, split attacks, Nausea lands befor
   const r = new Game(0, structuredClone(g.s));
   assert.equal(r.s.battle.enemies[0].phasePlan.line, line);
   round(g); // H
-  assert.equal(g.s.hp, 9946);
+  assert.equal(g.s.hp, 9940);
   assert.ok(e.corruptionPlan.every(p => p.kind === 'hypnosis'));
   round(g); // False face and Hypnosis; damage may include forced cards.
   assert.equal(Object.values(b.corruptions).filter(q => q.kind === 'hypnosis').length, 2);
@@ -63,8 +63,8 @@ test('Trickster damage escalates per completed cycle and Restless, never from ha
       e.hp = 30;
       e.restless = 2;
       const t = g.tell(e);
-      if (t.sequence) assert.deepEqual(t.sequence.map(h => h.damage), [9 + cycle, 9 + cycle]);
-      else assert.equal(t.damage, 22 + 2 * cycle);
+      if (t.sequence) assert.deepEqual(t.sequence.map(h => h.damage), [10 + cycle, 10 + cycle]);
+      else assert.equal(t.damage, 24 + 2 * cycle);
     }
   }
   e.cycle = 2; e.restless = 0;

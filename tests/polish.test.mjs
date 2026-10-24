@@ -56,11 +56,9 @@ test("victory rolls one Gem and one Setting while retaining choose-one card rewa
   assert.equal(typeof g.s.reward.gem, "string");
   assert.equal(typeof g.s.reward.setting, "string");
   g.act(g.legal().find((a) => a.type === "rewardCard"));
-  assert.equal(g.legal().length, 1);
-  assert.equal(g.legal()[0].type, "rewardGem");
-  g.act(g.legal()[0]);
-  assert.equal(g.legal().length, 1);
-  assert.equal(g.legal()[0].type, "rewardSetting");
+  assert.deepEqual(g.legal().map(a => a.type), ["rewardGem", "leaveRewardItem"]);
+  g.act(g.legal().find(a => a.type === "rewardGem"));
+  assert.deepEqual(g.legal().map(a => a.type), ["rewardSetting", "leaveRewardItem"]);
 });
 test("v1 saves migrate fixed rewards deterministically and retain current version", () => {
   const old = new Game(44).s;
@@ -71,7 +69,7 @@ test("v1 saves migrate fixed rewards deterministically and retain current versio
     b = new Game(0, old);
   assert.deepEqual(a.s, b.s);
   assert.equal(a.s.version.rules, VERSION.rules);
-  assert.equal(a.legal().length, 1);
+  assert.deepEqual(a.legal().map(x => x.type), ["rewardGem", "leaveRewardItem"]);
   const loaded = new Game(0, a.save());
   assert.deepEqual(loaded.legal(), a.legal());
   assert.equal(loaded.s.rng, a.s.rng);

@@ -1,3 +1,9 @@
+# Latest: Supplies expansion — 4.0.15
+
+[Full report](reports/supplies-expansion-report.md). Ten automated campaigns (4.0.14): nine died in S1, one in S2; no full-run wins. All 2,346 decisions across 66 encounters replayed exactly. These use a weighted policy plus bounded combat rollouts, not manually selected Codex moves. Early policy errors limit conclusions. Separately, 56 controlled boss/loadout comparisons before tuning and 56 after tuning, with two intermediate eight-fight Trickster batches, use archived builds and equal supplied potion kits. Seven of eight final Trickster loadouts won after its singles increased to 22 and split hits to 8+8. No other enemies changed. No new item won every boss comparison. Raw states/actions/frozen sources and compact results are retained; see report for limitations.
+
+---
+
 # Latest: Apex Predator at 500 HP — 4.0.13
 
 [Ten-attempt review](reports/apex-500-report.md): 0/10 search-assisted candidate lines won from the same archived 66/70-HP, 51-card opening. Closest loss left 70 boss HP. All 2,522 actions independently replayed as legal with matching final states. These reuse planned openings and bounded search; they are not independent campaign runs, a general win-rate estimate, or evidence that the fight is impossible. The only balance change is Predator HP 640 → 500.

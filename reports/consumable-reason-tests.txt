@@ -1,0 +1,43 @@
+✔ antidote explains an absent status and becomes usable when afflicted (22.0022ms)
+✔ cindersalve explains an absent status and becomes usable when afflicted (6.7652ms)
+✔ rustbane explains an absent status and becomes usable when afflicted (2.2199ms)
+✔ Unavailable supplies only mention lessons in an unfinished tutorial (0.7775ms)
+✔ Consumables respect phases, one use across phases, save/resume and next-turn refresh (7.8492ms)
+✔ Healing is five HP, never spent at full HP, once per map round and independent of battle allowance (4.0825ms)
+✔ No consumables during an incoming hit, enemy/reveal phases, rewards or at result (1.5138ms)
+✔ Insight draws exactly one using the seeded deck, preserves hand/phase and recycles discard (3.631ms)
+✔ Star Flask targets explicitly, deals six without Ring triggers and retains normal death resolution (3.8926ms)
+✔ Twelve shared Satchel slots exclude equipped gear and every socketed gem, but count separate bottles (1.3617ms)
+✔ Full acquisition preserves every item until an explicit discard; legacy overflow survives save/load (1.0523ms)
+✔ Cursed objects and cursed socket holders cannot be discarded to evade the Healer (0.6851ms)
+✔ Every normal Tavern offers two distinct consumables, uses posted prices, and supports sales (2.1019ms)
+✔ AI values finite supplies and can finish an enemy using a legal Flask action (2.5578ms)
+✔ Legacy overflow cannot interrupt or deadlock a pending enemy hit (0.9479ms)
+✔ Normal Continue restores the whole battle checkpoint, including potion inventory and HP together (2.775ms)
+✔ A full Satchel may consume legal healing to make room instead of discarding it (1.1367ms)
+✔ socket price depends on both gem and Setting; unsocket fees unchanged (1.7856ms)
+✔ tincture persists across Recall, re-placement and exact save, not new battle (23.4413ms)
+✔ Shifting Sap moves whole Construct and existing shield but not Corruption (2.3849ms)
+✔ Memory Draught determines the next draw without changing the rest of the pile (1.5787ms)
+✔ Wild Inspiration gives free placement and activation then Discard, with save support (6.7139ms)
+✔ Perfect Inspiration destroys selected card; free charge activation does not release (3.1486ms)
+✔ Confluence pays actual resources across both phases without creating resources (3.1176ms)
+✔ Fury doubles direct card damage, not separate ring attack (1.2325ms)
+✔ Bastion Oil doubles added Ward only (1.4304ms)
+✔ Sealed Breath suppresses application and following status tick, preserving stacks (1.8941ms)
+✔ Reservoir retains unused Guard; Reclaimer counts Constructs; Last Stand snapshots health (0.8949ms)
+✔ Remembrance counts cards destroyed, capped, and no passive armor (0.5823ms)
+✔ Remembrance also protects after a boss destroys a whole row (1.0181ms)
+✔ All new potions exclude Liquid Crystal and obey one-use allowance (0.961ms)
+✔ Echo Ring rewards a second element once per turn and never replaces target on a kill (1.3423ms)
+✔ Helm requires an activated source, grants four once, and leaves the potion multiplier separate (1.6321ms)
+✔ Anti-elemental previews the chosen Prismatic element and Reservoir refill (1.2706ms)
+✔ Inspiration cannot grant an enormous variable Focus spend or bypass an unrecallable engine (1.4562ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.2752

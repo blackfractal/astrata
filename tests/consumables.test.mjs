@@ -5,6 +5,7 @@ import { items } from "../src/content.mjs";
 import {
   satchelContents,
   consumableReason,
+  consumableUnavailableReason,
   SATCHEL_CAPACITY,
 } from "../src/consumables.mjs";
 import { WeightedPolicy } from "../src/policy.mjs";
@@ -23,7 +24,32 @@ function use(g, x) {
   g.act(a);
   return a;
 }
-test("Consumables respect phases, one use across phases, save/resume and next-turn refresh", () => {
+
+for (const [id, status, label] of [["antidote", "poison", "Poison"], ["cindersalve", "burn", "Burn"], ["rustbane", "corrode", "Corrosion"]]) {
+  test(`${id} explains an absent status and becomes usable when afflicted`, () => {
+    const g = base(), x = g.addItem(id);
+    g.s.status[status] = 0;
+    assert.equal(consumableUnavailableReason(g.s, x, 0), `No ${label} to remove.`);
+    assert.ok(!g.legal().some(a => a.type === "consume" && a.uid === x.uid));
+    g.s.status[status] = 3;
+    const choices = g.legal().filter(a => a.type === "consume" && a.uid === x.uid);
+    assert.equal(choices.length, 1);
+    assert.equal(consumableUnavailableReason(g.s, x, choices.length), "");
+    g.act(choices[0]);
+    assert.equal(g.s.status[status], 0);
+  });
+}
+
+test("Unavailable supplies only mention lessons in an unfinished tutorial", () => {
+  const g = base(), x = g.addItem("memoryDraught");
+  g.s.battle.discard = [];
+  assert.equal(consumableUnavailableReason(g.s, x, 0), "No available target or effect right now.");
+  g.s.tutorial = { completed: false };
+  assert.equal(consumableUnavailableReason(g.s, x, 0), "Unavailable during this lesson.");
+  g.s.tutorial.completed = true;
+  assert.equal(consumableUnavailableReason(g.s, x, 0), "No available target or effect right now.");
+});
+test("Multiple consumables work across player phases and save/resume, including legacy spent markers", () => {
   const g = base(),
     b = g.s.battle;
   const focus = g.addItem("focusDraught"),
@@ -32,39 +58,39 @@ test("Consumables respect phases, one use across phases, save/resume and next-tu
   assert.ok(g.legal().some((a) => a.uid === focus.uid && a.type === "consume"));
   assert.match(consumableReason(g.s, channel), /Activation/);
   b.focus = 0;
+  b.consumableTurn = b.turn;
   use(g, focus);
   assert.equal(b.focus, 1);
   assert.ok(!g.getItem(focus.uid));
-  assert.ok(!g.legal().some((a) => a.type === "consume"));
+  use(g, draw);
   g.act(g.legal().find((a) => a.type === "activatePhase"));
-  assert.ok(!g.legal().some((a) => a.type === "consume"));
+  assert.ok(g.legal().some((a) => a.type === "consume" && a.uid === channel.uid));
   const h = new Game(0, g.s);
-  assert.ok(!h.legal().some((a) => a.type === "consume"));
-  h.beginTurn();
-  assert.equal(h.s.battle.focus, 1);
-  h.s.battle.phase = "activate";
+  assert.ok(h.legal().some((a) => a.type === "consume" && a.uid === channel.uid));
   h.s.battle.channel = 0;
   use(h, channel);
   assert.equal(h.s.battle.channel, 1);
-  assert.match(consumableReason(h.s, draw), /already used/);
+  const another = h.addItem("channelDraught");
+  use(h, another);
+  assert.equal(h.s.battle.channel, 2);
   h.beginTurn();
   assert.equal(h.s.battle.channel, 2);
-  assert.equal(h.s.stats.consumablesUsed.length, 2);
+  assert.equal(h.s.stats.consumablesUsed.length, 4);
 });
-test("Healing is five HP, never spent at full HP, once per map round and independent of battle allowance", () => {
+test("Healing is five HP, never spent at full HP, and repeatable in the same movement round", () => {
   const g = base();
   g.s.mode = "field";
   g.s.field.round = 4;
+  g.s.field.consumableRound = 4;
   const first = g.addItem("healingSap"),
     second = g.addItem("healingSap");
   assert.match(consumableReason(g.s, first), /full HP/);
   g.s.hp = 60;
   use(g, first);
   assert.equal(g.s.hp, 65);
-  assert.ok(!g.legal().some((a) => a.type === "consume"));
+  assert.ok(g.legal().some((a) => a.type === "consume" && a.uid === second.uid));
   const h = new Game(0, g.s);
-  assert.ok(!h.legal().some((a) => a.type === "consume"));
-  h.s.field.round++;
+  assert.ok(h.legal().some((a) => a.type === "consume" && a.uid === second.uid));
   h.s.hp = 68;
   use(h, second);
   assert.equal(h.s.hp, 70);
@@ -75,7 +101,7 @@ test("Healing is five HP, never spent at full HP, once per map round and indepen
   assert.equal(h.s.hp, 60);
   assert.equal(h.s.stats.consumablesUsed[1].healed, 2);
 });
-test("No consumables during an incoming hit, enemy/reveal phases, rewards or at result", () => {
+test("Defensive supplies can interrupt a pending hit but not automatic enemy/reveal processing or death", () => {
   const g = base(),
     x = g.addItem("healingSap");
   g.s.hp = 40;
@@ -90,10 +116,36 @@ test("No consumables during an incoming hit, enemy/reveal phases, rewards or at 
     stage: "player",
     intercepted: [],
   };
-  assert.ok(!g.legal().some((a) => a.type === "consume"));
+  assert.ok(g.legal().some((a) => a.type === "consume" && a.uid === x.uid));
+  use(g, x);
+  assert.equal(g.s.hp, 45);
+  assert.equal(g.s.battle.reaction.damage, 2);
   g.s.battle.reaction = null;
   g.s.mode = "result";
   assert.deepEqual(g.legal(), []);
+});
+
+test("Healing, cures and protection preserve pending attacks and block subsequent status application", () => {
+  const g = base(), b = g.s.battle;
+  g.s.hp = 40;
+  g.s.status.poison = 3;
+  g.s.status.burn = 4;
+  b.phase = "enemy";
+  b.reaction = { damage: 5, element: "Fire", stage: "bracelet", column: -1, intercepted: [], name: "Test fire", burn: 2 };
+  for (const id of ["healingSap", "antidote", "cindersalve", "sealedBreath", "focusDraught", "channelDraught", "insightDew", "starFlask", "wildInspiration"]) g.addItem(id);
+  const allowed = () => g.legal().filter(a=>a.type === "consume").map(a=>g.getItem(a.uid).id).sort();
+  assert.deepEqual(allowed(), ["antidote", "cindersalve", "healingSap", "sealedBreath"]);
+  const pending = structuredClone(b.reaction);
+  for (const id of ["healingSap", "antidote", "cindersalve", "sealedBreath"]) {
+    use(g, g.s.inventory.find(x=>x.id===id));
+    assert.deepEqual(b.reaction, pending);
+  }
+  assert.equal(g.s.hp, 45);
+  assert.equal(g.s.status.poison, 0);
+  assert.equal(g.s.status.burn, 0);
+  g.act(g.legal().find(a=>a.type === "skipEquipment"));
+  assert.equal(g.s.hp, 40);
+  assert.equal(g.s.status.burn, 0);
 });
 test("Insight draws exactly one using the seeded deck, preserves hand/phase and recycles discard", () => {
   const g = base(),

@@ -1,4 +1,5 @@
 import {corruptionPower} from "./corruptions.mjs";
+import {supplyPreview} from './supplies.mjs';
 import {growthDamage} from "./growth-rules.mjs";
 import { areaHits } from "./area-targets.mjs";
 import { protectedOwner } from "./ideons.mjs";
@@ -39,9 +40,10 @@ export function attackPreview(b, c, i, enemy, element = c.element, action = {}) 
     (d.charge && c.charge < d.charge)
   )
     return null;
-  const power =
+  const boost=supplyPreview(b,c,i,element);
+  const power = (
       (f.forked ? corruptionPower(b,i,(action.effects?.route?.find(x=>x.uid===enemy.uid)?.damage||f.damage)+growthDamage(b,c,i,0)) :
-       f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0))) : cardPower(b, c, i, enemy)) * (f.ideonDouble && enemy.ideon ? 2 : 1),
+       f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0))) : cardPower(b, c, i, enemy)) * (f.ideonDouble && enemy.ideon ? 2 : 1)+boost.damageBonus)*boost.damageMultiplier,
     elements = f.braided ? [element,action.secondaryElement].filter(Boolean) : attackElements(b, c, i, element);
   const base = power * elements.length;
   const damage =

@@ -2,9 +2,11 @@ import { statHelp, statAttribute } from "./card-upgrade-ui.mjs";
 import { cards, glossary } from "./content.mjs";
 import { attackElements, attackPreview } from "./combat-preview.mjs";
 import { cardPower } from "./engine.mjs";
+import {supplyPreview} from './supplies.mjs';
 import { corruptionPower, cardFrozen, cardSevered, insanityCover } from "./corruptions.mjs";
 export function damageMarkup(b, c, slot) {
-  return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${cardPower(b, c, slot)}${attackElements(b, c, slot).length > 1 ? " ×" + attackElements(b, c, slot).length : ""}</b>`;
+  const boost=supplyPreview(b,c,slot);
+  return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${(cardPower(b, c, slot)+boost.damageBonus)*boost.damageMultiplier}${attackElements(b, c, slot).length > 1 ? " ×" + attackElements(b, c, slot).length : ""}</b>`;
 }
 export function targetPreview(ctx, source, slot, actionFor) {
   const number = source?.querySelector(".damage-value");
@@ -145,11 +147,15 @@ export function gridTelegraphs(ctx) {
   for (const t of ctx.o.battle.telegraphs || []) {
     const rule =
       t.kind === "row"
-        ? "Fullest row; ties choose the topmost row."
+        ? t.target === "valuable"
+          ? "Most valuable row: total damage/defense potential, then printed Focus and remaining activations; ties choose the topmost row."
+          : "Fullest row; ties choose the topmost row."
         : t.kind === "column"
-          ? "Fullest column; ties choose the leftmost column."
+          ? t.target === "valuable"
+            ? "Most valuable column: total damage/defense potential, then printed Focus and remaining activations; ties choose the leftmost column."
+            : "Fullest column; ties choose the leftmost column."
           : t.target === "valuable"
-            ? "Two most dangerous complete stacks: total damage/defense potential, then printed Focus, remaining activations and reading order. Both targets are chosen before destruction."
+            ? "Most dangerous complete Constructs: total damage/defense potential, then printed Focus, remaining activations and reading order. Targets are chosen before destruction."
             : "Tallest complete stack; ties choose the first occupied space in reading order.";
     const extra = t.damagePerEmpty
       ? ` Then ${t.damage} Arcane damage: ${t.emptySpaces} spaces empty before destruction × ${t.damagePerEmpty}. Destroyed cards cannot defend.`

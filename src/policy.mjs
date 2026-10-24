@@ -157,6 +157,7 @@ export class WeightedPolicy {
     if (!d) return 0;
     if (d.consumable)
       return (
+        (d.expansion === 'supplies' ? (d.consumable.inspiration ? 18 : d.consumable.tincture ? 12 : 9) : 0) +
         (d.consumable.heal || 0) * 0.8 +
         (d.consumable.focus || 0) * 6 +
         (d.consumable.channel || 0) * 8 +
@@ -165,6 +166,7 @@ export class WeightedPolicy {
       );
     const gem = items[o.inventory.find((x) => x.uid === inst.gem)?.id];
     return (
+      ({prismaticBracelet:4,reservoirBracelet:5,reclaimerBracelet:5,lastStandBracelet:3,echoRing:12,resonanceHelm:12,remembranceArmor:9}[d.id] || 0) +
       this.gearValue(d.effect, o) -
       (d.cursed ? 40 : 0) +
       (gem
@@ -184,6 +186,11 @@ export class WeightedPolicy {
     let n = 0,
       reason = a.label;
     switch (a.type) {
+      case 'inspirationKeep': return [10,'Keep the revealed card when its free sequence cannot legally continue.'];
+      case 'braceletElement': {
+        const incoming=b.enemies.filter(e=>e.hp>0).flatMap(e=>e.tell?.sequence || [e.tell || {}]);
+        return [10+incoming.reduce((n,h)=>n+(h.damage||0)*(1-defenseRate(h.element||'Arcane',a.element)),0),'Choose bracelet element against the visible incoming attacks.'];
+      }
       case "enhancePotion":
         return [f.potion === "channelDraught" ? 9 : f.potion === "healingSap" && injured >= 10 ? 10 : 3, "Combine a finite Liquid Crystal with a potion for double effect."];
       case "discardItem":
@@ -197,6 +204,15 @@ export class WeightedPolicy {
         ];
       case "consume": {
         const reserve = 5;
+        if(f.cleanse)return [(o.status[f.cleanse]||0)*4-2,'Clear an ongoing damaging status.'];
+        if(f.immunity)return [Object.values(o.status).reduce((n,x)=>n+x,0)*3-4,'Prevent a dangerous status round.'];
+        if(f.inspiration)return [b.channel===0 || b.focus===0 ? 12 : -8,'Use a finite free card when ordinary resources are exhausted.'];
+        if(f.confluence)return [b.phase==='activate'&&b.channel===0&&b.focus>0 ? 12 : b.phase==='place'&&b.focus===0&&b.channel>1 ? 8 : -10,'Exchange stranded resources when it unlocks useful actions.'];
+        if(f.fury||f.bastion)return [b.phase==='activate'&&b.channel>0 ? 10 : -10,'Prepare the next attack or defense activation.'];
+        if(f.tincture){const c=b.grid[a.slot]?.at(-1),enemies=b.enemies.filter(e=>e.hp>0);return [(cards[c?.id]?.effects.damage||cards[c?.id]?.effects.hpDamage)?enemies.reduce((n,e)=>Math.max(n,offense(10,a.element,e.element)-offense(10,c.element,e.element)),0)*2-3:-8,'Transmute an offensive card for a favorable matchup.'];}
+        if(f.recall){const c=b.grid[a.slot]?.at(-1);return [c?.zeroWard||c?.used>=cards[c?.id]?.limit?9:-10,'Recover a depleted or spent card without paying Focus.'];}
+        if(f.memory){const c=b.discard.find(c=>c.uid===a.card);return [this.cardValue(c?.id,o)*0.4-5,'Prepare a useful next draw.'];}
+        if(f.shift)return [-12,'Reserve movement for a deliberate positional rescue.'];
         if (f.heal)
           return [
             Math.min(injured, f.heal) * w.survival - reserve,
@@ -729,7 +745,7 @@ export class WeightedPolicy {
             this.itemValue(inst, o) +
             (g.id === "curseGem" ? 6 : 0) -
             (old?.id === "curseGem" ? 6 : 0) +
-            (old ? -10 : 10),
+            (old ? -10 : 10) - (a.costs.gold || 0) * 0.15,
           "Socket unused Gems to activate their powers.",
         ];
       }

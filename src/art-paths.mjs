@@ -230,3 +230,35 @@ for (const kind of [
   "bullet",
 ])
   artPaths["enemy-ideon_" + kind] = "assets/ideon-" + kind + ".png";
+
+Object.assign(artPaths, {
+  "item-prismaticBracelet": "assets/item-prismaticBracelet.png",
+  "item-reservoirBracelet": "assets/item-reservoirBracelet.png",
+  "item-reclaimerBracelet": "assets/item-reclaimerBracelet.png",
+  "item-lastStandBracelet": "assets/item-lastStandBracelet.png",
+  "item-echoRing": "assets/item-echoRing.png",
+  "item-resonanceHelm": "assets/item-resonanceHelm.png",
+  "item-remembranceArmor": "assets/item-remembranceArmor.png",
+  "item-tinctureFire": "assets/item-tinctureFire.png",
+  "item-tinctureEarth": "assets/item-tinctureEarth.png",
+  "item-tinctureWind": "assets/item-tinctureWind.png",
+  "item-tinctureWater": "assets/item-tinctureWater.png",
+  "item-tinctureLight": "assets/item-tinctureLight.png",
+  "item-tinctureChaos": "assets/item-tinctureChaos.png",
+  "item-tinctureArcane": "assets/item-tinctureArcane.png",
+  "item-prismaticTincture": "assets/item-prismaticTincture.png",
+  "item-shiftingSap": "assets/item-shiftingSap.png",
+  "item-wildInspiration": "assets/item-wildInspiration.png",
+  "item-perfectInspiration": "assets/item-perfectInspiration.png",
+  "item-confluence": "assets/item-confluence.png",
+  "item-recallMist": "assets/item-recallMist.png",
+  "item-memoryDraught": "assets/item-memoryDraught.png",
+  "item-rustbane": "assets/item-rustbane.png",
+  "item-cindersalve": "assets/item-cindersalve.png",
+  "item-antidote": "assets/item-antidote.png",
+  "item-sealedBreath": "assets/item-sealedBreath.png",
+  "item-furySap": "assets/item-furySap.png",
+  "item-bastionOil": "assets/item-bastionOil.png",
+  "event-potionDealer": "assets/event-potionDealer.png",
+  "event-loomPotionDealer": "assets/event-loomPotionDealer.png"
+});

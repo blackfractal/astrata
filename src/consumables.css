@@ -19,9 +19,18 @@
 }
 .consumable-row {
   display: flex;
+  overflow-x: auto;
   gap: 6px;
   justify-content: flex-start;
 }
+.supply-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; max-height:55vh; overflow:auto; }
+.supply-options button { white-space:normal; }
+.supply-group img { width:42px;height:54px;object-fit:cover;vertical-align:middle;margin-right:8px; }
+.supply-special { max-height:120px; overflow:auto; font-size:12px; }
+.supply-special button { font-size:11px; margin:3px; }
+.inspiration-prompt,.supply-buffs { color:#f0da95; font-size:12px; margin:0 0 6px; }
+.drop-ready[data-service-price] { position:relative; }
+.drop-ready[data-service-price]::after { content:attr(data-service-price); position:absolute; bottom:0; left:0; right:0; background:#18251ef2; color:#ffe0a3; padding:4px; z-index:4; font-size:13px; pointer-events:none; }
 .consumable {
   position: relative;
   width: 55px;
