@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.243
+# Astrata: Game Design Document v4.244
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -1021,6 +1021,8 @@ This is a hard requirement, not a nice-to-have. The long-term purpose is to find
 **Aggregate report.** For v1, the building LLM reads the bot's run logs and writes the interpretation itself. With 5 naive runs there may be little to glean, and that is fine. Something basic is the target: "enemies at the start do far too much damage," or "the starting cards are far too strong," or "starting balance feels about right," with the evidence that led there. The report format should scale to 100 runs and to win rate by class later.
 
 #### 10.5.1 AI Interface, Robustness, and Future Training
+
+The future training roadmap is recorded in [AI training planning](ai_training_planning.md). It specifies separate expert checkpoints for S4-only victory and the full prerequisite/S5 route, a strict player-information boundary, and update-aware retraining using explicit versioned rule changes plus targeted and broad regression evaluation. This roadmap does not expand the v1 training boundary below.
 The AI chooses from the actions available at each decision point using the current player-visible state. The engine owns legality and rule resolution; the bot must not maintain a separate copy of the game rules.
 
 * **Engine-owned decisions.** Provide the observation, relevant player-visible history, and the complete set of currently legal choices, including their parameters. Cover every player decision: Field movement, equipment, placement, activation, Recall, Shield selection, Ally interception, Taverns, rewards, and Events. Submitting a choice advances the engine to the next decision or a terminal result. The human interface and bot use the same rules and legal actions.
