@@ -213,16 +213,15 @@ test("Twelve shared Satchel slots exclude equipped gear and every socketed gem, 
   for (let n = 0; n < 12; n++) g.addItem("healingSap");
   assert.equal(SATCHEL_CAPACITY, 12);
   assert.equal(satchelContents(g.s).length, 12);
-  const a = g.legal().find((a) => a.type === "unequip");
-  g.act(a);
-  assert.equal(satchelContents(g.s).length, 13);
-  assert.ok(!g.legal().some((a) => a.type === "move"));
-  const equip = g
-    .legal()
-    .find((a) => a.type === "equip" && a.item === setting.uid);
-  g.act(equip);
-  assert.equal(satchelContents(g.s).length, 12);
-  assert.ok(g.legal().some((a) => a.type === "move"));
+  assert.ok(!g.legal().some(a => a.type === "unequip"));
+  assert.match(g.capacityBlockedActions.find(a => a.type === 'unequip').unavailable, /satchel is full/);
+  assert.equal(satchelContents(g.s).length,12);
+  assert.ok(g.legal().some(a => a.type === "move"));
+  g.act(g.legal().find(a => a.type === 'discardItem'));
+  g.act(g.legal().find(a => a.type === 'unequip'));
+  assert.equal(satchelContents(g.s).length,12);
+  assert.ok(satchelContents(g.s).some(x => x.uid === setting.uid));
+  assert.ok(!satchelContents(g.s).some(x => x.uid === gem.uid));
 });
 test("Full acquisition preserves every item until an explicit discard; legacy overflow survives save/load", () => {
   const g = base();

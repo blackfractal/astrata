@@ -61,6 +61,7 @@ import {
 import {
   SATCHEL_CAPACITY,
   satchelContents,
+  satchelActionReason,
   consumableReason,
   potionEffects,
   itemName,
@@ -3674,7 +3675,7 @@ export class Game {
     }
     for (const item of s.inventory) {
       const d = items[item.id];
-      if (d.slot === "gem") continue;
+      if (d.slot === "gem" || (d.cursed && Object.values(s.equipment).includes(item.uid))) continue;
       for (const slot of Object.keys(s.equipment).filter((k) =>
         k.startsWith(d.slot),
       )) {
@@ -3700,10 +3701,13 @@ export class Game {
     const s = this.s,
       b = s.battle,
       actions = [];
+    this.capacityBlockedActions = [];
     const add = (type, label, p = {}, effects = {}, costs = {}) => {
       const a = { type, ...p, label, effects, costs };
       a.key = JSON.stringify([type, p]);
-      actions.push(a);
+      const unavailable = satchelActionReason(s, a);
+      if (unavailable) this.capacityBlockedActions.push({...a, unavailable});
+      else actions.push(a);
     };
     if (s.mode === "result") return [];
     gearChoices(this,add);
@@ -3720,27 +3724,17 @@ export class Game {
         !s.inventory.some((g) => g.uid === x.gem && items[g.id].cursed),
     );
     if (
-      (overflow || ["field", "tavern"].includes(s.mode)) &&
+      (overflow || ["field", "tavern"].includes(s.mode) || (loose.length >= SATCHEL_CAPACITY && ["item", "reward", "event"].includes(s.mode))) &&
       (!b?.reaction || s.mode !== "battle")
     )
       for (const item of removable)
         add(
           "discardItem",
-          "Discard " + items[item.id].name,
+          "Discard " + items[item.id].name + (item.gem ? " + " + items[this.getItem(item.gem).id].name : ""),
           { uid: item.uid },
           { discardItem: true, worth: items[item.id].worth },
         );
-    if (
-      overflow &&
-      removable.length &&
-      !s.tutorial &&
-      (s.mode !== "battle" ||
-        (!b.reaction && ["place", "activate"].includes(b.phase)))
-    ) {
-      this.consumableChoices(add);
-      if (["field", "tavern"].includes(s.mode)) this.equipChoices(add);
-      return actions;
-    }
+    if (loose.length >= SATCHEL_CAPACITY && ["item", "reward", "event"].includes(s.mode)) this.equipChoices(add);
     this.consumableChoices(add);
     if (s.pendingArmor) {
       for (const old of s.inventory.filter(
@@ -4517,20 +4511,23 @@ export class Game {
         this.log("Added Liquid Crystal to " + items[potion.id].name + ": effect doubled.");
         break;
       }
-      case "discardItem":
-        this.log(
-          "Discarded " + items[this.getItem(a.uid).id].name + " permanently.",
-        );
+      case "discardItem": {
+        const item = this.getItem(a.uid), gem = this.getItem(item.gem);
+        this.log("Discarded " + items[item.id].name + (gem ? " + " + items[gem.id].name : "") + " permanently.");
+        if (gem) this.removeItem(gem.uid);
         this.removeItem(a.uid);
         break;
+      }
       case "unequip":
         s.equipment[a.slot] = null;
         break;
-      case "equip":
-        for (const k of Object.keys(s.equipment))
-          if (s.equipment[k] === a.item) s.equipment[k] = null;
+      case "equip": {
+        const previousSlot = Object.keys(s.equipment).find(k => s.equipment[k] === a.item);
+        // Moving worn gear between matching slots is an atomic swap, not an unequip.
+        if (previousSlot) s.equipment[previousSlot] = s.equipment[a.slot];
         s.equipment[a.slot] = a.item;
         break;
+      }
       case "usePickup": {
         const item = this.addItem(s.itemOffer[a.index]);
         this.consume({ uid: item.uid });

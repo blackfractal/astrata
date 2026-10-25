@@ -133,28 +133,23 @@ test("leave here retains exact bottle and permits a later revisit, without immed
   assert.equal(h.s.hp, 55);
   assert.equal(h.s.field.entities.length, 0);
 });
-test("collecting into a full Satchel pauses movement until space is chosen; direct use needs no such choice", () => {
+test("full Satchel blocks collection without advancing time; direct drinking remains available", () => {
   const g = field();
   for (let i = 0; i < 12; i++) g.addItem("focusDraught");
-  supply(g);
-  g.resolveTile();
-  act(g, "takeItem");
-  assert.equal(g.s.field.round, 8);
-  assert.equal(g.s.pendingPickupResolution, true);
-  assert.equal(satchelContents(g.s).length, 13);
-  assert.ok(
-    g
-      .legal()
-      .every((a) =>
-        ["discardItem", "consume", "equip", "unequip"].includes(a.type),
-      ),
-  );
-  act(g, "consume");
-  assert.equal(g.s.hp, 55);
-  assert.equal(g.s.field.round, 9);
-  assert.ok(!g.s.pendingPickupResolution);
-  assert.equal(satchelContents(g.s).length, 12);
+  supply(g);g.resolveTile();
+  const rng = g.s.rng;
+  assert.ok(!g.legal().some(a => a.type === 'takeItem'));
+  assert.equal(g.s.mode,'item');
+  assert.equal(g.s.field.round,8);
+  assert.equal(g.s.rng,rng);
+  assert.equal(satchelContents(g.s).length,12);
+  assert.ok(g.legal().some(a => a.type === 'leaveItem'));
+  act(g,'usePickup');
+  assert.equal(g.s.hp,55);
+  assert.equal(satchelContents(g.s).length,12);
+  assert.equal(g.s.field.round,9);
 });
+
 test("enemies on a supply tile fight first and inspection evidence discovers only visible supplies", () => {
   const g = field(),
     e = supply(g);

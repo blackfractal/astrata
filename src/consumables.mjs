@@ -1,4 +1,4 @@
-import { items } from "./content.mjs";
+import { items, events } from "./content.mjs";
 export const SATCHEL_CAPACITY = 12;
 export function potionEffects(item) {
   const f = items[item?.id]?.consumable;
@@ -19,7 +19,7 @@ export function itemText(item) {
     " Consumed on use. No Channel cost; no per-turn limit.";
 }
 export function canCombinePotion(s) {
-  return ["field", "tavern"].includes(s.mode) || (s.mode === "battle" && !s.battle.reaction && ["place", "activate"].includes(s.battle.phase));
+  return ["field", "tavern", "item", "reward", "event"].includes(s.mode) || (s.mode === "battle" && !s.battle.reaction && ["place", "activate"].includes(s.battle.phase));
 }
 export function satchelContents(s) {
   return s.inventory.filter(
@@ -28,11 +28,31 @@ export function satchelContents(s) {
       !s.inventory.some((g) => g.gem === x.uid),
   );
 }
+// Capacity is checked before payment, acquisition, or separating fitted equipment.
+export function satchelActionReason(s, a) {
+  const loose = satchelContents(s), worn = Object.values(s.equipment);
+  let id, delta = 0;
+  if (a.type === 'buy') id = s.shop?.stock[a.index];
+  if (a.type === 'takeItem') id = s.itemOffer?.[a.index];
+  if (['rewardGem', 'rewardSetting'].includes(a.type)) id = a.id;
+  if (a.type === 'eventChoice') {
+    const c = events.find(e => e.id === s.event)?.choices[a.index];
+    id = c?.item || c?.wager?.item;
+    if (id && loose.some(x => x.uid === a.tradeItem)) delta--;
+  }
+  if (id && !id.startsWith('card:')) delta++;
+  if (a.type === 'unequip' || a.type === 'unsocket') delta++;
+  if (a.type === 'replaceArmor' && !loose.some(x => x.uid === a.old)) delta++;
+  if (delta <= 0 || loose.length + delta <= SATCHEL_CAPACITY) return '';
+  if (a.type === 'unequip') return 'Unable to unequip, your satchel is full. Swap with another item or make room first.';
+  if (a.type === 'unsocket') return 'Unable to unsocket, your satchel is full. Make room for the loose Gem first.';
+  return 'Unable to pick up, your satchel is full. Drop or use an item, or sell or socket items at a Tavern.';
+}
 export function consumableReason(s, item) {
   const f = items[item.id]?.consumable,
     b = s.battle;
   if (!f) return "Not a consumable.";
-  if (s.mode === "field") {
+  if (["field", "tavern", "item", "reward", "event"].includes(s.mode)) {
     if (!f.heal) return "Use this during battle.";
     return s.hp >= s.maxHp ? "Already at full HP." : "";
   }

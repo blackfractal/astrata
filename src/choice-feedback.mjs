@@ -1,4 +1,5 @@
-import { cards, items } from "./content.mjs";
+import { satchelActionReason } from "./consumables.mjs";
+import { cards, items, events } from "./content.mjs";
 import { tradeAssets } from "./engine.mjs";
 import { apexActive } from "./apex.mjs";
 
@@ -8,6 +9,12 @@ export function disabledChoice(esc, label, reason) {
 
 export function eventChoiceReason(s, choice) {
   const reasons = [];
+  if (choice.item || choice.wager?.item) {
+    const index = (s.event && events.find(e => e.id === s.event)?.choices.findIndex(c => c.label === choice.label)) ?? -1;
+    const assets = choice.trade?.kind === "item" ? tradeAssets(s, choice.trade).filter(x => x.eligible) : [null];
+    const capacityReasons = assets.map(x => satchelActionReason(s, {type:"eventChoice", index, tradeItem:x?.uid}));
+    if (capacityReasons.length && capacityReasons.every(Boolean)) reasons.push(capacityReasons[0]);
+  }
   if ((choice.cost || 0) > s.gold) reasons.push("You don't have enough gold.");
   if (choice.maxHpCost && s.maxHp <= choice.maxHpCost) reasons.push("You do not have enough maximum HP to survive this bargain.");
   if (choice.trade) {

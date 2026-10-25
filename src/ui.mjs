@@ -434,21 +434,7 @@ function render(frame = null) {
         .find((x) => x.control?.startsWith("tavern:"))
         ?.control.split(":")[1] || "shop";
   let body = "";
-  if (
-    o.satchel.used > o.satchel.capacity &&
-    actions.some((a) => a.type === "discardItem")
-  ) {
-    body = `<section class="satchel-overflow"><div class="eyebrow">Choose what travels with you</div><h2>Satchel full · ${o.satchel.used} / ${o.satchel.capacity}</h2><p>Keep ${o.satchel.capacity} loose items. Equipped gear and socketed Gems take no space. Nothing is discarded automatically.</p><div class="overflow-items">${actions
-      .filter((a) => a.type === "discardItem")
-      .map((a) => {
-        const x = o.inventory.find((x) => x.uid === a.uid);
-        return `<article>${img("item-" + x.id)}<h3>${items[x.id].name}</h3><p>${text(items[x.id].text)}</p>${actionButton(a)}</article>`;
-      })
-      .join("")}</div><div class="choices">${actions
-      .filter((a) => a.type !== "discardItem")
-      .map((a) => actionButton(a))
-      .join("")}</div></section>`;
-  } else if (o.pendingArmor) {
+  if (o.pendingArmor) {
     body = `<div class="result"><h2>Three Armors, one traveler</h2><p>Choose what to keep.</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div></div>`;
   } else if (o.mode === "apexIntro") {
     body = apexIntroMarkup(actions, actionButton);
@@ -552,7 +538,7 @@ function render(frame = null) {
   } else if (o.mode === "reward" || o.mode === "item") {
     const pausedPickup =
       o.mode === "item" && tutorialGuide(game)?.kind === "note";
-    const offers = pausedPickup ? game.baseLegal() : actions;
+    const offers = pausedPickup ? game.baseLegal() : [...actions, ...(game.capacityBlockedActions || [])];
     const title =
       o.mode === "item"
         ? "Something left behind"
@@ -579,7 +565,7 @@ function render(frame = null) {
         return `<div class="reward-option">${isCard ? card({ id }) : `<div class="card">${img("item-" + id)}<div class="body"><h4>${items[id].name}</h4><p class="text">${text(items[id].text)}</p></div></div>`}<div class="reward-choice">${
           pausedPickup
             ? "<button disabled>Continue the lesson to collect</button>"
-            : actionButton(a, "primary") +
+            : (a.unavailable ? `<button disabled title="${esc(a.unavailable)}">Unable to pick up, your satchel is full.</button><p>Open Inventory to drop or use an item, then collect this one.</p>` : actionButton(a, "primary")) +
               (a.type === "takeItem"
                 ? actions
                     .filter(
