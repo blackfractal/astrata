@@ -84,7 +84,7 @@ test("far-edge Shield matching/attunement and Ally growth/statuses use new neigh
   g.beginTurn();
   assert.equal(ally.hp, hp - 2); // Sapling no longer grows at turn start.
 });
-test("bottom-right 2×2 formation doubles once, respects Sever and cannot cross a row boundary", () => {
+test("bottom-right Grove square grants its bonus, respects Sever and cannot cross a row boundary", () => {
   const g = base(),
     b = g.s.battle,
     c = put(g, "square", 41);

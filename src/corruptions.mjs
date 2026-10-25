@@ -353,6 +353,7 @@ export function startRepairs(g) {
       amount: loss,
       element: "Chaos",
       name: "Insanity",
+      gridSourceSlot: Number(i),
     });
     g.log("Insanity: lose " + loss + " HP.");
     if (g.s.hp <= 0) {

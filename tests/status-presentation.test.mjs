@@ -1,6 +1,31 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
+import { startRepairs } from "../src/corruptions.mjs";
+
+test("Insanity hits originate at each uncovered space, retain damage ramp and stop on death", () => {
+  const g = new Game(17);
+  g.beginBattle([{uid: g.uid(), enemy: "borrowedFace"}]);
+  const b = g.s.battle;
+  b.grid = b.grid.map(() => []);
+  b.corruptions = {
+    0: {kind: "insanity", value: 2},
+    15: {kind: "insanity", value: 3},
+    41: {kind: "insanity", value: 6},
+  };
+  b.grid[15] = [g.instance(g.newCard("blast"))];
+  g.s.hp = 7;
+  g.capturePresentation = true;
+  startRepairs(g);
+  const hits = g.presentation.filter(f => f.kind === "hit" && f.name === "Insanity");
+  assert.deepEqual(hits.map(f => [f.gridSourceSlot, f.target, f.amount, f.element]), [
+    [0, "player", 2, "Chaos"], [41, "player", 5, "Chaos"],
+  ]);
+  assert.equal(b.corruptions[0].value, 3);
+  assert.equal(b.corruptions[15].value, 1);
+  assert.equal(g.s.hp, 0);
+  assert.equal(g.s.mode, "result");
+});
 function base(element = "Arcane") {
   const g = new Game(8);
   g.s.equipment = {};

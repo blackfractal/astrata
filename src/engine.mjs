@@ -240,26 +240,34 @@ export function enemyDamage(n, element, enemy) {
   if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
   return damage;
 }
-// Shared by damage and its visual indicator; first valid block wins (no stacking).
-export function squarePattern(b, c, i) {
-  if (cardSevered(b, c, i)) return [];
-  for (const origin of [i, i - 1, i - MIND_COLUMNS, i - MIND_COLUMNS - 1]) {
-    if (
-      origin < 0 ||
-      origin % MIND_COLUMNS >= MIND_COLUMNS - 1 ||
-      origin >= MIND_SIZE - MIND_COLUMNS
-    )
-      continue;
-    const cells = [
-      origin,
-      origin + 1,
-      origin + MIND_COLUMNS,
-      origin + MIND_COLUMNS + 1,
-    ];
-    if (cells.every((j) => top(b.grid[j]) && !cardSevered(b, top(b.grid[j]), j)))
-      return cells;
+// Damage and presentation share one strongest solid square. Equal bonuses prefer
+// more cells, then the topmost/leftmost origin. Melded layers are not extra spaces.
+export function squareFormation(b, c, i) {
+  let best = { slots: [], size: 0, bonus: 0, earth: 0 };
+  const eligible = j => {
+    const card = top(b.grid[j]);
+    return card && !cardSevered(b, card, j) && !cardFrozen(b, card, j) && !coveredByIdeon(b, j);
+  };
+  if (!c || top(b.grid[i])?.uid !== c.uid || !eligible(i)) return best;
+  const row = Math.floor(i / MIND_COLUMNS), col = i % MIND_COLUMNS;
+  for (let size = 2; size <= Math.min(MIND_COLUMNS, MIND_ROWS); size++) {
+    for (let y = Math.max(0, row - size + 1); y <= Math.min(row, MIND_ROWS - size); y++) {
+      for (let x = Math.max(0, col - size + 1); x <= Math.min(col, MIND_COLUMNS - size); x++) {
+        const slots = [];
+        for (let dy = 0; dy < size; dy++)
+          for (let dx = 0; dx < size; dx++) slots.push((y + dy) * MIND_COLUMNS + x + dx);
+        if (!slots.every(eligible)) continue;
+        const earth = slots.filter(j => j !== i && attunementSourceElement(b, top(b.grid[j])) === "Earth").length;
+        const bonus = 2 * (slots.length - 1) + 2 * earth;
+        if (bonus > best.bonus || (bonus === best.bonus && size > best.size))
+          best = { slots, size, bonus, earth };
+      }
+    }
   }
-  return [];
+  return best;
+}
+export function squarePattern(b, c, i) {
+  return squareFormation(b, c, i).slots;
 }
 export function cardEffects(c) {
   return {
@@ -379,7 +387,7 @@ export function cardPower(b, c, i, target = null) {
     );
   if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
-  if (f.square && squarePattern(b, c, i).length) n *= 2;
+  if (f.square) n += squareFormation(b, c, i).bonus;
   return corruptionPower(b, i, growthDamage(b, c, i, n));
 }
 

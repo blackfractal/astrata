@@ -11,8 +11,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.23",
-  content: "4.0.23",
+  rules: "4.0.25",
+  content: "4.0.25",
   observation: 2,
   actions: 10,
 };
@@ -622,13 +622,13 @@ card(
 );
 card(
   "square",
-  "Fourfold Grove",
+  "Resonant Grove",
   "Earth",
   "Spell",
   1,
   2,
   { damage: 6, square: true },
-  "Deal 6 damage. Double in an intact 2 by 2 formation.",
+  "Deal 6 damage, plus 2 for each other card in the strongest complete square containing this card (2 by 2 or larger). Earth cards contribute 4 instead, including committed Earth Attunement this turn. Frozen, Severed, or Ideon-covered cards break the formation. Only exposed cards count; use one square, not multiple bonuses.",
   { rarity: "rare" },
 );
 card(

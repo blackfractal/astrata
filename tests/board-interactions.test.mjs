@@ -160,7 +160,7 @@ test("Visuals don't recalculate stored block after adjacency changes, and are re
   );
 });
 
-test("Fourfold visual block matches damage in every corner, retargets and breaks on Sever", () => {
+test("Resonant Grove visual square matches damage in every corner, retargets and breaks on Sever", () => {
   for (const i of [8, 9, 15, 16]) {
     const g = base(),
       b = g.s.battle;
@@ -176,11 +176,11 @@ test("Fourfold visual block matches damage in every corner, retargets and breaks
     b = g.s.battle,
     c = put(g, "square", 8);
   for (const j of [7, 9, 14, 15, 16]) put(g, "shield", j);
-  assert.deepEqual(squarePattern(b, c, 8), [8, 9, 15, 16]);
+  assert.deepEqual(squarePattern(b, c, 8), [7, 8, 14, 15]);
   assert.equal(cardPower(b, c, 8), 12);
-  b.grid[9] = [];
-  assert.deepEqual(cardInteraction(b, c, 8).pattern, [7, 8, 14, 15]);
   b.grid[14] = [];
+  assert.deepEqual(cardInteraction(b, c, 8).pattern, [8, 9, 15, 16]);
+  b.grid[9] = [];
   assert.deepEqual(squarePattern(b, c, 8), []);
 });
 

@@ -11,7 +11,7 @@ import {
   attunementSourceElement,
   gridNeighbors,
   damageBonusNeighbors,
-  squarePattern,
+  squareFormation,
   cardAllowance,
   corner,
 } from "./engine.mjs";
@@ -46,13 +46,15 @@ export function cardInteraction(b, c, i) {
     : portions.length
       ? unique(portions.map((p) => p.element))
       : [cast || c.element];
+  const formation = d.effects.square ? squareFormation(b, c, i) : null;
   return {
     attunes,
     conduit: conduitActive(b, c),
     neighbors,
     providers,
     matching,
-    pattern: d.effects.square ? squarePattern(b, c, i) : [],
+    pattern: formation?.slots || [],
+    formation,
     choices: attunementElements(b, c, i),
     portions,
     cast,
@@ -163,21 +165,7 @@ export function boardConnections(b) {
         )
           add(i, j, "allowance", "Light", "+1 activation allowance");
       }
-    if (!active || !m.pattern.length) continue;
-    const [tl, tr, bl, br] = m.pattern;
-    for (const [a, z] of [
-      [tl, tr],
-      [tl, bl],
-      [tr, br],
-      [bl, br],
-    ])
-      add(a, z, "pattern", null, "Fourfold 2×2 damage bonus", i, true);
-    const opposite = m.pattern.find(
-      (j) =>
-        Math.floor(j / MIND_COLUMNS) !== Math.floor(i / MIND_COLUMNS) &&
-        j % MIND_COLUMNS !== i % MIND_COLUMNS,
-    );
-    add(opposite, i, "pattern", null, "Fourfold opposite corner", i);
+    // Resonant Grove uses a single area outline, drawn separately below.
   }
   return links;
 }
@@ -208,7 +196,8 @@ export function inspectLinks(ctx, i = null) {
       i != null &&
         (Number(link.dataset.from) === i ||
           Number(link.dataset.to) === i ||
-          link.dataset.patternOwner === String(i)),
+          link.dataset.patternOwner === String(i) ||
+          link.dataset.patternSlots?.split(",").includes(String(i))),
     );
 }
 function severBorder(slot) {
@@ -355,9 +344,9 @@ export function boardInteractions(ctx) {
     if (m.pattern.length) {
       const badge = document.createElement("span");
       badge.className = "synergy-bonus pattern-bonus";
-      badge.textContent = "2×2 · ×2";
+      badge.textContent = `${m.formation.size}×${m.formation.size} · +${m.formation.bonus}`;
       badge.dataset.tooltip =
-        "Intact 2×2 formation: double damage, already included below. All four exposed cards must be present and not Severed. One qualifying formation is shown; multiple formations do not multiply the bonus again.";
+        `Strongest complete square: ${m.pattern.length - 1} other cards, ${m.formation.earth} Earth. +${m.formation.bonus} damage before other modifiers, already included below. Earth contributes 4, other elements 2. Frozen, Severed and Ideon-covered cards break the formation. Falls back to the best remaining square; ties prefer larger, then topmost/leftmost.`;
       slot.querySelector(".nums")?.append(badge);
     }
     if (m.bonus) {
@@ -504,6 +493,39 @@ export function boardInteractions(ctx) {
   for (const connection of boardConnections(b)) {
     const { from, to, type, element, owner, both, reason } = connection;
     edge(from, to, type, element, owner, both, reason);
+  }
+  for (const [i, stack] of b.grid.entries()) {
+    const c = stack.at(-1);
+    if (!c || !cards[c.id].effects.square || cardAllowance(b, c, i) <= 0) continue;
+    const formation = squareFormation(b, c, i);
+    if (!formation.size) continue;
+    const rect = j => ctx.app.querySelector(`[data-slot="${j}"]`).getBoundingClientRect();
+    const first = rect(formation.slots[0]), last = rect(formation.slots.at(-1)), owner = rect(i);
+    const corners = r => [[r.left, r.top], [r.right, r.top], [r.right, r.bottom], [r.left, r.bottom]];
+    const outer = corners({left:first.left + 1,top:first.top + 1,right:last.right - 1,bottom:last.bottom - 1});
+    const inner = corners({left:owner.left + 5,top:owner.top + 5,right:owner.right - 5,bottom:owner.bottom - 5});
+    const point = ([x,y]) => `${x - box.left},${y - box.top}`;
+    const group = document.createElementNS(ns, "g");
+    group.classList.add("board-link", "grove-pattern");
+    group.dataset.patternOwner = String(i);
+    group.dataset.patternSlots = formation.slots.join(",");
+    group.dataset.size = String(formation.size);
+    group.dataset.bonus = String(formation.bonus);
+    group.style.setProperty("--link-color", "#b7dc88");
+    const title = document.createElementNS(ns,"title");
+    title.textContent = `Resonant Grove: ${formation.size}×${formation.size}, +${formation.bonus} damage`;
+    group.append(title);
+    const draw = (d, kind) => {
+      for (const layer of ["link-rail", "link-glow", "link-core"]) {
+        const path = document.createElementNS(ns,"path");
+        path.setAttribute("d",d);
+        path.setAttribute("class",`${kind} ${layer}`);
+        group.append(path);
+      }
+    };
+    draw(`M${outer.map(point).join(" L")} Z`,"grove-outline");
+    outer.forEach((p,n) => draw(`M${point(p)} L${point(inner[n])}`,"grove-corner"));
+    svg.append(group);
   }
   mind.append(svg);
 }
