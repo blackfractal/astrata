@@ -1,0 +1,149 @@
+/* Enemy-side composition: mirror only the artwork, including portraits and previews. */
+img[src$="enemy-apex.png"],
+img[src$="enemy-riftBoar.png"],
+img[src$="enemy-riftChimera.png"] {
+  scale: -1 1;
+}
+
+.in-apex .hero,
+.apex-intro .scene-art,
+.apex-summit .scene-art {
+  background:
+    linear-gradient(90deg, #17141ddd, #17141d33),
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
+}
+.field.apex-field {
+  background:
+    linear-gradient(#211a2433, #211a2433),
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
+}
+.in-apex .mind {
+  background-image:
+    linear-gradient(#17142135, #17142135),
+    url("../assets/location-apex-mind-v2.png") !important;
+  background-size: cover;
+}
+.in-apex .enemy-line {
+  background:
+    linear-gradient(#17142199, #171421cc),
+    var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
+  border-radius: 12px;
+}
+.apex-deadline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #94739b;
+  border-radius: 8px;
+  background: #201722;
+  font-size: 12px;
+}
+#app.in-apex .field-wrap:has(.direction-pad) {
+  width: 480px;
+}
+#app.in-apex .field-wrap:has(.direction-pad) .field {
+  width: 480px;
+}
+.in-apex .apex-deadline {
+  font-size: 11px;
+  padding: 6px 8px;
+}
+.in-apex .apex-roster {
+  margin-bottom: 5px;
+}
+.apex-deadline strong {
+  color: #e8c6f0;
+}
+.apex-deadline span {
+  color: #b9abbf;
+}
+.apex-deadline.urgent {
+  border-color: #f0a75b;
+}
+.apex-deadline.urgent strong {
+  color: #ffd19c;
+}
+.apex-roster {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+.apex-roster > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.apex-roster img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #c7a2cf;
+  object-fit: cover;
+}
+.apex-roster .defeated {
+  opacity: 0.45;
+}
+.apex-seal {
+  position: absolute;
+  inset: 1px;
+  border: 2px solid #e8b3ff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 9px #b272e8,
+    inset 0 0 6px #e8b3ff;
+  pointer-events: none;
+}
+.apex-seal img {
+  position: absolute;
+  inset: 3px;
+  width: calc(100% - 6px) !important;
+  height: calc(100% - 6px) !important;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+.apex-seal > span {
+  position: absolute;
+  bottom: -3px;
+  right: -2px;
+  color: #fff1d5;
+  font-size: 19px;
+  text-shadow: 0 0 5px #b76aff;
+}
+.apex-seal.fallen {
+  opacity: 0.25;
+}
+.in-apex .glyph-Ascend {
+  color: #fff2bc;
+  text-shadow: 0 0 12px #e6be70;
+}
+.apex-beast {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.apex-summit-room {
+  display: grid;
+  grid-template-columns: repeat(5, 18px);
+  gap: 3px;
+  margin: 18px 0;
+}
+.apex-summit-room span {
+  height: 18px;
+  border: 1px solid #58435f;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 14px;
+}
+.apex-summit-room .summit-center {
+  color: #ffe1a1;
+  border-color: #ffe1a1;
+  box-shadow: 0 0 10px #f0bc6e80;
+}
+.apex-ending {
+  font-size: 13px;
+  color: #b6a6bd;
+  margin-top: 20px;
+}

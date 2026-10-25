@@ -718,6 +718,8 @@ export class WeightedPolicy {
           (f.heal ? Math.min(injured, f.heal) * 1.4 : 0) +
             (f.gold || 0) * 0.2 +
             (f.hp || 0) * 1.5 +
+            (f.maxHpCost ? -f.maxHpCost * 2.5 : 0) +
+            (f.wager ? this.itemValue({ id: f.wager.item }, o) / f.wager.odds : 0) +
             (f.card ? this.cardValue(f.card, o) : 0) +
             (f.hex ? -30 : 0) +
             (f.item ? this.itemValue({ id: f.item }, o) : 0) +

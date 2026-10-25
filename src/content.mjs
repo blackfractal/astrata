@@ -1,3 +1,4 @@
+import {addPremiumEvents} from "./premium-gear.mjs";
 import {addSupplies, socketPrice} from "./supplies-content.mjs";
 import { registerApex } from "./apex-content.mjs";
 import { registerGrowth } from "./growth-content.mjs";
@@ -10,8 +11,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.21",
-  content: "4.0.21",
+  rules: "4.0.23",
+  content: "4.0.23",
   observation: 2,
   actions: 10,
 };
@@ -1885,5 +1886,6 @@ export function cardText(definition, stratum = 1) {
 }
 
 addSupplies(items, events);
+addPremiumEvents(events);
 registerApex(enemy);
 tuneEnemyHealth(enemies);

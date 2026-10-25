@@ -546,7 +546,7 @@ function render(frame = null) {
       .map(([k, v]) => k + " " + v)
       .join(" · ")}</small></div></section>${sidebar(o)}</div>`;
   } else if (o.mode === "event") {
-    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/${o.stratum === 4 ? "location-apex-floor" + (o.apex?.floor || 1) : "event-" + o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
+    body = `<section class="scene"><div class="scene-art" style="background-image:url('assets/${o.stratum === 4 ? "location-apex-floor" + (o.apex?.floor || 1) : o.event.art || "event-" + o.event.id}.png')"></div><div class="scene-copy"><div class="eyebrow">An encounter in ${esc(o.stratumName)}</div><h2>${o.event.name}</h2><div class="rule"></div><p>${o.event.text}</p><div class="choices">${actions.map((a) => actionButton(a)).join("")}</div>${botControls()}</div></section>`;
   } else if (o.mode === "tavern") {
     body = `<div class="layout tavern-layout"><section></section>${sidebar(o)}</div>`;
   } else if (o.mode === "reward" || o.mode === "item") {

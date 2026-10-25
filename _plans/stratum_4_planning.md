@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.14 · 2026-10-24 · Jonathan / Codex
+Design draft 0.15 · 2026-10-24 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -22,7 +22,7 @@ Jonathan authorized implementation. The four-floor ascent, paired rematches, dea
 | Move | Direct attack | Additional effect |
 | --- | --- | --- |
 | Riven Earth | 24 Earth | Telegraph two Nauseas; summon one Hollow Sentinel |
-| Rending Fangs | 28 Fire | Apply pending Corruptions; destroy the single most valuable Construct (4.0.17) |
+| Rending Fangs | 16 Fire + 16 Fire | Apply pending Corruptions; no Construct destruction (4.0.22) |
 | Hollow Hunger | 16 Chaos, then 16 Light | Telegraph two Insanities; summon one Ward Leech |
 | Unmake H / V | 26 Arcane | Apply pending Corruptions; alternate fullest row (first cycle) and fullest column (next cycle) |
 | Brood of the Summit | 18 Water, then 18 Wind | Telegraph two Hypnoses; summon two Glass Skitters |

@@ -23,7 +23,7 @@ function act(g, type, predicate = () => true) {
   assert.ok(a, type);
   g.act(a);
 }
-for (const [cycle, expected] of [[1, [19]], [5, [19, 4]]])
+for (const [cycle, expected] of [[5, [19, 4]]])
   test(`Apex destruction move ${cycle} removes its promised number of whole Constructs`, () => {
     const g = base("apex", cycle), b = g.s.battle;
     put(g, 4); put(g, 7); put(g, 19, 2);
@@ -233,14 +233,16 @@ test("Continue finishes a legacy committed Unmake row even when the new cycle wo
   assert.equal(h.s.battle.grid[31].length, 1);
 });
 
-function nauseaFangs() {
-  const g = base("apex", 1), b = g.s.battle;
+function nauseaWorldEater() {
+  const g = base("apex", 5), b = g.s.battle;
   g.s.hp = g.s.maxHp = 1000;
   b.phase = "activate";
   b.grid[0] = [g.instance(g.newCard("grove"))];
   b.grid[0][0].used = 3;
   b.grid[0][0].hp = 1;
   b.grid[10] = [g.instance(g.newCard("prismaticSap"))];
+  b.grid[35] = [g.instance(g.newCard("grove"))];
+  b.grid[35][0].hp = 100;
   const shield = g.instance(g.newCard("shield"));
   shield.used = 2;
   b.grid[20] = [shield];
@@ -249,13 +251,13 @@ function nauseaFangs() {
   return g;
 }
 
-test("Fangs honors the committed warning when its own Nausea changes card values", () => {
-  const g = nauseaFangs(), b = g.s.battle;
-  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [10]);
+test("World Eater honors committed targets when pending Nausea changes card values", () => {
+  const g = nauseaWorldEater(), b = g.s.battle;
+  assert.deepEqual(g.observe().battle.telegraphs[0].targets, [35, 10]);
   const changed = new Game(0, structuredClone(g.s));
   applyCorruptions(changed, changed.s.battle.enemies[0]);
-  assert.deepEqual(gridTargets(changed.s.battle, changed.tell(changed.s.battle.enemies[0])), [20]);
-  const threatened = [b.grid[10][0].uid];
+  assert.deepEqual(gridTargets(changed.s.battle, changed.tell(changed.s.battle.enemies[0])), [35, 20]);
+  const threatened = [b.grid[35][0].uid, b.grid[10][0].uid];
   act(g, "endTurn");
   assert.deepEqual(b.destroyed.map(c => c.uid), threatened);
   assert.equal(b.corruptions[9].kind, "nausea");
@@ -263,7 +265,7 @@ test("Fangs honors the committed warning when its own Nausea changes card values
 });
 
 test("Legacy queued destruction locks before applying its own Corruptions", () => {
-  const g = nauseaFangs(), b = g.s.battle;
+  const g = nauseaWorldEater(), b = g.s.battle;
   b.phase = "enemy";
   b.jobs = [{ kind: "enemyAction", uid: b.enemies[0].uid }];
   g.pump();

@@ -1,0 +1,63 @@
+import {corruptionPower} from "./corruptions.mjs";
+import {supplyPreview} from './supplies.mjs';
+import {growthDamage} from "./growth-rules.mjs";
+import { areaHits } from "./area-targets.mjs";
+import { protectedOwner } from "./ideons.mjs";
+import { cards } from "./content.mjs";
+import {
+  cardPower,
+  cardEffects,
+  gridNeighbors,
+  enemyDamage,
+  attunementSourceElement,
+} from "./engine.mjs";
+export function attackElements(b, c, i, element = c.element) {
+  if (cards[c.id].effects.concord)
+    return [
+      ...new Set(
+        gridNeighbors(b, i)
+          .map((j) => attunementSourceElement(b, b.grid[j].at(-1)))
+          .filter((el) => el !== "Arcane"),
+      ),
+    ].slice(0, 4);
+  const cycle = ["Fire", "Earth", "Wind", "Water"];
+  return cards[c.id].effects.prism &&
+    cycle.every((el) =>
+      gridNeighbors(b, i).some((j) => b.grid[j].at(-1).element === el),
+    )
+    ? cycle
+    : [element];
+}
+// A read-only preview of this card's direct hits; gear and secondary effects are separate.
+export function attackPreview(b, c, i, enemy, element = c.element, action = {}) {
+  const d = cards[c.id],
+    f = cardEffects(c);
+  if (
+    !(f.damage || f.hpDamage || f.guide) ||
+    f.randomDamage ||
+    (f.all && !areaHits(f, i, enemy)) ||
+    d.stack === "plasmaMeld" ||
+    (d.charge && c.charge < d.charge)
+  )
+    return null;
+  const boost=supplyPreview(b,c,i,element);
+  const power = (
+      (f.forked ? corruptionPower(b,i,(action.effects?.route?.find(x=>x.uid===enemy.uid)?.damage||f.damage)+growthDamage(b,c,i,0)) :
+       f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0))) : cardPower(b, c, i, enemy)) * (f.ideonDouble && enemy.ideon ? 2 : 1)+boost.damageBonus)*boost.damageMultiplier,
+    elements = f.braided ? [element,action.secondaryElement].filter(Boolean) : attackElements(b, c, i, element);
+  const base = power * elements.length;
+  const damage =
+    enemy.flicker || (!enemy.ideon && protectedOwner(b, enemy.uid))
+      ? 0
+      : elements.reduce((sum, el) => sum + enemyDamage(power, el, enemy), 0);
+  const blocked = Math.min(damage, enemy.guard || 0);
+  return {
+    base,
+    damage,
+    blocked,
+    hpLoss: Math.min(enemy.hp, damage - blocked),
+    delta: damage - base,
+    elements,
+    negated: !!enemy.flicker,
+  };
+}

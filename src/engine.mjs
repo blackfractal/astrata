@@ -1,3 +1,4 @@
+import {PREMIUM_GEAR} from "./premium-gear.mjs";
 import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
 import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete } from "./apex.mjs";
 import { pressureDamage, pressureTell, pressureSignature } from "./difficulty.mjs";
@@ -537,6 +538,10 @@ export function tradeAssets(s, trade) {
           items[s.inventory.find((g) => g.uid === x.gem)?.id]?.cursed) ||
         (!isItem && d.type === "Hex")
           ? "Cannot trade a Curse or Hex"
+          : trade.equippedOnly && !Object.values(s.equipment).includes(x.uid)
+            ? "This bracelet must be equipped"
+          : trade.requireGem && !s.inventory.some(g => g.uid === x.gem)
+            ? "This bracelet needs a fitted Gem"
           : socketed
             ? "Remove this Gem at a Tavern before trading it"
             : null;
@@ -1131,10 +1136,10 @@ export class Game {
       ),
     };
     this.s.eventDeck = this.shuffle(
-      events.filter((e) => e.id !== "shrine").map((e) => e.id),
+      events.filter((e) => e.id !== "shrine" && !e.resultOnly).map((e) => e.id),
     ).filter(id => this.eventPool().includes(id));
     this.s.itemDeck = this.shuffle([
-      ...Object.keys(items).filter((id) => !items[id].fieldOnly && suppliesAvailable(this.s,id)),
+      ...Object.keys(items).filter((id) => !items[id].fieldOnly && !PREMIUM_GEAR.has(id) && suppliesAvailable(this.s,id)),
       ...Object.keys(cards)
         .filter(
           (id) =>
@@ -1156,7 +1161,7 @@ export class Game {
   normalizeRewards() {
     const s = this.s;
     if (s.itemDeck) s.itemDeck = s.itemDeck.filter(id =>
-      !id.startsWith("card:") || !excludedStarterOffers.has(id.slice(5)));
+      id.startsWith("card:") ? !excludedStarterOffers.has(id.slice(5)) : !PREMIUM_GEAR.has(id));
     if (s.reward?.cards) {
       if (
         s.reward.boss && !s.reward.apexReward &&
@@ -1195,7 +1200,7 @@ export class Game {
         "channelRing",
         "focusRing",
         "necklace",
-      ]);
+      ].filter(id => (s.stratum || 1) >= 2 || !PREMIUM_GEAR.has(id)));
   }
   normalizeShop() {
     const stock = this.s.shop?.stock;
@@ -1391,7 +1396,7 @@ export class Game {
   }
   eventPool() {
     const stratum = this.s.stratum || 1;
-    return events.filter(e => e.id !== "shrine" &&
+    return events.filter(e => e.id !== "shrine" && !e.resultOnly &&
       (stratum >= 3 ? e.stratum === 3 : !e.stratum || e.stratum === stratum))
       .map(e => e.id);
   }
@@ -1696,7 +1701,7 @@ export class Game {
           e.item ||
             this.drawDeck(
               "itemDeck",
-              Object.keys(items).filter((id) => !items[id].fieldOnly && suppliesAvailable(this.s,id)),
+              Object.keys(items).filter((id) => !items[id].fieldOnly && !PREMIUM_GEAR.has(id) && suppliesAvailable(this.s,id)),
             ),
         ];
         s.mode = "item";
@@ -1861,7 +1866,7 @@ export class Game {
       status: blankStatus(),
     });
   }
-  beginBattle(entities, { enemyFirst = false } = {}) {
+  beginBattle(entities, { enemyFirst = false, victoryItem = null } = {}) {
     // The Hive's opening swarm always allows a player response before it moves.
     if (entities.some(e => e.enemy === "mindHive")) enemyFirst = false;
     tutorialBattle(this, entities);
@@ -1871,6 +1876,7 @@ export class Game {
     s.battle = {
       turn: 0,
       enemyFirst,
+      victoryItem,
       phase: "place",
       columns: MIND_COLUMNS,
       rows: MIND_ROWS,
@@ -3438,6 +3444,7 @@ export class Game {
         setting: boss,
       };
       if (apexActive(s)) s.reward = apexVictory(this, original);
+      if (b.victoryItem) s.reward.setting = b.victoryItem;
       this.normalizeRewards();
       if (tutorialReward(this)) return;
       delete s.checkpoint;
@@ -3509,7 +3516,7 @@ export class Game {
     );
     s.enemyDecks = {};
     s.itemDeck = this.shuffle([
-      ...Object.keys(items).filter((id) => !items[id].fieldOnly),
+      ...Object.keys(items).filter((id) => !items[id].fieldOnly && !PREMIUM_GEAR.has(id) && suppliesAvailable(s,id)),
       ...this.pool("common").filter(c => !excludedStarterOffers.has(c.id)).map((c) => "card:" + c.id),
       ...this.pool("rare").filter(c => !excludedStarterOffers.has(c.id)).map((c) => "card:" + c.id),
     ]);
@@ -3851,7 +3858,7 @@ export class Game {
     if (s.mode === "event") {
       const event = events.find((x) => x.id === s.event);
       event.choices.forEach((c, index) => {
-        if ((c.cost || 0) > s.gold) return;
+        if ((c.cost || 0) > s.gold || (c.maxHpCost && s.maxHp <= c.maxHpCost)) return;
         if (c.trade) {
           for (const asset of tradeAssets(s, c.trade).filter(
             (x) => x.eligible,
@@ -4589,6 +4596,18 @@ export class Game {
           s.deck = s.deck.filter((x) => x.uid !== a.tradeCard);
         }
         if (c.cost) this.spend(c.cost);
+        if (c.maxHpCost) {
+          s.maxHp -= c.maxHpCost;
+          s.hp = Math.min(s.hp, s.maxHp);
+          this.log(`Gave ${c.maxHpCost} maximum HP. Maximum HP is now ${s.maxHp}.`);
+        }
+        if (c.wager) {
+          const won = this.rand() < 1 / c.wager.odds;
+          if (won) this.addItem(c.wager.item);
+          s.event = won ? "keepersWagerWon" : "keepersWagerLost";
+          this.log(won ? `Wager won: ${items[c.wager.item].name}.` : `Wager lost: ${c.cost} Gold, no reward.`);
+          break;
+        }
         if (c.hp) {
           s.hp += c.hp;
           s.stats.damageTaken += Math.max(0, -c.hp);
@@ -4614,7 +4633,7 @@ export class Game {
               restless: 0,
               count: c.count || 1,
             },
-          ]);
+          ], { victoryItem: c.victoryItem || null });
         else this.resolveTile();
         break;
       }

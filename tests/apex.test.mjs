@@ -345,7 +345,7 @@ test("Predator has readable destruction warnings, bounded owned Ideons, Purify c
   assert.equal(g.tell(e).damage, 27);
   e.hp = 250;
   assert.equal(g.tell(e).damage, 31);
-  e.cycle = 1;
+  e.cycle = 5;
   b.grid[10] = [g.instance(g.newCard("ward"))];
   assert.ok(g.gridTelegraphs().some((t) => t.targets.includes(10)));
   e.purifyPending = true;

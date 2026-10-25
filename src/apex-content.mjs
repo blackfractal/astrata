@@ -67,12 +67,12 @@ export function registerApex(enemy) {
       },
       {
         name: "Rending Fangs",
-        damage: 28,
         element: "Fire",
+        sequence: [
+          { damage: 16, element: "Fire" },
+          { damage: 16, element: "Fire" },
+        ],
         applyCorruption: true,
-        grid: "destroy",
-        target: "valuable",
-        count: 1,
         commandIdeons: true,
       },
       {
@@ -122,7 +122,7 @@ export function registerApex(enemy) {
         commandIdeons: true,
       },
     ],
-    "Commands its surviving Ideons on every move, including Purify. Riven Earth summons a Hollow Sentinel; Hollow Hunger a Ward Leech; Brood summons two Glass Skitters. At most six owned Ideons. Rending Fangs destroys the most valuable Construct; World Eater destroys the two most valuable Constructs. Unmake alternates each cycle: H destroys the fullest row, then V the fullest column. Count all cards, including melded cards; ties choose the topmost row or leftmost column. Corruptions are warned one move before application; destruction is telegraphed. Direct damage rises by 3 per full cycle and another 4 below half HP. Cycle-end Purify clears damage statuses when needed.",
+    "Commands its surviving Ideons on every move, including Purify. Riven Earth summons a Hollow Sentinel; Hollow Hunger a Ward Leech; Brood summons two Glass Skitters. At most six owned Ideons. Rending Fangs strikes twice with Fire without destroying Constructs; World Eater destroys the two most valuable Constructs. Unmake alternates each cycle: H destroys the fullest row, then V the fullest column. Count all cards, including melded cards; ties choose the topmost row or leftmost column. Corruptions are warned one move before application; destruction is telegraphed. Each direct hit rises by 3 per full cycle and another 4 at or below half HP. Cycle-end Purify clears damage statuses when needed.",
     "Sustain and rebuild your formation. Clear the Sentinel to attack its owner, repair dangerous spaces, and Recall valuable cards before destruction. Its elemental attacks require several defenses.",
     { stratum: 4, corruptionCap: 10, ideonCap: 6, apexPredator: true },
   );

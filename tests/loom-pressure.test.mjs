@@ -76,6 +76,8 @@ test("Hollow Scribe fills a third of the grid, spreads marks, redirects coverage
     b = g.s.battle,
     e = b.enemies[0];
   g.capturePresentation = true;
+  // Isolate the spatial-spread fixture from overworld loot/event pool changes.
+  g.s.rng = 83;
   g.endTurn();
   assert.ok(
     g.presentation.some(

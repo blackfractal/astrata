@@ -9,6 +9,7 @@ export function disabledChoice(esc, label, reason) {
 export function eventChoiceReason(s, choice) {
   const reasons = [];
   if ((choice.cost || 0) > s.gold) reasons.push("You don't have enough gold.");
+  if (choice.maxHpCost && s.maxHp <= choice.maxHpCost) reasons.push("You do not have enough maximum HP to survive this bargain.");
   if (choice.trade) {
     const assets = tradeAssets(s, choice.trade);
     if (!assets.some(x => x.eligible)) {

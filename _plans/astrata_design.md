@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.241
+# Astrata: Game Design Document v4.243
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -183,6 +183,19 @@ Avoiding enemies while farming Gold, Items, and Taverns must not be a winning st
 In physical play this is a token placed on the enemy card. Restlessness makes Skittish enemies harder to catch and Sentinels a growing threat, so the Field slowly pushes the player toward fighting.
 
 ### 2.9 Events and the Item Deck
+**Premium equipment acquisition (v4.0.23).** Gold Bracelet, Focus Ring, Channel Ring, Mirror Armor, Prismatic Bracelet, Reservoir Bracelet, Reclaimer's Bracelet, Last Stand Bracelet, Echo Ring, Helm of Resonance, and Armor of Remembrance are excluded from ordinary free Item pickups in every Stratum. They remain in eligible Tavern stock at their existing prices, and later-Stratum Archon equipment rewards may offer premium gear. S1 Archon Setting rewards exclude premium gear. This is an acquisition rule, not a change to equipment stats. Preserve owned gear and already-revealed offers; remove premium gear from unseen saved Item Decks without rerolling their remaining order or advancing randomness.
+
+Four optional events provide explicit alternatives to purchasing premium equipment:
+
+| Event | Stratum | Bargain |
+|---|---:|---|
+| The Gilded Heartwood | 1 | Gold Bracelet for 15 permanent maximum HP. Clamp current HP only if above the new maximum; require at least 1 maximum HP afterward. |
+| The Keeper's Wager | 1 | Pay 100 Gold for a seeded one-in-three chance of Gold Bracelet; otherwise lose the stake with no reward. Show odds before committing and a persistent result afterward. |
+| The Counterweight Smith | 2 | Pay 100 Gold and surrender one chosen **equipped bracelet with its fitted gem** for Gold, Prismatic, or Reclaimer's Bracelet. The new Setting is empty. Show the surrendered gem, reward details, and unavailable trade reasons. |
+| The Sealed Reflection | 2 | Optional Censer Engine fight; Mirror Armor is offered only after victory, alongside normal encounter rewards. Save the promised prize with the battle. |
+
+Each event includes a leave option. Unaffordable or unsafe choices remain visible with a specific reason. Wager result scenes never enter random event pools. No recurring HP curse is introduced.
+
 **Stratum eligibility applies to the initial Event Deck and every later draw/refill.** Stratum 3 events, including A Light in the Chitin, The Listening Stone and The Divided Passage, cannot appear in S1 or S2. Existing saved event queues must obey the same restriction while preserving the order of eligible events. Events already opened or resolved are not retroactively replaced.
 
 **Events** work like Slay the Spire events: a card from the Stratum's **Event Deck** is drawn and anything can happen. Examples of the range:
@@ -583,6 +596,8 @@ Skittish enemies are weaker fighters with richer drops, so chasing them is a del
 The Grimoire begins at about 10 generic cards and is expected to reach roughly 30 by the end of a run. Taverns let the player remove cards to keep it lean.
 
 ### 6.2 Equipment: Body Slots, Settings, and Gems
+**Build variety.** Final equipment should offer competing build choices rather than converge on Gold Bracelets and Holy Armor. Preserve reliable general-purpose gear, while alternatives reward distinct engines such as Recall, elemental preparation, charged attacks, or managing card destruction. Conditional gear should compete when its condition is met, without universally exceeding the general-purpose option. Additional proposals are recorded in `reports/premium-equipment-report.md`; they are not yet implemented balance rules.
+
 Equipment is deliberately shallow so the Mind Grid stays the source of complexity. The body has **seven slots**:
 
 | Slot | Holds | Kind |
@@ -714,7 +729,7 @@ If an acquisition or inventory change would leave more than twelve loose items, 
 
 ### 6.7.1 Tactical supplies and engine equipment (v4.0.15)
 
-These items supplement the five introductory consumables. All retain the twelve-slot Satchel, cost no Channel, and have no per-turn limit. Status cures and Sealed Breath may be used during an incoming defense choice, like Healing Sap; other supplies require a player phase and legal targets. They appear in normal Item loot, finite Tavern stock, events, and fight item rewards. Existing inventory/offers are preserved. New specialty equipment and the premium potions below start in S2; earlier items remain available later. The introductory scattered supplies and tutorial bottles remain unchanged.
+These items supplement the five introductory consumables. All retain the twelve-slot Satchel, cost no Channel, and have no per-turn limit. Status cures and Sealed Breath may be used during an incoming defense choice, like Healing Sap; other supplies require a player phase and legal targets. Consumables appear in normal Item loot, finite Tavern stock, events, and fight item rewards; specialty equipment follows the premium acquisition rules in §2.9. Existing inventory/offers are preserved. New specialty equipment and the premium potions below start in S2; earlier items remain available later. The introductory scattered supplies and tutorial bottles remain unchanged.
 
 | Consumable | Effect | Gold | First Stratum |
 |---|---|---:|---:|
@@ -1350,7 +1365,7 @@ No new S4 play evidence in this pass. See reports/growth-manual-balance-report.m
 
 **Apex Predator endurance tuning (4.0.13):** 500 maximum HP (previously 640). Keep its six-move cycle, destruction, Corruptions, Ideons, +3 direct damage per completed cycle, and +4 per direct hit at half HP or lower (250 HP). This change shortens attrition without removing formation planning. Existing in-progress battle HP remains saved; new encounters use 500.
 
-**Apex Predator rebuilding window (4.0.17):** Rending Fangs destroys only the single most valuable Construct, down from two. World Eater still destroys the two most valuable Constructs. Unmake is subsequently revised below in 4.0.19. HP, direct damage, scaling, Corruptions, Ideons and destruction-warning commitment rules remain unchanged.
+**Apex Predator rebuilding window (4.0.22, superseding 4.0.17):** Rending Fangs deals **two separate 16 Fire hits** and **does not destroy Constructs**. It still applies the pending Corruptions and commands owned Ideons. Each hit receives the existing +3 per completed cycle and +4 at or below half HP. World Eater still destroys the two most valuable Constructs; Unmake retains the fullest-line rule below. HP, other moves, Corruptions, Ideons and destruction-warning commitment rules remain unchanged.
 
 **Alternating Unmake (4.0.19):** The fourth move alternates between **Unmake H**, destroying the fullest row on the first/succeeding odd cycles, and **Unmake V**, destroying the fullest column on even cycles. Rank each line by total card count, including all melded cards; ties choose the topmost row / leftmost column. Card damage, Guard, Focus and remaining uses do not affect this choice. This replaces the short-lived 4.0.18 valuable-line rule. Destroy all cards and melded attachments in the selected line. Display the actual H/V move name and highlight the threatened line; forecasts update during player decisions and commit at End Turn before any enemy/status effects. Purify does not advance the alternation. Existing in-flight saved warnings finish on their committed line. Direct damage remains 26 Arcane with existing escalation; Fangs, World Eater and other mechanics are unchanged.
 

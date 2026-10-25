@@ -1,6 +1,6 @@
 # Astrata
 
-A spatial deckbuilding roguelike by Jonathan. **Version 4.0.21** contains four playable Strata: **The Whispering Weald**, **The Unfinished Loom**, **The Lucent Grotto**, and **The Apex**. S3 introduces enemy-owned Ideons inside your Mind Grid, a crystal-cavern overworld with barriers, five new cards, and three new Archons: Mind Hive, Cnidarian, and the Refraction Cannon.
+A spatial deckbuilding roguelike by Jonathan. **Version 4.0.22** contains four playable Strata: **The Whispering Weald**, **The Unfinished Loom**, **The Lucent Grotto**, and **The Apex**. S3 introduces enemy-owned Ideons inside your Mind Grid, a crystal-cavern overworld with barriers, five new cards, and three new Archons: Mind Hive, Cnidarian, and the Refraction Cannon.
 
 Double-click **Play Astrata.cmd**, or **release/Astrata/Astrata.exe**. The portable distribution is **release/Astrata-v4.zip**; extract it and keep the entire Astrata folder together. No Node installation or network connection is needed to play.
 
