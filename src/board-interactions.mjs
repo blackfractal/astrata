@@ -1,7 +1,9 @@
-import {sourceSlots,formationSlots} from "./growth-rules.mjs";
+import {currentPath,elementalLine,connects} from "./elemental-formations.mjs";
+import {sourceSlots,formationSlots,diagonals} from "./growth-rules.mjs";
 import { cards, MIND_COLUMNS } from "./content.mjs";
 import { cardSevered } from "./corruptions.mjs";
 import {
+  adjacent,
   activationGrowth,
   chargeSources,
   conduitActive,
@@ -69,7 +71,7 @@ export function cardInteraction(b, c, i) {
 export function boardConnections(b) {
   const links = [];
   const add = (from, to, type, element, reason, owner = null, both = false) => {
-    if (from === to || cardSevered(b, b.grid[from].at(-1), from) || cardSevered(b, b.grid[to].at(-1), to))
+    if (from === to || (type !== "penalty" && (cardSevered(b, b.grid[from].at(-1), from) || cardSevered(b, b.grid[to].at(-1), to))))
       return;
     links.push({ from, to, type, element, reason, owner, both });
   };
@@ -81,7 +83,7 @@ export function boardConnections(b) {
       m = cardInteraction(b, c, i),
       active = live(c, i);
     if (active && (d.formation || d.effects.diagonalDamage))
-      for (const j of d.effects.diagonalDamage ? sourceSlots(b,c,i) : formationSlots(b,c,i))
+      for (const j of d.effects.diagonalDamage ? (connects(b,i)?diagonals(i).filter(j=>connects(b,j)):[]) : formationSlots(b,c,i))
         if(b.grid[j]?.length) add(j,i,"benefit",c.element,"Formation bonus");
     if(c.ashesUntil===b.turn && c.ashesPower>0)
       for(const j of m.neighbors) if(cards[b.grid[j].at(-1).id].effects.damage || cards[b.grid[j].at(-1).id].effects.hpDamage)
@@ -139,14 +141,18 @@ export function boardConnections(b) {
           d.chargeElement,
           "Watering: +2 Charge per activation",
         );
-    if (active && d.effects.row && !cardSevered(b, c, i))
-      for (const [j, other] of b.grid.entries())
-        if (
-          j !== i &&
-          Math.floor(i / MIND_COLUMNS) === Math.floor(j / MIND_COLUMNS) &&
-          other.at(-1)?.element === c.element
-        )
-          add(j, i, "benefit", c.element, "Same-element row damage");
+    if (active && (d.effects.row || d.effects.column)) {
+      const axis=d.effects.row?"row":"column";
+      const line=elementalLine(b,i,axis,d.effects.row?"Fire":"Wind",d.effects.row?"Water":"Earth");
+      for(const j of line.positive)add(j,i,"benefit",d.element,`+2 ${axis} damage`);
+      for(const j of line.negative)add(j,i,"penalty","Fire",`-2 ${axis} damage`);
+    }
+    if(active && d.effects.orthogonalPenalty)
+      for(const j of adjacent(i).filter(j=>b.grid[j]?.length))add(j,i,"penalty","Fire","-2 damage: orthogonal neighbor");
+    if(active && d.effects.waterPath){
+      const path=currentPath(b,i);
+      for(let n=1;n<path.length;n++)add(path[n-1],path[n],"current","Water",`Meandering Current: ${path.length} cards, +${2*(path.length-1)} damage`,i);
+    }
     if (active && d.condition && !["corner", "isolated"].includes(d.condition))
       for (const j of m.neighbors)
         if (b.grid[j].at(-1).element === d.condition)
@@ -306,8 +312,8 @@ export function boardInteractions(ctx) {
         dot.className = "attune-swatch";
         dot.style.setProperty("--swatch", color(element));
         dot.dataset.tooltip =
-          element === "Arcane"
-            ? "Unattune: use Arcane for this activation, even with elemental neighbors."
+          element === c.element
+            ? `Unattune: use ${c.element} for this activation, even with elemental neighbors.`
             : `${element} available from an adjacent card`;
         dot.setAttribute("role", "img");
         dot.setAttribute("aria-label", `${element} attunement available`);

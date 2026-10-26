@@ -51,9 +51,9 @@ test("Prismatic Sap deals 8 damage, retains 4 Guard, and relays its chosen eleme
     if (element === "Light") assert.ok(attunementElements(b, b.grid[9][0], 9).includes("Light"));
   }
 });
-test("Growth registry adds twenty-one distinct cards with explicit costs and gated pools", () => {
+test("Growth registry adds twenty-three distinct cards with explicit costs and gated pools", () => {
   const all = Object.values(cards).filter((c) => c.expansion === "growth");
-  assert.equal(all.length, 21);
+  assert.equal(all.length, 23);
   for (const d of all) {
     assert.ok(Number.isInteger(d.channel));
     assert.ok(d.recall === null || Number.isInteger(d.recall));
@@ -106,10 +106,10 @@ test("Rooted Concentration leaves selectable temporary player Guard after destru
   b.reaction = { damage: 9, element: "Fire", stage: "defend", pierce: true };
   assert.ok(!g.legal().some((a) => a.type === "playerGuard"));
 });
-test("Mindfire exposes affordable Focus choices and pays only chosen amount", () => {
+test("Mindfire automatically spends the maximum affordable Focus", () => {
   const { g, b, e } = setup("mindfire");
   b.focus = 2;
-  assert.deepEqual([...new Set(opts(g).map((a) => a.focusSpend))], [0, 1, 2]);
+  assert.deepEqual([...new Set(opts(g).map((a) => a.focusSpend))], [2]);
   use(g, (a) => a.focusSpend === 2);
   assert.equal(e.hp, 9978);
   assert.equal(b.focus, 0);

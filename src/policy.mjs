@@ -637,7 +637,7 @@ export class WeightedPolicy {
         ];
       case "armor":
         return [
-          Math.min(b.reaction.damage, f.reflect ? b.reaction.damage : f.armor) *
+          Math.min(b.reaction.damage, f.armor) *
             w.survival,
           "Choose armor protection for this hit, or preserve reflection by skipping it.",
         ];

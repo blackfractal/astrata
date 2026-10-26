@@ -1,7 +1,9 @@
 import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
+  "card-meanderingCurrent": "assets/card-meanderingCurrent.png",
+  "card-risingGale": "assets/card-risingGale.png",
   "card-borrowedDawn": "assets/card-borrowedDawn.png",
-  "card-rootFlame": "assets/card-rootFlame.png",
+  "card-rootFlame": "assets/card-rootFlame-v2.png",
   "card-scorchedResolve": "assets/card-scorchedResolve.png",
   "card-rootedConcentration": "assets/card-rootedConcentration.png",
   "card-mindfire": "assets/card-mindfire.png",

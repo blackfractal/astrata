@@ -34,7 +34,7 @@ test("live power follows neighbors, Sever, row elements, HP, upgrades and snapsh
   const fire = put(g, "corner", 18);
   assert.equal(cardPower(b, row, 14), 7);
   fire.element = "Water";
-  assert.equal(cardPower(b, row, 14), 5);
+  assert.equal(cardPower(b, row, 14), 3);
   const ally = put(g, "sapling", 15);
   ally.hp = 17;
   assert.equal(cardPower(b, ally, 15), 17);

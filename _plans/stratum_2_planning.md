@@ -1,3 +1,5 @@
+**4.0.28 Bombadier retune:** HP stays288. Final S2 ordinary attacks18Fire/20Arcane/20Fire; Steam12Fire→15Water→18Wind. Every direct hit grows+2/fullcycle plusRestlessness/buffs and+3at/belowhalfHP. Below25%, once-only Last Ditch Effort inserts an extra turn (does not skip the normal move): resolve existing warnings, warn six mines, no direct hit. Resume normal cycle/Purify next turn and apply the six; retain the full post-placement response turn and fixed20Fire explosions. See main design4.249 and [retune report](../reports/bombadier-retune-report.md). Earlier numeric proposals below are historical.
+
 **4.0.7 balance update:** Trickster direct attacks now use base18 damage (21 after current S2 pressure scaling), retaining fixed damage, original rotation and telegraphs. See [Druid expansion evaluation](../reports/growth-expansion-report.md). Earlier numeric proposals below are historical.
 
 # Stratum 2 planning — The Unfinished Loom
@@ -223,3 +225,13 @@ Main design4.150 supersedes older timing notes: every newly placed Mind Mine giv
 ### 2.1.7 follow-up — continuous lesson and Tools
 
 Main design4.159 supersedes earlier tutorial/upgrade proposals. Patient Spoolkeeper waits through the guided demonstration, then continues at his remaining HP on the same board (100 initial HP). Alternate7Arcane+warning with a no-attack Corruption application, rotating only Nausea/Anger/MemoryHole. Stratum2 starts with two potions (HealingSap plus one random other) and one visible Tools pickup. Tools occupy a Satchel slot and are consumed with100Gold at a Tavern Scribe to upgrade one MachineElves; this is their only upgrade route. Extra basic Elves can appear as normal Stratum2 card rewards. See main design for current repair rules; the earlier proposals above are historical.
+
+
+### Black Bile pressure retune — 4.0.29 / 2026-10-25
+
+Main design4.250 supersedes older Bile numbers: final S2 cycle18Earth,22Fire+Burn2,16Earth→12Fire,20Fire+Burn1; +2/hit/fullcycle, existing +3 at half HP and Restlessness. HP276 unchanged. Independent strongest-damage-card throws: one every round, two after first full cycle, in addition to ordinary spread/fresh throws. Deterministic live telegraphs, no duplicate destinations or already-Biled/spent targets; formation damage informs ranking. Purify does not pause Bile.
+
+
+### Trickster staggered shifts and pressure — 4.0.30 / 2026-10-25
+
+Main design4.251 supersedes old Trickster movement/damage: fullest row moves2right, above1,below3; fullest column moves2down,left1,right3. Neighbor lines wrap at edges, and the complete pattern locks when first telegraphed. Count all cards including melds; ties topmost/leftmost. Every one-space traversal tests Memory Holes: the whole Construct visibly dies at the first Hole crossed, including transit spaces. Hypnosis remains final-landing-only. Published legacy warnings retain their scope until resolved. Three single attacks30; split phases12+12; percycle+3single/+2eachsplit,Restlessretained,HP264unchanged. Dazzle4Holes,6belowhalfHP; Hmarks3Hypnosis; Vmarks4Nausea. No artificial Corruption cap beyond legal spaces.

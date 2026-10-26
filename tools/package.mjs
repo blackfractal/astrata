@@ -53,6 +53,13 @@ for (const name of ["README.md", "BUILD_LOG.md", "AI_REPORT.md"])
   await fs.copyFile(path.join(root, name), path.join(dest, name));
 await fs.mkdir(path.join(dest, "reports"), { recursive: true });
 for (const name of [
+  "cnidarian-four-tendrils-report.md",
+  "mirror-cap-report.md",
+  "apex-escape-grace-report.md",
+  "apex-map-simplicity-report.md",
+  "elemental-formations-report.md",
+  "trickster-retune-report.md",
+  "black-bile-retune-report.md",
   "palimpsest-draw-report.md",
   "apex-fangs-report.md",
   "apex-unmake-report.md",

@@ -11,8 +11,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.27",
-  content: "4.0.27",
+  rules: "4.0.35",
+  content: "4.0.35",
   observation: 2,
   actions: 10,
 };
@@ -165,8 +165,8 @@ card(
   "Spell",
   1,
   3,
-  { damage: 5, row: 2 },
-  "Deal 5 damage, +2 per other Fire card in this row.",
+  { damage: 5, row: 2, rowPenalty: 2 },
+  "Deal 5 damage, +2 per other Fire card and -2 per Water card in this row. Minimum 0. Activated attunements count.",
 );
 card("water", "Water Blast", "Water", "Spell", 1, 2, hit(7), "Deal 7 damage.");
 card(
@@ -970,9 +970,9 @@ item(
   "mirrorArmor",
   "Mirror Armor",
   "torso",
-  { reflect: true },
+  { reflect: true, reflectLimit: 20 },
   180,
-  "Choose to reflect an incoming attack in its original element, applying the normal elemental matchup against its source and enemy Guard. Once per battle; you may skip it and save reflection for a later hit.",
+  "Absorb up to 20 damage from one incoming attack and reflect that amount in its original element, applying the normal elemental matchup and enemy Guard. Any remainder must be defended with other equipment or hits you. Once per battle, even if fewer than 20 damage is reflected; you may save it for a later hit.",
 );
 item(
   "crown",
@@ -1675,7 +1675,7 @@ export const glossary = {
   Transmute:
     "Change an orthogonally adjacent placed card to the chosen element, overriding Attune until it leaves the grid or is transmuted again. Existing Shield portions keep their elements.",
   Attune:
-    "Prepare an activation, then choose an adjacent element or Unattune for Arcane. Choices only preview the card; commit on an enemy or with Activate/double-click. Double-click keeps the current choice, including Arcane. For Shield, clicking Activate after choosing an element confirms it; Cancel or clicking away clears only the pending choice. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
+    "Prepare an activation, then choose an adjacent element or Unattune for the printed element (usually Arcane). Choices only preview the card; commit on an enemy or with Activate/double-click. Double-click keeps the current choice, including Arcane. For Shield, clicking Activate after choosing an element confirms it; Cancel or clicking away clears only the pending choice. After activation, the card offers its chosen element to adjacent Attune cards until your next turn, even when spent or Guard is depleted. Blink relays its latest activation; Sever and covering prevent connections. Relays reset together each player turn and do not change printed-element conditions. Clicking elsewhere cancels without spending resources. Transmute fixes the placed card to its chosen element instead. Existing Shield portions retain their elements. Defensive attunement follows the attack cycle: +50% Guard against the element it beats, -50% against its weakness; same element is neutral.",
   Focus: "Placement and Recall budget. Unspent Focus is lost.",
   Channel:
     "Activation budget. Each card activates once per turn unless it has Blink. Unspent Channel is lost.",

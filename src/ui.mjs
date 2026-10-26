@@ -1,4 +1,4 @@
-import { apexFieldSummary, apexIntroMarkup, apexSummitMarkup, apexMarks, animateApexFloor } from "./apex-ui.mjs";
+import { apexIntroMarkup, apexSummitMarkup, apexMarks, animateApexFloor } from "./apex-ui.mjs";
 import { GUIDE_STORY } from "./depths-content.mjs";
 import { barrierAt } from "./depths-field.mjs";
 import { ELVES_STORY, CORRUPTIONS } from "./strata.mjs";
@@ -183,15 +183,16 @@ function tellText(t) {
       ? "Counters your largest elemental Guard total; ties → Arcane"
       : "",
     t.disrupt
-      ? "Wrap whole " +
-        (t.disrupt === "H" ? "row right" : "column down") +
-        " 2 spaces; Holes destroy, Hypnosis compels"
+      ? (t.phasePlan?.shifts
+          ? "Shift three " + (t.disrupt === "H" ? "rows right" : "columns down") + " 1 / 2 / 3 spaces"
+          : "Shift warned " + (t.disrupt === "H" ? "row(s) right" : "column(s) down") + " 2 spaces") +
+        "; crossing Holes destroys, landing on Hypnosis compels"
       : "",
     t.markCorruption
       ? `Mark ${t.count || 1} ${CORRUPTIONS[t.markCorruption].name}${t.alsoCorruption ? " + " + (t.alsoCount || 1) + " " + CORRUPTIONS[t.alsoCorruption].name : ""} · one turn to respond`
       : "",
     t.applyCorruption ? "Corrupt marked spaces" : "",
-    t.warnDisruption ? `Telegraph next ${t.warnDisruption === "H" ? "row" : "column"} shift · one turn to respond` : "",
+    t.warnDisruption ? `Telegraph three ${t.warnDisruption === "H" ? "rows" : "columns"} shifting 1 / 2 / 3 spaces · one turn to respond` : "",
     t.releaseCorruption ? "Remove its Corruptions" : "",
     t.damagePerEmpty
       ? `${t.damagePerEmpty} per empty space before Collapse; hit after destruction${t.emptySpaces != null ? ` (${t.emptySpaces} empty)` : ""}`
@@ -460,7 +461,7 @@ function render(frame = null) {
     body = `<section class="scene ${o.mode === "intro" ? "companion-intro" : ""}"><div class="scene-art" style="background-image:url('assets/location-${o.mode === "intro" ? "field" : "druid"}.png')">${o.mode === "intro" ? `<figure class="companion-portrait">${img("card-sapling")}<figcaption>Sapling <span>Your first companion</span></figcaption></figure>` : ""}</div><div class="scene-copy"><div class="eyebrow">${o.mode === "class" ? "Choose your class" : o.mode === "gem" ? "Choose your starting socket" : "Stratum one"}</div><h2>${title}</h2><div class="rule"></div>${o.mode === "intro" ? `<p class="companion-story">${DRUID_COMPANION_STORY}</p>` : ""}<p${o.mode === "intro" ? ' class="companion-world"' : ""}>${copy}</p>${o.mode === "class" ? '<p><span class="tag">70 HP</span> <span class="tag">Sapling signature</span></p>' : ""}<div class="choices">${actions.map((a) => actionButton(a, "primary")).join("")}</div></div></section>`;
   } else if (o.mode === "field") {
     const f = o.field;
-    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum " + o.stratum + " tutorial" : "Stratum " + o.stratum}</div><h2>${o.tutorial ? o.tutorial.name : o.stratumName}${o.apex ? " · Floor " + o.apex.floor : ""}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / ${o.apex ? 16 : 32} spawns · Pair ${Math.ceil(f.spawned / 2)} / ${o.apex ? 8 : 16}`}</small></div></div><div class="field-wrap">${o.apex ? apexFieldSummary(o) : ""}<div style="grid-template-columns:repeat(${f.size || 11},1fr)" class="field ${o.stratum === 4 ? "apex-field" : o.stratum === 3 ? "depths-field" : o.stratum === 2 ? "loom-field" : o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
+    body = `<div class="layout"><section><div class="section-head"><div><div class="eyebrow">${o.tutorial ? "Stratum " + o.stratum + " tutorial" : "Stratum " + o.stratum}</div><h2>${o.tutorial ? o.tutorial.name : o.stratumName}</h2></div><div class="muted">${f.moves} movement remaining<br><small>${o.tutorial ? "A guided journey" : `${f.spawned} / ${o.apex ? 16 : 32} spawns · Pair ${Math.ceil(f.spawned / 2)} / ${o.apex ? 8 : 16}`}</small></div></div><div class="field-wrap"><div style="grid-template-columns:repeat(${f.size || 11},1fr)" class="field ${o.stratum === 4 ? "apex-field" : o.stratum === 3 ? "depths-field" : o.stratum === 2 ? "loom-field" : o.tutorial ? "clearing-field" : "weald-field"}">${Array.from(
       { length: (f.size || 11) ** 2 },
       (_, i) => {
         const x = i % (f.size || 11),

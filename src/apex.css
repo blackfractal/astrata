@@ -29,63 +29,6 @@ img[src$="enemy-riftChimera.png"] {
     var(--apex-field-art, url("../assets/location-apex-floor1.png")) center/cover;
   border-radius: 12px;
 }
-.apex-deadline {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 9px 12px;
-  margin-bottom: 8px;
-  border: 1px solid #94739b;
-  border-radius: 8px;
-  background: #201722;
-  font-size: 12px;
-}
-#app.in-apex .field-wrap:has(.direction-pad) {
-  width: 480px;
-}
-#app.in-apex .field-wrap:has(.direction-pad) .field {
-  width: 480px;
-}
-.in-apex .apex-deadline {
-  font-size: 11px;
-  padding: 6px 8px;
-}
-.in-apex .apex-roster {
-  margin-bottom: 5px;
-}
-.apex-deadline strong {
-  color: #e8c6f0;
-}
-.apex-deadline span {
-  color: #b9abbf;
-}
-.apex-deadline.urgent {
-  border-color: #f0a75b;
-}
-.apex-deadline.urgent strong {
-  color: #ffd19c;
-}
-.apex-roster {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 8px;
-  font-size: 12px;
-}
-.apex-roster > span {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-.apex-roster img {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid #c7a2cf;
-  object-fit: cover;
-}
-.apex-roster .defeated {
-  opacity: 0.45;
-}
 .apex-seal {
   position: absolute;
   inset: 1px;

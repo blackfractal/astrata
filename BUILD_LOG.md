@@ -2028,3 +2028,45 @@ Ten automated search-assisted campaigns:9deathsS1/1deathS2,2346decisions/66encou
 ## Full-Satchel preflight and Tavern rewind — round230
 
 2026-10-25. Jonathan replaced the forced-discard flow with rejecting capacity-increasing actions before payment/pickup, keeping the current screen and management options, and requested rewind before all purchases. Version4.0.27/design4.248. Purchases/pickups/rewards/event bargains and unsocket/unequip preflight capacity; cards and atomic equipment swaps remain legal. Full offer stays visible with explicit reason, Inventory allows voluntary drop/use/equip/combining, Tavern retains sell/socket services. Healing can be used in noncombat management screens; battle-only supplies retain restrictions. Dropping a fitted Setting drops the pair. No forced overflow screen, including legacy over-capacity saves. 774rules tests pass; isolated packaged Edge verifies full-shop sell→buy and full-pickup Inventory heal→collect availability, no renderer errors. Source/runtime/ZIP refreshed. Exact archive step671 restored on explicit request:537Gold,32cards,original stock/equipment,12/12Satchel,including discarded RootboundRing and spareAmber; backups in reports/tavern-rewind-20261025. App restarted; Continue resumes Tavern. No archive history erased, no commit/push. Approximately15minutes additional implementation/test/UI/restore/docs/packaging (estimate).
+
+## Bombadier damage, Last Ditch Effort and Black Bile rematch — round231
+
+2026-10-25. Jonathan approved stronger Bombadier attacks and once-only low-HP mine wave, named Last Ditch Effort, then confirmed extra inserted turn rather than skipped cycle move and requested same-setup BlackBile rematch. Version4.0.28/design4.249. S2direct18/20/20,Steam12/15/18,+2/cycle perhit,+3halfHP plusRestless/buffs; HP288unchanged. Below25%extra turn warns6mines, resolves existingwarnings, pausescycle, resumes nextturn withnormalfuse. Save/Purify/cap interactions covered.778rules tests +packaged Edge intent/sixwarnings/sixmines pass,screenshotreviewed. Exact originalhumanline baselinewinsT9at63HP; adaptedretunedlinewinsT9at39HP,103actions replayverified; notoptimized orwinrate. Source/runtime/ZIP refreshed. Live completedBombadier save backedup,originalpre-fight setup restoredagainst BlackBile276HP:67playerHP,47Gold,32cards,samegear/supplies,ambushretained. Reports bombadier-retune-report.md, bombadier-retune-4.0.28, black-bile-rematch-20261025. Approximately20minutes additional implementation/tests/comparison/manualplay/UI/docs/packaging/restore work (estimate). No commit/push.
+
+
+## Black Bile pressure + Trickster rematch — round232
+
+2026-10-25. Jonathan requested additional Bile on strongest damage cards, increased damage, then the same setup against Trickster. Version4.0.29/design4.250 adds independent1→2 damage-ranked throws alongside original route/fresh casts; live forecasts, deterministic ties, distinct eligible targets. Final S2 attacks18/22/16+12/20,+2/fullcycle perhit, existing halfHP/Restlessness;HP276 unchanged.783rules tests and three isolated packaged Edge warning checks pass. Latest human win6turns67→57HP,124damage in turn5; no new balance playthrough claimed. Report reports/black-bile-retune-report.md. Prepared exact pre-boss32card67HP47Gold Trickster enemy-first rematch, backup before restore, archives retained. Approximately15minutes additional implementation/verification/docs/packaging (estimate). No commit/push.
+
+
+## Trickster pressure and staggered shifts — round233
+
+2026-10-25. Jonathan requested more Trickster damage/Corruptions and Memory Hole transit destruction, then approved1/2/3staggeredneighborlines instead of two nonadjacent lines.4.0.30/design4.251 implements locked fullestcenter+wrappedneighbors,per-step simultaneousmovement,wholeConstruct deathatthefirstHolecrossed,final-onlyHypnosis,visiblepathwarnings anddisintegrationbeforecontinuation. Damage30singles/12+12splits,+3/+2cycle;4→6HolesbelowhalfHP,3Hypnosis,4Nausea;HPunchanged264.789rules tests,packagedEdge bothaxes animation/warningchecks. Previoushumanfight6turns67→67HP;no newbalanceplaythrough claimed. Report reports/trickster-retune-report.md. Liveprofile untouched. Approximately20minutes additional implementation/testing/docs/packaging (estimate). No commit/push.
+
+
+## Element formation engines and Mindfire — round234
+
+2026-10-25. Jonathan approved StarleafLight+diagonal6/orthogonal−2;IgnisFire-rowbonus/Waterpenalty;newWaterpath/Windcolumncards;automaticMindfiremax3Focus.4.0.31/design4.252 addsS1rareMeanderingCurrent2F1Ch3usesRecall1 andcommonRisingGale1F1Ch3usesRecall1. ExactNESWlongestpathcontainingorigin, six-widefrontierDP/cache, livepath/penaltylinks; committedattunements count. StarleafLightmigration preservesTransmute/relays;Unattuneprintedbase. Mindfirelivecost/damage,InspirationactualFocusprojection.796rules tests,4packagedEdgeUIcases,90independentbruteforcepathcomparisons,45denseperformanceboards.2built-inimage_genartassets+prompts/provenance,originalspreserved. Report reports/elemental-formations-report.md recordsbalancechoices and pre-existing6premiumeventart gaps. No live save changes/no fullcampaign test. Approximately30minutes additional implementation/art/testing/docs/packaging (estimate). No commit/push.
+
+
+## Root to Flame orange artwork — round235
+
+2026-10-25. Jonathan requested the existing composition with more orange to clearly read as Fire. Edited with built-in image_gen, preserved original, selected assets/card-rootFlame-v2.png; prompt/source/hash recorded in reports/root-flame-orange-art.json and art manifest. Art-only update under 4.0.31; no gameplay/save changes. Visually checked composition and orange flame/root glow. Approximately 5 minutes additional artwork/integration/packaging (estimate).
+
+## Fourth starting Cnidarian Tendril — round236
+
+2026-10-25. Jonathan approved raising the opening from three to four Tendrils. Version4.0.32/design4.253; applies to new Cnidarian encounters including Apex rematches. Existing battles retain saved Ideons, other combat rules unchanged. All797rules tests pass, including new opening/Continue regression coverage. No new balance playthrough; live profile untouched. Report reports/cnidarian-four-tendrils-report.md. Approximately10minutes additional implementation/testing/docs/packaging work (estimate). No commit/push.
+
+## Mirror Armor capped reflection — round237
+
+2026-10-25. Jonathan approved absorbing/reflecting at most20 of one attack, once per battle, with remainder defended by equipment or hitting player. Version4.0.33/design4.254 preserves elemental matchup after capped base reflection, price180. Legal effects, AI and remainder preview updated. All801rules tests pass including four new cap/spillover/Continue/reset/elemental/lethal-reflection tests. Report reports/mirror-cap-report.md. No live-profile changes or new balance campaign. Approximately10minutes additional implementation/testing/docs/packaging work (estimate). No commit/push.
+
+## Apex round-eight escape movement — round238
+
+2026-10-25. Jonathan requested one post-first-Archon movement opportunity before the survivor hunts, clarified only necessary for round8victory. Version4.0.34/design4.255/S4plan0.16. Pending grace skips survivor's immediate movement, ordinary enemies still move; active grace grants full movement without a ninth spawn/aging/decay; ending it resumes hunt. Earlier victories unchanged. Saved states and older pending reward supported. UI banner/inspection/intro updated. All805rules tests pass, including allthreefloors,stairreachability,Continue,expiry,ordinaryencounters,round4–7timing; existingpairedhunt/achievementchecks pass. No live-profile changes or fight rewinds. Approximately12minutes implementation/testing/docs/packaging (estimate). Report reports/apex-escape-grace-report.md. No commit/push.
+
+Follow-up to round238: Jonathan confirmed he should bypass the already-forced Colossus fight. Restored archive post-Choir/post-Season’sTurn state at57HP422Gold to active escape window, backing up current save and appending a rewind record without deleting archives. Guarded against changed save. Packaged isolated Edge Continue plus two southwest clicks verified floor2 with57HP422Gold and no errors. Artifacts reports/apex-escape-restore-20261025; approximately5additional minutes restoration/UI verification.
+
+## Standard Apex map layout — round239
+
+2026-10-25. Jonathan requested standard Stratum map presentation without purple deadline panel, separate Archon names or numbered floor title. Version4.0.35/design4.256/S4plan0.17 removes these, uses The Apex/Ascend labels, drops obsolete panel CSS and narrower map override. Mechanics unchanged. All21Apex rules tests pass; isolatedpackagedEdge maps1–3 and summit confirm labels, tilecounts, no panels/overflow/renderererrors. Screenshot reviewed. Report reports/apex-map-simplicity-report.md. No live-save edits. Approximately8minutes additional implementation/UIverification/docs/packaging (estimate). No commit/push.

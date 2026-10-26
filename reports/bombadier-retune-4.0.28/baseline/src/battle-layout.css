@@ -1,0 +1,1203 @@
+/* One 1600×900 composition. Window size changes scale, never rearrange, the battlefield. */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #050a08;
+}
+#app {
+  position: fixed;
+  left: var(--stage-left, 0px);
+  top: var(--stage-top, 0px);
+  width: 1600px;
+  height: 900px;
+  overflow: auto;
+  transform: scale(var(--stage-scale, 1));
+  transform-origin: top left;
+  background: var(--ink);
+  color-scheme: dark;
+}
+#app > .hero {
+  min-height: 900px;
+}
+#app .hero-copy {
+  padding: 90px 128px 45px;
+}
+#app > .scene {
+  min-height: 824px;
+}
+#app .scene-copy {
+  padding: 63px 96px;
+}
+#app:not(.battle-scene) > .layout {
+  min-height: 824px;
+}
+/* Tavern controls fit the same fixed canvas as battle, at every window preset. */
+#app:has(.tavern-layout) > header {
+  height: 62px;
+}
+#app:not(.battle-scene) > .tavern-layout {
+  height: 838px;
+  min-height: 0;
+  padding: 16px 24px;
+  gap: 18px;
+}
+.tavern-layout > section {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 58px 220px minmax(0, 1fr);
+  gap: 12px;
+}
+.tavern-layout .section-head {
+  margin: 0;
+}
+.tavern-layout .section-head h2 {
+  font-size: 28px;
+}
+.tavern-layout .tavern-scene {
+  height: 100%;
+}
+.tavern-layout .tavern-service {
+  margin: 0;
+  padding: 14px;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+}
+.tavern-layout .tavern-service > h3 {
+  align-self: center;
+  margin: 0;
+}
+.tavern-layout .market-tabs {
+  margin: 0;
+}
+.tavern-layout .market-tabs button,
+.tavern-layout .market-categories button {
+  padding: 7px 14px;
+}
+.tavern-layout .service-content {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-height: 0;
+  overflow: auto;
+}
+.tavern-layout .service-content:has(#market-catalog) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.tavern-layout .jeweler-content {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+}
+.tavern-layout .jeweler-content > * {
+  margin: 0;
+}
+.tavern-layout .jeweler-content > h3 {
+  font-size: 18px;
+  line-height: 22px;
+}
+.tavern-layout .jeweler-content .gear-item {
+  height: 70px;
+}
+.tavern-layout .jeweler-content .gear-item img {
+  width: 42px;
+  height: 42px;
+}
+.tavern-layout .market-categories {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+.tavern-layout #market-catalog {
+  min-height: 0;
+  overflow: auto;
+}
+.tavern-layout .market-item {
+  display: flex;
+  flex-direction: column;
+}
+.tavern-layout .store-controls {
+  margin-top: auto;
+  padding-top: 8px;
+}
+.tavern-layout > .sidebar {
+  min-height: 0;
+  overflow: auto;
+}
+#app .field-wrap .field {
+  width: 600px;
+}
+#modal {
+  padding: calc(var(--stage-top, 0px) + 12px)
+    calc(var(--stage-left, 0px) + 12px);
+}
+#modal .dialog {
+  max-height: calc(var(--stage-height, 900px) - 24px);
+}
+#modal.card-peek {
+  padding: calc(var(--stage-top, 0px) + 12px)
+    calc(var(--stage-left, 0px) + 12px) !important;
+}
+#toast {
+  bottom: calc(var(--stage-top, 0px) + 22px);
+}
+.presentation-bar {
+  bottom: calc(var(--stage-top, 0px) + 12px);
+  max-width: calc(var(--stage-width, 1600px) - 24px);
+}
+#app.battle-scene {
+  overflow: hidden;
+}
+#app.battle-scene > header {
+  height: 62px;
+  min-height: 62px;
+  padding: 10px 24px;
+}
+#app.battle-scene > header h1 {
+  font-size: 26px;
+}
+#app.battle-scene > header .stats {
+  font-size: 18px;
+}
+#app.battle-scene > header button {
+  padding: 7px 14px;
+  font-size: 16px;
+}
+.battle-scene .battle-layout {
+  height: 838px;
+  padding: 8px 24px 10px;
+  display: grid;
+  grid-template-rows: 80px 550px 126px 34px;
+  gap: 10px;
+}
+.battle-scene .battle-command {
+  min-width: 0;
+}
+.battle-scene .phasebar {
+  height: 45px;
+  margin: 0;
+  width: 100%;
+}
+.battle-scene .phasebar .phase-step {
+  font-size: 17px;
+  padding: 7px;
+}
+.battle-scene .phasebar .phase-arrow {
+  width: 44px;
+  min-width: 44px;
+  padding: 4px;
+}
+.battle-scene .resources {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 44px;
+  gap: 0;
+  margin: 0;
+}
+.battle-scene .resources > span {
+  justify-self: center;
+  align-self: center;
+  font-size: 17px;
+  padding: 2px 10px;
+}
+.battle-scene .resources b {
+  font-size: 22px;
+}
+.battle-scene .battle-arena {
+  display: grid;
+  grid-template-columns: 218px minmax(0, 1fr) 280px;
+  gap: 14px;
+  align-items: stretch;
+  min-height: 0;
+}
+.battle-scene .mind {
+  width: 100%;
+  height: 550px;
+  grid-template-rows: repeat(var(--mind-rows, 6), minmax(0, 1fr));
+  gap: 7px;
+  padding: 10px;
+}
+.battle-scene .mind .slot {
+  height: 100%;
+  min-height: 0;
+}
+.battle-scene .mind .slot .overlay {
+  padding: 6px;
+  bottom: 31px;
+}
+.battle-scene .mind .slot .name {
+  font-size: 16px;
+}
+.battle-scene .mind .slot .nums {
+  font-size: 13px;
+}
+.battle-scene .mind .slot .level {
+  font-size: 11px;
+}
+.battle-scene .mind .slot .slot-activate {
+  height: 31px;
+  min-height: 31px;
+  font-size: 13px;
+  padding: 5px;
+}
+.battle-scene .mind .slot.has-statuses .overlay {
+  right: 0;
+}
+.battle-scene .mind .card-statuses {
+  top: 3px;
+  right: 3px;
+  max-width: 87px;
+}
+.battle-scene .mind .slot.has-statuses .name {
+  padding-right: 87px;
+}
+.battle-scene .mind .ally-health {
+  height: 15px;
+  min-width: 59px;
+}
+.battle-scene .mind .ally-health > span {
+  font-size: 11px;
+  line-height: 13px;
+}
+.battle-scene .battle-player {
+  width: 238px;
+  margin: 0;
+  padding: 14px 0 0;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: 50px 124px 50px;
+  grid-template-rows: 60px 60px 92px 92px 60px 28px;
+  gap: 7px;
+  align-content: center;
+  align-items: stretch;
+}
+.battle-scene .battle-player .equipment-slots {
+  display: contents;
+}
+.battle-scene .battle-player .player-portrait {
+  grid-column: 2;
+  grid-row: 3 / 5;
+  width: 124px;
+  height: 191px;
+  justify-content: flex-start;
+  align-self: stretch;
+}
+.battle-scene .battle-player .player-portrait img {
+  width: 122px;
+  height: 140px;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+.battle-scene .battle-player .player-portrait > span {
+  font-size: 17px;
+  line-height: 1.2;
+  padding: 3px;
+  text-align: center;
+}
+.battle-scene .battle-player .player-portrait b {
+  font-size: 17px;
+}
+.battle-scene .battle-player .gear-slot {
+  min-width: 0;
+  border: 0;
+  width: 50px;
+  position: relative;
+  align-self: center;
+}
+.battle-scene .battle-player [data-equip-slot="head"] {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+}
+.battle-scene .battle-player [data-equip-slot="neck"] {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: center;
+}
+.battle-scene .battle-player [data-equip-slot="torso"] {
+  grid-column: 2;
+  grid-row: 5;
+  justify-self: center;
+}
+.battle-scene .battle-player [data-equip-slot="wrist1"] {
+  grid-column: 1;
+  grid-row: 3;
+}
+.battle-scene .battle-player [data-equip-slot="wrist2"] {
+  grid-column: 3;
+  grid-row: 3;
+}
+.battle-scene .battle-player [data-equip-slot="finger1"] {
+  grid-column: 1;
+  grid-row: 4;
+}
+.battle-scene .battle-player [data-equip-slot="finger2"] {
+  grid-column: 3;
+  grid-row: 4;
+}
+.battle-scene .battle-player .gear-label {
+  font-size: 10px;
+  padding: 0;
+  text-align: center;
+  letter-spacing: 0;
+}
+.battle-scene .battle-player .gear-item {
+  width: 50px;
+  height: 43px;
+  min-height: 43px;
+  padding: 0;
+  border: 1px solid #778563;
+  border-radius: 4px;
+  justify-content: center;
+}
+.battle-scene .battle-player .gear-item img {
+  width: 42px;
+  height: 40px;
+  object-fit: contain;
+}
+.battle-scene
+  .battle-player
+  .gear-item
+  > span:not(.empty-gear):not(.held-attack) {
+  display: none;
+}
+.battle-scene .battle-player .block-left {
+  font-size: 13px;
+  padding: 0 3px;
+  right: 0;
+  top: -5px;
+  bottom: auto;
+  border-radius: 3px;
+}
+.battle-scene .battle-player .ring-trigger {
+  top: -5px;
+  bottom: auto;
+  font-size: 10px;
+}
+.battle-scene .battle-player .gem-socket {
+  position: absolute;
+  right: -3px;
+  bottom: -6px;
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  padding: 1px;
+  border: 1px solid #b49e68;
+  border-radius: 50%;
+  background: #14271b;
+}
+.battle-scene .battle-player .gem-socket img {
+  width: 16px;
+  height: 16px;
+}
+.battle-scene .battle-player .gem-socket span {
+  display: none;
+}
+.battle-scene .battle-player .player-status {
+  grid-column: 1 / 4;
+  grid-row: 6;
+  justify-content: center;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+.battle-scene .battle-player .attack-ready .gear-item {
+  border-color: #e3c172;
+  box-shadow: 0 0 7px #e3c17245;
+}
+.battle-scene .battle-player .defense-empty img {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+.battle-scene .battle-player .block-available {
+  outline: 2px solid #8dded1;
+  box-shadow: 0 0 16px #8dded175;
+}
+.battle-scene .battle-foes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+.battle-scene .battle-foes > .eyebrow {
+  font-size: 12px;
+}
+.battle-scene .enemy-line {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: minmax(120px, 1fr);
+  gap: 8px;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  overflow-y: auto;
+  align-content: start;
+}
+.battle-scene .enemy {
+  display: flex;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+.battle-scene .enemy img {
+  width: 92px;
+  height: 100%;
+  max-height: 210px;
+  object-fit: cover;
+  align-self: center;
+}
+.battle-scene .enemy .info {
+  min-width: 0;
+  padding: 8px;
+  flex: 1;
+}
+.battle-scene .enemy h4 {
+  font-size: 18px;
+  line-height: 1.12;
+  margin: 0 0 5px;
+}
+.battle-scene .enemy small {
+  font-size: 13px;
+  line-height: 1.25;
+}
+.battle-scene .enemy .tell {
+  font-size: 15px;
+  line-height: 1.25;
+  margin-top: 5px;
+}
+.battle-scene .enemy .health-track {
+  margin: 7px 0;
+}
+.battle-scene .enemy-line.many-enemies {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(142px, 1fr);
+  gap: 6px;
+}
+.battle-scene .many-enemies .enemy {
+  display: block;
+  position: relative;
+}
+.battle-scene .many-enemies .enemy img {
+  width: 44px;
+  height: 48px;
+  float: left;
+  margin: 6px 5px 0 6px;
+}
+.battle-scene .many-enemies .enemy .info {
+  padding: 6px;
+}
+.battle-scene .many-enemies .enemy h4 {
+  font-size: 16px;
+  min-height: 20px;
+}
+.battle-scene .many-enemies .enemy small {
+  font-size: 13px;
+}
+.battle-scene .many-enemies .enemy .tell {
+  clear: both;
+  font-size: 14px;
+}
+.battle-scene .crowded-enemies .enemy {
+  min-height: 142px;
+}
+.battle-scene .battle-dock {
+  min-width: 0;
+  min-height: 0;
+  border-top: 1px solid var(--line);
+  padding-top: 7px;
+}
+.battle-scene .revealed-hand {
+  height: 100%;
+}
+.battle-scene .revealed-hand > .eyebrow {
+  text-align: center;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.battle-scene .revealed-hand .hand {
+  flex-direction: row;
+  justify-content: safe center;
+  align-items: stretch;
+  gap: 9px;
+  width: 100%;
+  height: 154px;
+  max-height: none;
+  margin: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 8px 8px;
+}
+.battle-scene .revealed-hand .card {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  flex: 0 0 205px;
+  width: 205px;
+  min-width: 205px;
+  min-height: 0;
+  height: 139px;
+  position: relative;
+  overflow: hidden;
+}
+.battle-scene .revealed-hand .card img {
+  width: 58px;
+  height: 139px;
+  object-fit: cover;
+}
+.battle-scene .revealed-hand .card .body {
+  padding: 8px 7px;
+  min-width: 0;
+}
+.battle-scene .revealed-hand .card h4 {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+.battle-scene .revealed-hand .card .text {
+  font-size: 13px;
+  -webkit-line-clamp: 3;
+  line-height: 1.2;
+}
+.battle-scene .revealed-hand .card .meta {
+  font-size: 11px;
+  line-height: 1.15;
+  margin-top: 5px;
+}
+.battle-scene .revealed-hand .card .eyebrow {
+  font-size: 10px;
+}
+.battle-scene .revealed-hand .card .cost {
+  left: 3px;
+  top: 4px;
+  width: 25px;
+  height: 25px;
+  font-size: 15px;
+}
+.battle-scene .revealed-hand .card:hover {
+  transform: none;
+}
+.battle-scene .battle-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+}
+.battle-scene .battle-footer button {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+.battle-scene .battle-turn {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--muted);
+}
+.battle-scene .battle-tools {
+  position: relative;
+}
+.battle-scene .battle-tools summary {
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--gold);
+}
+.battle-scene .battle-tools > .sidebar {
+  position: absolute;
+  bottom: 36px;
+  right: 0;
+  z-index: 30;
+  width: 310px;
+  max-height: 640px;
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid #9a885f;
+  background: #12271f;
+  box-shadow: 0 5px 28px #0008;
+}
+.battle-scene .battle-tools .sidebar .row {
+  flex-wrap: wrap;
+}
+.battle-scene .battle-dock .incoming-attack {
+  height: 100%;
+  margin: 0 !important;
+  padding: 10px 16px;
+  overflow: auto;
+}
+.battle-scene .incoming-attack h4 {
+  font-size: 19px;
+  margin: 0 0 5px;
+}
+.battle-scene .incoming-attack p {
+  font-size: 14px;
+  margin: 4px 0;
+}
+.battle-scene .incoming-attack .row button {
+  font-size: 15px;
+  padding: 7px 12px;
+}
+.battle-scene .targeting-bar {
+  bottom: 225px;
+  max-width: 900px;
+  font-size: 16px;
+}
+.battle-scene .target-damage-preview {
+  font-size: 13px;
+  right: 2px;
+  bottom: 2px;
+  max-width: calc(100% - 4px);
+}
+
+.battle-scene .solo-enemy .enemy {
+  flex-direction: column;
+}
+.battle-scene .solo-enemy .enemy img {
+  width: 100%;
+  height: 300px;
+  max-height: 300px;
+  object-position: 50% 35%;
+}
+.battle-scene .solo-enemy .enemy .info {
+  width: 100%;
+  text-align: center;
+}
+
+.battle-scene .battle-player .gear-item.gear-proc {
+  outline: 2px solid #ffe6a1;
+  box-shadow: 0 0 18px 5px #e9c76d99;
+}
+
+/* Destruction forecasts sit above art without covering card controls. */
+.battle-scene .grid-threat-outline {
+  position: absolute;
+  inset: 1px;
+  z-index: 4;
+  border: 2px dashed #f0ad72;
+  box-shadow: inset 0 0 9px #e6763330;
+  pointer-events: none;
+}
+.battle-scene .grid-threat-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 5;
+  width: 23px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  color: #ffd0a5;
+  background: #382014;
+  border: 1px solid #f0ad72;
+  border-radius: 3px;
+}
+.battle-scene .grid-threat-badge svg,
+.battle-scene .grid-threat-label svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  flex-shrink: 0;
+}
+.battle-scene .grid-threat-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 2px;
+  color: #ffd0a5;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+/* Elemental state and spatial relationships are separate from danger outlines. */
+.battle-scene .mind {
+  position: relative;
+}
+.battle-scene .mind .slot.has-element {
+  border: 2px solid var(--card-primary);
+}
+.battle-scene .element-wash {
+  position: absolute;
+  inset: 0 0 31px;
+  background: var(--card-colors);
+  opacity: 0.28;
+  pointer-events: none;
+  z-index: 0;
+}
+.battle-scene .card-element-panel {
+  position: absolute;
+  top: 3px;
+  left: 7px;
+  right: 4px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2px 4px;
+  font-size: 10px;
+  line-height: 14px;
+}
+.battle-scene .has-statuses .card-element-panel {
+  right: var(--status-reserve, 26px);
+}
+.battle-scene .element-label {
+  color: var(--card-primary);
+  background: #0d1917e8;
+  padding: 0 3px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .attune-swatches {
+  display: inline-flex;
+  gap: 3px;
+  padding: 2px;
+  background: #0d1917e8;
+}
+.battle-scene .attune-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid #f2e9d4;
+  border-radius: 50%;
+  background: var(--swatch);
+}
+.battle-scene .shield-portions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  width: 100%;
+}
+.battle-scene .shield-portion {
+  color: var(--portion);
+  border-left: 3px solid var(--portion);
+  padding: 0 3px;
+  background: #0d1917eb;
+  white-space: nowrap;
+}
+.battle-scene .shield-more {
+  color: var(--paper);
+  background: #0d1917eb;
+  padding: 0 3px;
+}
+.battle-scene .synergy-bonus {
+  display: inline-block;
+  margin-left: 5px;
+  color: #ffe09a;
+  font-size: 12px;
+  line-height: 14px;
+  padding: 0 3px;
+  border: 1px solid #bca46b;
+  background: #302a17;
+}
+.battle-scene .board-links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 6;
+  pointer-events: none;
+}
+.battle-scene .board-link {
+  stroke: var(--link-color);
+  stroke-width: 3;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.battle-scene .link-synergy {
+  filter: drop-shadow(0 0 3px #f1c865);
+}
+.battle-scene .link-attune {
+  opacity: 0;
+  stroke-dasharray: 2 2;
+}
+.battle-scene .link-inspected {
+  opacity: 1;
+  stroke-width: 5;
+}
+.battle-scene .element-preview .element-wash {
+  opacity: 0.32;
+}
+.battle-scene .has-element .grid-threat-badge {
+  top: auto;
+  left: auto;
+  right: 4px;
+  bottom: 34px;
+  width: 19px;
+  height: 19px;
+}
+
+.battle-scene .slot .overlay {
+  z-index: 1;
+}
+
+/* The 7×6 playtest board gets more arena space; card details remain one click away. */
+.battle-scene .phasebar {
+  height: 40px;
+}
+.battle-scene .resources {
+  height: 38px;
+}
+.battle-scene .mind {
+  padding: 8px;
+  gap: 5px;
+}
+.battle-scene .battle-player {
+  width: 218px;
+  grid-template-columns: 44px 116px 44px;
+}
+.battle-scene .battle-player .player-portrait {
+  width: 116px;
+}
+.battle-scene .battle-player .player-portrait img {
+  width: 114px;
+}
+.battle-scene .battle-player .gear-slot,
+.battle-scene .battle-player .gear-item {
+  width: 44px;
+}
+.battle-scene .mind .slot .overlay {
+  padding: 3px 4px;
+  bottom: 23px;
+}
+.battle-scene .mind .slot .name {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .mind .slot.has-statuses .name {
+  padding-right: 0;
+}
+.battle-scene .mind .slot .nums {
+  font-size: 11px;
+  line-height: 13px;
+  white-space: nowrap;
+}
+.battle-scene .mind .slot .slot-activate {
+  height: 23px;
+  min-height: 23px;
+  padding: 2px 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.battle-scene .mind .card-status {
+  width: 16px;
+  height: 16px;
+}
+.battle-scene .mind .card-status svg {
+  width: 13px;
+  height: 13px;
+}
+.battle-scene .mind .card-statuses {
+  max-width: 52px;
+  gap: 2px;
+}
+.battle-scene .mind .slot .level {
+  top: auto;
+  bottom: 24px;
+  right: 3px;
+  font-size: 10px;
+}
+.battle-scene .mind .card-element-panel {
+  top: 2px;
+  left: 6px;
+  gap: 1px 3px;
+  font-size: 9px;
+  line-height: 11px;
+}
+.battle-scene .mind .attune-swatch {
+  width: 7px;
+  height: 7px;
+}
+.battle-scene .mind .element-wash {
+  bottom: 23px;
+}
+.battle-scene .mind .synergy-bonus {
+  margin-left: 3px;
+  font-size: 10px;
+  line-height: 11px;
+  padding: 0 2px;
+}
+.battle-scene .mind .shield-portions {
+  flex-wrap: nowrap;
+}
+.battle-scene .mind .shield-portion {
+  padding: 0 2px;
+}
+.battle-scene .mind .grid-threat-badge {
+  bottom: 46px;
+  right: 2px;
+  width: 15px;
+  height: 15px;
+}
+.battle-scene .mind .ally-health {
+  height: 12px;
+  display: inline-block;
+  min-width: 53px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.battle-scene .mind .ally-health > span {
+  font-size: 9px;
+  line-height: 10px;
+}
+.battle-scene .revealed-hand .hand {
+  height: 104px;
+  gap: 8px;
+  padding: 2px 8px 6px;
+}
+.battle-scene .revealed-hand .card {
+  width: 230px;
+  min-width: 230px;
+  flex-basis: 230px;
+  height: 96px;
+  grid-template-columns: 48px 1fr;
+}
+.battle-scene .revealed-hand .card img {
+  width: 48px;
+  height: 96px;
+}
+.battle-scene .revealed-hand .card .body {
+  padding: 4px 6px;
+}
+.battle-scene .revealed-hand .card h4 {
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.battle-scene .revealed-hand .card .text {
+  font-size: 11px;
+  line-height: 1.1;
+  -webkit-line-clamp: 2;
+}
+.battle-scene .revealed-hand .card .meta {
+  font-size: 10px;
+  margin-top: 2px;
+  line-height: 1.1;
+}
+.battle-scene .revealed-hand .card .eyebrow {
+  font-size: 9px;
+}
+.battle-scene .targeting-bar {
+  bottom: 60px;
+}
+
+/* Connections read as physical joins; Sever is a break around the entire card. */
+.battle-scene .board-link {
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.battle-scene .link-rail {
+  stroke: #06110f;
+  stroke-width: 8;
+}
+.battle-scene .link-core {
+  stroke: var(--link-color);
+}
+.battle-scene .link-port {
+  fill: var(--link-color);
+  stroke: #10241b;
+  stroke-width: 1;
+}
+.battle-scene .link-adjacency {
+  opacity: 0.55;
+}
+.battle-scene .link-attune {
+  opacity: 0.9;
+  stroke-dasharray: none;
+  filter: drop-shadow(0 0 2px var(--link-color));
+}
+.battle-scene .link-pattern,
+.battle-scene .link-synergy {
+  stroke-width: 5;
+  filter: drop-shadow(0 0 4px #ffdc79);
+}
+.battle-scene .link-inspected {
+  opacity: 1;
+  stroke-width: 6;
+}
+.battle-scene .sever-border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+  pointer-events: none;
+  overflow: visible;
+}
+.battle-scene .sever-border path {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.battle-scene .sever-shadow {
+  stroke: #1b092a;
+  stroke-width: 5;
+}
+.battle-scene .sever-cut {
+  stroke: #d69aff;
+  stroke-width: 2.3;
+  filter: drop-shadow(0 0 2px #9c4ee4);
+}
+.battle-scene .mind .slot.severed-card {
+  border-color: #bb70ed;
+  box-shadow: inset 0 0 12px #9b47d82e;
+}
+.battle-scene .mind .status-sever {
+  color: #edc9ff;
+  background: #4a1b69;
+  border-color: #d69aff;
+  box-shadow: 0 0 5px #b964f1;
+}
+
+/* Energy only follows real card effects; no proximity-only cables. */
+.battle-scene .grove-pattern .grove-outline.link-core {
+  stroke-width: 2.5;
+  opacity: 0.95;
+}
+.battle-scene .grove-pattern .grove-corner {
+  opacity: 0.32;
+}
+.battle-scene .grove-pattern .grove-corner.link-rail {
+  stroke-width: 3;
+}
+.battle-scene .grove-pattern.link-inspected .grove-corner {
+  opacity: 0.85;
+}
+.battle-scene .board-link {
+  fill: none;
+  stroke-width: 2;
+  opacity: 0.85;
+  filter: none;
+}
+.battle-scene .board-link .link-rail {
+  stroke: #071610;
+  stroke-width: 6;
+}
+.battle-scene .board-link .link-glow {
+  stroke: var(--link-color);
+  stroke-width: 5;
+  opacity: 0.25;
+  filter: blur(2px);
+}
+.battle-scene .board-link .link-core {
+  stroke: var(--link-color);
+  stroke-width: 1.5;
+  opacity: 0.8;
+}
+.battle-scene .board-link .link-flow {
+  stroke: #fff8da;
+  stroke-width: 2.5;
+  stroke-dasharray: 14 86;
+  animation: connection-flow 1.7s linear infinite;
+  filter: drop-shadow(0 0 2px var(--link-color));
+}
+.battle-scene .board-link .link-flow-return {
+  animation-direction: reverse;
+  animation-delay: -0.85s;
+}
+.battle-scene .board-link.link-distant {
+  opacity: 0;
+}
+.battle-scene .board-link.link-inspected {
+  opacity: 1;
+}
+.battle-scene .board-link.link-inspected .link-glow {
+  opacity: 0.55;
+}
+@keyframes connection-flow {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-scene .board-link .link-flow {
+    animation: none;
+    stroke-dashoffset: 50;
+    opacity: 0.65;
+  }
+  .battle-scene .board-link .link-flow-return {
+    display: none;
+  }
+}
+
+.battle-scene .mind .upgrade-badge {
+  width: 20px;
+  height: 20px;
+  top: 3px;
+  right: 3px;
+}
+.battle-scene .mind .upgrade-badge svg {
+  width: 16px;
+  height: 16px;
+}
+.battle-scene .mind .slot:has(.upgrade-badge) .card-statuses {
+  right: 27px;
+  max-width: 52px;
+}
+
+/* The opening companion is framed as a character, using the complete card art. */
+.companion-intro .scene-art {
+  display: grid;
+  place-items: center;
+}
+.companion-portrait {
+  margin: 40px;
+  padding: 15px;
+  width: 390px;
+  background: #101f18e8;
+  border: 1px solid #b9a96e;
+  box-shadow: 0 22px 65px #0009;
+}
+.companion-portrait img {
+  display: block;
+  width: 100%;
+  height: 490px;
+  object-fit: contain;
+}
+.companion-portrait figcaption {
+  padding: 15px 5px 4px;
+  font-size: 29px;
+  color: #efdbaf;
+}
+.companion-portrait figcaption span {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #b8c6a9;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+#app .companion-intro .scene-copy {
+  padding: 40px 80px;
+}
+#app .companion-intro .companion-story {
+  color: #eee4ce;
+  font-size: 22px;
+  line-height: 1.55;
+}
+#app .companion-intro .companion-world {
+  font-size: 16px;
+}
+
+/* Offset card edges show attachments beneath the exposed host. */
+.battle-scene .mind .slot .meld-layers {
+  position: absolute; left: 7px; right: 7px; bottom: 0;
+  height: 4px; pointer-events: none; z-index: 5;
+}
+.battle-scene .mind .slot .meld-layers i {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  border: 1px solid #c7b982; background: #17262b; border-radius: 1px;
+}
+.battle-scene .mind .slot .meld-layers i + i { left: 4px; right: 4px; bottom: 2px; }

@@ -1,4 +1,4 @@
-import { phaseMoves } from "./loom-bosses.mjs";
+import { bileMoves, phaseMoves } from "./loom-bosses.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
 import { corruptionPower, nauseaTargets, cardFrozen } from "./corruptions.mjs";
 import { artPaths } from "./art-paths.mjs";
@@ -187,34 +187,37 @@ export function paintCorruptions(o, app) {
     );
   for (const e of b.enemies) {
     const p = e.bilePlan;
-    for (const to of p ? [p.to, ...(p.additional || [])] : []) {
-      const slot = to === "player" ? p.from : to;
+    for (const move of bileMoves(p)) {
+      const {to,from}=move;
+      const slot = to === "player" ? from : to;
       const el = app.querySelector('[data-slot="' + slot + '"]');
       el?.classList.add("bile-destination");
       const warning =
-        p.to === "player"
+        to === "player"
           ? "Green · Live Bile route: this Bile will reach you next enemy round: Poison +2."
+          : move.targeted ? "Green · Targeted Bile: a strongest damaging card loses one activation next enemy round. Target updates with card damage and remaining uses."
           : "Green · Live Bile route: Bile arrives next enemy round and consumes one activation. Warning updates if the route changes.";
       el?.insertAdjacentHTML(
         "beforeend",
-        `<span class="bile-forecast${p.to === "player" ? " bile-escape" : ""}" aria-hidden="true">${p.to === "player" ? "←" : ""}</span>`,
+        `<span class="bile-forecast${to === "player" ? " bile-escape" : ""}" aria-hidden="true">${to === "player" ? "←" : ""}</span>`,
       );
       if (el) hazardHelp(el, warning);
-      if (p.from != null && p.to !== "player")
-        arrows.push({ from: p.from, to: p.to, color: "#63e68b" });
+      if (from != null && to !== "player")
+        arrows.push({ from, to, color: "#63e68b" });
     }
     if (e.tell?.disrupt) {
       for (const m of phaseMoves(b, e.tell.phasePlan)) {
         const el = app.querySelector('[data-slot="' + m.from + '"]');
         el?.classList.add("phase-warning");
-        const danger = b.corruptions?.[m.to]?.kind;
+        const danger = m.hole != null ? "hole" : b.corruptions?.[m.to]?.kind;
         el?.insertAdjacentHTML(
           "beforeend",
-          `<span class="phase-label" data-tooltip="Whole stack moves to row ${Math.floor(m.to / 7) + 1}, column ${(m.to % 7) + 1}. ${danger === "hole" ? "Memory Hole destroys the whole arriving stack." : danger === "hypnosis" ? "Hypnosis immediately activates the arriving top card against you." : "Corruptions stay fixed."}">${e.tell.disrupt === "H" ? "→" : "↓"}2${m.occupied && danger === "hole" ? " ×" : m.occupied && danger === "hypnosis" ? " ◎" : ""}</span>`,
+          `<span class="phase-label" data-tooltip="Whole stack moves to row ${Math.floor(m.to / 7) + 1}, column ${(m.to % 7) + 1}. ${danger === "hole" ? `Memory Hole on the route destroys the whole Construct at row ${Math.floor(m.hole / 7) + 1}, column ${m.hole % 7 + 1}, before it can move farther.` : danger === "hypnosis" ? "Hypnosis immediately activates the arriving top card against you." : "Corruptions stay fixed."}">${e.tell.disrupt === "H" ? "→" : "↓"}${m.distance}${m.occupied && danger === "hole" ? " ×" : m.occupied && danger === "hypnosis" ? " ◎" : ""}</span>`,
         );
         if (m.occupied)
           arrows.push({
             ...m,
+            to: m.hole ?? m.to,
             axis: e.tell.disrupt,
             color: danger === "hole" ? "#ff8067" : "#dba8ff",
           });

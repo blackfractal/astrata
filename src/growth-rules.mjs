@@ -1,3 +1,4 @@
+import {currentPath,connects} from "./elemental-formations.mjs";
 import { protectedOwner, ideonActivationReason } from "./ideons.mjs";
 import {
   cards,
@@ -86,8 +87,10 @@ export function ashesBonus(b, c, i) {
 }
 export function growthDamage(b, c, i, n) {
   const f = cards[c.id].effects;
-  if (f.diagonalDamage) n += sourceSlots(b, c, i).length * f.diagonalDamage;
-  return n + ashesBonus(b, c, i);
+  if (f.diagonalDamage && connects(b,i)) n += diagonals(i).filter(j=>connects(b,j)).length * f.diagonalDamage;
+  if (f.orthogonalPenalty) n -= adjacent(i).filter(j=>b.grid[j]?.length).length * f.orthogonalPenalty;
+  if (f.waterPath) n += Math.max(0,currentPath(b,i).length-1)*f.waterPath;
+  return Math.max(0,n + ashesBonus(b, c, i));
 }
 export function growthGuard(b, c, i) {
   const f = cards[c.id].effects;
@@ -210,10 +213,7 @@ export function growthTarget(b, c, i, e) {
 export function growthVariants(b, c, i, element, target, ex) {
   const f = cards[c.id].effects;
   if (f.focusDamage)
-    return Array.from(
-      { length: Math.min(3, b.focus) + 1 },
-      (_, focusSpend) => ({ ...ex, focusSpend }),
-    );
+    return [{ ...ex, focusSpend: Math.max(0, Math.min(3, b.focus)) }];
   if (f.braided) {
     const els = braidedElements(b, c, i);
     if (!els.includes(element)) return [];

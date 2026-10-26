@@ -100,7 +100,7 @@ export function registerGrowth(card) {
     2,
     1,
     { damage: 6, focusDamage: 8 },
-    "Spend 0–3 remaining Focus. Deal 6 Arcane damage, plus 8 per Focus spent (6/14/22/30). Choose the expenditure before attacking.",
+    "Automatically spend up to 3 available Focus. Deal 6 Arcane damage, plus 8 per Focus spent (6/14/22/30).",
     { rarity: "rare" },
   );
   add(
@@ -204,18 +204,25 @@ export function registerGrowth(card) {
     "Attune. Gain 16 Guard through this enemy phase. Requires player cards immediately north and south, and empty spaces east and west. All four neighboring spaces must exist.",
     { attune: true, formation: "vertical" },
   );
+  add("meanderingCurrent", "Meandering Current", "Water", "Spell", 1, 2, 1, 3, 1,
+    {damage:5,waterPath:2},
+    "Deal 5 damage, +2 per other card in the longest unbroken Water path containing this card. Connect orthogonally, count each space once; branches do not add together. Activated Water attunements count. Frozen, Severed or Ideon-covered cards break the path.",
+    {rarity:"rare"});
+  add("risingGale", "Rising Gale", "Wind", "Spell", 1, 1, 1, 3, 1,
+    {damage:5,column:2,columnPenalty:2},
+    "Deal 5 damage, +2 per other Wind card and -2 per Earth card in this column. Minimum 0. Activated attunements count.");
   add(
     "starleaf",
     "Starleaf",
-    "Arcane",
+    "Light",
     "Spell",
     2,
     1,
     2,
     3,
     1,
-    { damage: 8, diagonalDamage: 6 },
-    "Deal 8 damage plus 6 per diagonally adjacent player card (maximum 32). Attune from diagonal cards instead of orthogonal cards.",
+    { damage: 8, diagonalDamage: 6, orthogonalPenalty: 2 },
+    "Deal 8 damage, +6 per diagonally adjacent player card and -2 per orthogonally adjacent player card (minimum 0, maximum 32). Attune from diagonal cards instead of orthogonal cards.",
     { attune: true, diagonalAttune: true, rarity: "rare" },
   );
   add(

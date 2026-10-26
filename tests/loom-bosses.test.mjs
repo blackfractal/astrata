@@ -148,7 +148,7 @@ test("Bile deterministic spawn, left-diagonal priority, no trail and only arriva
   const g = arena(),
     b = g.s.battle,
     e = b.enemies[0];
-  const a = put(g, "blast", 13),
+  const a = put(g, "shield", 13),
     z = put(g, "shield", 5),
     up = put(g, "blast", 6);
   assert.deepEqual(bilePlan(g, e), { from: null, to: 6 }); // rightmost tie: top row
@@ -158,11 +158,12 @@ test("Bile deterministic spawn, left-diagonal priority, no trail and only arriva
   resolveBile(g, e);
   assert.equal(b.biles[6], undefined);
   assert.equal(a.used, 1);
-  assert.deepEqual(bilePlan(g, e), { from: 13, to: 5 });
+  assert.deepEqual(bilePlan(g, e), { from: 13, to: 5, targeted: [6] });
   resolveBile(g, e);
   assert.equal(z.used, 1);
   assert.equal(a.used, 1);
-  assert.deepEqual(Object.keys(b.biles), ["5"]);
+  assert.deepEqual(Object.keys(b.biles), ["5", "6"]);
+  assert.equal(up.used, 2);
 });
 test("Bile picks leftmost movable glob; blocked globs persist and trigger fresh throws", () => {
   const g = arena(),
@@ -170,9 +171,9 @@ test("Bile picks leftmost movable glob; blocked globs persist and trigger fresh 
     e = b.enemies[0];
   bile(g, 10);
   bile(g, 12);
-  put(g, "blast", 2);
-  put(g, "blast", 4);
-  put(g, "blast", 27);
+  put(g, "shield", 2);
+  put(g, "shield", 4);
+  put(g, "shield", 27);
   assert.deepEqual(bilePlan(g, e), { from: 10, to: 2 });
   b.grid[2][0].used = 2;
   b.grid[4][0].used = 2;
@@ -300,12 +301,12 @@ test("Bombadier mines give one full turn,20 Fire damage, and basic Elves defuse 
   assert.equal(b.jobs.find((x) => x.name === "Mind Mine").damage, 20);
   assert.equal(b.jobs.find((x) => x.name === "Mind Mine").element, "Fire");
 });
-test("Steam preserves ordered independent elements and scaled9/12/14 damage", () => {
+test("Steam preserves ordered independent elements and per-hit cycle, buff, restlessness and half-HP scaling", () => {
   const g = arena("bombadier"),
     b = g.s.battle,
     e = b.enemies[0];
   e.cycle = 2;
-  e.hp = 1;
+  e.hp = e.maxHp / 2;
   e.buff = 7;
   e.restless = 3;
   const hits = [];
@@ -315,9 +316,9 @@ test("Steam preserves ordered independent elements and scaled9/12/14 damage", ()
     act(g, "skipEquipment");
   }
   assert.deepEqual(hits, [
-    [9, "Fire"],
-    [12, "Water"],
-    [14, "Wind"],
+    [25, "Fire"],
+    [28, "Water"],
+    [31, "Wind"],
   ]);
 });
 
@@ -417,9 +418,10 @@ test("Phase H commits fullest row, shifts stacks simultaneously, destroys whole 
   const frozen = structuredClone(b.corruptions);
   disrupt(g, e, e.phasePlan);
   assert.equal(b.grid[0].length, 0);
-  assert.equal(b.grid[1][0].uid, z.uid);
+  assert.equal(b.grid[1].length, 0);
+  assert.ok(b.destroyed.some(c=>c.uid===z.uid));
   assert.ok(b.destroyed.some((c) => c.uid === a.uid));
-  assert.equal(b.destroyed.length, 2);
+  assert.equal(b.destroyed.length, 3);
   assert.deepEqual(b.corruptions, frozen);
 });
 test("Phase V wraps bottom stack two rows; Hypnosis forces spent-this-turn card exactly once", () => {
@@ -482,10 +484,10 @@ test("Anti-elemental counts actual Shield/Ward/equipment Guard, ignores Allies, 
   bracelet.gem = gem.uid;
   g.s.equipment.wrist1 = bracelet.uid;
   assert.equal(antiElement(g).element, "Water");
-  assert.equal(g.tell(e).damage, 22);
+  assert.equal(g.tell(e).damage, 30);
   e.cycle = 11;
   e.hp = 1;
-  assert.equal(g.tell(e).damage, 26);
+  assert.equal(g.tell(e).damage, 36);
 });
 test("Anti-elemental ignores covered or destroyed Shield owners", () => {
   const g = arena("trickster"),
@@ -531,23 +533,23 @@ test("Black Bile escalates after its first completed cycle, forecasts distinct f
     c = put(g, "blast", 20),
     d = put(g, "blast", 34);
   e.cycle = 3;
-  assert.deepEqual(bilePlan(g, e), { from: null, to: 6 });
+  assert.deepEqual(bilePlan(g, e), { from: null, to: 6, targeted: [20] });
   e.cycle = 4;
-  assert.deepEqual(bilePlan(g, e), { from: null, to: 6, additional: [20] });
+  assert.deepEqual(bilePlan(g, e), { from: null, to: 6, additional: [20], targeted: [34] });
   resolveBile(g, e);
   assert.equal(a.used, 1);
   assert.equal(c.used, 1);
-  assert.equal(d.used, 0);
+  assert.equal(d.used, 1);
   put(g, "blast", 12);
   assert.deepEqual(bilePlan(g, e), { from: 6, to: 12 });
   resolveBile(g, e);
   assert.equal(b.biles[6], undefined);
   assert.ok(b.biles[12]);
   assert.ok(b.biles[20]);
-  assert.equal(d.used, 0);
+  assert.equal(d.used, 1);
 });
 
-test("first-cycle final Bile action still uses the single-glob forecast", () => {
+test("first-cycle final Bile action uses one ordinary and one targeted glob", () => {
   const g = arena(),
     b = g.s.battle,
     e = b.enemies[0];
@@ -557,7 +559,7 @@ test("first-cycle final Bile action still uses the single-glob forecast", () => 
   e.cycle = 3;
   b.phase = "activate";
   g.endTurn();
-  assert.equal(Object.keys(b.biles).length, 1);
+  assert.equal(Object.keys(b.biles).length, 2);
 });
 
 test("Bombadier telegraphs three mines for its third full cycle, with ordinary caps retained", () => {
@@ -674,13 +676,13 @@ test("Bombadier still counts long-fuse or newly placed mines toward reserved cap
 test("Black Bile Churn presents and executes an Earth hit followed by Fire with normal scaling", () => {
   const g = arena(), b = g.s.battle, e = b.enemies[0];
   e.cycle = 2;
-  assert.deepEqual(g.tell(e).sequence, [{damage:12,element:"Earth"},{damage:7,element:"Fire"}]);
-  e.cycle = 6; e.hp = e.maxHp / 2;
   assert.deepEqual(g.tell(e).sequence, [{damage:16,element:"Earth"},{damage:12,element:"Fire"}]);
+  e.cycle = 6; e.hp = e.maxHp / 2;
+  assert.deepEqual(g.tell(e).sequence, [{damage:21,element:"Earth"},{damage:17,element:"Fire"}]);
   b.phase = "activate"; g.endTurn();
-  assert.equal(b.reaction.element, "Earth"); assert.equal(b.reaction.damage, 16);
+  assert.equal(b.reaction.element, "Earth"); assert.equal(b.reaction.damage, 21);
   act(g, "skipEquipment");
-  assert.equal(b.reaction.element, "Fire"); assert.equal(b.reaction.damage, 12);
+  assert.equal(b.reaction.element, "Fire"); assert.equal(b.reaction.damage, 17);
 });
 
 test("saved Bile and Bombadier fights adopt descriptions without replacing committed targets or HP", () => {

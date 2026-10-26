@@ -389,15 +389,15 @@ export function registerStratum2(card, enemy, glossary) {
     230,
     "Archon",
     [
-      { ...mark("nausea", 4), ...hit("Sickening flood", 10, "Earth") },
-      { ...apply("nausea"), ...hit("Burning bile", 12, "Fire", { burn: 2 }) },
+      { ...mark("nausea", 4), ...hit("Sickening flood", 18, "Earth") },
+      { ...apply("nausea"), ...hit("Burning bile", 22, "Fire", { burn: 2 }) },
       { name: "Churn", element: "Earth", sequence: [
-        { damage: 10, element: "Earth" },
-        { damage: 6, element: "Fire" },
+        { damage: 16, element: "Earth" },
+        { damage: 12, element: "Fire" },
       ] },
-      hit("Acrid breath", 10, "Fire", { burn: 1 }),
+      hit("Acrid breath", 20, "Fire", { burn: 1 }),
     ],
-    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. After one complete cycle, fresh casts throw two globs instead of one; spreading still moves one glob. Churn hits Earth, then Fire. Nausea spreads four spaces per cast, maximum twelve.",
+    "Bile acts every enemy round alongside normal attacks, even during Purify. It moves without a trail and consumes one activation on arrival. Left-edge Bile inflicts Poison 2 and disappears. After one complete cycle, fresh casts throw two globs instead of one; spreading still moves one glob. Independently throws at the strongest un-Biled damaging card every round, or two after one complete cycle. Targets with no uses left are ignored; ties prefer rightmost, then topmost. Churn hits Earth, then Fire. Attacks gain +2 damage per hit each full cycle, plus +3 below half HP and Restlessness. Nausea spreads four spaces per cast, maximum twelve.",
     "Read Bile's moving warning. Break the route, spend a threatened activation, or intercept with Machine Elves. Bile may share a Nausea space.",
     { corruptionCap: 12, bile: true, bossMode: "stalker" },
   );
@@ -409,32 +409,31 @@ export function registerStratum2(card, enemy, glossary) {
     240,
     "Archon",
     [
-      { ...apply("mine"), ...hit("Royal bombardment", 10, "Fire") },
+      { ...apply("mine"), ...hit("Royal bombardment", 18, "Fire") },
       {
         ...mark("mine", 2),
         alsoCorruption: "anger",
         alsoCount: 2,
-        ...hit("Excavation", 12, "Arcane"),
+        ...hit("Excavation", 20, "Arcane"),
       },
       {
         ...apply("hole"),
         name: "Deconstructed Steam",
         element: "Fire",
         sequence: [
-          { damage: 8, element: "Fire" },
-          { damage: 10, element: "Water" },
-          { damage: 12, element: "Wind" },
+          { damage: 12, element: "Fire" },
+          { damage: 15, element: "Water" },
+          { damage: 18, element: "Wind" },
         ],
-        fixedDamage: true,
       },
       {
         ...mark("mine", 2),
         alsoCorruption: "hole",
         alsoCount: 2,
-        ...hit("Light the fuses", 12, "Fire"),
+        ...hit("Light the fuses", 20, "Fire"),
       },
     ],
-    "Alternates two Memory Holes + two bombs with two Anger spaces + two bombs. The first wave is telegraphed at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. From the third full cycle, both waves cast three bombs instead of two; the preceding warning shows all three. Machine Elves defuse immediately. Deconstructed Steam hits for 8 Fire, then 10 Water, then 12 Wind.",
+    "Alternates two Memory Holes + two bombs with two Anger spaces + two bombs. The first wave is telegraphed at battle start. Bombs explode for 20 Fire on his next turn: one player turn to respond. Covering sacrifices the top card instead. From the third full cycle, both waves cast three bombs instead of two; the preceding warning shows all three. Machine Elves defuse immediately. Royal bombardment deals 18 Fire; Excavation deals 20 Arcane; Light the fuses deals 20 Fire. Deconstructed Steam hits for 12 Fire, then 15 Water, then 18 Wind. Direct hits gain +2 per full cycle, +1 per Restless level, and +3 at half HP. Once below 25% HP, Last Ditch Effort inserts one extra turn, pausing the normal cycle: resolves existing warnings and telegraphs six additional mines, without a direct attack. The next move resumes the cycle and places them; each mine still gives one full player turn to cover or defuse before its 20 Fire explosion.",
     "Defuse or cover the bombs; prepare different elements for each Steam hit. Memory Holes take two turns to Mend, one when upgraded.",
     {
       corruptionCap: 10,
@@ -459,35 +458,35 @@ export function registerStratum2(card, enemy, glossary) {
     [
       {
         ...apply("nausea"),
-        ...mark("hole", 2),
-        ...hit("Dazzle", 22, "Light", { fixedDamage: true }),
+        ...mark("hole", 4),
+        ...hit("Dazzle", 30, "Light", { fixedDamage: true }),
       },
       {
         ...apply("hole"),
-        ...hit("Anti-elemental", 22, "Arcane", {
+        ...hit("Anti-elemental", 30, "Arcane", {
           antiElemental: true, fixedDamage: true, warnDisruption: "H",
         }),
       },
       {
-        ...mark("hypnosis", 2),
+        ...mark("hypnosis", 3),
         name: "Phase disruption H",
         disrupt: "H",
         element: "Chaos",
         fixedDamage: true,
-        sequence: [{ damage: 8, element: "Chaos" }, { damage: 8, element: "Light" }],
+        sequence: [{ damage: 12, element: "Chaos" }, { damage: 12, element: "Light" }],
       },
       {
         ...apply("hypnosis"),
-        ...hit("False face", 22, "Chaos", { fixedDamage: true, warnDisruption: "V" }),
+        ...hit("False face", 30, "Chaos", { fixedDamage: true, warnDisruption: "V" }),
       },
       {
-        ...mark("nausea", 2), name: "Phase disruption V", disrupt: "V", element: "Chaos",
+        ...mark("nausea", 4), name: "Phase disruption V", disrupt: "V", element: "Chaos",
         fixedDamage: true,
-        sequence: [{ damage: 8, element: "Light" }, { damage: 8, element: "Chaos" }],
+        sequence: [{ damage: 12, element: "Light" }, { damage: 12, element: "Chaos" }],
       },
     ],
-    "Dazzle: 22 Light, apply pending Nausea and mark two Memory Holes (four below 60 HP). Anti-elemental: 22 counter damage, apply Holes and warn of H. H: 8 Chaos then 8 Light, shift a row right two and mark two Hypnoses. False face: 22 Chaos, apply Hypnosis and warn of V. V: 8 Light then 8 Chaos, shift a column down two and mark two Nauseas. Whole stacks wrap; Holes destroy arriving stacks and Hypnosis compels immediately. Corruptions can fill the entire grid. Each completed cycle adds 2 to single attacks and 1 to each split hit; Restless adds 1 per level to each hit. Anti-elemental counters the unique largest elemental Guard total, including equipment; ties use Arcane.",
-    "Read the committed line and landing spaces. Balance elemental Guard before Anti-elemental; its live Tell updates. Ordinary once-per-turn activation does not protect a card forcibly moved onto Hypnosis.",
+    "Dazzle: 30 Light, apply pending Nausea and mark four Memory Holes (six below half HP). Anti-elemental: 30 counter damage, apply Holes and warn of H. H: 12 Chaos then 12 Light, shift the fullest row right two, above one, below three and mark three Hypnoses. False face: 30 Chaos, apply Hypnosis and warn of V. V: 12 Light then 12 Chaos, shift the fullest column down two, left one, right three and mark four Nauseas. Count all melded cards; ties topmost/leftmost. The full three-line pattern locks when warned; neighboring lines wrap at edges. Whole Constructs wrap one space at a time; crossing a Hole on any step destroys them immediately. Hypnosis compels at final landing. Corruptions can fill the grid. Each completed cycle adds 3 to single attacks and 2 to each split hit; Restless adds 1 per level to each hit. Anti-elemental counters the unique largest elemental Guard total including equipment; ties use Arcane.",
+    "Read all three committed lines and every space along each route. Holes destroy cards that pass over them, even when the final space is safe. Balance elemental Guard before Anti-elemental.",
     { corruptionCap: 42, bossMode: "hunter" },
   );
   add(
@@ -532,7 +531,7 @@ export function registerStratum2(card, enemy, glossary) {
   glossary["Anti-elemental"] =
     "Trickster attacks the counter to your unique largest elemental Guard total, including Wards and socketed equipment. Tied leaders or only Arcane Guard produce Arcane. The Tell updates as your defenses change.";
   glossary["Phase disruption"] =
-    "Trickster moves a committed row right two or column down two, wrapping whole stacks. Holes destroy arriving stacks; Hypnosis compels the top card immediately, even after its normal activation.";
+    "Trickster shifts the fullest row right two spaces, the row above one, and below three; V shifts the fullest column down two, the left column one, and right column three. Neighbor lines and movement wrap. The pattern locks when warned. A whole Construct falls into the first Memory Hole crossed; Hypnosis compels only at final landing, even after normal activation.";
   glossary.Mend =
     "Machine Elves have three uses, one per player turn. Mend this space or one orthogonally adjacent space. Ordinary repairs are immediate; Memory Hole and other more powerful Corruptions take two player-turn starts, or one upgraded. Freeze delays completion. After the final successful repair, Recall to Discard automatically for no Focus. May Recall early for 1 Focus during Placement; unfinished repairs are canceled.";
 }

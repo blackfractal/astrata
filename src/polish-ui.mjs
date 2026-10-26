@@ -117,7 +117,7 @@ function effect(c, slot, ctx) {
     corruptionPower(ctx.o.battle, slot, shieldBase + ctx.o.bonuses.shield) -
     corruptionPower(ctx.o.battle, slot, shieldBase);
   return (
-    (activationCost(ctx.o.battle,c,slot) !== 1 ? `${activationCost(ctx.o.battle,c,slot)} Channel · ` : "") + (d.charge ? "Release · " : "") +
+    (activationCost(ctx.o.battle,c,slot) !== 1 ? `${activationCost(ctx.o.battle,c,slot)} Channel · ` : "") + (d.charge ? "Release · " : "") + (f.focusDamage ? `Spend ${Math.max(0,Math.min(3,ctx.o.battle.focus))} Focus · ` : "") +
     ([
       f.damage || f.hpDamage
         ? damageMarkup(ctx.o.battle, c, slot) +
@@ -230,7 +230,8 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
   ctx.app.querySelector(".mind").before(bar);
   const controller = new AbortController(),
     signal = controller.signal;
-  let element = elements.includes("Arcane") ? "Arcane" : elements[0];
+  const baseElement=ctx.o.battle.grid[slot].at(-1).element;
+  let element = elements.includes(baseElement) ? baseElement : elements[0];
   let options = new Map(),
     dropped = false;
   const filtered = () => choices.filter((a) => a.element === element);
@@ -302,13 +303,13 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
     bar.querySelector("[data-target-cancel]").onclick = clearTargeting;
     const activate = bar.querySelector("[data-target-activate]");
     if (activate) activate.onclick = () => commit();
-    if (elements.includes("Arcane")) {
+    if (elements.includes(baseElement)) {
       const neutral = document.createElement("button");
       neutral.textContent = "Unattune";
       neutral.dataset.targetUnattune = "";
-      neutral.title = "Use Arcane for this activation";
+      neutral.title = `Use ${baseElement} for this activation`;
       bar.querySelector(".target-elements").append(neutral);
-      mark(neutral, "element", "Arcane");
+      mark(neutral, "element", baseElement);
     }
     for (const i of sourceSlots(ctx.o.battle,ctx.o.battle.grid[slot].at(-1),slot)) {
       const neighbor = ctx.o.battle.grid[i].at(-1);
@@ -339,7 +340,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
         // A selected elemental, targetless activation is ready to commit.
         // Neutral keeps the chooser open on a single click; double-click
         // commits it without changing the current choice.
-        if (element !== "Arcane" && filtered().every((a) => a.target == null))
+        if (element !== baseElement && filtered().every((a) => a.target == null))
           commit();
         return;
       }
@@ -1398,7 +1399,7 @@ function incomingDetails(ctx) {
         note = ` → ${result.remaining} damage continues`;
       }
       if (a.type === "armor")
-        note = ` → ${a.effects.reflect ? 0 : Math.max(0, h.damage - a.effects.armor)} damage continues`;
+        note = ` → ${Math.max(0, h.damage - a.effects.armor)} damage continues`;
       if (a.type === "intercept") {
         const result = allyHit(
           h,

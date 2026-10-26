@@ -498,17 +498,24 @@ export async function playFrames(before, frames, after, renderView, isFast) {
             ];
           }
           const anim = ghost.animate(keys, {
-            duration: ms(650),
+            duration: ms(frame.step ? 400 : 650),
             fill: "forwards",
             easing: "ease-in-out",
           });
           ghosts.push({ ghost, anim });
         }
-        await pause(700);
+        await pause(frame.step ? 450 : 700);
         for (const { ghost, anim } of ghosts) {
           anim.cancel();
           ghost.remove();
         }
+        render(frame.state);
+      } else if (frame.kind === "holeFall") {
+        const target = card(frame.slot);
+        target?.classList.add("disintegrating");
+        const burst = spellImpact(target, "Chaos", {duration:ms(650),reduced});
+        await pause(650);
+        burst?.remove();
         render(frame.state);
       } else if (frame.kind === "eggHatch") {
         const target = card(frame.slot);

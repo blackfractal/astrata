@@ -324,7 +324,7 @@ export function initializeIdeons(g) {
     }
     if (e.id === "refractionCannon") e.cannonTurns = 0;
     if (e.id === "cnidarian")
-      for (let n = 0; n < 3; n++) spawnIdeon(g, e, "tentacle");
+      for (let n = 0; n < 4; n++) spawnIdeon(g, e, "tentacle");
     if (e.id === "mindHive") {
       b.hiveLarvaOpening = true;
       const shuffle = (values) => {

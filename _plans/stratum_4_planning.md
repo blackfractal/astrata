@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.15 · 2026-10-24 · Jonathan / Codex
+Design draft 0.17 · 2026-10-25 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -91,11 +91,11 @@ The player must defeat one of the two Archons and reach Ascend by the round-8 de
 
 - If both Archons remain alive, **both hunt together**, forcing a battle against both simultaneously.
 - If one remains alive, that survivor hunts and forces another fight if the player has not ascended.
-- Killing one does not cancel the other one's deadline.
+- Killing one does not cancel the other one's hunt, but a round-8 first victory grants the single escape movement described below.
 
-This is a deliberate encounter-choice deadline, not merely increased movement speed that can be evaded indefinitely. The UI must show which Archons remain, the current floor round and the impending hunt. Both hunters reaching the player must form one battle rather than allowing the first encounter to interrupt the second hunter's arrival.
+This is a deliberate encounter-choice deadline, not merely increased movement speed that can be evaded indefinitely. Use normal map markers, enemy inspection and round/spawn indicators to communicate the remaining Archons and hunt timing. Do not add a persistent deadline box or separate Archon roster. Both hunters reaching the player must form one battle rather than allowing the first encounter to interrupt the second hunter's arrival.
 
-**Confirmed timing:** pair 8 appears, the player gets that round's normal movement, then surviving Archons hunt during enemy movement. Battles pause the Field clock. Entering an enemy tile still ends that movement turn. Deliberately initiating the first Archon fight in round 7 leaves round 8 to reach Ascend; initiating it in round 8 is too late to escape the other Archon. Show that consequence before committing to the fight.
+**Confirmed timing:** pair 8 appears, the player gets that round's normal movement, then surviving Archons hunt during enemy movement. Battles pause the Field clock. Entering an enemy tile still ends that movement turn. Deliberately initiating the first Archon fight in round 7 leaves round 8 to reach Ascend; initiating it in round 8 grants one escape movement after victory (4.0.34). The surviving Archon skips the immediate enemy movement while ordinary enemies move normally; then restore the player's normal full movement allowance without advancing the floor round, spawning a ninth pair, aging enemies or decaying Gold. The survivor hunts at the end of that extra movement if the player has not ascended. Other encounters and Continue do not grant another grace turn. Show the escape opportunity and the resumed hunt explicitly.
 
 **Confirmed forced ascent:** after surviving the deadline hunt battle, the player automatically enters the next floor at its center, as if they had taken Ascend. This applies whether the hunt contains one remaining Archon or both. There is no return to the old floor to collect loot or finish off ordinary enemies. Preserve the battle rewards before completing the transition; their exact presentation order remains an implementation detail. Losing the fight does not advance the player.
 
@@ -154,7 +154,7 @@ Victory follows the main design's normal-run ending, including the closing line 
 Implementation checks for the first playable build:
 
 - Display **The Apex · Floor N** and **Round N/8**, with the two-spawn preview preserving the scheduled Archon pair and Tavern slot. Floor 4 has no misleading round counter.
-- Show the hunt deadline explicitly, rather than requiring players to infer it from enemy ages. Show Ascend appearing and keep it visually distinct from loot.
+- Use the standard Stratum map layout, titled **The Apex**, without a floor-number label, purple deadline box or Archon-name strip (4.0.35). Keep hunt timing in enemy inspection and the entry explanation. Show Ascend appearing and keep it visually distinct from loot.
 - Choose floor contents and Archon pairs through the saved run RNG. Save floor, round, remaining Archons, hunt status and staircase availability; Continue must not reroll or reset a deadline.
 - Archive floor transitions, both Archon identities, encounters, rewards and abandoned contents with the rules version. Keep optional full-clear achievements auditable.
 - Verify pair-4 replacement, floor-3 Tavern scheduling, a single two-Archon battle after a missed deadline, lone-survivor hunting, automatic center-entry after the second Archon victory at any round (only once the full encounter and rewards resolve), stair reachability, voluntary second fights, achievement failure for abandoned enemies, Wanderer base-one movement, and the final room's absence of a map clock.

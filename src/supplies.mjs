@@ -53,13 +53,13 @@ export function nextDrawIndex(g){
 export function inspirationLegal(g){
   const b=g.s.battle,p=b.inspiration;
   const old={phase:b.phase,focus:b.focus,channel:b.channel,hand:b.hand};
-  g.projectingSupply=true;b.phase=p.stage;b.focus=999;b.channel=999;
+  g.projectingSupply=true;b.phase=p.stage;b.focus=p.stage==='place'?999:old.focus;b.channel=999;
   if(p.stage==='place')b.hand=b.hand.filter(c=>c.uid===p.uid);
   let legal;
   try{legal=g.baseLegal();}finally{Object.assign(b,old);g.projectingSupply=false;}
   const slot=b.grid.findIndex(s=>top(s)?.uid===p.uid);
   const choices=legal.filter(a=>p.stage==='place'?['place','placeStrike'].includes(a.type)&&a.uid===p.uid&&(a.slot==null||!b.grid[a.slot].length):a.type==='activate'&&a.slot===slot&&(a.focusSpend||0)<=old.focus&&(a.costs.focus||0)<=old.focus);
-  return choices.length?choices.map(a=>({...a,label:'Inspiration · '+a.label,costs:{...a.costs,focus:0,channel:0},effects:{...a.effects,inspiration:true}})):
+  return choices.length?choices.map(a=>({...a,label:'Inspiration · '+a.label,costs:{...a.costs,focus:p.stage==='activate'?(a.costs.focus||0):0,channel:0},effects:{...a.effects,inspiration:true}})):
     [{type:'inspirationKeep',key:JSON.stringify(['inspirationKeep',{}]),label:'Cannot resolve: keep revealed card in hand',effects:{},costs:{}}];
 }
 export function finishInspiration(g,a){

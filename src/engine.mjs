@@ -1,6 +1,7 @@
+import {elementalLine} from "./elemental-formations.mjs";
 import {PREMIUM_GEAR} from "./premium-gear.mjs";
 import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
-import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete } from "./apex.mjs";
+import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete, apexEscapeGrace } from "./apex.mjs";
 import { pressureDamage, pressureTell, pressureSignature } from "./difficulty.mjs";
 import { sourceSlots, growthDamage, growthGuard, wardGain, growthReason, acornIn, projectedInsight, growthTarget, growthVariants, growthActionEffects, forkedRoute, forkedShares } from "./growth-rules.mjs";
 import { areaHits } from "./area-targets.mjs";
@@ -151,11 +152,11 @@ export function attunementElements(b, c, i) {
   const elements =
     d.attune && !c.transmuted && c.element === d.element
       ? [
-          "Arcane",
+          d.element,
           ...new Set(
             sourceSlots(b, c, i)
               .map((j) => attunementSourceElement(b, top(b.grid[j])))
-              .filter((element) => element !== "Arcane"),
+              .filter((element) => element !== "Arcane" && element !== d.element),
           ),
         ]
       : [c.element];
@@ -367,25 +368,17 @@ export function cardPower(b, c, i, target = null) {
     : f.damage
       ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
       : 0;
+  if (f.focusDamage) n += f.focusDamage * Math.max(0,Math.min(3,b.focus));
   if (f.nearDamage && target?.ideon && Number.isInteger(target.slot) &&
       Math.abs(i % MIND_COLUMNS - target.slot % MIND_COLUMNS) +
       Math.abs(Math.floor(i / MIND_COLUMNS) - Math.floor(target.slot / MIND_COLUMNS)) <= f.damageRadius)
     n = f.nearDamage + (c.upgrade ? d.upgrade?.bonus || 0 : 0);
   if (c.id === "plasma")
     n = plasmaContributions(b, c, i).reduce((a, n) => a + n, 0);
-  if (f.row)
-    n += b.grid.reduce(
-      (sum, slot, j) =>
-        sum +
-        (j !== i &&
-        Math.floor(j / MIND_COLUMNS) === Math.floor(i / MIND_COLUMNS) &&
-        top(slot)?.element === c.element &&
-        !cardSevered(b, top(slot), j) &&
-        !cardSevered(b, c, i)
-          ? f.row
-          : 0),
-      0,
-    );
+  if (f.row || f.column) {
+    const line=elementalLine(b,i,f.row?"row":"column",f.row?"Fire":"Wind",f.row?"Water":"Earth");
+    n += line.positive.length*(f.row||f.column)-line.negative.length*(f.rowPenalty||f.columnPenalty||0);
+  }
   if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square) n += squareFormation(b, c, i).bonus;
@@ -848,6 +841,12 @@ function normalizeMagnifierWards(s) {
   }
 }
 
+function normalizeStarleaf(s) {
+  if ((s.version?.rules || "0").localeCompare("4.0.31",undefined,{numeric:true})<0)
+    for(const c of s.battle?.grid.flat() || [])
+      if(c.id === "starleaf" && c.element === "Arcane" && !c.transmuted && !s.battle.tinctures?.[c.uid])c.element="Light";
+  if(s.checkpoint)normalizeStarleaf(s.checkpoint);
+}
 function normalizeInitialWards(s) {
   for (const c of s.battle?.grid.flat() || [])
     if (
@@ -981,6 +980,7 @@ export class Game {
       normalizeLoomRotations(this.s);
       normalizeUtilityMelds(this.s);
       normalizePlasmaMelds(this.s);
+      normalizeStarleaf(this.s);
       normalizeMagnifierWards(this.s);
       normalizeInitialWards(this.s);
       normalizeInsectMovement(this.s);
@@ -1483,7 +1483,10 @@ export class Game {
         : `Archon · ${spaces} spaces this enemy movement`;
     } else
       movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
-    if (e.apexMap && d.tier === "Archon") movement = this.s.field.round < 8 ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
+    if (e.apexMap && d.tier === "Archon") movement = this.s.field.archonGrace === "pending"
+      ? "Stationary · one escape movement after victory"
+      : this.s.field.archonGrace === "active" ? "Hunt · after this escape movement"
+      : this.s.field.round < 8 ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
     if (d.flying) movement += " · Flying: crosses barriers";
     return {
       age,
@@ -1733,11 +1736,16 @@ export class Game {
       }
     }
     s.mode = "field";
-    if (f.stage === "enemyDone") this.beginRound();
+    if (f.stage === "enemyDone" && apexActive(s) && f.archonGrace === "pending") {
+      f.archonGrace = "active";
+      f.stage = "player";
+      f.moves = this.bonuses().movement;
+    } else if (f.stage === "enemyDone") this.beginRound();
     else if (f.moves <= 0) this.endMovement();
   }
   endMovement() {
     const f = this.s.field;
+    if (apexActive(this.s) && f.archonGrace === "active") f.archonGrace = "spent";
     f.moves = 0;
     f.stage = "enemyDone";
     const reaching = new Set();
@@ -1789,7 +1797,7 @@ export class Game {
       let n = (d.speed || 2) + e.restless,
         type = d.movement;
       if (e.apexMap && type === "Archon") {
-        if (f.round < 8) continue;
+        if (f.round < 8 || f.archonGrace === "pending") continue;
         type = "Hunter";
       }
       if (type === "Archon") {
@@ -2270,10 +2278,21 @@ export class Game {
       return { name: Object.values(this.s.battle?.corruptions || {}).some(q => q.kind === "mine" && q.source === e.uid)
         ? "Mind Mines detonate, then Final Blast" : "Final Blast", damage: pressureDamage(cannonBlastDamage(e), e), element: e.finalBlastElement,
         fixedDamage: true, finalBlast: true };
+    if (e.id === "bombadier" && !e.lastDitchUsed && e.hp > 0 && e.hp < e.maxHp / 4)
+      return {name:"Last Ditch Effort", damage:0, lastDitch:true,
+        applyCorruption:!!e.corruptionPlan?.length, markCorruption:"mine", count:6, ignoreMineCap:true};
     if (enemies[e.id].tier === "Archon" && e.purifyPending)
-      return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex" });
+      return depthsTell(this, e, { name: "Purify", purify: true, damage: 0, commandIdeons: e.id === "apex",
+        ...(e.id === "bombadier" && e.lastDitchRelease ? {applyCorruption:true} : {}) });
     const d = enemies[e.id],
       t = clone(d.rotation[e.cycle % d.rotation.length]);
+    if (["bombadier", "blackBile"].includes(e.id)) {
+      // Along with ordinary +1/cycle below, this makes +2 per completed cycle.
+      const completed = Math.floor(e.cycle / d.rotation.length);
+      if (t.damage) t.damage += completed;
+      if (t.sequence) t.sequence = t.sequence.map(hit => ({...hit, damage:hit.damage + completed}));
+      if (e.lastDitchRelease) t.applyCorruption = true;
+    }
     if (t.alternateUnmake) {
       const vertical = Math.floor(e.cycle / d.rotation.length) % 2 === 1;
       t.grid = vertical ? "column" : "row";
@@ -2282,11 +2301,11 @@ export class Game {
     if (e.id === "trickster") {
       const completed = Math.floor(e.cycle / d.rotation.length);
       const restless = e.restless || 0;
-      if (t.damage) t.damage += 2 * completed + restless;
+      if (t.damage) t.damage += 3 * completed + restless;
       if (t.sequence) t.sequence = t.sequence.map(hit => ({
-        ...hit, damage: hit.damage + completed + restless,
+        ...hit, damage: hit.damage + 2 * completed + restless,
       }));
-      if (t.markCorruption === "hole") t.count = e.hp < 60 ? 4 : 2;
+      if (t.markCorruption === "hole") t.count = e.hp < e.maxHp / 2 ? 6 : 4;
       // Only execute existing warnings; the opening Dazzle has no Nausea yet.
       if (t.applyCorruption && !e.corruptionPlan?.length) t.applyCorruption = false;
     }
@@ -2472,7 +2491,7 @@ export class Game {
           t.emptySpaces = gridPlan.emptySpaces;
           t.damage = gridPlan.damage;
         }
-        if (!t.purify && !t.openingWarning && !t.finalBlast) e.cycle++;
+        if (!t.purify && !t.openingWarning && !t.finalBlast && !t.lastDitch) e.cycle++;
         this.log(
           e.name +
             ": " +
@@ -2526,6 +2545,7 @@ export class Game {
           !t.purify &&
           !t.openingWarning &&
           !t.finalBlast &&
+          !t.lastDitch &&
           enemies[e.id].tier === "Archon" &&
           e.cycle % enemies[e.id].rotation.length === 0
         )
@@ -2535,6 +2555,10 @@ export class Game {
         if (enemies[e.id].bile) resolveBile(this, { ...e, cycle: actionCycle });
         if (t.disrupt) disrupt(this, e, t.phasePlan);
         if (t.applyCorruption) applyCorruptions(this, e);
+        if (e.id === "bombadier") {
+          if (t.lastDitch) { e.lastDitchUsed = true; e.lastDitchRelease = true; }
+          else if (e.lastDitchRelease) e.lastDitchRelease = false;
+        }
         // Dazzle resolves the previous Nausea warning before selecting new Holes.
         if (t.markCorruption) prepareCorruption(this, e, t);
         if (t.nextCorruption && !t.openingWarning)
@@ -2689,7 +2713,7 @@ export class Game {
           uid: x.uid,
           name: x.definition.name,
           element: x.element,
-          protection: Math.ceil(
+          protection: x.definition.effect.reflect ? Math.min(h.damage, x.definition.effect.reflectLimit) : Math.ceil(
             b.armorBlock * defenseRate(x.element, h.element),
           ),
           reflect: !!x.definition.effect.reflect && !b.mirror,
@@ -3912,7 +3936,7 @@ export class Game {
         add(
           "continueReward",
           s.reward.boss
-            ? apexActive(s) ? s.reward.extraOffers?.length ? "Next Archon reward" : s.reward.apexFinal ? "Complete The Apex" : s.reward.apexAscend ? "Ascend to floor " + (s.apex.floor + 1) : "Return to the Field" : (s.stratum || 1) < 4 && !s.tutorial
+            ? apexActive(s) ? s.reward.extraOffers?.length ? "Next Archon reward" : s.reward.apexFinal ? "Complete The Apex" : s.reward.apexAscend ? "Ascend" : "Return to the Field" : (s.stratum || 1) < 4 && !s.tutorial
               ? "Continue to " + STRATA[(s.stratum || 1) + 1].name
               : "Complete Stratum " + (s.stratum || 1)
             : "Return to the Field",
@@ -4161,7 +4185,7 @@ export class Game {
         for (const armor of choices.armors)
           add(
             "armor",
-            `${armor.name} · ${armor.reflect ? "Reflect" : armor.protection + " protection"}`,
+            `${armor.name} · ${armor.reflect ? "Reflect " + armor.protection : armor.protection + " protection"}`,
             { uid: armor.uid },
             {
               armor: armor.protection,
@@ -4411,7 +4435,7 @@ export class Game {
                         }
                       : f),
                     damage: charging ? 0 : cardPower(b, c, i,
-                      hostiles(b).find(e => e.uid === (ex.target ?? target))) + (f.focusDamage ? corruptionPower(b,i,f.focusDamage*(ex.focusSpend||0)) : 0),
+                      hostiles(b).find(e => e.uid === (ex.target ?? target))),
                     ...growthActionEffects(b,c,i,target,{...ex,element}),
                     ...(f.bodyGuard?{bodyGuard:corruptionPower(b,i,f.bodyGuard)}:{}),
                     ...Object.fromEntries(
@@ -4665,7 +4689,11 @@ export class Game {
           if (s.reward.extraOffers?.length) { s.reward.cards = s.reward.extraOffers.shift(); break; }
           if (s.reward.apexFinal) this.finish(true);
           else if (s.reward.apexAscend) enterApexFloor(this, s.apex.floor + 1);
-          else this.resolveTile();
+          else {
+            // Also support a first-Archon reward saved before escape grace existed.
+            if (s.reward.boss) apexEscapeGrace(this);
+            this.resolveTile();
+          }
           break;
         }
         if (s.reward.boss && !s.tutorial && (s.stratum || 1) < 4)
@@ -5031,7 +5059,7 @@ export class Game {
         h.weaknessBonus = 0;
         h.weaknessElement = null;
         const result = armor.reflect
-          ? { remaining: 0, block: b.armorBlock }
+          ? { remaining: h.damage - armor.protection, block: b.armorBlock }
           : blockHit(b.armorBlock, armor.element, h.damage, h.element);
         const stopped = h.damage - result.remaining;
         loss = armor.reflect ? stopped : b.armorBlock - result.block;

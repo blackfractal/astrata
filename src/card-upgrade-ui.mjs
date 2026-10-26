@@ -52,6 +52,9 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
       label: "Damage",
       text: `${parts.join(" + ")} diminishing Plasma damage${corruptionPower(b, slot, 4) < 4 ? " → Nausea ×½, rounded down" : ""} = ${cardPower(b, c, slot)} damage. One random target; host element applies to the combined attack.`,
     });
+  } else if (f.focusDamage && live) {
+    const spent=Math.max(0,Math.min(3,b.focus));
+    rows.push({label:"Damage",text:`${f.damage} base + ${f.focusDamage*spent} from automatically spending ${spent} Focus${corruptionPower(b,slot,4)<4?" → Nausea ×½, rounded down":""} = ${cardPower(b,c,slot)} damage.`});
   } else if (f.damage || f.hpDamage) {
     const base = f.hpDamage ? (c.hp ?? d.hp) : d.effects.damage || 0,
       bonus = f.damage ? up + f.damage - (d.effects.damage || 0) : 0;

@@ -5,6 +5,24 @@ import {enemies} from '../src/content.mjs';
 import {commandIdeon, protectedOwner} from '../src/ideons.mjs';
 
 const openings = {nerveWeaver:['shuttle',1],paleGrazer:['leech',1],hollowDrifter:['guardian',1],knotkeeper:['binder',2]};
+test('Cnidarian begins with four distinct owned Tendrils and Continue does not repopulate them',()=>{
+  for(const first of [false,true]) {
+    const g=arena(['cnidarian'],first),b=g.s.battle;
+    const tendrils=b.ideons.filter(i=>i.kind==='tentacle');
+    assert.equal(tendrils.length,4);
+    assert.equal(new Set(tendrils.map(i=>i.slot)).size,4);
+    for(const i of tendrils) {
+      assert.equal(i.owner,b.enemies[0].uid);
+      assert.equal(i.maxHp,18);
+      assert.equal(b.grid[i.slot].length,0);
+    }
+    const h=new Game(0,structuredClone(g.s));
+    assert.deepEqual(JSON.parse(JSON.stringify(h.s.battle.ideons)),JSON.parse(JSON.stringify(b.ideons)));
+    // Continuing an older three-Tendril opening must not add an unearned fourth.
+    const old=structuredClone(g.s);old.version.rules='4.0.31';old.battle.ideons.pop();
+    assert.equal(new Game(0,old).s.battle.ideons.length,3);
+  }
+});
 function arena(ids, enemyFirst=false, seed=44) {
   const g=new Game(seed);g.s.stratum=3;
   g.beginBattle(ids.map((enemy,i)=>({uid:900+i,enemy,restless:0})),{enemyFirst});

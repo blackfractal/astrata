@@ -223,6 +223,64 @@ test("first victory reveals central stairs; voluntary entry abandons survivor an
   assert.equal(g.s.apex.floor, 2);
   assert.equal(apexComplete(g.s), false);
 });
+test("round-eight first Archon victory gives one saved escape movement on all three floors without more spawns",()=>{
+  for(let n=1;n<=3;n++) {
+    const g=floor(n),aa=round4(g),f=g.s.field,c=(f.size-1)/2;
+    f.entities=aa;f.round=8;f.spawned=16;f.moves=2;
+    f.x=aa[0].x+1;f.y=aa[0].y+1;g.s.hp=g.s.maxHp=1000;
+    act(g,'move',{x:aa[0].x,y:aa[0].y});
+    win(g);assert.equal(f.archonGrace,'pending');
+    const h=new Game(0,structuredClone(g.s));rewards(h);
+    assert.equal(h.s.mode,'field');assert.equal(h.s.field.archonGrace,'active');
+    assert.equal(h.s.field.moves,2);assert.equal(h.s.field.round,8);
+    assert.equal(h.s.field.spawned,16);
+    const survivor=h.s.field.entities.find(e=>e.enemy);
+    assert.deepEqual([survivor.x,survivor.y],[aa[1].x,aa[1].y]);
+    assert.match(h.fieldEnemyPreview(survivor).movement,/after this escape movement/);
+    act(h,'move',{x:c-1,y:c-1});
+    const resumed=new Game(0,structuredClone(h.s));
+    assert.equal(resumed.s.field.moves,1);
+    act(resumed,'move',{x:c,y:c});
+    assert.equal(resumed.s.apex.floor,n+1);
+    assert.equal(apexComplete(resumed.s),false);
+  }
+});
+
+test("passing the escape movement lets the survivor hunt; no repeat grace or ninth pair",()=>{
+  const g=floor(),aa=round4(g),f=g.s.field;
+  f.entities=aa;f.round=8;f.spawned=16;f.x=aa[0].x;f.y=aa[0].y;f.moves=0;
+  g.s.hp=g.s.maxHp=1000;g.beginBattle([aa[0]]);win(g);rewards(g);
+  assert.equal(f.archonGrace,'active');act(g,'wait');
+  assert.equal(g.s.mode,'battle');assert.equal(f.archonGrace,'spent');
+  assert.equal(g.s.battle.enemies[0].id,aa[1].enemy);assert.equal(f.spawned,16);
+  win(g);rewards(g);assert.equal(g.s.apex.floor,2);
+});
+
+test("old first-Archon reward at deadline receives grace, but earlier victories use normal rounds",()=>{
+  for(const round of [4,5,6,7,8]) {
+    const g=floor(),aa=round4(g),f=g.s.field;
+    f.entities=aa;f.round=round;f.spawned=round*2;
+    f.x=aa[0].x;f.y=aa[0].y;f.moves=0;g.s.hp=g.s.maxHp=1000;
+    g.beginBattle([aa[0]]);win(g);delete f.archonGrace;
+    const h=new Game(0,structuredClone(g.s));rewards(h);
+    assert.equal(h.s.mode,'field');assert.equal(h.s.field.round,Math.min(8,round+1));
+    assert.equal(h.s.field.moves,2);assert.equal(h.s.field.spawned,Math.min(16,(round+1)*2));
+    assert.equal(h.s.field.archonGrace,round===8?'active':undefined);
+  }
+});
+
+test("ordinary enemies still move during the Archon pause; their fight does not consume or refresh pending grace",()=>{
+  const g=floor(),aa=round4(g),f=g.s.field;
+  const imp={uid:g.uid(),enemy:'imp',type:'Mote',x:aa[0].x,y:aa[0].y+1,born:4,restless:0,apexMap:true,apexFloor:1};
+  f.entities=[...aa,imp];f.round=8;f.spawned=16;f.moves=0;
+  f.x=aa[0].x;f.y=aa[0].y;g.s.hp=g.s.maxHp=1000;
+  g.beginBattle([aa[0]]);win(g);rewards(g);
+  assert.equal(g.s.mode,'battle');assert.equal(g.s.battle.enemies[0].id,'imp');
+  assert.equal(f.archonGrace,'pending');assert.equal(aa[1].x,f.archons[1].x);
+  win(g);rewards(g);assert.equal(g.s.mode,'field');assert.equal(f.archonGrace,'active');
+  act(g,'wait');assert.equal(g.s.mode,'battle');assert.equal(f.archonGrace,'spent');
+});
+
 test("second voluntary victory forces ascent before round eight, after both reward offers if paired", () => {
   const g = floor(),
     aa = round4(g);

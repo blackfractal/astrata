@@ -6,7 +6,7 @@ const top = (stack) => stack.at(-1);
 const order = (a, b) => (a % 7) - (b % 7) || a - b;
 
 // Bile has a separate space layer: it can crawl across Nausea or Hypnosis.
-export function bilePlan(g, e) {
+function bileRoute(g, e) {
   const b = g.s.battle;
   const active = Object.keys(b.biles || {})
     .map(Number)
@@ -46,6 +46,29 @@ export function bilePlan(g, e) {
     : null;
 }
 
+// Independent offensive pressure: ordinary routing never suppresses these throws.
+export function bilePlan(g, e) {
+  const route = bileRoute(g, e);
+  if (!route) return null;
+  const b = g.s.battle;
+  const reserved = new Set([route.to, ...(route.additional || [])]);
+  const targeted = b.grid.map((stack, slot) => ({slot, c:top(stack)}))
+    .filter(({slot,c}) => c && !b.biles?.[slot] && !reserved.has(slot) &&
+      g.allowance(c, slot) > 0 && g.cardPower(c, slot) > 0)
+    .sort((a,z) => g.cardPower(z.c,z.slot)-g.cardPower(a.c,a.slot) ||
+      (z.slot%7)-(a.slot%7) || a.slot-z.slot)
+    .slice(0, e.cycle >= 4 ? 2 : 1).map(x=>x.slot);
+  return {...route, ...(targeted.length ? {targeted} : {})};
+}
+
+export function bileMoves(plan) {
+  return plan ? [
+    {from:plan.from, to:plan.to},
+    ...(plan.additional || []).map(to=>({from:null,to})),
+    ...(plan.targeted || []).map(to=>({from:null,to,targeted:true})),
+  ] : [];
+}
+
 export function phasePlan(b, e, axis) {
   if (e.phasePlan?.cycle === e.cycle && e.phasePlan.axis === axis)
     return e.phasePlan;
@@ -60,19 +83,30 @@ export function phasePlan(b, e, axis) {
       0,
     ),
   );
-  return { cycle: e.cycle, axis, line: totals.indexOf(Math.max(...totals)) };
+  const line = totals.indexOf(Math.max(...totals));
+  return {cycle:e.cycle,axis,line,shifts:[
+    {line:(line+count-1)%count,distance:1},
+    {line,distance:2},
+    {line:(line+1)%count,distance:3},
+  ]};
 }
 
-export function phaseMoves(b, plan) {
+function phaseShifts(plan) {
+  // Published older single/two-line warnings retain their exact scope on Continue.
+  return plan.shifts || (plan.lines || [plan.line]).map(line=>({line,distance:2}));
+}
+export function phaseMoves(b, plan, step = null) {
   if (!plan) return [];
   return b.grid.flatMap((stack, from) => {
-    if ((plan.axis === "H" ? Math.floor(from / 7) : from % 7) !== plan.line)
-      return [];
-    const to =
-      plan.axis === "H"
-        ? Math.floor(from / 7) * 7 + (((from % 7) + 2) % 7)
-        : ((Math.floor(from / 7) + 2) % 6) * 7 + (from % 7);
-    return [{ from, to, occupied: stack.length > 0 }];
+    const line=plan.axis === "H" ? Math.floor(from/7) : from%7;
+    const shift=phaseShifts(plan).find(s=>s.line===line);
+    if (!shift || (step != null && step>shift.distance)) return [];
+    const distance = step != null ? 1 : shift.distance;
+    const path = Array.from({length:distance}, (_,n)=>plan.axis === "H"
+      ? Math.floor(from/7)*7+((from%7+n+1)%7)
+      : ((Math.floor(from/7)+n+1)%6)*7+from%7);
+    const hole=path.find(i=>b.corruptions?.[i]?.kind === "hole");
+    return [{from,to:path.at(-1),path,hole,distance:shift.distance,occupied:stack.length>0}];
   });
 }
 
@@ -91,8 +125,7 @@ export function refreshBossPlans(g) {
 export function resolveBile(g, e) {
   const p = bilePlan(g, e);
   if (!p) return;
-  for (const to of [p.to, ...(p.additional || [])])
-    resolveGlob(g, e, { from: p.from, to });
+  for (const move of bileMoves(p)) resolveGlob(g, e, move);
 }
 function resolveGlob(g, e, p) {
   const b = g.s.battle;
@@ -150,45 +183,33 @@ function resolveGlob(g, e, p) {
 }
 
 export function disrupt(g, e, plan) {
-  const b = g.s.battle,
-    moves = phaseMoves(b, plan);
-  const stacks = moves.map((m) => ({ ...m, stack: b.grid[m.from] }));
-  g.present("phaseShift", {
-    source: e.uid,
-    axis: plan.axis,
-    name: "Phase disruption " + plan.axis,
-    moves: stacks
-      .filter((m) => m.stack.length)
-      .map(({ from, to }) => ({ from, to })),
-  });
-  for (const m of stacks) b.grid[m.from] = [];
-  for (const m of stacks) b.grid[m.to] = m.stack;
-  // Activated Shield pools travel with their owners, never remain at old slots.
-  for (const shield of b.shields) {
-    const m = stacks.find((m) => m.stack.some((c) => c.uid === shield.owner));
-    if (m) shield.slot = m.to;
+  const b = g.s.battle;
+  // Simultaneous one-space translations, with Hole collisions between every step.
+  for (let step=1; step<=Math.max(...phaseShifts(plan).map(s=>s.distance)); step++) {
+    const stacks = phaseMoves(b,plan,step).map(m=>({...m,stack:b.grid[m.from]}));
+    for (const m of stacks) b.grid[m.from]=[];
+    for (const m of stacks) b.grid[m.to]=m.stack;
+    for (const shield of b.shields) {
+      const moved=stacks.find(m=>m.stack.some(c=>c.uid===shield.owner));
+      if(moved)shield.slot=moved.to;
+    }
+    g.present("phaseShift", {source:e.uid,axis:plan.axis,step,
+      name:"Phase disruption "+plan.axis,
+      moves:stacks.filter(m=>m.stack.length).map(({from,to})=>({from,to}))});
+    for (const {to,stack} of stacks) {
+      if (!stack.length || b.corruptions?.[to]?.kind !== "hole") continue;
+      const removed=stack.map(c=>c.uid);
+      for (const c of [...stack])g.destroyCard(to,c.uid);
+      b.shields=b.shields.filter(s=>!removed.includes(s.owner));
+      g.present("holeFall",{slot:to,step,removed,name:"Memory Hole · Construct destroyed"});
+    }
   }
-  const destroyed = new Set();
-  for (const { to, stack } of stacks) {
-    if (!stack.length) continue;
-    const q = b.corruptions?.[to];
-    if (q?.kind === "hole") {
-      g.present("corruption", {
-        slot: to,
-        name: "Memory Hole · entire stack destroyed",
-      });
-      for (const c of [...stack]) {
-        destroyed.add(c.uid);
-        g.destroyCard(to, c.uid);
-      }
-    } else if (q?.kind === "hypnosis") compelCard(g, to, q, true);
+  // Other on-arrival effects still use the final landing space, not transit spaces.
+  for (const m of phaseMoves(b,plan)) {
+    const q=b.corruptions?.[m.from];
+    if(b.grid[m.from].length && q?.kind === "hypnosis")compelCard(g,m.from,q,true);
   }
-  b.shields = b.shields.filter((s) => !destroyed.has(s.owner));
-  g.log(
-    "Phase disruption " +
-      plan.axis +
-      ": whole stacks wrap two spaces; Corruptions stay fixed.",
-  );
+  g.log("Phase disruption "+plan.axis+": selected lines shift their telegraphed distances, one space at a time. Memory Holes destroy Constructs on any step; Corruptions stay fixed.");
 }
 
 export function antiElement(g) {

@@ -2,8 +2,8 @@
 export function pressureFactor(enemy) {
   if (enemy.tutorialOnly || enemy.id === "apex") return 1;
   const source = enemy.stratum || 1;
-  // Trickster's reworked numbers are final S2 values, not pre-pressure values.
-  const base = enemy.id === "trickster" ? 1 : source === 2 ? 1.15 : source >= 3 ? 1.2 : 1;
+  // Reworked S2 Archon numbers are final S2 values, not pre-pressure values.
+  const base = ["trickster", "bombadier", "blackBile"].includes(enemy.id) ? 1 : source === 2 ? 1.15 : source >= 3 ? 1.2 : 1;
   return base * (enemy.apexMap && !enemy.apexNative ? 1.1 : 1);
 }
 export const pressureDamage = (damage, enemy) =>

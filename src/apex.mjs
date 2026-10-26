@@ -74,9 +74,9 @@ export function enterApexFloor(g, floor = 1) {
   delete s.checkpoint;
   delete s.itemSource;
   g.log(
-    `The Apex · Floor ${floor}. ${floor === 4 ? "The Apex Predator waits." : "The Archons hunt after round 8. Defeating both forces ascent."}`,
+    `The Apex. ${floor === 4 ? "The Apex Predator waits." : "The Archons hunt after round 8. Defeating both forces ascent."}`,
   );
-  g.present("ascent", { floor, name: "The Apex · Floor " + floor });
+  g.present("ascent", { floor, name: "The Apex" });
   if (floor < 4) g.beginRound();
 }
 export function apexBatch(g) {
@@ -175,6 +175,13 @@ export function apexRound(g) {
   apexBatch(g);
   g.resolveTile();
 }
+export function apexEscapeGrace(g) {
+  const f = g.s.field;
+  if (!apexActive(g.s) || f.apexFloor >= 4 || f.round < 8 ||
+      f.defeatedArchons.length !== 1 || f.archonGrace) return;
+  f.archonGrace = "pending";
+  g.log("The surviving Archon pauses. You have one movement turn to reach Ascend before it hunts.");
+}
 export function apexVictory(g, original) {
   const s = g.s,
     f = s.field;
@@ -197,6 +204,7 @@ export function apexVictory(g, original) {
     );
   }
   const offer = () => (g.rand() < 0.35 ? g.bossOffer() : g.rareOffer(3, true));
+  if (bosses.length) apexEscapeGrace(g);
   const offers = bosses.map(offer);
   const goodItems = [
     "gold",

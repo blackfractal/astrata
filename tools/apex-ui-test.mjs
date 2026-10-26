@@ -110,7 +110,8 @@ for (const kind of [
       });
       assert.ok(background.css.includes(`location-apex-floor${n}.png`));
       assert.ok(background.width > 1000);
-      assert.ok((await p.locator(".apex-roster").innerText()).length > 10);
+      assert.equal(await p.locator(".apex-roster, .apex-deadline").count(), 0);
+      assert.equal(await p.locator(".section-head h2").innerText(), "The Apex");
       // Exercise map coordinates on resized rooms through their real UI actions.
       const move = p.locator(".tile.reachable[data-action]").first();
       await move.click();

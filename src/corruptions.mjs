@@ -130,6 +130,7 @@ export function prepareCorruption(g, e, t) {
     if (!(["bombadier", "refractionCannon"].includes(e.id) && kind === "mine") && room-- <= 0) break;
     if (
       kind === "mine" &&
+      !t.ignoreMineCap &&
       e.mineCap &&
       Object.values(b.corruptions).filter(
         // Bombadier's old one-turn mines detonate at the end of this round,
