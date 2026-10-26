@@ -1483,10 +1483,10 @@ export class Game {
         : `Archon · ${spaces} spaces this enemy movement`;
     } else
       movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
-    if (e.apexMap && d.tier === "Archon") movement = this.s.field.archonGrace === "pending"
-      ? "Stationary · one escape movement after victory"
-      : this.s.field.archonGrace === "active" ? "Hunt · after this escape movement"
-      : this.s.field.round < 8 ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
+    if (e.apexMap && d.tier === "Archon") movement = this.s.field.round < 8
+      ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
+    if (apexActive(this.s) && ["pending", "active"].includes(this.s.field.archonGrace))
+      movement = "Frozen · normal movement resumes after this escape movement";
     if (d.flying) movement += " · Flying: crosses barriers";
     return {
       age,
@@ -1736,7 +1736,7 @@ export class Game {
       }
     }
     s.mode = "field";
-    if (f.stage === "enemyDone" && apexActive(s) && f.archonGrace === "pending") {
+    if (apexActive(s) && f.archonGrace === "pending") {
       f.archonGrace = "active";
       f.stage = "player";
       f.moves = this.bonuses().movement;
@@ -1748,6 +1748,10 @@ export class Game {
     if (apexActive(this.s) && f.archonGrace === "active") f.archonGrace = "spent";
     f.moves = 0;
     f.stage = "enemyDone";
+    if (apexActive(this.s) && f.archonGrace === "pending") {
+      this.resolveTile();
+      return;
+    }
     const reaching = new Set();
     const arrive = (e) => {
       if (e.x !== f.x || e.y !== f.y || reaching.has(e.uid)) return;
@@ -1797,7 +1801,7 @@ export class Game {
       let n = (d.speed || 2) + e.restless,
         type = d.movement;
       if (e.apexMap && type === "Archon") {
-        if (f.round < 8 || f.archonGrace === "pending") continue;
+        if (f.round < 8) continue;
         type = "Hunter";
       }
       if (type === "Archon") {
@@ -3483,7 +3487,7 @@ export class Game {
       delete s.checkpoint;
       this.log(
         boss
-          ? apexActive(s) ? "Victory. Choose one Archon reward." : "Victory. Choose one card: one Legendary or either of two Rares."
+          ? apexActive(s) ? "Victory. Choose one Archon reward or skip." : "Victory. Choose one card: one Legendary or either of two Rares, or skip."
           : "Victory. Choose a card or skip.",
       );
     }
@@ -3915,7 +3919,7 @@ export class Game {
       if (s.reward.cards) {
         for (const id of s.reward.cards)
           add("rewardCard", "Take " + cards[id].name, { id }, { card: id });
-        if (!s.reward.boss) add("skipReward", "Skip card");
+        add("skipReward", "Skip card");
       } else if (s.reward.gem) {
         for (const id of [s.reward.gem])
           add(

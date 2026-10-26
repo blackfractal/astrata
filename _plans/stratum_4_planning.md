@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.17 · 2026-10-25 · Jonathan / Codex
+Design draft 0.18 · 2026-10-26 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -91,11 +91,11 @@ The player must defeat one of the two Archons and reach Ascend by the round-8 de
 
 - If both Archons remain alive, **both hunt together**, forcing a battle against both simultaneously.
 - If one remains alive, that survivor hunts and forces another fight if the player has not ascended.
-- Killing one does not cancel the other one's hunt, but a round-8 first victory grants the single escape movement described below.
+- Killing one does not cancel the other one's hunt, but the first victory on any round grants the all-enemy pause described below.
 
 This is a deliberate encounter-choice deadline, not merely increased movement speed that can be evaded indefinitely. Use normal map markers, enemy inspection and round/spawn indicators to communicate the remaining Archons and hunt timing. Do not add a persistent deadline box or separate Archon roster. Both hunters reaching the player must form one battle rather than allowing the first encounter to interrupt the second hunter's arrival.
 
-**Confirmed timing:** pair 8 appears, the player gets that round's normal movement, then surviving Archons hunt during enemy movement. Battles pause the Field clock. Entering an enemy tile still ends that movement turn. Deliberately initiating the first Archon fight in round 7 leaves round 8 to reach Ascend; initiating it in round 8 grants one escape movement after victory (4.0.34). The surviving Archon skips the immediate enemy movement while ordinary enemies move normally; then restore the player's normal full movement allowance without advancing the floor round, spawning a ninth pair, aging enemies or decaying Gold. The survivor hunts at the end of that extra movement if the player has not ascended. Other encounters and Continue do not grant another grace turn. Show the escape opportunity and the resumed hunt explicitly.
+**Confirmed timing (4.0.37):** pair 8 appears, the player gets that round's normal movement, then surviving Archons hunt during enemy movement. Battles pause the Field clock. Entering an enemy tile still ends that movement turn. After the first Archon is defeated on any round, skip all enemies' immediate movement and grant one full player movement turn. No floor-round advance, additional spawn pair, enemy aging or Gold decay occurs during this pause. At its end, all enemies resume normal movement; the surviving Archon hunts if the round-8 deadline has been reached, otherwise it remains stationary until that deadline. Continue and other encounters do not refresh the pause; deliberately entering an enemy tile still starts battle and ends that movement turn. After the second Archon is defeated, surviving the entire encounter and resolving rewards forces immediate ascent, with no further opportunity to collect loot or hunt remaining enemies. Abandoned map enemies prevent I Stand Alone. This supersedes the round-8-only pause for the surviving Archon.
 
 **Confirmed forced ascent:** after surviving the deadline hunt battle, the player automatically enters the next floor at its center, as if they had taken Ascend. This applies whether the hunt contains one remaining Archon or both. There is no return to the old floor to collect loot or finish off ordinary enemies. Preserve the battle rewards before completing the transition; their exact presentation order remains an implementation detail. Losing the fight does not advance the player.
 

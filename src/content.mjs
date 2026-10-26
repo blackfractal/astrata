@@ -11,8 +11,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.35",
-  content: "4.0.35",
+  rules: "4.0.37",
+  content: "4.0.37",
   observation: 2,
   actions: 10,
 };

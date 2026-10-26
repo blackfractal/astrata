@@ -2070,3 +2070,13 @@ Follow-up to round238: Jonathan confirmed he should bypass the already-forced Co
 ## Standard Apex map layout — round239
 
 2026-10-25. Jonathan requested standard Stratum map presentation without purple deadline panel, separate Archon names or numbered floor title. Version4.0.35/design4.256/S4plan0.17 removes these, uses The Apex/Ascend labels, drops obsolete panel CSS and narrower map override. Mechanics unchanged. All21Apex rules tests pass; isolatedpackagedEdge maps1–3 and summit confirm labels, tilecounts, no panels/overflow/renderererrors. Screenshot reviewed. Report reports/apex-map-simplicity-report.md. No live-save edits. Approximately8minutes additional implementation/UIverification/docs/packaging (estimate). No commit/push.
+
+
+## Optional boss card rewards — round240
+
+2026-10-26. Jonathan requested allowing boss card rewards to be skipped. Version4.0.36/design4.257 exposes the existing Skip card action for every Archon offer, including The Apex and queued paired-boss offers. Skipping only clears the card offer; Gold, item rewards and progression remain unchanged. All25 reward/Apex tests pass. An isolated copy of Jonathan's current Trickster reward verified unchanged deck/Gold, retained item reward, persisted skip across save/load and successful continuation. Live save untouched. Approximately5minutes implementation/verification/packaging (estimate). No commit/push.
+
+
+## All-enemy Apex victory pause — round241
+
+2026-10-26. Jonathan replaced the round-8-only surviving-Archon grace with one movement turn after the first Archon victory on any round, freezing every enemy. 4.0.37/design4.258/S4plan0.18. Pause survives Continue, does not advance spawn/aging/loot clocks, expires when movement ends; deliberate encounters remain legal and cannot refresh it. Existing second-Archon forced ascent after full encounter/rewards verified, retaining I Stand Alone pressure. All25 Apex/reward tests pass. Report reports/apex-all-enemy-pause-report.md. No live-profile changes or automatic rewind; current Bellows Grub/Loose Echo fight was already started under old rules. Approximately7minutes implementation/testing/docs/packaging (estimate). No commit/push.

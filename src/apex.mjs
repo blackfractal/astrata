@@ -177,10 +177,10 @@ export function apexRound(g) {
 }
 export function apexEscapeGrace(g) {
   const f = g.s.field;
-  if (!apexActive(g.s) || f.apexFloor >= 4 || f.round < 8 ||
+  if (!apexActive(g.s) || f.apexFloor >= 4 ||
       f.defeatedArchons.length !== 1 || f.archonGrace) return;
   f.archonGrace = "pending";
-  g.log("The surviving Archon pauses. You have one movement turn to reach Ascend before it hunts.");
+  g.log("All enemies pause after the first Archon falls. You have one movement turn to reach Ascend before normal enemy movement resumes.");
 }
 export function apexVictory(g, original) {
   const s = g.s,

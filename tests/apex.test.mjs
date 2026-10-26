@@ -256,29 +256,38 @@ test("passing the escape movement lets the survivor hunt; no repeat grace or nin
   win(g);rewards(g);assert.equal(g.s.apex.floor,2);
 });
 
-test("old first-Archon reward at deadline receives grace, but earlier victories use normal rounds",()=>{
+test("old first-Archon rewards receive one escape movement at every possible round",()=>{
   for(const round of [4,5,6,7,8]) {
     const g=floor(),aa=round4(g),f=g.s.field;
     f.entities=aa;f.round=round;f.spawned=round*2;
     f.x=aa[0].x;f.y=aa[0].y;f.moves=0;g.s.hp=g.s.maxHp=1000;
     g.beginBattle([aa[0]]);win(g);delete f.archonGrace;
     const h=new Game(0,structuredClone(g.s));rewards(h);
-    assert.equal(h.s.mode,'field');assert.equal(h.s.field.round,Math.min(8,round+1));
-    assert.equal(h.s.field.moves,2);assert.equal(h.s.field.spawned,Math.min(16,(round+1)*2));
-    assert.equal(h.s.field.archonGrace,round===8?'active':undefined);
+    assert.equal(h.s.mode,'field');assert.equal(h.s.field.round,round);
+    assert.equal(h.s.field.moves,2);assert.equal(h.s.field.spawned,round*2);
+    assert.equal(h.s.field.archonGrace,'active');
   }
 });
 
-test("ordinary enemies still move during the Archon pause; their fight does not consume or refresh pending grace",()=>{
-  const g=floor(),aa=round4(g),f=g.s.field;
-  const imp={uid:g.uid(),enemy:'imp',type:'Mote',x:aa[0].x,y:aa[0].y+1,born:4,restless:0,apexMap:true,apexFloor:1};
-  f.entities=[...aa,imp];f.round=8;f.spawned=16;f.moves=0;
-  f.x=aa[0].x;f.y=aa[0].y;g.s.hp=g.s.maxHp=1000;
-  g.beginBattle([aa[0]]);win(g);rewards(g);
-  assert.equal(g.s.mode,'battle');assert.equal(g.s.battle.enemies[0].id,'imp');
-  assert.equal(f.archonGrace,'pending');assert.equal(aa[1].x,f.archons[1].x);
-  win(g);rewards(g);assert.equal(g.s.mode,'field');assert.equal(f.archonGrace,'active');
-  act(g,'wait');assert.equal(g.s.mode,'battle');assert.equal(f.archonGrace,'spent');
+test("all enemies freeze after the first Archon; voluntary fights consume but never refresh the escape turn",()=>{
+  for(const round of [4,7,8]) {
+    const g=floor(),aa=round4(g),f=g.s.field;
+    const imp={uid:g.uid(),enemy:'imp',type:'Mote',x:aa[0].x,y:aa[0].y+1,born:4,restless:0,apexMap:true,apexFloor:1};
+    const hunter={uid:g.uid(),enemy:'dervish',type:'Eidolon',x:0,y:0,born:4,restless:0,apexMap:true,apexFloor:1};
+    f.entities=[...aa,imp,hunter];f.round=round;f.spawned=round*2;f.moves=0;
+    f.x=aa[0].x;f.y=aa[0].y;g.s.hp=g.s.maxHp=1000;
+    const positions=[aa[1],imp,hunter].map(e=>[e.uid,e.x,e.y]);
+    g.beginBattle([aa[0]]);win(g);rewards(g);
+    assert.equal(g.s.mode,'field');assert.equal(f.archonGrace,'active');assert.equal(f.moves,2);
+    assert.deepEqual(f.entities.filter(e=>e.enemy).map(e=>[e.uid,e.x,e.y]),positions);
+    assert.equal(f.round,round);assert.equal(f.spawned,round*2);
+    assert.match(g.fieldEnemyPreview(imp).movement,/Frozen/);
+    // Deliberately entering an enemy remains legal and ends this movement turn.
+    act(g,'move',{x:imp.x,y:imp.y});assert.equal(g.s.mode,'battle');
+    win(g);rewards(g);assert.equal(f.archonGrace,'spent');
+    assert.notDeepEqual([hunter.x,hunter.y],[0,0]);
+    assert.ok(g.s.mode==='battle'||f.round===round+1);
+  }
 });
 
 test("second voluntary victory forces ascent before round eight, after both reward offers if paired", () => {

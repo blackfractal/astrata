@@ -43,7 +43,8 @@ test("all nine Archons offer one Legendary and two Rares; either rarity may be s
       assert.equal(g.s.mode, "reward");
       assert.equal(g.s.reward.boss, true);
       mixedOffer(g.s.reward.cards);
-      assert.ok(g.legal().every((a) => a.type === "rewardCard"));
+      assert.equal(g.legal().filter((a) => a.type === "rewardCard").length, 3);
+      assert.ok(g.legal().some((a) => a.type === "skipReward"));
       const before = g.s.deck.length,
         chosen = g.s.reward.cards[choice];
       g.act(g.legal().find((a) => a.id === chosen));

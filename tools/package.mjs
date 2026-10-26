@@ -56,6 +56,7 @@ for (const name of [
   "cnidarian-four-tendrils-report.md",
   "mirror-cap-report.md",
   "apex-escape-grace-report.md",
+  "apex-all-enemy-pause-report.md",
   "apex-map-simplicity-report.md",
   "elemental-formations-report.md",
   "trickster-retune-report.md",

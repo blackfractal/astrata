@@ -1,3 +1,15 @@
+## Latest: Requested post-Trickster rewind — 2026-10-26
+
+Restored latest post-reward Trickster checkpoint (archive2026-10-26T05:15:23.156Z) under4.0.37. Actual save now field floor2 round7,49HP845Gold,45cards,position(3,3)one-based,2moves,archonGrace active. Skipped card and collectedClearQuartz retained; all enemies remain at pre-movement positions. Verified southeast to(4,4),then(5,5)ascendsfloor3 without damage. No game running during install. Backup profile/save-backups/apex-escape-1792996631129; append-only rewind archive; reports/trickster-escape-restore-20261026 includes original save,source record,candidate,verification,installed receipt. No automatic app launch.
+
+## Latest: All-enemy Apex pause — 4.0.37 / 2026-10-26
+
+Supersedes4.0.34: first Archon victory at ANY round freezes ALL enemies through immediate post-victory resolution, grants full movement without round/spawn/aging/Gold changes. Pending→active in resolveTile regardless field stage; pending endMovement safety returns before movement loop. Endmovement consumes active→spent and resumes ordinary enemy behavior, surviving Archon hunting only at round8. No refresh after ordinary encounters/Continue. Second Archon still forces ascent after entire encounter/rewards. 25 Apex/reward tests pass, design4.258/S4draft0.18, BUILD_LOG241, reports/apex-all-enemy-pause-report.md. No live save edits; latest profile already at Bellows Grub/Loose Echo battle round7 floor2 HP49. Update does not rewind that fight.
+
+## Latest: Optional boss cards — 4.0.36 / 2026-10-26
+
+Every boss/Archon card reward now offers Skip card, including pending saved rewards and each queued Apex offer. Other rewards/progression unchanged. Design4.257, BUILD_LOG240. 25 reward/Apex tests and isolated current-save skip/reload/continue check pass; no live save changes. Jonathan is closing old Astrata processes to clear cache-lock errors; do not restart/terminate his app unasked.
+
 ## Latest coaching: Trickster opening zero damage/no supplies — 2026-10-26
 
 Jonathan asked to preserve supplies for Apex Predator and search from fight start. Exact archive4.0.35Apexfloor2Trickster349HP,player57HP. Manual75decision line winsT6at57HP,zeroHPdamage/healing/consumables; independently replayed alllegal,inventory andRNGverified. Uses Sapling+Mirror cap20 firstturn,Season’sTurnEarth→ArcaneGuard,T2Rootwall+storedReservoir preservingBastion,LightTransmutedIgnis,T4LatticeunderBastion+rightcolumnplacementstargetV,T5Starleaf30base/45Light twice withPlasmafinish. All7supplieskept. Full coordinates/orderedactions reports/trickster-opening-search-20261026/README.md; winning-line.json/verified.json. No live reset or balance edits. Earlier reports/trickster-live-search-20261025 rescuedT4at37HPwith2Dews+1ChannelDraught+1Fury; openingline supersedes for supply conservation. User may want to replay, but not authorized to rewind yet.
