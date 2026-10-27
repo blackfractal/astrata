@@ -6,7 +6,7 @@ The design document, S4 planning document and enemy description reflect this cha
 
 ## Evaluation method
 
-Paired bounded-search retries use the latest manual campaign opening: seed24102477, 36/70HP, 55 cards, four Focus/four Channel, six Insight, boss500HP. Source: reports/codex-growth-manual-24102477/battle-466.json. Both frozen rule sets include Palimpsest replacement draw. Only the Rending Fangs count differs. Starting log/history/checkpoint data were removed for search efficiency, with gameplay state unchanged.
+Paired bounded-search retries use the latest manual campaign opening: seed24102477, 36/70HP, 55 cards, four Focus/four Channel, six Insight, boss500HP. Source: snapshots/codex-growth-manual-24102477/battle-466.json. Both frozen rule sets include Palimpsest replacement draw. Only the Rending Fangs count differs. Starting log/history/checkpoint data were removed for search efficiency, with gameplay state unchanged.
 
 Both use the same placement heuristic, activation beam10/depth7, defense beam5/depth30 and evaluation weights. The older helper was updated identically in both copies to include the current playerGuard defense action. This is a limited search-assisted comparison, not manually chosen moves, an optimality claim or a population win rate. Raw initial state, frozen rules, search code, actions and turn checkpoints are under reports/apex-fangs-4.0.17.
 

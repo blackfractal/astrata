@@ -35,7 +35,7 @@ This is one authored strong deck and one seed, not an estimate of ordinary-playe
 
 Initial UI assertion mistakenly read the battle-start autosave instead of current HP; corrected to assert the visible HP counter. No product fix was needed.
 
-- `reports/codex-cannon-3.0.26/attempt.json`: initial state, every selected action, checkpoint and final state.
+- `snapshots/codex-cannon-3.0.26/attempt.json`: initial state, every selected action, checkpoint and final state.
 - `sources.json`: frozen source snapshot; `verification.json`: results and deterministic replay validation; `winning-line.json`: portable full line.
 - `defense-correction.json`: isolated alternative proving the 2-HP mistake avoidable.
 - `reports/cannon-mines-tests.txt`, `reports/cannon-mines-ui.json` and UI screenshots.

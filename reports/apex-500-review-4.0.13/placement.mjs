@@ -1,5 +1,5 @@
-import {elementalRate,defenseRate,adjacent} from './rules/engine.mjs';
-import {cards} from './rules/content.mjs';
+import {elementalRate,defenseRate,adjacent} from '../../snapshots/apex-500-review-4.0.13/rules/engine.mjs';
+import {cards} from '../../snapshots/apex-500-review-4.0.13/rules/content.mjs';
 import {clone,value} from './search.mjs';
 let cfg; export function configure(c){cfg=c;}
 function potential(game){

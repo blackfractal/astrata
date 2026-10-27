@@ -1,10 +1,10 @@
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-import {Game} from './rules/engine.mjs';
+import {Game} from '../../snapshots/apex-500-review-4.0.13/rules/engine.mjs';
 import {activate,defend,setConfig} from './search.mjs';
 import {planPlace,configure} from './placement.mjs';
-const dir='reports/apex-500-review-4.0.13';
-const old='reports/apex-line-search-4.0.12';
+const dir='snapshots/apex-500-review-4.0.13';
+const old='snapshots/apex-line-search-4.0.12';
 const initial=JSON.parse(fs.readFileSync(dir+'/initial.json'));
 const configs=[
  {hp:3,keep:1.5,guard:1.5,titan:1.5,source:3,stop:14},

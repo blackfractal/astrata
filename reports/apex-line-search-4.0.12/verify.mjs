@@ -1,9 +1,10 @@
+import { reportPath, snapshotPath } from '../../tools/artifact-paths.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {Game} from './rules/engine.mjs';
-const dir=path.dirname(fileURLToPath(import.meta.url));
+import {Game} from '../../snapshots/apex-line-search-4.0.12/rules/engine.mjs';
+const dir=snapshotPath(path.dirname(fileURLToPath(import.meta.url)));
 const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n),'utf8'));
 const initial=read('initial.json');
 const canonical=x=>Array.isArray(x)?x.map(canonical):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,canonical(x[k])])):x;
@@ -25,4 +26,4 @@ for(let trial=1;trial<=10;trial++){
  results.push({trial,actions:record.actions.length,checks,win:g.s.outcome==='win',playerHp:g.s.hp,bossHp:g.s.battle.enemies[0].hp,turn:g.s.battle.turn,death:g.s.death,destroyed:g.s.battle.destroyed.length,turns,health});
  console.log(JSON.stringify({trial,checks,hp:g.s.hp,boss:g.s.battle.enemies[0].hp,death:g.s.cause}));
 }
-fs.writeFileSync(path.join(dir,'verification.json'),JSON.stringify(results,null,2));
+fs.writeFileSync(reportPath(path.join(dir,'verification.json')),JSON.stringify(results,null,2));

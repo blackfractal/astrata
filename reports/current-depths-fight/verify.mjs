@@ -1,6 +1,6 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 import {Game} from '../../src/engine.mjs';import {start,event} from './trial.mjs';
-const read=n=>JSON.parse(fs.readFileSync(new URL(n,import.meta.url)));
+const read=n=>JSON.parse(fs.readFileSync(new URL('../../snapshots/current-depths-fight/'+n,import.meta.url)));
 const results=[];
 for(const name of ['human','oracle-no-damage','brood-victory']){
  let g=new Game(0,structuredClone(name==='brood-victory'?event:start));

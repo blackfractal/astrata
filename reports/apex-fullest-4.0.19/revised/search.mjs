@@ -1,5 +1,5 @@
-import {Game,cardPower,adjacent,enemyDamage,defenseRate} from './rules/engine.mjs';
-import {cards} from './rules/content.mjs';
+import {Game,cardPower,adjacent,enemyDamage,defenseRate} from '../../../snapshots/apex-fullest-4.0.19/revised/rules/engine.mjs';
+import {cards} from '../../../snapshots/apex-fullest-4.0.19/revised/rules/content.mjs';
 const clone=g=>{const s=structuredClone(g.s);s.log=[];s.history=[];delete s.checkpoint;const z=new Game(0,s);return z;};
 let cfg, simulated=0;
 export function setConfig(c){cfg=c;}

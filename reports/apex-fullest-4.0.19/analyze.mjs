@@ -1,7 +1,8 @@
+import { reportPath } from '../../tools/artifact-paths.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-const root='reports/apex-fullest-4.0.19';
-const {Game}=await import('./revised/rules/engine.mjs');
+const root='snapshots/apex-fullest-4.0.19';
+const {Game}=await import('../../snapshots/apex-fullest-4.0.19/revised/rules/engine.mjs');
 const initial=JSON.parse(fs.readFileSync(root+'/initial.json'));
 for(const trial of ['revised','offense','survival']){
  const path=root+'/'+trial+'/trial.json';
@@ -16,6 +17,6 @@ for(const trial of ['revised','offense','survival']){
   }
   g.act(a);
  }
- fs.writeFileSync(root+'/'+trial+'/enemy-turn-plans.json',JSON.stringify(moves,null,2));
+ fs.writeFileSync(reportPath(root+'/'+trial+'/enemy-turn-plans.json'),JSON.stringify(moves,null,2));
  console.log(trial,JSON.stringify(moves.filter(x=>x.move.startsWith('Unmake'))));
 }

@@ -1,7 +1,8 @@
+import { reportPath } from '../../tools/artifact-paths.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {Game} from './revised/rules/engine.mjs';
-const root='reports/apex-double-fangs-4.0.22';
+import {Game} from '../../snapshots/apex-double-fangs-4.0.22/revised/rules/engine.mjs';
+const root='snapshots/apex-double-fangs-4.0.22';
 const g=new Game(0,JSON.parse(fs.readFileSync(root+'/turn11.json')));
 const actions=JSON.parse(fs.readFileSync(root+'/turn11-prefix.json'));
 const finish=[];
@@ -26,5 +27,5 @@ for(const [i,wanted] of actions.entries()){
 for(const k of ['hp','mode','rng','battle','inventory','equipment'])assert.deepEqual(replay.s[k],g.s[k],k);
 const summary={win:true,hp:g.s.hp,boss:g.s.battle.enemies[0].hp,turn:g.s.battle.turn,destroyed:g.s.battle.destroyed.length,actions:actions.length,manualFinalActions:finish.length,replayVerified:true,finish};
 fs.writeFileSync(root+'/winning-line.json',JSON.stringify({summary,actions,final:g.s}));
-fs.writeFileSync(root+'/winning-summary.json',JSON.stringify(summary,null,2));
+fs.writeFileSync(reportPath(root+'/winning-summary.json'),JSON.stringify(summary,null,2));
 console.log(JSON.stringify(summary));

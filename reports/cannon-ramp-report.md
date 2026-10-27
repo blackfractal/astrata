@@ -36,6 +36,6 @@ One authored strong deck and one seed cannot establish population balance. Later
 
 622 rules tests pass, including the exact ordinary sequence through16turns, distinct-element ordering, pauses for Final Blast/Purify, explicit escalation only, stable inspection, Continue, and mines before blasts. Three isolated packaged UI fixtures show actual8+8/10+10/12+12 charging attacks and40/50/60Final Blasts; resulting HP totals verify both mines and the blast execute. No page errors; screenshot inspected. UI fixtures use1000HP only to survive testing and are separate from the70HP manual playtest.
 
-Artifacts: `reports/codex-cannon-3.0.28/attempt.json`, `sources.json`, `verification.json`, `winning-line.json`; `reports/cannon-ramp-tests.txt`; `reports/cannon-ramp-ui.json` and screenshots. Tools: `codex-cannon-ramp-play.mjs`, `verify-codex-cannon-ramp.mjs`, `cannon-ramp-ui-test.mjs`.
+Artifacts: `snapshots/codex-cannon-3.0.28/attempt.json`, `sources.json`, `verification.json`, `winning-line.json`; `reports/cannon-ramp-tests.txt`; `reports/cannon-ramp-ui.json` and screenshots. Tools: `codex-cannon-ramp-play.mjs`, `verify-codex-cannon-ramp.mjs`, `cannon-ramp-ui-test.mjs`.
 
 Portable executable and ZIP rebuilt. Live user save untouched. No commit/push.

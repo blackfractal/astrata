@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import {Game} from './revised/rules/engine.mjs';
-const root='reports/apex-fullest-4.0.19';
+import {Game} from '../../snapshots/apex-fullest-4.0.19/revised/rules/engine.mjs';
+const root='snapshots/apex-fullest-4.0.19';
 const g=new Game(0,JSON.parse(fs.readFileSync(root+'/initial-70hp.json')));
 const actions=JSON.parse(fs.readFileSync(root+'/revised/trial.json')).actions;
 let played=0;

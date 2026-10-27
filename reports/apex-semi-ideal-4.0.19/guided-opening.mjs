@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {Game} from './guided/rules/engine.mjs';
-const root='reports/apex-semi-ideal-4.0.19';
+import {Game} from '../../snapshots/apex-semi-ideal-4.0.19/guided/rules/engine.mjs';
+const root='snapshots/apex-semi-ideal-4.0.19';
 const g=new Game(0,JSON.parse(fs.readFileSync(root+'/initial.json')));
 const actions=[];
 for(const [id,slot] of [['corner',6],['shield',5],['cinder',12],['eclipse',19],['lucidGuide',20]]){

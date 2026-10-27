@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {Game} from './revised/rules/engine.mjs';
-const root='reports/apex-fullest-4.0.19';
+import {Game} from '../../snapshots/apex-fullest-4.0.19/revised/rules/engine.mjs';
+const root='snapshots/apex-fullest-4.0.19';
 const initial=JSON.parse(fs.readFileSync(root+'/initial-70hp.json'));
 const prefix=JSON.parse(fs.readFileSync(root+'/same-line-70hp.json'));
 const suffix=JSON.parse(fs.readFileSync(root+'/full-health-prefix/trial.json'));

@@ -1,8 +1,9 @@
+import { reportPath } from '../../tools/artifact-paths.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import {Game} from './revised/rules/engine.mjs';
-import {cards,items} from './revised/rules/content.mjs';
-const root='reports/apex-semi-ideal-4.0.19';
+import {Game} from '../../snapshots/apex-semi-ideal-4.0.19/revised/rules/engine.mjs';
+import {cards,items} from '../../snapshots/apex-semi-ideal-4.0.19/revised/rules/content.mjs';
+const root='snapshots/apex-semi-ideal-4.0.19';
 for(const name of ['balanced','offense','preservation','guided','recycling-run']){
  const file=root+'/'+name+'/trial.json';if(!fs.existsSync(file))continue;
  const trial=JSON.parse(fs.readFileSync(file));
@@ -38,6 +39,6 @@ for(const name of ['balanced','offense','preservation','guided','recycling-run']
  for(const k of ['hp','mode','rng','battle','inventory','equipment'])assert.deepEqual(g.s[k],trial.final[k]);
  const summary={summary:trial.summary,fullActions:actions.length,fullReplayVerified:true,damageToBoss:damage,activations,placements,recalls,potionEvents,enemyPlans,stats:g.s.stats,
   destroyed:g.s.battle.destroyed.map(c=>cards[c.id].name)};
- fs.writeFileSync(root+'/'+name+'/analysis.json',JSON.stringify(summary,null,2));
+ fs.writeFileSync(reportPath(root+'/'+name+'/analysis.json'),JSON.stringify(summary,null,2));
  console.log(JSON.stringify({trial:name,...trial.summary,damageToBoss:damage,recalls,potionEvents,damageTaken:g.s.stats.damageTaken}));
 }

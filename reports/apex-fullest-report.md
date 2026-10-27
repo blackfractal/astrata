@@ -8,7 +8,7 @@ All744 rules tests pass, including H/V/H, card count over value, melded cards, t
 
 ## Retry method
 
-Exact same36/70HP opening from seed24102477:55cards,4Focus/4Channel/6Insight, boss500HP. Same equipment, inventory, RNG and card order as reports/apex-unmake-4.0.18/initial.json. The preceding three bounded-search configurations are repeated unchanged: comparable, offense/Titan priority, survival/draw priority. Both search helpers are byte-identical to the prior versions. No live save/profile is touched. This is search-assisted evaluation, not manually selected moves, optimality proof or a population win rate.
+Exact same36/70HP opening from seed24102477:55cards,4Focus/4Channel/6Insight, boss500HP. Same equipment, inventory, RNG and card order as snapshots/apex-unmake-4.0.18/initial.json. The preceding three bounded-search configurations are repeated unchanged: comparable, offense/Titan priority, survival/draw priority. Both search helpers are byte-identical to the prior versions. No live save/profile is touched. This is search-assisted evaluation, not manually selected moves, optimality proof or a population win rate.
 
 Frozen rules, initial state, turn checkpoints, full actions, independently verified replays and results are retained under reports/apex-fullest-4.0.19.
 

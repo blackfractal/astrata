@@ -14,7 +14,7 @@ All744 rules tests pass. New coverage includes H/V/H cycles, value over count, f
 
 ## Retry method
 
-Same seed24102477 Apex opening as the preceding comparison:36/70HP,55cards,4Focus/4Channel/6Insight, boss500HP. Source reports/apex-fangs-4.0.17/initial.json, originally reports/codex-growth-manual-24102477/battle-466.json. The first retry uses the same placement/activation/defense search and weights as the preceding Fangs comparison. Two additional candidates prioritize Titan offense or survival/draw. These are bounded-search retries, not manually chosen actions, a global win rate or proof of optimal play. Source snapshots, exact initial state, actions, summaries and replay checks are preserved in reports/apex-unmake-4.0.18.
+Same seed24102477 Apex opening as the preceding comparison:36/70HP,55cards,4Focus/4Channel/6Insight, boss500HP. Source snapshots/apex-fangs-4.0.17/initial.json, originally snapshots/codex-growth-manual-24102477/battle-466.json. The first retry uses the same placement/activation/defense search and weights as the preceding Fangs comparison. Two additional candidates prioritize Titan offense or survival/draw. These are bounded-search retries, not manually chosen actions, a global win rate or proof of optimal play. Source snapshots, exact initial state, actions, summaries and replay checks are preserved in reports/apex-unmake-4.0.18.
 
 ## Results
 
