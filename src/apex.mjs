@@ -4,6 +4,7 @@ export const APEX_SIZES = [11, 9, 7, 5];
 export const apexActive = (s) => s.stratum === 4 && !!s.apex;
 export const fieldSize = (f) => f.size || 11;
 export function apexMovement(d, e) {
+  if (e.apexFloor === 4 && e.enemy === "apex") return { ...d, movement: "Hunter" };
   if (!e.apexMap || d.tier !== "Mote") return d;
   return {
     ...d,
@@ -78,6 +79,20 @@ export function enterApexFloor(g, floor = 1) {
   );
   g.present("ascent", { floor, name: "The Apex" });
   if (floor < 4) g.beginRound();
+  else prepareApexSummit(g);
+}
+export function prepareApexSummit(g) {
+  const s = g.s, f = s.field;
+  if (!apexActive(s) || s.apex.floor !== 4 || s.mode !== "field" || f.summitApproach) return;
+  // A five-wide map cannot put a target three king-moves from its center.
+  // Enter at the southern edge instead; retain the smaller summit footprint.
+  f.summitApproach = true;
+  f.summitSteps = 0;
+  f.x = 2; f.y = 4;
+  f.moves = g.bonuses().movement;
+  f.stage = "player";
+  f.entities = [{ uid: g.uid(), type: "Archon", enemy: "apex", x: 2, y: 1,
+    restless: 0, born: 0, count: 1, apexMap: true, apexFloor: 4 }];
 }
 export function apexBatch(g) {
   const f = g.s.field;
@@ -182,6 +197,16 @@ export function apexEscapeGrace(g) {
   f.archonGrace = "pending";
   g.log("All enemies pause after the first Archon falls. You have one movement turn to reach Ascend before normal enemy movement resumes.");
 }
+export function clearApexStair(s) {
+  if (!apexActive(s)) return;
+  const stair = s.field.entities.find(e => e.type === "Ascend");
+  if (!stair || stair.occupantsShifted) return;
+  // Field entities may share a space. Shift only the original stair occupants;
+  // do not push the destination's occupants or move the player.
+  for (const e of s.field.entities)
+    if (e !== stair && e.x === stair.x && e.y === stair.y) e.y--;
+  stair.occupantsShifted = true;
+}
 export function apexVictory(g, original) {
   const s = g.s,
     f = s.field;
@@ -199,8 +224,9 @@ export function apexVictory(g, original) {
   ) {
     const c = Math.floor(f.size / 2);
     f.entities.push({ uid: g.uid(), type: "Ascend", x: c, y: c });
+    clearApexStair(s);
     g.log(
-      "Ascend appears at the center. Defeat the second Archon to ascend automatically.",
+      "Ascend appears at the center, shifting anything on its space one space north. Defeat the second Archon to ascend automatically.",
     );
   }
   const offer = () => (g.rand() < 0.35 ? g.bossOffer() : g.rareOffer(3, true));

@@ -15,7 +15,7 @@ for (const kind of ["ascent", "predator"])
       policy = new WeightedPolicy(),
       actions = [];
     if (kind === "predator")
-      g.act(g.legal().find((a) => a.type === "fightApex"));
+      g.act(g.legal().find((a) => a.type === "wait"));
     const name = kind + "-" + seed;
     await fs.writeFile(dir + "/" + name + "-initial.json", JSON.stringify(g.s));
     const start = Date.now();

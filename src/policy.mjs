@@ -266,7 +266,6 @@ export class WeightedPolicy {
       case "chooseClass":
       case "begin":
       case "enterApex":
-      case "fightApex":
       case "continueReward":
         return [10, "Advance the journey."];
       case "startGem":

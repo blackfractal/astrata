@@ -41,6 +41,7 @@ export function unavailableTavernChoices(s, type, actions) {
   }
   if (type === "gossip") {
     if (actions.some(a => a.type === type)) return [];
+    if (apexActive(s)) return [{ label: "Gossip", reason: "The Apex's Archons are already revealed. No gossip is available here." }];
     return [{ label: "Gossip · 15 Gold", reason: shop.gossipUsed ? "You have already heard the gossip here." : "You don't have enough gold." }];
   }
   if (type !== "removeHex" && type !== "sell") return [];

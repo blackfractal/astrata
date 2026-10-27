@@ -2080,3 +2080,18 @@ Follow-up to round238: Jonathan confirmed he should bypass the already-forced Co
 ## All-enemy Apex victory pause — round241
 
 2026-10-26. Jonathan replaced the round-8-only surviving-Archon grace with one movement turn after the first Archon victory on any round, freezing every enemy. 4.0.37/design4.258/S4plan0.18. Pause survives Continue, does not advance spawn/aging/loot clocks, expires when movement ends; deliberate encounters remain legal and cannot refresh it. Existing second-Archon forced ascent after full encounter/rewards verified, retaining I Stand Alone pressure. All25 Apex/reward tests pass. Report reports/apex-all-enemy-pause-report.md. No live-profile changes or automatic rewind; current Bellows Grub/Loose Echo fight was already started under old rules. Approximately7minutes implementation/testing/docs/packaging (estimate). No commit/push.
+
+
+## Clear Apex staircase — round242
+
+2026-10-26. Jonathan requested moving every existing occupant of the newly appearing staircase one space north. 4.0.38/design4.259/S4draft0.19 adds one-time displacement for enemies and all pickups/events; destination occupants remain, no cascading, player unchanged. Continue corrects older uncleared stair saves once without spending movement or rerolling. All26 Apex/reward tests pass, covering three floors, entity types, occupied destination, legacy loads and no repeated displacement. Current game stays open and live save is not overwritten; restart/Continue applies correction. Approximately6minutes implementation/verification/docs/packaging (estimate). No commit/push.
+
+
+## Apex Gossip explanation — round243
+
+2026-10-26. Jonathan had1024Gold but Gossip claimed insufficientGold. Legal gossip intentionally excludes Apex because Archon identities are already shown; the shared unavailable-choice fallback omitted this case. 4.0.39 adds the correct Apex-specific explanation and removes the misleading15Gold price from that unavailable service. Verified current-save explanation, ordinary unaffordable gossip and available-action behavior. No mechanics/design/save changes. Approximately4minutes including packaging (estimate). No commit/push.
+
+
+## Predator summit approach — round244
+
+2026-10-26. Jonathan requested the Predator three spaces away as a Hunter on a smaller final map, rewarding three-movement equipment with preemption. 4.0.40/design4.260/S4draft0.20 uses5×5,player(3,5),Predator(3,2),normal map controls,no spawn clock. Normal2movement ends in enemy-first fight;3movement can initiate first. Equipment changes use allowance minus spent steps; Continue cannot reset distance/steps. Old waiting screens migrate once, existing fights retained. Removed old fightApex bypass and updated drivers. All809tests pass; packaged isolated Edge checks both movement counts,layout/noerrors,screenshotreviewed. Report reports/apex-summit-approach-report.md. No liveprofile changes; currentPredatorfight leftintact. Approximately12minutes implementation/tests/UI/docs/packaging (estimate). No commit/push.

@@ -1,3 +1,19 @@
+## Latest: Summit arrival restored on request — 2026-10-26
+
+User asked to see new final room. Restored archived fieldarrival2026-10-27T01:23:56.286Z under4.0.40:46HP229Gold48cards,5×5 summit,player(3,5),Predator(3,2),2moves. Preserved deck/inventory/equipment/RNG/rewards. No Astrata processes during install. Current save backed up at profile/save-backups/apex-escape-1793066766279, rewind appended without deleting archives. reports/summit-arrival-restore-20261026 holdsbefore/source/candidate/verification/receipt. No app launched; userContinue showsnewroom.
+
+## Latest: Predator approach — 4.0.40 / 2026-10-26
+
+Summit now normal5×5 map,player(3,5),Predator(3,2),3stepsnorth; Hunter immediatelyafterinitialmovement. Two movement→enemy-first;three canpreempt. prepareApexSummit migrates old field waiting screen once; no ongoingbattle rewinds. field.summitApproach and summitSteps preserve progress; equip/unequip recalculates moves=allowance−steps. No spawnclock,loot,oldfightApexaction. Ordinary mapUI +floor4art. All809tests+packagedEdge2/3movement/UI pass. Design4.260/S4draft0.20,BUILD_LOG244,reports/apex-summit-approach-report.md. Currentuser save alreadybattle46HP,version4.38; leftuntouched, no automaticrewind.
+
+## Latest: Apex Gossip UI — 4.0.39 / 2026-10-26
+
+choice-feedback.mjs now explains Apex Archons already revealed, instead of falsely blaming Gold. Mechanics unchanged. Verified actual floor3Tavern1024Gold and ordinary gossip reasons. BUILD_LOG243. Current shop advice pending in chat: mostly upgrades, consider secondLattice; no purchases or save edits executed.
+
+## Latest: Stair occupants shift north — 4.0.38 / 2026-10-26
+
+clearApexStair(s) moves every non-Ascend field entity sharing stair x/y north1, marks stair.occupantsShifted. Called on creation and in saved-game constructor; old uncleared stairs corrected once. No cascade/player move/RNG/movement cost. Later arrivals not re-shifted on Continue. 26 Apex/reward tests pass; design4.259/S4draft0.19, BUILD_LOG242. Current user save was floor2 at(4,4)one-based with1move remaining; HollowScribe on stair(5,5) shifts to(5,4), joining LoopMoth. Game running; no live save overwrite, restart/Continue applies.
+
 ## Latest: Requested post-Trickster rewind — 2026-10-26
 
 Restored latest post-reward Trickster checkpoint (archive2026-10-26T05:15:23.156Z) under4.0.37. Actual save now field floor2 round7,49HP845Gold,45cards,position(3,3)one-based,2moves,archonGrace active. Skipped card and collectedClearQuartz retained; all enemies remain at pre-movement positions. Verified southeast to(4,4),then(5,5)ascendsfloor3 without damage. No game running during install. Backup profile/save-backups/apex-escape-1792996631129; append-only rewind archive; reports/trickster-escape-restore-20261026 includes original save,source record,candidate,verification,installed receipt. No automatic app launch.

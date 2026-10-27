@@ -57,6 +57,7 @@ for (const name of [
   "mirror-cap-report.md",
   "apex-escape-grace-report.md",
   "apex-all-enemy-pause-report.md",
+  "apex-summit-approach-report.md",
   "apex-map-simplicity-report.md",
   "elemental-formations-report.md",
   "trickster-retune-report.md",

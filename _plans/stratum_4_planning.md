@@ -1,6 +1,6 @@
 # Stratum 4 planning — The Apex
 
-Design draft 0.18 · 2026-10-26 · Jonathan / Codex
+Design draft 0.20 · 2026-10-26 · Jonathan / Codex
 
 Companion to [the main design](astrata_design.md) and [Stratum 3 planning](stratum_3_planning.md). **First playable implementation: package 4.0.0.** Confirmed rules below come from Jonathan's four-floor proposal. The implementation snapshot below supersedes older pending recommendations.
 
@@ -12,7 +12,7 @@ Jonathan authorized implementation. The four-floor ascent, paired rematches, dea
 - Reserve the center, its two northwest/northeast diagonal approach spaces, and the Archon seals from random spawns. Movement can still bring enemies across these spaces. Entering an open Ascend tile takes precedence over an encounter there, preserving the promised exit route. Floor contents are abandoned on ascent; HP, Gold, deck, equipment and persistent effects carry forward without free healing or a new companion.
 - Ordinary enemy HP multipliers on floors 1/2/3: 1.60 / 1.35 / 1.15, rounded up. Add 4 / 3 / 2 damage to each direct hit. S1/S2 rematch Archons: 1.35 / 1.20 HP and +3 / +2 direct damage per hit, in addition to their normal escalation. S3 Archons retain their original HP and damage. Status values and mine damage are not multiplied. Motes retain Hunter/Stalker behavior; other Motes use base-one Wanderer movement, with Restlessness. Archons do not become Restless before their deadline hunt.
 - Each returning Archon pays 180 Gold. Each grants its own choice of three Rares, with a 35% chance to replace one with a Legendary. A victory encounter containing Archons has a 50% chance of an optional good equipment/gem reward. Defeating both in one battle presents both card offers before ascent. Existing base victory rewards still apply to ordinary enemies.
-- Floor 3's Tavern has full services and one 50-HP rest for 50 Gold. Normal S3 transition Tavern remains. No extra shop or healing between Apex floors. The final room has no movement clock or collection; equipment management remains accessible before starting the fight.
+- Floor 3's Tavern has full services and one 50-HP rest for 50 Gold. Normal S3 transition Tavern remains. No extra shop or healing between Apex floors. The final room is a 5×5 approach map: bottom-center player, Predator three spaces north. Equipment management remains accessible; Hunter movement begins after the initial player movement. No spawn clock or collectibles.
 - I Stand Alone checks the saved roster of every map-spawned S4 enemy, including all six rematch Archons, and surviving victory over the Predator. Event-only enemies do not enter the required ledger. The separate Machine Elves retention/non-use achievement is awarded after S4 victory using the existing tracked eligibility.
 
 ### Predator first-pass moves
@@ -40,7 +40,7 @@ See [build report](../reports/stratum4-build-report.md) and [AI evaluation](../r
 
 The Apex tests the complete build: formations and card survival from the Whispering Weald, Corruption management from the Unfinished Loom, and Ideon management from the Lucent Grotto. Players revisit familiar Archons, choose which matchup their build can handle, and leave before the alternative catches them.
 
-There is one new, unique final boss: **The Apex Predator**. The three preceding floors contain returning Archon fights, not three additional new bosses. The final room gives the Predator the player's full attention, without a map clock or collectibles.
+There is one new, unique final boss: **The Apex Predator**. The three preceding floors contain returning Archon fights, not three additional new bosses. The final room gives the Predator the player's full attention, with one approach movement turn and no spawn clock or collectibles.
 
 This four-floor structure supersedes the earlier long, five-space-wide map with gates at global rounds 8, 16 and 24, the Tavern after round 24, and the older generic rule that the Predator spawns in pair 16 and hunts. Ascending stairs within The Apex is intentional; travel between Strata remains a journey rather than a descent or ascent.
 
@@ -61,7 +61,7 @@ Each of the first three floors has its own eight-round spawn schedule. A round m
 | 1 | Motes, Eidolons, Items or Gold | Two distinct S1 Archons | Defeat either; take the central Ascend staircase |
 | 2 | Motes, Eidolons, Items or Gold | Two distinct S2 Archons | Defeat either; take the central Ascend staircase |
 | 3 | Pair 1 is **Tavern + one other spawn**; other ordinary slots use the usual floor pool | Two distinct S3 Archons | Defeat either; take the final Ascend staircase |
-| 4 | No rounds, movement turns, spawns or collectibles | No Archon pair | Start the Apex Predator fight when ready |
+| 4 | One approach movement turn; no spawn pairs or collectibles | Predator three spaces north | Reach it with three movement to attack first; otherwise it hunts and attacks first |
 
 Pair 4 uses both spawn slots for the Archons; it does not add them on top of an ordinary pair. No ordinary Event spawn is specified for this plan. No other scheduled Tavern inside S4 is currently specified.
 
@@ -97,7 +97,7 @@ This is a deliberate encounter-choice deadline, not merely increased movement sp
 
 **Confirmed timing (4.0.37):** pair 8 appears, the player gets that round's normal movement, then surviving Archons hunt during enemy movement. Battles pause the Field clock. Entering an enemy tile still ends that movement turn. After the first Archon is defeated on any round, skip all enemies' immediate movement and grant one full player movement turn. No floor-round advance, additional spawn pair, enemy aging or Gold decay occurs during this pause. At its end, all enemies resume normal movement; the surviving Archon hunts if the round-8 deadline has been reached, otherwise it remains stationary until that deadline. Continue and other encounters do not refresh the pause; deliberately entering an enemy tile still starts battle and ends that movement turn. After the second Archon is defeated, surviving the entire encounter and resolving rewards forces immediate ascent, with no further opportunity to collect loot or hunt remaining enemies. Abandoned map enemies prevent I Stand Alone. This supersedes the round-8-only pause for the surviving Archon.
 
-**Confirmed forced ascent:** after surviving the deadline hunt battle, the player automatically enters the next floor at its center, as if they had taken Ascend. This applies whether the hunt contains one remaining Archon or both. There is no return to the old floor to collect loot or finish off ordinary enemies. Preserve the battle rewards before completing the transition; their exact presentation order remains an implementation detail. Losing the fight does not advance the player.
+**Confirmed forced ascent:** after surviving the deadline hunt battle, the player automatically enters the next floor at its normal entry (center on floors 1–3, bottom-center on floor 4), as if they had taken Ascend. This applies whether the hunt contains one remaining Archon or both. There is no return to the old floor to collect loot or finish off ordinary enemies. Preserve the battle rewards before completing the transition; their exact presentation order remains an implementation detail. Losing the fight does not advance the player.
 
 This deliberately makes **I Stand Alone** harder: any spawned ordinary enemy left alive when the forced ascent occurs prevents the achievement.
 
@@ -107,13 +107,13 @@ This deliberately makes **I Stand Alone** harder: any spawned ordinary enemy lef
 
 ## Ascend staircase and room sizes
 
-The first floor Archon's defeat immediately reveals the **Ascend icon in the middle of the room**. From either stationary Archon position it is reachable in one normal two-space movement turn. Taking Ascend puts the player at the center of the next floor; quickly replace the current room with the next room to convey the ascent. There is no walk from an outer entrance. Defeating the second Archon, including in the deadline hunt, triggers ascent automatically after surviving the entire battle and resolving rewards. Returning Archon victories do not end S4 or automatically open a between-Strata Tavern.
+The first floor Archon's defeat immediately reveals the **Ascend icon in the middle of the room**. From either stationary Archon position it is reachable in one normal two-space movement turn. Taking Ascend puts the player at the next floor’s entry (center, except bottom-center on the summit); quickly replace the current room with the next room to convey the ascent. The summit alone has an outer entrance for its three-step approach. Defeating the second Archon, including in the deadline hunt, triggers ascent automatically after surviving the entire battle and resolving rewards. Returning Archon victories do not end S4 or automatically open a between-Strata Tavern.
 
 Floors become progressively smaller. Floor 2 is smaller than the familiar Field; floor 3 is smaller again; floor 4 is the smallest. This changes the **overworld rooms**, not the 7×6 battle Mind Grid.
 
 **Confirmed Archon positions:** relative to the center `(cx, cy)`, spawn one Archon two spaces northwest at `(cx − 2, cy − 2)` and the other two spaces northeast at `(cx + 2, cy − 2)`. Ascend appears at `(cx, cy)` after either is defeated. With diagonal movement, each starting position is exactly two steps from the staircase. Which selected Archon occupies which side is still to specify.
 
-**Confirmed room sizes and entry:** floors 1–4 are **11×11 → 9×9 → 7×7 → 5×5**. Enter every room at its center, including the first room after the S3 transition Tavern. Floor 4 retains its compact room presentation but has no movement-turn clock. The player initiates the waiting Predator fight.
+**Confirmed room sizes and entry:** floors 1–4 are **11×11 → 9×9 → 7×7 → 5×5**. Enter floors 1–3 at their centers. On floor 4, enter at (3,5), with the Predator at (3,2), using one-based coordinates. The Predator hunts after the initial movement turn. Three movement allows a player-first encounter; normal two movement results in an enemy-first encounter. No spawn pairs or collectibles.
 
 **Confirmed Archon movement:** both Archons remain stationary at their northwest/northeast positions until the enemy movement phase after round 8's player movement. This overrides their usual overworld movement types for these floors.
 
@@ -143,7 +143,7 @@ Preserve the separate prior achievement concept: retain Machine Elves from S2 th
 
 ## Apex Predator — original design direction
 
-The Predator waits alone on floor 4. No countdown, scavenging or pursuit forces the player into combat. Give a clear action to start the fight and let the player inspect their build beforehand. **Confirmed direction:** a long, high-HP endurance fight testing everything learned so far. It destroys cards, applies Corruptions, deploys and commands Ideons, and deals threatening attacks. It should be an absolute menace, demanding sustained use and rebuilding of the player's engine. No new fourth combat system is needed. Its exact HP, damage, elements, move cycle, escalation, destruction targets, Corruption selection and Ideons remain to design. Its approved appearance is specified under Setting and art direction.
+The Predator waits alone three steps north of the player on floor 4, then hunts as soon as the initial movement ends. Use the standard map, enemy inspection and movement controls. Players may inspect or equip gear before moving; movement equipment allows preemption, and gear swaps cannot restore spent steps. **Confirmed direction:** a long, high-HP endurance fight testing everything learned so far. It destroys cards, applies Corruptions, deploys and commands Ideons, and deals threatening attacks. It should be an absolute menace, demanding sustained use and rebuilding of the player's engine. No new fourth combat system is needed. Its exact HP, damage, elements, move cycle, escalation, destruction targets, Corruption selection and Ideons remain to design. Its approved appearance is specified under Setting and art direction.
 
 The intended role is the culmination of the run and the hardest fight up to this point. The preceding floor choices should affect the resources and build brought here. Avoid prescribing specific required cards before designing and testing the encounter.
 
@@ -157,7 +157,7 @@ Implementation checks for the first playable build:
 - Use the standard Stratum map layout, titled **The Apex**, without a floor-number label, purple deadline box or Archon-name strip (4.0.35). Keep hunt timing in enemy inspection and the entry explanation. Show Ascend appearing and keep it visually distinct from loot.
 - Choose floor contents and Archon pairs through the saved run RNG. Save floor, round, remaining Archons, hunt status and staircase availability; Continue must not reroll or reset a deadline.
 - Archive floor transitions, both Archon identities, encounters, rewards and abandoned contents with the rules version. Keep optional full-clear achievements auditable.
-- Verify pair-4 replacement, floor-3 Tavern scheduling, a single two-Archon battle after a missed deadline, lone-survivor hunting, automatic center-entry after the second Archon victory at any round (only once the full encounter and rewards resolve), stair reachability, voluntary second fights, achievement failure for abandoned enemies, Wanderer base-one movement, and the final room's absence of a map clock.
+- Verify pair-4 replacement, floor-3 Tavern scheduling, a single two-Archon battle after a missed deadline, lone-survivor hunting, automatic next-floor entry after the second Archon victory at any round (only once the full encounter and rewards resolve), stair reachability, voluntary second fights, achievement failure for abandoned enemies, Wanderer base-one movement, and the final room's two-step ambush versus three-step preemption, with no spawn clock.
 
 ## Next design decisions
 
@@ -186,3 +186,8 @@ Presentation preference: Apex Predator, Rift Boar and Rift Chimera artwork is mi
 Returning enemies receive an additional 10% HP and direct damage over the prior rematch modifiers; S2/S3 source tuning is inherited once. Native Rift Boar and Rift Chimera receive 20% HP/damage (162 and 174 HP). Mind Hive stays a 15-round survival timer. The Apex Predator and its owned Ideons remain unchanged. Target roughly 5 Focus and 5 Channel or more by S4; do not grant resources automatically.
 
 Four distinct top-down field images now distinguish the floors. The battle background depicts a small candlelit meditation mat at a cliff, overlooking lava and crystals. Original art remains archived alongside these selections.
+
+
+### Clear staircase placement (4.0.38)
+
+When central Ascend appears after the first Archon victory, move all existing entities on that space exactly one space north. Includes enemies, Items, Gold, Events and Taverns; preserve their IDs, stats, loot values and achievement tracking. Do not move the player or push anything already occupying the destination; entities may share that northern space. Apply once, including a one-time correction for older saves on Continue, without consuming player movement. Later enemy movement is unchanged.

@@ -1,7 +1,7 @@
 import {elementalLine} from "./elemental-formations.mjs";
 import {PREMIUM_GEAR} from "./premium-gear.mjs";
 import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
-import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete, apexEscapeGrace } from "./apex.mjs";
+import { apexActive, fieldSize, apexMovement, apexStats, enterApexFloor, apexBatch, apexRound, apexVictory, apexComplete, apexEscapeGrace, clearApexStair, prepareApexSummit } from "./apex.mjs";
 import { pressureDamage, pressureTell, pressureSignature } from "./difficulty.mjs";
 import { sourceSlots, growthDamage, growthGuard, wardGain, growthReason, acornIn, projectedInsight, growthTarget, growthVariants, growthActionEffects, forkedRoute, forkedShares } from "./growth-rules.mjs";
 import { areaHits } from "./area-targets.mjs";
@@ -985,6 +985,8 @@ export class Game {
       normalizeInitialWards(this.s);
       normalizeInsectMovement(this.s);
       refreshBossPlans(this);
+      clearApexStair(this.s);
+      prepareApexSummit(this);
       this.s.version = VERSION;
       if (this.s.battle) {
         // Legacy saves did not retain an Armor pool. Preserve a known spent hit;
@@ -1483,7 +1485,7 @@ export class Game {
         : `Archon · ${spaces} spaces this enemy movement`;
     } else
       movement += ` · ${(d.speed || 2) + restless} spaces per enemy movement`;
-    if (e.apexMap && d.tier === "Archon") movement = this.s.field.round < 8
+    if (e.apexMap && e.apexFloor !== 4 && d.tier === "Archon") movement = this.s.field.round < 8
       ? "Stationary · hunts after round 8 movement" : "Hunt · after this movement";
     if (apexActive(this.s) && ["pending", "active"].includes(this.s.field.archonGrace))
       movement = "Frozen · normal movement resumes after this escape movement";
@@ -3813,11 +3815,6 @@ export class Game {
       return actions;
     }
     if (s.mode === "field") {
-      if (apexActive(s) && s.apex.floor === 4) {
-        add("fightApex", "Face the Apex Predator", {}, {progress:1});
-        this.equipChoices(add);
-        return actions;
-      }
       if (s.field.moves > 0)
         for (let dy = -1; dy <= 1; dy++)
           for (let dx = -1; dx <= 1; dx++)
@@ -4507,9 +4504,6 @@ export class Game {
         delete s.apexIntro;
         enterApexFloor(this, 1);
         break;
-      case "fightApex":
-        this.beginBattle([{uid:this.uid(), enemy:"apex", restless:0, apexFloor:4}]);
-        break;
       case "begin":
         this.beginRound();
         break;
@@ -4519,6 +4513,7 @@ export class Game {
         s.field.x = a.x;
         s.field.y = a.y;
         s.field.moves--;
+        if (s.field.summitApproach) s.field.summitSteps++;
         if (s.field.entities.some((e) => e.x === a.x && e.y === a.y))
           s.field.moves = 0;
         this.present("move", { player: true, from, to: { x: a.x, y: a.y } });
@@ -4548,12 +4543,16 @@ export class Game {
       }
       case "unequip":
         s.equipment[a.slot] = null;
+        if (s.field.summitApproach && s.mode === "field")
+          s.field.moves = Math.max(0, this.bonuses().movement - s.field.summitSteps);
         break;
       case "equip": {
         const previousSlot = Object.keys(s.equipment).find(k => s.equipment[k] === a.item);
         // Moving worn gear between matching slots is an atomic swap, not an unequip.
         if (previousSlot) s.equipment[previousSlot] = s.equipment[a.slot];
         s.equipment[a.slot] = a.item;
+        if (s.field.summitApproach && s.mode === "field")
+          s.field.moves = Math.max(0, this.bonuses().movement - s.field.summitSteps);
         break;
       }
       case "usePickup": {

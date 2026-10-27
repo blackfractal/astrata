@@ -34,7 +34,7 @@ for (const kind of [
   const g = apexFixture(84001, kind === "intro" ? 0 : n);
   if (kind === "intro") g.act(g.legal().find((a) => a.type === "leave"));
   if (["predator", "victory"].includes(kind))
-    g.act(g.legal().find((a) => a.type === "fightApex"));
+    g.act(g.legal().find((a) => a.type === "wait"));
   if (kind === "predator") {
     g.s.battle.grid[10] = [g.instance(g.newCard("ward"))];
     g.s.battle.grid[11] = [g.instance(g.newCard("grove"))];
@@ -117,8 +117,9 @@ for (const kind of [
       await move.click();
     } else if (kind === "intro") await p.locator(".apex-intro").waitFor();
     else if (kind === "summit") {
-      await p.locator(".apex-summit").waitFor();
-      assert.equal(await p.locator('[data-action*="wait"]').count(), 0);
+      await p.locator(".apex-field").waitFor();
+      assert.equal(await p.locator(".tile").count(), 25);
+      assert.equal(await p.locator('[data-action*="wait"]').count(), 1);
     } else if (kind === "victory") {
       await p
         .getByText("The Apex Predator has fallen.", { exact: false })

@@ -78,22 +78,60 @@ test("S3 victory reward leads through full transition Tavern and Apex introducti
   assert.equal(g.s.field.x, 5);
   assert.equal(g.s.field.round, 1);
 });
-test("all four floors enter center, shrink and reset local rounds; summit has no movement or spawning", () => {
-  const g = floor();
-  for (let n = 1; n <= 4; n++) {
-    enterApexFloor(g, n);
-    assert.equal(g.s.field.size, [11, 9, 7, 5][n - 1]);
-    assert.equal(g.s.field.x, (g.s.field.size - 1) / 2);
-    assert.equal(g.s.field.y, g.s.field.x);
+test("Apex floors shrink; summit gives two steps toward a Predator three spaces away", () => {
+  const g=floor();
+  for(let n=1;n<=4;n++) {
+    enterApexFloor(g,n);assert.equal(g.s.field.size,[11,9,7,5][n-1]);
+    assert.equal(g.s.field.x,(g.s.field.size-1)/2);
+    assert.equal(g.s.field.y,n===4?4:g.s.field.x);
   }
-  assert.equal(g.s.field.round, 0);
-  assert.deepEqual(g.s.field.entities, []);
-  assert.ok(g.legal().some((a) => a.type === "fightApex"));
-  assert.ok(!g.legal().some((a) => ["move", "wait"].includes(a.type)));
-  act(g, "fightApex");
-  assert.equal(g.s.battle.enemies[0].id, "apex");
-  assert.equal(g.s.battle.enemies[0].hp, 500);
+  const f=g.s.field,e=f.entities[0];
+  assert.equal(f.round,0);assert.equal(f.spawned,0);assert.deepEqual(f.queue,[]);
+  assert.equal(f.moves,2);assert.equal(e.enemy,'apex');
+  assert.equal(Math.max(Math.abs(f.x-e.x),Math.abs(f.y-e.y)),3);
+  assert.match(g.fieldEnemyPreview(e).movement,/Hunter/);
+  assert.ok(!g.legal().some(a=>a.type==='fightApex'));
+  act(g,'move',{x:2,y:3});act(g,'move',{x:2,y:2});
+  assert.equal(g.s.mode,'battle');assert.equal(g.s.battle.enemyFirst,true);
+  assert.equal(g.s.battle.enemies[0].hp,500);
 });
+
+test("every normal two-step route and waiting gives the Predator the opening attack",()=>{
+  const g=floor(4);
+  const paths=[[],...g.legal().filter(a=>a.type==='move').map(a=>[a])];
+  for(const first of g.legal().filter(a=>a.type==='move')) {
+    const h=new Game(0,g.save());h.act(first);
+    for(const second of h.legal().filter(a=>a.type==='move'))paths.push([first,second]);
+  }
+  for(const path of paths) {
+    const h=new Game(0,g.save());for(const a of path)h.act(a);
+    if(h.s.mode==='field')act(h,'wait');
+    assert.equal(h.s.mode,'battle');assert.equal(h.s.battle.enemyFirst,true);
+    assert.equal(h.s.field.spawned,0);
+  }
+});
+
+test("movement equipment permits preemption; Continue and equipment swaps cannot refill spent summit steps",()=>{
+  const g=floor(4),item={uid:g.uid(),id:'quickArmor',gem:null};g.s.inventory.push(item);
+  act(g,'equip',{item:item.uid,slot:'torso'});assert.equal(g.s.field.moves,3);
+  act(g,'move',{x:2,y:3});const h=new Game(0,g.save());assert.equal(h.s.field.moves,2);
+  act(h,'unequip',{slot:'torso'});assert.equal(h.s.field.moves,1);
+  act(h,'equip',{item:item.uid,slot:'torso'});assert.equal(h.s.field.moves,2);
+  act(h,'move',{x:2,y:2});act(h,'move',{x:2,y:1});
+  assert.equal(h.s.mode,'battle');assert.equal(h.s.battle.enemyFirst,false);
+});
+
+test("legacy summit screens gain the approach without resetting ongoing Predator fights",()=>{
+  const g=floor(4),old=g.save();old.field.entities=[];old.field.x=2;old.field.y=2;old.field.moves=0;
+  delete old.field.summitApproach;delete old.field.summitSteps;
+  const h=new Game(0,old);assert.equal(h.s.field.y,4);assert.equal(h.s.field.moves,2);
+  assert.equal(h.s.hp,old.hp);assert.equal(h.s.rng,old.rng);assert.deepEqual(h.s.deck,old.deck);
+  g.beginBattle([g.s.field.entities[0]]);const fighting=g.save();
+  delete fighting.field.summitApproach;fighting.field.entities=[];
+  const resumed=new Game(0,fighting);assert.equal(resumed.s.mode,'battle');
+  assert.deepEqual(resumed.s.field,fighting.field);assert.deepEqual(resumed.s.battle,g.s.battle);
+});
+
 test("pair four replaces both slots with distinct corresponding Archons at fixed marked spaces", () => {
   for (let n = 1; n <= 3; n++) {
     const g = floor(n);
@@ -330,7 +368,7 @@ test("final victory grants completed S4 and durable I Stand Alone only with a co
   }
   g.s.apex.defeated = g.s.apex.required.map((e) => e.uid);
   enterApexFloor(g, 4);
-  act(g, "fightApex");
+  g.beginBattle([g.s.field.entities.find(e => e.enemy === "apex")]);
   win(g);
   rewards(g);
   assert.equal(g.s.outcome, "win");
@@ -402,7 +440,7 @@ test("Predator has readable destruction warnings, bounded owned Ideons, Purify c
   const g = floor(4);
   g.s.hp = g.s.maxHp = 10000;
   g.s.equipment = {};
-  act(g, "fightApex");
+  g.beginBattle([g.s.field.entities.find(e => e.enemy === "apex")]);
   const b = g.s.battle,
     e = b.enemies[0];
   assert.equal(g.tell(e).damage, 24);
@@ -490,4 +528,25 @@ test("Rift Chimera is a native Apex Eidolon with a three-element breath", () => 
     { damage: 11, element: "Earth" },
     { damage: 11, element: "Chaos" },
   ]);
+});
+
+
+test("Ascend shifts all existing occupants north once, including legacy saves, without cascading or consuming movement",()=>{
+  for(const n of [1,2,3]) {
+    const g=floor(n),aa=round4(g),f=g.s.field,c=Math.floor(f.size/2);
+    const occupants=['Mote','Item','Gold','Event','Tavern'].map(type=>({uid:g.uid(),type,x:c,y:c,...(type==='Mote'?{enemy:'beetle',restless:0,apexMap:true}:{}),value:30}));
+    const above={uid:g.uid(),type:'Gold',x:c,y:c-1,value:50};
+    f.entities=[...aa,...occupants,above];f.x=aa[0].x;f.y=aa[0].y;f.moves=0;g.s.hp=1000;
+    g.beginBattle([aa[0]]);win(g);
+    assert.deepEqual(occupants.map(e=>[e.x,e.y]),occupants.map(()=>[c,c-1]));
+    assert.equal(above.y,c-1);assert.equal(f.entities.filter(e=>e.x===c&&e.y===c).length,1);
+    assert.ok(f.entities.find(e=>e.type==='Ascend').occupantsShifted);
+    const legacy=g.save();delete legacy.field.entities.find(e=>e.type==='Ascend').occupantsShifted;
+    const id=occupants[0].uid;legacy.field.entities.find(e=>e.uid===id).y=c;
+    const h=new Game(0,legacy);assert.equal(h.s.field.entities.find(e=>e.uid===id).y,c-1);
+    assert.equal(h.s.field.moves,legacy.field.moves);assert.equal(h.s.rng,legacy.rng);
+    // A later arrival is not displaced again simply by saving/resuming.
+    h.s.field.entities.find(e=>e.uid===id).y=c;
+    const resumed=new Game(0,h.save());assert.equal(resumed.s.field.entities.find(e=>e.uid===id).y,c);
+  }
 });
