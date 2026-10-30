@@ -27,6 +27,11 @@ Development: `npm start`, `npm test`, `node tools/audit.mjs`. Package with `node
 
 ## Git LFS
 
+Readable reports stay in `reports/`. Raw saves, rewind snapshots, replay traces and
+frozen experiment builds are kept locally in the Git-ignored `snapshots/` tree;
+see [artifact storage conventions](reports/README.md). Curated replayable puzzles
+remain versioned in `_knowledge/situations/`.
+
 Artwork and verification screenshots are stored in **Git LFS**, including their historical versions. Install Git LFS before cloning, then run `git lfs install`. In an existing checkout, `git lfs pull` downloads the actual images if they are missing. Use `npm ci` before the development commands above. Normal `git add`, `git commit` and `git push` handle subsequent image changes through `.gitattributes` and the LFS hook.
 
 The image history was migrated on 2026-10-05. Existing clones from before that migration should preserve local work and clone afresh; this workspace has already been migrated. [Migration record and old-to-new commit map](_knowledge/git-lfs-migration-2026-10-05/README.md).

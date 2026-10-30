@@ -1,3 +1,4 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
@@ -8,6 +9,8 @@ import { VERSION } from "../src/content.mjs";
 import { runRecord } from "../src/run-record.mjs";
 const { createArchive } = createRequire(import.meta.url)("../run-archive.cjs");
 const dir = "reports/depths-evaluation";
+const snapshots = snapshotPath(dir);
+await fs.mkdir(snapshots, { recursive: true });
 await fs.mkdir(dir, { recursive: true });
 const names = (await fs.readdir("src")).filter((n) => n.endsWith(".mjs"));
 const sources = Object.fromEntries(
@@ -15,7 +18,7 @@ const sources = Object.fromEntries(
     names.map(async (n) => [n, await fs.readFile("src/" + n, "utf8")]),
   ),
 );
-const archive = createArchive(dir, {
+const archive = createArchive(snapshots, {
   packageVersion: "3.0.0",
   sources,
   source: "headless",
@@ -118,7 +121,7 @@ for (const scenario of [
     runId,
   };
   await fs.writeFile(
-    dir + "/" + scenario + ".json",
+    snapshots + "/" + scenario + ".json",
     JSON.stringify(
       { result, initial, decisions, rounds, final: g.save() },
       null,

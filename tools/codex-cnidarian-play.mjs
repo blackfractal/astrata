@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-const dir='reports/codex-cnidarian-play';
+const dir='snapshots/codex-cnidarian-play';
 const sourceDir=path.resolve('.tmp/codex-cnidarian-rules');
 await fs.mkdir(dir,{recursive:true});
 const file=dir+'/attempt.json';
@@ -11,7 +11,7 @@ if(process.argv[2]==='start'){
   for(const n of (await fs.readdir('release/Astrata/resources/app/src')).filter(n=>n.endsWith('.mjs'))){
     sources[n]=await fs.readFile('release/Astrata/resources/app/src/'+n,'utf8');await fs.writeFile(path.join(sourceDir,n),sources[n]);
   }
-  const initial=JSON.parse(await fs.readFile('reports/cnidarian-same-build-20261014/prepared-save.json','utf8'));delete initial.checkpoint;
+  const initial=JSON.parse(await fs.readFile('snapshots/cnidarian-same-build-20261014/prepared-save.json','utf8'));delete initial.checkpoint;
   await fs.writeFile(dir+'/sources.json',JSON.stringify(sources));
   await fs.writeFile(file,JSON.stringify({controller:'Codex manual legal-action selections',initial,state:structuredClone(initial),decisions:[],checkpoints:[]}));
 }

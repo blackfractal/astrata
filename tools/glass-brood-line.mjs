@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import {Game,cardPower} from '../src/engine.mjs';
 import {cards} from '../src/content.mjs';
-const dir='reports/glass-brood-line-20261025';fs.mkdirSync(dir,{recursive:true});
+const dir='snapshots/glass-brood-line-20261025';fs.mkdirSync(dir,{recursive:true});
 const file=dir+'/attempt.json';
 if(process.argv[2]==='start'){
  const initial=JSON.parse(fs.readFileSync(process.env.APPDATA+'/astrata/save.json','utf8'));

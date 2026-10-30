@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {Game} from '../src/engine.mjs';
 import {cards,items,VERSION} from '../src/content.mjs';
-const dir='reports/codex-fullrun-4.0.2-second';
+const dir='snapshots/codex-fullrun-4.0.2-second';
 fs.mkdirSync(dir,{recursive:true});
 const file=dir+'/current.json',mode=process.argv[2]||'view';
 if(mode==='start'){
@@ -37,8 +37,8 @@ if(mode==='act'||mode==='query'){
 }
 if(mode==='replay'){
  // Reuse the first run's already-authored S1 decisions only, stopping on any divergence.
- const old=JSON.parse(fs.readFileSync('reports/codex-fullrun-4.0.1-1792172183724/final.json','utf8')).state.history;
- const {Game:OldGame}=await import('../reports/codex-fullrun-4.0.1-1792172183724/app/src/engine.mjs');
+ const old=JSON.parse(fs.readFileSync('snapshots/codex-fullrun-4.0.1-1792172183724/final.json','utf8')).state.history;
+ const {Game:OldGame}=await import('../snapshots/codex-fullrun-4.0.1-1792172183724/app/src/engine.mjs');
  const prior=new OldGame(885553835);
  for(let i=0;i<g.s.steps;i++)prior.act(prior.legal().find(a=>a.key===old[i]));
  let n=0;

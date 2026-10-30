@@ -1,6 +1,8 @@
+import { reportPath } from './artifact-paths.mjs';
 import fs from 'node:fs/promises';import assert from 'node:assert/strict';import crypto from 'node:crypto';
 import {Game} from '../src/engine.mjs';import {VERSION,cards} from '../src/content.mjs';
-const dir='reports/codex-cannon-3.0.29',r=JSON.parse(await fs.readFile(dir+'/attempt.json','utf8'));
+const dir='snapshots/codex-cannon-3.0.29',r=JSON.parse(await fs.readFile(dir+'/attempt.json','utf8'));
+await fs.mkdir(reportPath(dir), { recursive: true });
 const g=new Game(0,structuredClone(r.initial));delete g.s.checkpoint;
 const perTurn={},bossDamage={},blasts=[],titanDefense=[],bulletIds=new Set();let lost=0,healed=0,withheld=0;
 for(const [i,d] of r.decisions.entries()){
@@ -31,6 +33,6 @@ const result={version:VERSION,controller:r.controller,seed:r.initial.seed,fixtur
  blasts,titanDefense,bossDamage,perTurn,projectilesLaunched:bulletIds.size,launchesWithheld:withheld,
  sourcesSha256:crypto.createHash('sha256').update(await fs.readFile(dir+'/sources.json')).digest('hex'),
  limitation:'One authored strong carry-in and one seed, manually played with placement errors; not an optimized line, a natural run, or a population win-rate estimate.'};
-await fs.writeFile(dir+'/verification.json',JSON.stringify(result,null,2));
+await fs.writeFile(reportPath(dir+'/verification.json'),JSON.stringify(result,null,2));
 await fs.writeFile(dir+'/winning-line.json',JSON.stringify({result,initial:r.initial,decisions:r.decisions.map(d=>d.action.key),final:g.s}));
 console.log(JSON.stringify(result,null,2));

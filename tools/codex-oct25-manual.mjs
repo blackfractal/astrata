@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 const seed=Number(process.argv[3]||17101701);
-const dir='reports/codex-growth-manual-'+seed;
+const dir='snapshots/codex-growth-manual-'+seed;
 fs.mkdirSync(dir,{recursive:true});
 const file=dir+'/current.json',mode=process.argv[2]||'view';
 if(mode==='start'){

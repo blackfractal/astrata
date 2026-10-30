@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 const seed=process.argv[3];
-const dir='reports/loom-balance-20261023/'+seed;
+const dir='snapshots/loom-balance-20261023/'+seed;
 fs.mkdirSync(dir,{recursive:true});
 const file=dir+'/current.json',mode=process.argv[2]||'view';
 if(mode==='start'){

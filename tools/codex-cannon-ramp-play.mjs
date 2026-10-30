@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-const dir='reports/codex-cannon-3.0.28';
+const dir='snapshots/codex-cannon-3.0.28';
 const sourceDir=path.resolve('.tmp/codex-cannon-3.0.28-rules');
 await fs.mkdir(dir,{recursive:true});
 const file=dir+'/attempt.json';
@@ -13,7 +13,7 @@ if(process.argv[2]==='start'){
   }
   const {depthsFixture}=await import('./depths-fixture.mjs');
   const initial=depthsFixture(73001,'refractionCannon').s;delete initial.checkpoint;
-  const prior=JSON.parse(await fs.readFile('reports/codex-hive-3.0.11/attempt.json','utf8')).initial;
+  const prior=JSON.parse(await fs.readFile('snapshots/codex-hive-3.0.11/attempt.json','utf8')).initial;
   const {default:assert}=await import('node:assert/strict');
   assert.deepEqual(initial.deck,prior.deck);assert.deepEqual(initial.inventory,prior.inventory);assert.deepEqual(initial.equipment,prior.equipment);
   await fs.writeFile(dir+'/sources.json',JSON.stringify(sources));

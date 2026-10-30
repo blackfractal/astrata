@@ -2,11 +2,11 @@
 import fs from 'node:fs/promises';
 import { Game } from '../src/engine.mjs';
 import { cards } from '../src/content.mjs';
-const dir='reports/codex-hive-play';await fs.mkdir(dir,{recursive:true});
+const dir='snapshots/codex-hive-play';await fs.mkdir(dir,{recursive:true});
 const file=dir+'/attempt.json';
 let record;
 if(process.argv[2]==='start'){
- const source=process.argv[3]||'reports/hive-drone-evaluation/baseline-73001.json';
+ const source=process.argv[3]||'snapshots/hive-drone-evaluation/baseline-73001.json';
  const initial=JSON.parse(await fs.readFile(source,'utf8')).initial;
  record={source,controller:'Codex selects every move through legal actions; no WeightedPolicy',initial,state:initial,decisions:[],checkpoints:[]};
 }else record=JSON.parse(await fs.readFile(file,'utf8'));

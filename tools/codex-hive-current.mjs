@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import {Game} from '../src/engine.mjs';
 import {cards,VERSION} from '../src/content.mjs';
 import {depthsFixture} from './depths-fixture.mjs';
-const dir='reports/codex-hive-3.0.11';await fs.mkdir(dir,{recursive:true});const file=dir+'/attempt.json';
+const dir='snapshots/codex-hive-3.0.11';await fs.mkdir(dir,{recursive:true});const file=dir+'/attempt.json';
 let r;
 if(process.argv[2]==='start'){
  try{await fs.access(file);throw Error('Attempt already exists; do not overwrite');}catch(e){if(e.code!=='ENOENT')throw e;}

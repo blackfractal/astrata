@@ -1,10 +1,12 @@
+import { reportPath } from './artifact-paths.mjs';
 // Replay only the recorded human-model decisions; no policy or new decisions.
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 for (const seed of [24102501, 24102502]) {
-  const dir = `reports/codex-growth-manual-${seed}`;
+  const dir = `snapshots/codex-growth-manual-${seed}`;
+  fs.mkdirSync(reportPath(dir), {recursive:true});
   const frozen = path.resolve(`.tmp/manual-audit-${seed}/src`);
   fs.mkdirSync(frozen, {recursive:true});
   const sources = JSON.parse(fs.readFileSync(`${dir}/sources.json`, 'utf8'));
@@ -31,6 +33,6 @@ for (const seed of [24102501, 24102502]) {
     encounters:game.s.stats.encounters,
     supplies:game.s.stats.consumablesUsed,
   };
-  fs.writeFileSync(`${dir}/replay-audit.json`, JSON.stringify(audit, null, 2));
+  fs.writeFileSync(reportPath(`${dir}/replay-audit.json`), JSON.stringify(audit, null, 2));
   console.log(JSON.stringify({seed, actions:rows.length, exactFinalStateMatched:true, outcome:game.s.outcome, hp:game.s.hp}));
 }

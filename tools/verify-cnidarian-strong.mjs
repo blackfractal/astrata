@@ -1,9 +1,11 @@
+import { reportPath } from './artifact-paths.mjs';
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-const dir='reports/codex-cnidarian-strong-3.0.12';
+const dir='snapshots/codex-cnidarian-strong-3.0.12';
+await fs.mkdir(reportPath(dir), { recursive: true });
 const r=JSON.parse(await fs.readFile(dir+'/attempt.json','utf8'));
 const sources=JSON.parse(await fs.readFile(dir+'/sources.json','utf8'));
 const cache=path.resolve('.tmp/codex-cnidarian-strong-replay');
@@ -33,6 +35,6 @@ const result={fixture:g.s.evaluationFixture,seed:r.initial.seed,healed,perTurn,b
   tendrilKills:g.s.battle.enemies[0].tentacleKills||0,
   sourcesSha256:crypto.createHash('sha256').update(JSON.stringify(sources)).digest('hex'),
   limitation:'One authored strong build and one seed; not a population win-rate estimate. Uses revised adjacent strike and Splash rules.'};
-await fs.writeFile(dir+'/verification.json',JSON.stringify(result,null,2));
+await fs.writeFile(reportPath(dir+'/verification.json'),JSON.stringify(result,null,2));
 await fs.writeFile(dir+'/winning-line.json',JSON.stringify({result,initial:r.initial,decisions:r.decisions.map(d=>d.action.key),final:g.s}));
 console.log(result);

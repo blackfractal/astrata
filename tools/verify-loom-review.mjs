@@ -3,7 +3,7 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-const root='reports/loom-balance-20261023', results=[];
+const root='snapshots/loom-balance-20261023', results=[];
 for(const name of fs.readdirSync(root)) {
   const dir=path.join(root,name);
   if(!fs.existsSync(path.join(dir,'decisions.jsonl')))continue;

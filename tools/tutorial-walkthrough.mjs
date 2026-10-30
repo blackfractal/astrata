@@ -1,3 +1,4 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import { randomUUID } from "node:crypto";
@@ -20,8 +21,11 @@ const sources = Object.fromEntries(
     ].map(async (n) => [n, await fs.readFile("src/" + n, "utf8")]),
   ),
 );
-const dir = "reports/tutorial-evaluation",
-  archive = createArchive(dir, {
+const dir = "reports/tutorial-evaluation";
+await fs.mkdir(dir, { recursive: true });
+const snapshots = snapshotPath(dir);
+await fs.mkdir(snapshots, { recursive: true });
+const archive = createArchive(snapshots, {
     packageVersion,
     sources,
     source: "headless-tutorial",

@@ -1,3 +1,4 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from "node:fs/promises";
 import assert from "node:assert/strict";
 import { Game } from "../src/engine.mjs";
@@ -5,6 +6,8 @@ import { cards, enemies, VERSION } from "../src/content.mjs";
 import { WeightedPolicy } from "../src/policy.mjs";
 import { depthsFixture } from "./depths-fixture.mjs";
 const dir = "reports/growth-evaluation";
+const snapshots = snapshotPath(dir);
+await fs.mkdir(snapshots, { recursive: true });
 await fs.mkdir(dir, { recursive: true });
 const sources = Object.fromEntries(
   await Promise.all(
@@ -13,7 +16,7 @@ const sources = Object.fromEntries(
       .map(async (n) => [n, await fs.readFile("src/" + n, "utf8")]),
   ),
 );
-await fs.writeFile(dir + "/sources.json", JSON.stringify(sources));
+await fs.writeFile(snapshots + "/sources.json", JSON.stringify(sources));
 const results = process.argv.includes("--encounters-only")
   ? JSON.parse(await fs.readFile(dir + "/summary.json", "utf8")).filter(
       (r) => r.kind === "campaign",
@@ -85,7 +88,7 @@ async function run(g, name, kind, limit = 14000) {
   };
   results.push(result);
   await fs.writeFile(
-    `${dir}/${name}.json`,
+    `${snapshots}/${name}.json`,
     JSON.stringify({
       version: VERSION,
       controller: "WeightedPolicy with growth features; not manual Codex play",

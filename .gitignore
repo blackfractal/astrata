@@ -1,6 +1,8 @@
 node_modules/
 release/
 .tmp/
+# Local saves, rewind snapshots, replay traces and frozen experiment builds.
+/snapshots/
 # Original local research/profiles remain on disk.
 _research/
 _knowledge/repository-migration-2026-10-04/
@@ -8,7 +10,7 @@ _knowledge/situations/_builds/
 __pycache__/
 *.pyc
 
-# Manual playthrough runtime files stay local; reports and saved evidence remain tracked.
+# Legacy paths: keep old playthrough tools from tracking temporary runtime files.
 /reports/codex-fullrun-*/app/
 /reports/codex-fullrun-*/commands/
 /reports/codex-fullrun-*/profile/

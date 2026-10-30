@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {Game} from '../src/engine.mjs';
-const [build,boss]=process.argv.slice(2),root='reports/loom-balance-20261023';
+const [build,boss]=process.argv.slice(2),root='snapshots/loom-balance-20261023';
 const dir=`${root}/${process.argv[4]||"tuned"}-${build}-${boss}`;
 const g=new Game(0,JSON.parse(fs.readFileSync(dir+'/initial.json')));
 const records=fs.readFileSync(`${root}/baseline-${build}-${boss}/decisions.jsonl`,'utf8').trim().split('\n').map(JSON.parse);

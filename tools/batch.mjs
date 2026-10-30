@@ -1,3 +1,4 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import { createRequire } from "node:module";
 import { randomUUID } from "node:crypto";
 import { runRecord } from "../src/run-record.mjs";
@@ -9,6 +10,8 @@ import { VERSION } from "../src/content.mjs";
 const count = Number(process.argv[2] || 5),
   first = Number(process.argv[3] || 41001),
   dir = process.argv[4] || "reports/evaluation";
+const snapshots = snapshotPath(dir);
+await fs.mkdir(snapshots, { recursive: true });
 await fs.mkdir(dir, { recursive: true });
 const summary = [];
 const packageVersion = JSON.parse(
@@ -22,7 +25,7 @@ const sources = Object.fromEntries(
     ]),
   ),
 );
-const archive = createArchive(dir, {
+const archive = createArchive(snapshots, {
   packageVersion,
   sources,
   source: "headless",

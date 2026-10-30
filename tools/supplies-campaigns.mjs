@@ -1,3 +1,4 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -5,9 +6,11 @@ import {Game} from '../src/engine.mjs';
 import {WeightedPolicy} from '../src/policy.mjs';
 import {cards,items,VERSION} from '../src/content.mjs';
 const dir=process.argv[2]||'reports/supplies-campaigns-4.0.14';
-fs.mkdirSync(dir,{recursive:true});
+const snapshots = snapshotPath(dir);
+fs.mkdirSync(snapshots, { recursive: true });
+fs.mkdirSync(dir, { recursive: true });
 const sources=Object.fromEntries(fs.readdirSync('src').filter(n=>n.endsWith('.mjs')).map(n=>[n,fs.readFileSync('src/'+n,'utf8')]));
-fs.writeFileSync(dir+'/sources.json',JSON.stringify(sources));
+fs.writeFileSync(snapshots+'/sources.json',JSON.stringify(sources));
 const policy=new WeightedPolicy();
 const summaries=[];
 function fork(g){const t=Object.create(Game.prototype);t.s=structuredClone(g.s);t.presentation=[];t.decisionLog=[];return t;}
@@ -41,7 +44,7 @@ function choose(g){
  return {action,reason:'Automated six-candidate turn rollout; value '+best.toFixed(2)+'. '+ordinary.reason};
 }
 for(let index=0;index<10;index++){
- const seed=24102501+index,runDir=dir+'/run-'+seed;fs.mkdirSync(runDir,{recursive:true});
+ const seed=24102501+index,runDir=snapshots+'/run-'+seed;fs.mkdirSync(runDir,{recursive:true});
  const g=new Game(seed),initial=structuredClone(g.s),trace=[];fs.writeFileSync(runDir+'/initial.json',JSON.stringify(initial));
  const start=Date.now();
  for(let step=0;step<12000&&g.s.mode!=='result';step++){

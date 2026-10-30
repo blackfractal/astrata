@@ -1,9 +1,11 @@
+import { reportPath } from './artifact-paths.mjs';
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-const dir='reports/codex-hive-play';const r=JSON.parse(await fs.readFile(dir+'/attempt.json','utf8'));
+const dir='snapshots/codex-hive-play';
+await fs.mkdir(reportPath(dir), { recursive: true });const r=JSON.parse(await fs.readFile(dir+'/attempt.json','utf8'));
 // Preserve historical proof under the exact recorded rules, even after balance changes.
 const sources=JSON.parse(await fs.readFile(dir+'/sources.json','utf8'));
 const cache=path.resolve('.tmp/codex-hive-replay-3.0.8');await fs.mkdir(cache,{recursive:true});
@@ -25,5 +27,5 @@ const rounds=r.checkpoints.filter((s,i,all)=>i===0||s.battle.turn!==all[i-1].bat
 const result={version:VERSION,fixture:r.source,seed:73001,controller:'Codex manual legal-action selections; no policy or search',outcome:'victory',hp:g.s.hp,minimumHp,turn:g.s.battle.turn,decisions:r.decisions.length,rewinds:0,replayVerified:true,previousAiResult:source.result,rounds,damageTaken:g.s.stats.damageTaken,repairs:g.s.stats.repairs};
 result.sourcesSha256=crypto.createHash('sha256').update(JSON.stringify(sources)).digest('hex');
 await fs.writeFile(dir+'/winning-line.json',JSON.stringify({result,initial:r.initial,decisions:r.decisions.map(d=>d.action.key),final:g.s},null,2));
-await fs.writeFile(dir+'/verification.json',JSON.stringify(result,null,2));
+await fs.writeFile(reportPath(dir+'/verification.json'),JSON.stringify(result,null,2));
 console.log(JSON.stringify(result,null,2));

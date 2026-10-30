@@ -1,12 +1,16 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from "node:fs/promises";
 import { apexFixture } from "./apex-fixture.mjs";
 import { WeightedPolicy } from "../src/policy.mjs";
 import { VERSION } from "../src/content.mjs";
 const dir = process.argv[2] || "reports/apex-evaluation";
-await fs.mkdir(dir + "/sources", { recursive: true });
+const snapshots = snapshotPath(dir);
+await fs.mkdir(snapshots, { recursive: true });
+await fs.mkdir(dir, { recursive: true });
+await fs.mkdir(snapshots + "/sources", { recursive: true });
 for (const file of await fs.readdir("src"))
   if (file.endsWith(".mjs"))
-    await fs.copyFile("src/" + file, dir + "/sources/" + file);
+    await fs.copyFile("src/" + file, snapshots + "/sources/" + file);
 const summary = [];
 for (const kind of ["ascent", "predator"])
   for (let i = 0; i < 5; i++) {
@@ -17,7 +21,7 @@ for (const kind of ["ascent", "predator"])
     if (kind === "predator")
       g.act(g.legal().find((a) => a.type === "wait"));
     const name = kind + "-" + seed;
-    await fs.writeFile(dir + "/" + name + "-initial.json", JSON.stringify(g.s));
+    await fs.writeFile(snapshots + "/" + name + "-initial.json", JSON.stringify(g.s));
     const start = Date.now();
     let error = null;
     try {
@@ -57,7 +61,7 @@ for (const kind of ["ascent", "predator"])
     };
     summary.push(result);
     await fs.writeFile(
-      dir + "/" + name + ".json",
+      snapshots + "/" + name + ".json",
       JSON.stringify({ result, actions, final: g.s }),
     );
     console.log(JSON.stringify(result));

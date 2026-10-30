@@ -1,3 +1,4 @@
+import { reportPath } from './artifact-paths.mjs';
 // Isolated, visible manual play. No policy selects actions and no live profile is used.
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -6,10 +7,10 @@ import {_electron as electron} from '@playwright/test';
 import {Game} from '../src/engine.mjs';
 const version=JSON.parse(await fs.readFile('package.json','utf8')).version;
 const stamp=Date.now();
-const dir=path.resolve('reports/codex-fullrun-'+version+'-'+stamp);
+const dir=path.resolve('snapshots/codex-fullrun-'+version+'-'+stamp);
 const session=path.resolve('.tmp/codex-watch-'+stamp);
 const appDir=path.join(session,'app'),profile=path.join(session,'profile'),queue=path.join(session,'commands');
-await fs.mkdir(dir,{recursive:true});await fs.mkdir(queue,{recursive:true});await fs.mkdir(profile,{recursive:true});
+await fs.mkdir(dir,{recursive:true});await fs.mkdir(reportPath(dir),{recursive:true});await fs.mkdir(queue,{recursive:true});await fs.mkdir(profile,{recursive:true});
 await fs.cp('release/Astrata/resources/app',appDir,{recursive:true});
 const seed=randomInt(1,2147483647),g=new Game(seed);
 await fs.writeFile(path.join(dir,'initial.json'),JSON.stringify(g.s));
@@ -51,7 +52,7 @@ while(!page.isClosed()){
   const request=JSON.parse(await fs.readFile(path.join(queue,file),'utf8'));let response;
   try{
    if(request.type==='play')response={played:await page.evaluate(async r=>window.codexManual.play(r.selectors,r.reason),request)};
-   else if(request.type==='screenshot'){await page.screenshot({path:path.join(dir,'view.png')});response={screenshot:path.join(dir,'view.png')};}
+   else if(request.type==='screenshot'){await page.screenshot({path:path.join(reportPath(dir),'view.png')});response={screenshot:path.join(reportPath(dir),'view.png')};}
    else response={read:true};
   }catch(e){response={error:e.message};}
   const v=await snapshot();response.step=v.state.steps;response.mode=v.state.mode;

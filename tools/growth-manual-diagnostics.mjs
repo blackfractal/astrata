@@ -4,7 +4,7 @@ import {Game as CurrentGame} from '../src/engine.mjs';
 import {enemies as currentEnemies,items} from '../src/content.mjs';
 import {Game} from '../.tmp/growth-manual-replay-17101703/src/engine.mjs';
 import {enemies} from '../.tmp/growth-manual-replay-17101703/src/content.mjs';
-const dir='reports/codex-growth-manual-17101703';
+const dir='snapshots/codex-growth-manual-17101703';
 const g=new Game(0,JSON.parse(fs.readFileSync(`${dir}/initial.json`,'utf8')));
 const ds=fs.readFileSync(`${dir}/decisions.jsonl`,'utf8').trim().split('\n').map(JSON.parse);
 const mirror=[],activations={},checks={};

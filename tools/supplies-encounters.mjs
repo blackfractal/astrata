@@ -1,14 +1,18 @@
+import { snapshotPath } from './artifact-paths.mjs';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {Game} from '../src/engine.mjs';
 import {WeightedPolicy} from '../src/policy.mjs';
 import {items} from '../src/content.mjs';
-const dir=process.argv[2]||'reports/supplies-encounters-4.0.14';fs.mkdirSync(dir,{recursive:true});
-fs.writeFileSync(dir+'/sources.json',JSON.stringify(Object.fromEntries(fs.readdirSync('src').filter(n=>n.endsWith('.mjs')).map(n=>[n,fs.readFileSync('src/'+n,'utf8')]))));
+const dir=process.argv[2]||'reports/supplies-encounters-4.0.14';
+const snapshots = snapshotPath(dir);
+fs.mkdirSync(snapshots, { recursive: true });
+fs.mkdirSync(dir, { recursive: true });
+fs.writeFileSync(snapshots+'/sources.json',JSON.stringify(Object.fromEntries(fs.readdirSync('src').filter(n=>n.endsWith('.mjs')).map(n=>[n,fs.readFileSync('src/'+n,'utf8')]))));
 const summary=[];
-const builds={loom:JSON.parse(fs.readFileSync('reports/loom-balance-20261023/final-engine-blackBile/initial.json')),late:JSON.parse(fs.readFileSync('reports/apex-500-review-4.0.13/initial.json'))};
+const builds={loom:JSON.parse(fs.readFileSync('snapshots/loom-balance-20261023/final-engine-blackBile/initial.json')),late:JSON.parse(fs.readFileSync('snapshots/apex-500-review-4.0.13/initial.json'))};
 for(const enemy of ['blackBile','bombadier','trickster','mindHive','cnidarian','refractionCannon','apex'])for(const item of ['baseline','prismaticBracelet','reservoirBracelet','reclaimerBracelet','lastStandBracelet','echoRing','resonanceHelm','remembranceArmor']){
- if(fs.existsSync(`${dir}/${enemy}-${item}.json`)){summary.push(JSON.parse(fs.readFileSync(`${dir}/${enemy}-${item}.json`)).result);continue;}
+ if(fs.existsSync(`${dir}/${enemy}-${item}.json`)){summary.push(JSON.parse(fs.readFileSync(`${snapshots}/${enemy}-${item}.json`)).result);continue;}
  const stratum=['blackBile','bombadier','trickster'].includes(enemy)?2:enemy==='apex'?4:3;
  const s=structuredClone(builds[stratum===2?'loom':'late']);
  s.stratum=stratum;s.hp=70;s.maxHp=70;s.mode='field';delete s.checkpoint;delete s.battle;delete s.apex;s.rng=971230;
@@ -24,6 +28,6 @@ for(const enemy of ['blackBile','bombadier','trickster','mindHive','cnidarian','
  assert.notEqual(g.s.mode,'battle');
  const replay=new Game(0,initial);for(const a of trace)replay.act(a);assert.deepEqual(JSON.parse(JSON.stringify(replay.s)),JSON.parse(JSON.stringify(g.s)));
  const result={enemy,item,stratum,hp:g.s.hp,outcome:g.s.mode==='result'?'loss':'victory',turns:g.s.battle.turn,enemyHP:g.s.battle.enemies[0].hp,used:g.s.stats.consumablesUsed?.slice(-6),replayVerified:true};
- fs.writeFileSync(`${dir}/${enemy}-${item}.json`,JSON.stringify({initial,trace,final:g.s,turnLog:turns,result}));summary.push(result);console.log(enemy,item,result.outcome,result.hp);
+ fs.writeFileSync(`${snapshots}/${enemy}-${item}.json`,JSON.stringify({initial,trace,final:g.s,turnLog:turns,result}));summary.push(result);console.log(enemy,item,result.outcome,result.hp);
 }
 fs.writeFileSync(dir+'/summary.json',JSON.stringify(summary,null,2));
