@@ -191,3 +191,7 @@ Four distinct top-down field images now distinguish the floors. The battle backg
 ### Clear staircase placement (4.0.38)
 
 When central Ascend appears after the first Archon victory, move all existing entities on that space exactly one space north. Includes enemies, Items, Gold, Events and Taverns; preserve their IDs, stats, loot values and achievement tracking. Do not move the player or push anything already occupying the destination; entities may share that northern space. Apply once, including a one-time correction for older saves on Continue, without consuming player movement. Later enemy movement is unchanged.
+
+## Hidden route clarification — 2026-10-30 (not implemented)
+
+Jonathan reaffirmed Calm the Apex Predator: obtain a special potion, then use it on the Predator at exactly1HP to calm it and enter hiddenS5, where Astrata herself is the opponent. Other established secret prerequisites, including A Little Kindness, still apply. Potion acquisition/recipe and exact transition rules remain open. See the main design's “Hidden S5 route” section; this does not change ordinary S4 victory or add gameplay yet.

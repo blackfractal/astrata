@@ -2102,3 +2102,26 @@ Follow-up to round238: Jonathan confirmed he should bypass the already-forced Co
 2026-10-26. Jonathan requested moving raw snapshots into an ignored directory while leaving existing Git history intact. Moved 4,360 files (about 1.43 GB), including saves, rewind backups, run archives, replay traces and frozen experiment builds, from reports/ to matching snapshots/ paths. Verified every moved file by SHA-256; local inventory: snapshots/migration-20261026.json. Retained reports, summary statistics, screenshots, provenance and tracked replay harnesses; curated _knowledge/situations/ remains unchanged. Updated evaluation/manual-play/replay tools and explicit references for the new layout. New artifact-paths helper splits reports from snapshots without changing custom paths outside reports/.
 
 Validation: 268 scripts passed syntax checks; ten archived Apex attempts replayed 2,522 legal decisions with exact HP, mode, RNG and battle results; a fresh 141-decision batch wrote summaries to reports/ and raw archives/builds to snapshots/; Git ignore and deletion inventory checks passed; no full game-state JSON remains in reports/. Live profile, game rules, release and Git history unchanged. Version remains 4.0.40; no commit/push. Approximately 15 minutes for inventory, migration, tool updates and verification (estimate).
+
+
+## Title screen and Archives — round246
+
+2026-10-30. Jonathan requested immediate title/Archives cleanup on main before a later gameplay UI branch. Version4.0.41/design4.261 removes title eyebrow/footer, uses “Your mind is the battlefield.”, moves controls help into Settings and fits both Continue entries. Archives opens Cards with five top tabs, expandable filters, four-corner card stats and full inspection. Consolidated Spoolkeeper/Oracle tutorial identities, preserved independently discovered variants, retired three demoted-S2 boss achievements without deleting earned records, retained20-run display/all-run storage. Added _plans/ui_design_v2.md separating delivered changes from future gameplay/mobile experiments. All812tests and isolated packaged-renderer Edge checks pass at1600×900/1280×720; screenshots reviewed. Electron/Playwright protocol assertion required the existing Edge fallback. No gameplay/save changes; rules remain4.0.40. Approximately35minutes additional implementation/documentation/verification/packaging (estimate). Report reports/title-archives-ui-report.md. No commit/push.
+
+
+2026-10-30 follow-up to round246: Jonathan classified the Apex Predator as an Archon, removing the separate Boss Archives rank/detail override. Existing gameplay definition was already Archon; combat is unchanged. Updated design/UI plan and packaged4.0.41. Archive tests and a direct Predator filter assertion passed. Approximately2minutes additional work.
+
+
+## Achievement descriptions and challenges — round247
+
+2026-10-30. Jonathan requested public achievement requirements except four secret question-mark descriptions, plus Blast Miser, Shield Miser, On a Strict Diet, Masochist, Sedentary Lifestyle, Elemental Purity and Pop Goes the Weasel. Version4.0.42/design4.262. Starter-only Miser tracking, consumable use, spawned-Tavern visits and <20 chosen map steps persist through saves/restarts and award on normal S4 victory; untracked legacy histories remain unknown. Purity uses final printed elements: Arcane plus at most one other, per revised request. One-hit Archon evidence is recorded per damage hit and awarded only after surviving the encounter. Verified a constructed legal final-action setup dealing306Fire with Resonant Grove/Transmute/Fury Sap against276HP Black Bile; not a full-run proof. All824tests and packaged renderer Archives checks pass; report reports/achievement-challenges-report.md. Approximately40minutes additional work (estimate, including clarification/verification/documentation/packaging). User save untouched. No commit/push.
+
+
+2026-10-30 follow-up to round247: Jonathan noticed inconsistent achievement text indentation. The65px icon flex item could shrink according to adjacent copy length, independently of earned state. Fixed its flex basis at65px and allowed the text column to wrap. Packaged4.0.42 refreshed; Archives UI smoke/screenshots checked. Approximately2minutes additional work.
+
+
+2026-10-30 copy follow-up: Jonathan requested “Complete a run” instead of “Complete Strata1–4” in all achievement descriptions. Updated all seven full-run descriptions, including Without the Menders and Elemental Purity, with no change to qualification. Design/UI notes updated and packaged4.0.42 refreshed. Approximately1minute additional work.
+
+2026-10-30 Archives polish: Jonathan requested shorter descriptions for seven challenges and a divider between the tabs and ARCHIVES heading. Simplified that copy without changing achievement rules; added a full-width divider with spacing below the tabs. Packaged4.0.42 refreshed. Approximately2minutes additional work (estimate).
+
+2026-10-30 Archives spacing follow-up: removed the inherited fixed game-header height from Archives so its heading fits naturally below the tab divider, and increased padding below the large page title to28px. Prevents title descenders overlapping the scroll area. Packaged4.0.42 refreshed. Approximately2minutes additional work (estimate).

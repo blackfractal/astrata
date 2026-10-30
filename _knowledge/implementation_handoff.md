@@ -1,3 +1,15 @@
+## Latest: Achievement expansion — 4.0.42 / 2026-10-30
+
+Still on main for Jonathan to commit/push. Public descriptions except exact four secrets (Calm Apex, I Stand Alone, Calm Astrata, A Little Kindness) show18questionmarks. Seven new achievements: starter-only Blast/Shield Miser, no consumables, no spawned Taverns (intermissions allowed), <20 map steps (not movement turns), Arcane+at most1other printed element final Grimoire, full-HP Archon one-hit with surviving encounter. First5 use stats.runChallenges initialized only for new runs; legacy gaps unknown, checkpoint violations retained. Purity can use complete legacy final-deck evidence. One-hit records on enemies commit into victorious encounter.oneHitArchons, including surviving Choir Final Note. Report achievement-challenges-report.md, BUILD_LOG247, design4.262;824tests and packaged Edge UI pass. No combat balance/save changes or commit/push.
+
+Owner also reaffirmed future secret route: special potion on Apex Predator at exactly1HP calms it and opensS5 to Astrata, alongside other prerequisites. Planning only; potion acquisition/transition details unresolved. UI design plan and main/S4 docs updated.
+
+## Latest: Title screen and Archives on main — 2026-10-30
+
+Jonathan changed the requested branch workflow: finish title/Archives on main first so he can commit/push, then revisit gameplay UI on a separate branch. Current main contains4.0.41; no commit/push. `design/ui-v2` was created before clarification and has no independent commits; update its base after Jonathan's main commit before using it. `_plans/ui_design_v2.md` records implemented first pass, achievement meanings and future brainstorming. Do not implement battle/mobile redesign without the next discussion.
+
+Title concise, controls in Settings; Archives directly Cards with top five tabs, expandable filters, consistent four-corner stats. Tutorial enemy stages consolidated without revealing unknown regular Oracle. Three obsolete S2 boss achievements retired, earned data preserved. All812tests passed plus packaged Edge UI checks (Electron launcher protocol assertion; no shell changes). User profile untouched. `reports/title-archives-ui-report.md`, BUILD_LOG246, design4.261. Rules4.0.40/content4.0.41. Packaged app refreshed.
+
 ## Latest: Local snapshot storage — 2026-10-26
 
 Jonathan requested raw snapshots move out of reports and explicitly approved leaving old Git history intact. Use ignored `snapshots/<experiment>/` for states, rewind backups, action traces, run archives and frozen builds. Keep readable reports, screenshots, analysis and summary statistics in `reports/<experiment>/`. Tools now split their outputs accordingly; see `reports/README.md` and `tools/artifact-paths.mjs`. Existing raw files were moved with SHA-256 verification; the local move inventory is `snapshots/migration-20261026.json`. Curated `_knowledge/situations/` and the live game profile were not changed. No history rewrite, version bump, repackaging, commit or push for this organizational change.

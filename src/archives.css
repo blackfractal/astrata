@@ -1,6 +1,6 @@
 .archives {
   height: 100%;
-  padding: 42px 60px;
+  padding: 28px 60px;
   display: flex;
   flex-direction: column;
   background:
@@ -8,12 +8,13 @@
 }
 .archives-heading {
   position: static;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--gold);
   background: none;
-  padding: 0 0 22px;
+  padding: 0 0 28px;
   flex: none;
 }
 .archives h1 {
@@ -27,45 +28,6 @@
   flex: 1;
   padding: 24px 4px;
 }
-.archive-intro {
-  font-size: 21px;
-  color: var(--muted);
-  margin: 0 0 30px;
-}
-.archive-volumes {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-}
-.archive-volume {
-  position: relative;
-  min-height: 330px;
-  text-align: left;
-  padding: 32px 24px;
-  background: linear-gradient(100deg, #39483255, #172a22 12%, #172a22);
-  border: 1px solid var(--line);
-  border-left: 6px double var(--gold);
-}
-.archive-volume h2 {
-  font-size: 29px;
-  margin: 60px 0 8px;
-}
-.archive-volume > span:not(.archive-numeral) {
-  color: var(--muted);
-}
-.archive-volume > b {
-  position: absolute;
-  right: 22px;
-  bottom: 24px;
-  font-size: 25px;
-  color: var(--gold);
-}
-.archive-numeral {
-  font-family: Georgia, serif;
-  font-size: 44px;
-  color: var(--gold);
-}
-.archive-volume:hover,
 .archive-entry:hover {
   border-color: var(--gold);
   background-color: #304632;
@@ -73,7 +35,9 @@
 .archive-tabs {
   display: flex;
   gap: 9px;
-  margin-top: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 24px;
   flex: none;
 }
 .archive-tabs button {
@@ -85,11 +49,14 @@
   color: var(--gold);
   border-bottom-color: var(--gold);
 }
+.archive-tabs [data-archive-back] {
+  margin-left: auto;
+}
 .archive-filters {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-bottom: 22px;
+  gap: 18px;
+  margin-bottom: 12px;
   color: var(--muted);
 }
 .archive-filters > span {
@@ -101,7 +68,9 @@
   gap: 10px;
 }
 .archive-filters input,
-.archive-filters select {
+.archive-filters select,
+.archive-filter-panel select,
+.archive-variant select {
   background: #182b24;
   color: var(--paper);
   border: 1px solid var(--line);
@@ -109,7 +78,7 @@
 }
 .archive-gallery {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 20px;
 }
 .archive-entry {
@@ -122,11 +91,121 @@
   display: flex;
   flex-direction: column;
 }
-.archive-entry > img {
+.archive-art > img {
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
   display: block;
+}
+.archive-art {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.archive-stat {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  min-height: 55px;
+  padding: 4px;
+  border: 1px solid #c2ad7899;
+  background: #10231ff2;
+  box-shadow: 0 2px 10px #0008;
+  color: #f6eedb;
+  border-radius: 4px;
+  line-height: 1.05;
+}
+.archive-stat small {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: #c8c7ae;
+}
+.archive-stat b {
+  font:
+    24px Georgia,
+    serif;
+}
+.archive-stat-focus {
+  top: 8px;
+  left: 8px;
+}
+.archive-stat-channel {
+  top: 8px;
+  right: 8px;
+}
+.archive-stat-uses {
+  bottom: 8px;
+  left: 8px;
+}
+.archive-stat-recall {
+  bottom: 8px;
+  right: 8px;
+}
+.archive-art-detail > img {
+  aspect-ratio: auto;
+  max-height: 65vh;
+  object-fit: contain;
+}
+.archive-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+  padding: 18px;
+  margin: 0 0 12px;
+  border: 1px solid var(--line);
+  background: #14241f;
+}
+.archive-filter-panel[hidden] {
+  display: none;
+}
+.archive-filter-panel label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.archive-filter-panel select {
+  min-width: 140px;
+}
+.archive-filter-panel button {
+  margin-left: auto;
+}
+.archive-results-count {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+.archive-empty {
+  grid-column: 1 / -1;
+  padding: 32px 0;
+}
+.archive-entry:hover .archive-art > img {
+  filter: brightness(1.08);
+}
+.archive-entry:focus-visible {
+  border-color: var(--gold);
+}
+.settings-controls {
+  margin: 18px 0;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.settings-controls summary {
+  color: var(--gold);
+  cursor: pointer;
+}
+.settings-controls dl {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px 18px;
+}
+.settings-controls dd {
+  margin: 0;
+  color: var(--muted);
 }
 .archive-entry-copy {
   padding: 12px;
@@ -203,11 +282,21 @@
   font-size: 25px;
   margin: 0 0 8px;
 }
+.achievement-description {
+  margin: 0 0 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 15px;
+}
 .achievement-seal {
   font-size: 46px;
   width: 65px;
+  flex: 0 0 65px;
   text-align: center;
   color: var(--muted);
+}
+.archive-achievement > div {
+  min-width: 0;
 }
 .archive-achievement.earned {
   border-color: var(--gold);

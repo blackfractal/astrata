@@ -10,6 +10,93 @@ import {
   achievements,
 } from "../src/archive-profile.mjs";
 import { createCollectionStore } from "../collection-store.cjs";
+import {
+  archiveEntries,
+  archiveMatches,
+  archiveFacets,
+  archiveCardStats,
+} from "../src/archive-catalog.mjs";
+import { cards, items } from "../src/content.mjs";
+
+test("Archives consolidate tutorial stages without revealing the unseen encounter variant", () => {
+  const entries = archiveEntries("enemies", {
+    mendingTutor: {},
+    mendingWarden: {},
+    whisperTutor: {},
+    whisperWarden: {},
+  });
+  assert.equal(
+    entries.filter((e) => e.definition.name === "Patient Spoolkeeper").length,
+    1,
+  );
+  assert.equal(
+    entries.filter((e) => e.definition.name === "Borrowed Oracle").length,
+    1,
+  );
+  const oracle = entries.find((e) => e.id === "borrowedOracle");
+  assert.deepEqual(
+    oracle.variants.map((v) => v.id),
+    ["whisperWarden"],
+  );
+  assert.equal(archiveMatches(oracle, "enemies", { element: "Light" }), false);
+  const both = archiveEntries("enemies", {
+    borrowedOracle: {},
+    whisperTutor: {},
+  }).find((e) => e.id === "borrowedOracle");
+  assert.equal(both.variants.length, 2);
+  assert.equal(archiveMatches(both, "enemies", { element: "Light" }), true);
+});
+test("Unknown cards cannot be identified by filters, while hybrid roles remain searchable", () => {
+  const unknown = archiveEntries("cards").find((e) => e.id === "blast");
+  assert.equal(archiveMatches(unknown, "cards"), true);
+  for (const filter of [
+    { element: "Arcane" },
+    { query: "Blast" },
+    { role: "Attack" },
+    { visibility: "seen" },
+  ])
+    assert.equal(archiveMatches(unknown, "cards", filter), false);
+  const sapling = archiveEntries("cards", { sapling: {} }).find(
+    (e) => e.id === "sapling",
+  );
+  assert.ok(
+    archiveMatches(sapling, "cards", { role: "Attack", element: "Earth" }),
+  );
+  assert.ok(archiveMatches(sapling, "cards", { role: "Defense" }));
+  assert.deepEqual(archiveFacets("equipment", items.gold).category, [
+    "Bracelet",
+  ]);
+  assert.equal(archiveCardStats(cards.undertow)[0].value, "1+");
+  assert.equal(archiveCardStats(cards.undertow)[1].value, "—");
+});
+test("Legacy enemy names respect tutorial context and retired achievements retain earned data", () => {
+  const normal = emptyCollection(),
+    tutorial = emptyCollection();
+  const stats = {
+    encounters: [{ enemies: ["Borrowed Oracle"], outcome: "victory" }],
+  };
+  discover(normal, { stats });
+  discover(tutorial, { stats, tutorial: { id: "stratum3" } });
+  assert.ok(normal.enemies.borrowedOracle);
+  assert.equal(normal.enemies.whisperTutor, undefined);
+  assert.ok(tutorial.enemies.whisperTutor);
+  assert.equal(tutorial.enemies.borrowedOracle, undefined);
+  const old = { earnedAt: "before-demotion" };
+  normal.achievements["defeat-censer"] = old;
+  discover(normal, {
+    stats: {
+      encounters: [
+        {
+          enemies: ["The Censer Engine", "The Seamstress of Absence"],
+          outcome: "victory",
+        },
+      ],
+    },
+  });
+  assert.equal(normal.achievements["defeat-censer"], old);
+  assert.equal(normal.achievements["defeat-seamstress"], undefined);
+  assert.equal(achievements.filter((a) => a.retired).length, 3);
+});
 test("Discovery retains all visible offers but never reads future queues, deck pools or hidden boss", () => {
   const c = emptyCollection();
   discover(
@@ -72,7 +159,7 @@ test("Boss achievements require confirmed non-tutorial victories, including earl
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
   discover(c, state, "later");
   assert.equal(c.achievements["defeat-choir"].earnedAt, "earned");
-  assert.equal(achievements.length, 18);
+  assert.equal(achievements.length, 25);
   state.stats.encounters.push(
     ...["The Black Bile", "King Bombadier", "The Trickster"].map((name) => ({
       enemies: [name],

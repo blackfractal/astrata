@@ -1107,6 +1107,7 @@ export class Game {
       log: [],
       history: [],
       stats: {
+        runChallenges: { trackedFromStart: true, placements: {}, consumablesUsed: 0, spawnedTavernsVisited: 0, movement: 0 },
         damageDealt: 0,
         damageTaken: 0,
         goldEarned: 0,
@@ -3030,7 +3031,10 @@ export class Game {
     const guard = Math.min(d, e.guard);
     e.guard -= guard;
     d -= guard;
+    const hpBefore = e.hp;
     e.hp -= d;
+    if (!e.ideon && e.tier === "Archon" && hpBefore === e.maxHp && e.hp <= 0)
+      e.oneHitDefeat = { enemy: e.id, enemyUid: e.uid, maxHp: e.maxHp, hpBefore, damage: d, element, sourceCard: activation.card ?? null, sourceItem };
     if (e.kind === "tentacle" && e.hp <= 0) {
       const slot = sourceItem == null
         ? b.grid.findIndex(stack => stack.some(c => c.uid === activation.card))
@@ -3465,6 +3469,8 @@ export class Game {
       encounter.outcome = "victory";
       encounter.turns = b.turn;
       encounter.hpEnd = s.hp;
+      const oneHitArchons = b.enemies.filter(e => e.oneHitDefeat).map(e => clone(e.oneHitDefeat));
+      if (oneHitArchons.length) encounter.oneHitArchons = oneHitArchons;
       const original = b.enemies.filter((e) => e.entityUid);
       if (original.some((e) => e.herald)) s.revealedArchon = s.archon;
       const boss = original.some((e) => e.tier === "Archon"),
@@ -3572,6 +3578,10 @@ export class Game {
     this.log("A Tavern welcomes you before " + STRATA[next].name + ".");
   }
   openTavern({ afterStratum = null } = {}) {
+    if (afterStratum == null) {
+      const challenges = this.s.stats.runChallenges ||= { trackedFromStart: false, placements: {}, consumablesUsed: 0, spawnedTavernsVisited: 0, movement: 0 };
+      challenges.spawnedTavernsVisited++;
+    }
     this.s.mode = "tavern";
     this.s.shop = {
       afterStratum,
@@ -3644,6 +3654,8 @@ export class Game {
       b = s.battle,
       item = this.getItem(a.uid),
       f = potionEffects(item);
+    const challenges = s.stats.runChallenges ||= { trackedFromStart: false, placements: {}, consumablesUsed: 0, spawnedTavernsVisited: 0, movement: 0 };
+    challenges.consumablesUsed++;
     const healed = f.heal ? Math.min(f.heal, s.maxHp - s.hp) : 0;
     if (healed) s.hp += healed;
     if (f.focus) b.focus += f.focus;
@@ -4509,6 +4521,8 @@ export class Game {
         break;
       case "move": {
         const from = { x: s.field.x, y: s.field.y };
+        const challenges = s.stats.runChallenges ||= { trackedFromStart: false, placements: {}, consumablesUsed: 0, spawnedTavernsVisited: 0, movement: 0 };
+        challenges.movement++;
         s.field.leftSupplies = [];
         s.field.x = a.x;
         s.field.y = a.y;
@@ -4852,6 +4866,9 @@ export class Game {
       case "place": {
         const c = b.hand.find((x) => x.uid === a.uid),
           d = cards[c.id];
+        // Missing legacy evidence is unknown, never proof that no card was placed.
+        const challenges = s.stats.runChallenges ||= { trackedFromStart: false, placements: {}, consumablesUsed: 0, spawnedTavernsVisited: 0, movement: 0 };
+        challenges.placements[c.id] = (challenges.placements[c.id] || 0) + 1;
         b.hand = b.hand.filter((x) => x.uid !== a.uid);
         b.focus -= a.costs.focus;
         b.milky = false;
@@ -5140,6 +5157,8 @@ export class Game {
     }
     if (s.checkpoint && challenge)
       s.checkpoint.stats.withoutMenders = clone(challenge);
+    if (s.checkpoint && s.stats.runChallenges)
+      s.checkpoint.stats.runChallenges = clone(s.stats.runChallenges);
     finishInspiration(this,a);
     refreshBossPlans(this);
     tutorialAfter(this, a);

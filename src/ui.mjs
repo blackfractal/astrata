@@ -321,7 +321,7 @@ function menu() {
   app.classList.remove("battle-scene", "in-loom", "in-depths", "in-apex");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero"><div class="hero-copy"><div class="sigil"><span>✧</span></div><div class="eyebrow">A journey through the Strata</div><h1>ASTRATA</h1><p>A living spellbook.<br>A forest that will not rest.<br>Make room for what comes next.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav><div class="hero-foot muted">STRATA 1–4 · v4 · Mouse / Enter / Escape</div></div></section>`;
+  app.innerHTML = `<section class="hero hero-title"><div class="hero-copy"><div class="sigil"><span>✧</span></div><h1>ASTRATA</h1><p>Your mind is the battlefield.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav></div></section>`;
   bind();
 }
 async function persist() {
@@ -737,7 +737,7 @@ function showSettings() {
       )
       .join(
         "",
-      )}</select></label><label>Fast animations <input id="fast" type="checkbox" ${settings.fast ? "checked" : ""}></label><label>Music <input id="music" type="range" min="0" max="100" value="${settings.music}"></label><label>Effects <input id="effects" type="range" min="0" max="100" value="${settings.effects}"></label><small>This edition is silent. Volume settings are retained for future audio.</small><div style="margin-top:20px"><button class="primary" data-ui="applySettings">Apply</button></div>`,
+      )}</select></label><label>Fast animations <input id="fast" type="checkbox" ${settings.fast ? "checked" : ""}></label><label>Music <input id="music" type="range" min="0" max="100" value="${settings.music}"></label><label>Effects <input id="effects" type="range" min="0" max="100" value="${settings.effects}"></label><small>This edition is silent. Volume settings are retained for future audio.</small><details class="settings-controls"><summary>Controls</summary><dl><dt>Mouse</dt><dd>Click to select. Drag cards to place, attune or target.</dd><dt>Enter</dt><dd>Use the focused button or the current primary action.</dd><dt>Escape</dt><dd>Close a window, leave Archives or open the game menu.</dd></dl></details><div style="margin-top:20px"><button class="primary" data-ui="applySettings">Apply</button></div>`,
   );
 }
 async function tutorialSignal(control) {
