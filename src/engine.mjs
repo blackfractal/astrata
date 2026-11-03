@@ -1,3 +1,4 @@
+import { synergyBonus, enhancementBonus, normalizeSynergyState } from "./synergy-rules.mjs";
 import {elementalLine} from "./elemental-formations.mjs";
 import {PREMIUM_GEAR} from "./premium-gear.mjs";
 import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
@@ -368,6 +369,7 @@ export function cardPower(b, c, i, target = null) {
     : f.damage
       ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
       : 0;
+  n += synergyBonus(b, c);
   if (f.focusDamage) n += f.focusDamage * Math.max(0,Math.min(3,b.focus));
   if (f.nearDamage && target?.ideon && Number.isInteger(target.slot) &&
       Math.abs(i % MIND_COLUMNS - target.slot % MIND_COLUMNS) +
@@ -976,6 +978,7 @@ export class Game {
       normalizeCardCaps(this.s);
       normalizeCharges(this.s);
       normalizeEquipmentHealing(this.s);
+      normalizeSynergyState(this.s);
       normalizeLoomRoster(this.s);
       normalizeLoomRotations(this.s);
       normalizeUtilityMelds(this.s);
@@ -1908,6 +1911,8 @@ export class Game {
       corruptions: {},
       ideons: [],
       deck: clone(s.deck),
+      grimoire: s.deck.map(({ id, uid }) => ({ id, uid })),
+      elementEnhancements: {},
       hand: [],
       discard: [],
       destroyed: [],
@@ -3119,6 +3124,17 @@ export class Game {
       }
       c.charge = 0;
     }
+    if (f.enhance) {
+      b.elementEnhancements ||= {};
+      b.elementEnhancements[d.element] = (b.elementEnhancements[d.element] || 0) + f.enhance;
+      const slots = b.grid.flatMap((stack, slot) => {
+        const other = top(stack);
+        return other && other.uid !== c.uid && cards[other.id].element === d.element &&
+          hasDirectDamageActivation(other) ? [slot] : [];
+      });
+      this.present("enhance", { slot: i, slots, element: d.element, amount: f.enhance, name: d.name });
+      this.log(`${d.name}: printed ${d.element} attacks gain +${f.enhance} damage for this battle (+${b.elementEnhancements[d.element]} total).`);
+    }
     if (f.transmute) {
       const victim = top(b.grid[a.cardTarget]);
       if (victim) {
@@ -3266,13 +3282,13 @@ export class Game {
         attackResolved = true;
         const old = e.hp;
         let n = f.randomDamage
-          ? 1 + Math.floor(this.rand() * f.randomDamage)
+          ? corruptionPower(b, i, 1 + Math.floor(this.rand() * f.randomDamage) + enhancementBonus(b, c))
           : cardPower(b, c, i, e);
         if (f.focusDamage) n = corruptionPower(b,i, growthDamage(b,c,i,f.damage + f.focusDamage * (a.focusSpend || 0)));
         if (f.forked) n = corruptionPower(b,i,routeShares.find(x=>x.uid===e.uid).damage + growthDamage(b,c,i,0));
         if (f.ivy) n = corruptionPower(b,i,growthDamage(b,c,i,f.damage + targets.indexOf(e)*4));
         if (f.ideonDouble && e.ideon) n *= 2;
-        if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus);
+        if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus + enhancementBonus(b, c));
         n = (n + supply.damageBonus) * supply.damageMultiplier;
         if (n) {
           const prism =
@@ -4223,7 +4239,7 @@ export class Game {
           if (d.effects.placementStrike) {
             const cost = d.focus + (b.milky ? 1 : 0);
             if (cost <= b.focus) for (const e of legalHostiles(b))
-              add("placeStrike", `${d.name} → ${e.name} · ${cost} Focus`, {uid:c.uid,target:e.uid}, {card:c.id,damage:e.ideon?20:10,element:c.element||d.element}, {focus:cost});
+              add("placeStrike", `${d.name} → ${e.name} · ${cost} Focus`, {uid:c.uid,target:e.uid}, {card:c.id,damage:(e.ideon?20:10)+enhancementBonus(b,c),element:c.element||d.element}, {focus:cost});
             continue;
           }
           for (let i = 0; i < b.grid.length; i++) {

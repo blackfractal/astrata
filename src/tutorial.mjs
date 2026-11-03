@@ -415,7 +415,7 @@ activate(
 reward(
   "water-reward",
   "water",
-  "Take Water Blast. It will help with the upcoming lesson about elements.",
+  "Take Crashing Wave. It will help with the upcoming lesson about elements.",
 );
 back("rootling-back");
 note(
@@ -532,12 +532,12 @@ action(
   { type: "consume", itemId: "insightDew" },
   ".consumable-tray",
 );
-place("water-place", "water", 22, "Place Water Blast on the marked space.");
+place("water-place", "water", 22, "Place Crashing Wave on the marked space.");
 phase("water-phase");
 activate(
   "water-attack",
   22,
-  "Water Blast's 7 becomes 11 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
+  "Crashing Wave's 8 becomes 12 against Fire. Your unsocketed Ring adds a neutral 2. Drag over the enemy without releasing the mouse button to see a preview of the damage change from the elemental matchup. Release over the enemy when you are ready to attack.",
 );
 end("ember-enemy");
 defend(
@@ -557,25 +557,25 @@ place(
   "attune-place",
   "blast",
   23,
-  "Place Blast beside Water Blast. An adjacent elemental card gives Blast an Attunement choice.",
+  "Place Blast beside Crashing Wave. An adjacent elemental card gives Blast an Attunement choice.",
 );
 place(
   "potion-shield",
   "shield",
   21,
-  "Spend the extra Focus on this Shield beside Water Blast. You still need Channel to activate it; placement alone provides no Guard.",
+  "Spend the extra Focus on this Shield beside Crashing Wave. You still need Channel to activate it; placement alone provides no Guard.",
 );
 phase("attune-phase");
 activate(
   "attune-attack",
   23,
-  "Select Blast's Activate control, choose the neighboring Water Blast for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6, and your Ring adds 2. The Mote survives so we can answer its Fire attack with Water defense.",
+  "Select Blast's Activate control, choose the neighboring Crashing Wave for attunement, then click or drag onto the enemy. Choosing an element only previews it; you can change your choice or Unattune before committing. Its 4 becomes 6, and your Ring adds 2. The Mote survives so we can answer its Fire attack with Water defense.",
   "Water",
 );
 activate(
   "attune-shield",
   21,
-  "You have 1 Channel left. Select the Shield, choose the neighboring Water Blast to preview Water attunement, then activate the Shield. Its 4 Guard protects for 6 against Fire. The same element cycle helps both attacks and defenses.",
+  "You have 1 Channel left. Select the Shield, choose the neighboring Crashing Wave to preview Water attunement, then activate the Shield. Its 4 Guard protects for 6 against Fire. The same element cycle helps both attacks and defenses.",
   "Water",
 );
 end("water-shield-enemy");

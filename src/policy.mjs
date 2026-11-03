@@ -1,3 +1,4 @@
+import { synergyBonus } from "./synergy-rules.mjs";
 import {growthScore} from "./growth-policy.mjs";
 import { areaHits } from "./area-targets.mjs";
 import { cards, items, enemies, VERSION } from "./content.mjs";
@@ -110,7 +111,8 @@ export class WeightedPolicy {
     if (!d) return 0;
     const e = d.effects;
     return (
-      (e.damage || 0) / (d.charge ? d.charge + 1 : 1) +
+      ((e.damage || 0) + synergyBonus({grimoire:o?.deck || []}, {id,uid:"offer"})) / (d.charge ? d.charge + 1 : 1) +
+      (e.enhance ? Math.min(18, (o?.deck || []).filter(c=>cards[c.id].element===d.element && (hasDirectDamageActivation(c) || cards[c.id].effects.placementStrike)).length * 3) : 0) +
       (d.hp || 0) * 0.6 +
       (e.ward || 0) * 0.55 +
       (e.shield || 0) * 0.4 +

@@ -1,3 +1,4 @@
+import { printedDeck, synergyBonus } from "./synergy-rules.mjs";
 import { cards } from "./content.mjs";
 import { formationReady, formationSlots, diagonals } from "./growth-rules.mjs";
 import { enemyDamage, hasDirectDamageActivation, adjacent } from "./engine.mjs";
@@ -7,6 +8,17 @@ export function growthScore(o, a) {
   if (!b) return 0;
   const d = cards[a.effects.card],
     f = a.effects;
+  if (a.type === "place" && d?.effects.deckSynergy || a.type === "place" && d?.effects.prismaticSynergy) {
+    const c = b.hand.find(c => c.uid === a.uid);
+    return c ? synergyBonus(b,c) : 0;
+  }
+  if ((a.type === "place" || a.type === "activate") && d?.effects.enhance) {
+    const eligible = printedDeck(b).filter(c => cards[c.id].element === d.element &&
+      (hasDirectDamageActivation(c) || cards[c.id].effects.placementStrike));
+    const ready = b.grid.map(s=>s.at(-1)).filter(c=>c && cards[c.id].element === d.element &&
+      hasDirectDamageActivation(c) && c.used < cards[c.id].limit && c.lastActivatedTurn !== b.turn).length;
+    return Math.min(12, eligible.length * 1.5) + ready * 2 - (eligible.length ? 0 : 12);
+  }
   if (a.type === "placeStrike") {
     const e = [...b.enemies, ...(b.ideons || [])].find(
       (e) => e.uid === a.target,

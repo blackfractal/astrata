@@ -41,7 +41,7 @@ test("Ordinary S4 wins award independent Miser and Diet challenges; ownership an
   for (const id of ["blast-miser", "shield-miser", "strict-diet", "masochist"])
     assert.ok(earned[id]);
 });
-test("Placing an upgraded or recolored starter disqualifies only its own Miser; Water Blast is allowed", () => {
+test("Placing an upgraded or recolored starter disqualifies only its own Miser; Crashing Wave is allowed", () => {
   const g = fixture();
   place(g, "water", 0);
   place(g, "blast", 2, 1);

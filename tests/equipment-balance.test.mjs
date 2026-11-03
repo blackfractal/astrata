@@ -99,7 +99,7 @@ test("Charge building and status-only activations preserve the Ring, including m
   heat.attachedTo = host.uid;
   h.s.battle.grid[0].unshift(heat);
   activate(h, 0);
-  assert.equal(h.s.battle.enemies[0].hp, 991);
+  assert.equal(h.s.battle.enemies[0].hp, 990); // Crashing Wave 8 + Ring 2.
   assert.equal(h.s.battle.enemies[0].status.burn, 2);
 });
 test("Negated, guarded or lethal opening attacks spend the Ring without moving its proc to another target", () => {

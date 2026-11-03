@@ -1,3 +1,4 @@
+import { enhancementBonus } from "./synergy-rules.mjs";
 import {supplyPreview} from './supplies.mjs';
 import {sourceSlots,growthGuard,wardGain,growthReason} from "./growth-rules.mjs";
 import {attackPreview} from "./combat-preview.mjs";
@@ -125,7 +126,7 @@ function effect(c, slot, ctx) {
             ? ` → +${activationGrowth(ctx.o.battle, c, slot)} HP`
             : "")
         : f.randomDamage
-          ? "Deal 1–" + f.randomDamage
+          ? `Deal ${1 + enhancementBonus(ctx.o.battle, c)}–${f.randomDamage + enhancementBonus(ctx.o.battle, c)}`
           : null,
       f.shield
         ? `Shield <b class="shield-value" data-tooltip="${ctx.esc(statHelp(ctx.o.battle, c, slot, ctx.o.bonuses.shield))}">${(corruptionPower(ctx.o.battle, slot, growthGuard(ctx.o.battle,c,slot) + (f.matchingShield || 0) * matching)+supplyBoost.guardBonus)*supplyBoost.guardMultiplier}</b>${d.name.includes("Shield") && ctx.o.bonuses.shield ? ` <span class="gear-shield-bonus" title="Equipment bonus added on activation">(+${shieldGear*supplyBoost.guardMultiplier})</span>` : ""}`
@@ -160,6 +161,7 @@ function effect(c, slot, ctx) {
         ? `Insight +${insightGain(ctx.o.battle, c, slot)} next turn`
         : null,
       f.channel ? `Channel +${f.channel}` : null,
+      f.enhance ? `${d.element} attacks +${f.enhance} this battle` : null,
       f.bodyGuard ? `Player Guard +${corruptionPower(ctx.o.battle,slot,f.bodyGuard)}` : null,
       f.borrowInsight ? `−${f.borrowInsight} Insight next turn` : null,
       f.spendFocus ? `Spend ${f.spendFocus} Focus` : null,

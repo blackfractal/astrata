@@ -1,3 +1,4 @@
+import { registerSynergy } from "./synergy-content.mjs";
 import {addPremiumEvents} from "./premium-gear.mjs";
 import {addSupplies, socketPrice} from "./supplies-content.mjs";
 import { registerApex } from "./apex-content.mjs";
@@ -11,8 +12,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.42",
-  content: "4.0.42",
+  rules: "4.0.45",
+  content: "4.0.45",
   observation: 2,
   actions: 10,
 };
@@ -168,7 +169,7 @@ card(
   { damage: 5, row: 2, rowPenalty: 2 },
   "Deal 5 damage, +2 per other Fire card and -2 per Water card in this row. Minimum 0. Activated attunements count.",
 );
-card("water", "Water Blast", "Water", "Spell", 1, 2, hit(7), "Deal 7 damage.");
+card("water", "Crashing Wave", "Water", "Spell", 1, 2, hit(8), "Deal 8 damage.");
 card(
   "gust",
   "Gust",
@@ -387,8 +388,8 @@ card(
   "Spell",
   1,
   2,
-  hit(14),
-  "Charge 1. When fully charged, spend a separate activation to deal 14 damage, then reset to 0.",
+  hit(20),
+  "Charge 1. When fully charged, spend a separate activation to deal 20 damage, then reset to 0.",
   { charge: 1 },
 );
 card(
@@ -1865,6 +1866,7 @@ registerStratum2(card, enemy, glossary);
 
 registerDepths(card, enemy, glossary, events);
 registerGrowth(card);
+registerSynergy(card);
 for (const [kind, d] of Object.entries(ideonDefs))
   enemies["ideon_" + kind] = {
     ...d,

@@ -1,3 +1,4 @@
+import { enhancementBonus } from "./synergy-rules.mjs";
 import { cards } from "./content.mjs";
 import { wardGain } from "./growth-rules.mjs";
 import { CORRUPTIONS } from "./strata.mjs";
@@ -420,7 +421,7 @@ export function compelCard(g, i, q, forced = false) {
   }
   if (d.charge) c.charge = 0;
   const damage = f.randomDamage
-    ? corruptionPower(b, i, 1 + Math.floor(g.rand() * f.randomDamage))
+    ? corruptionPower(b, i, 1 + Math.floor(g.rand() * f.randomDamage) + enhancementBonus(b, c))
     : g.cardPower(c, i);
   if (damage)
     b.jobs.unshift({

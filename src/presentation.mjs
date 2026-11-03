@@ -637,6 +637,11 @@ export async function playFrames(before, frames, after, renderView, isFast) {
           cell?.classList.add("collision");
           await pause(550);
         }
+      } else if (frame.kind === "enhance") {
+        await Promise.all((frame.slots || []).map(slot =>
+          flash(card(slot), "+" + frame.amount + " damage", false, card(frame.slot), frame.element)));
+        if (!frame.slots?.length) await flash(card(frame.slot), frame.element + " attacks +" + frame.amount, false, null, frame.element);
+        render(frame.state);
       } else if (frame.kind === "shieldBoost") {
         const from = item(frame.sourceItem);
         from?.classList.add("gear-proc");
