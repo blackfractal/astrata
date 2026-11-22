@@ -1,0 +1,4100 @@
+{
+  "version": "4.0.45",
+  "protocol": "Five original seeds, selected local public-information corrections; manual legal decisions; no tuning or hidden-state search.",
+  "validation": [
+    {
+      "id": "1",
+      "actions": 793,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": null,
+      "fork": null,
+      "failure": null
+    },
+    {
+      "id": "1-r1",
+      "actions": 131,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "1",
+        "destination": "1-r1",
+        "step": 647,
+        "reason": "Replay Black Bile from battle start with its player-visible Bile route/target warnings, preventing left-edge Poison routes and recycling drained cards. Keep all prior draft, route, purchases, HP and consumables; Archon was already revealed.",
+        "knownArchon": "The Black Bile",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "2",
+      "actions": 679,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": null,
+      "fork": null,
+      "failure": null
+    },
+    {
+      "id": "2-r1",
+      "actions": 39,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "2",
+        "destination": "2-r1",
+        "step": 505,
+        "reason": "Reconsider visible route before taking an event with multiple approaching enemies. Use public movement categories and current positions; do not use the later event outcome or future spawns.",
+        "knownArchon": "The Black Bile",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "2-r2",
+      "actions": 126,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "2-r1",
+        "destination": "2-r2",
+        "step": 542,
+        "reason": "Clear range correction at round 12: Spoolkeeper is one tile west and can reach every eastern two-step escape near this edge; Borrowed Face hunts regardless. Preempt the adjacent Spoolkeeper to separate fights, rather than move into a predictable combined ambush. Only current visible positions and movement rules are used.",
+        "knownArchon": "The Black Bile",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "2-r3",
+      "actions": 122,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "2-r2",
+        "destination": "2-r3",
+        "step": 665,
+        "reason": "Visible routing error: the item tile was adjacent to the already revealed Black Bile, so ending movement there allowed its approach to cause an ambush. Preempt it directly instead. Do not use knowledge of either item contents or the ensuing boss draw.",
+        "knownArchon": "The Black Bile",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "3",
+      "actions": 215,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": null,
+      "fork": null,
+      "failure": null
+    },
+    {
+      "id": "3-r1",
+      "actions": 114,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "3",
+        "destination": "3-r1",
+        "step": 133,
+        "reason": "Reconsider visible route before knowingly moving near a triple Ashling pack; account for movement and ambush risk using current enemy previews only.",
+        "knownArchon": "The Cinder Hart",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "4",
+      "actions": 228,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": null,
+      "fork": null,
+      "failure": null
+    },
+    {
+      "id": "4-r1",
+      "actions": 18,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "4",
+        "destination": "4-r1",
+        "step": 130,
+        "reason": "Review the state before the next battle transition for a demonstrable routing or tactical correction. Keep earlier drafts and purchases; no future Archon inference.",
+        "knownArchon": "Void-Colossus",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "4-r2",
+      "actions": 129,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "4-r1",
+        "destination": "4-r2",
+        "step": 145,
+        "reason": "Immediate arithmetic correction: Sapling 8 plus Arcane Blast 4 leaves the visible 13-HP Leech at 1; adjacent Conduit allows Wind Blast 6 for lethal. No new draw or hidden information was revealed by the error. Retain fork r1 as evidence.",
+        "knownArchon": "Void-Colossus",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "4-r3",
+      "actions": 17,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "4-r2",
+        "destination": "4-r3",
+        "step": 269,
+        "reason": "Clear visible targeting mistake: placing Sunfruit in an otherwise empty earlier column redirected the tied Collapse onto Sunfruit. An expert can instead fill the already targeted column to reduce its publicly displayed empty-space damage. No future draws or Glare element are used.",
+        "knownArchon": "Void-Colossus",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5",
+      "actions": 213,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": null,
+      "fork": null,
+      "failure": null
+    },
+    {
+      "id": "5-r1",
+      "actions": 205,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5",
+        "destination": "5-r1",
+        "step": 108,
+        "reason": "Replay the existing three-enemy ambush without counting the once-per-turn Ring twice; prioritize actual lethal damage and respect Frozen/Severed restrictions. No change to earlier draft or route.",
+        "knownArchon": "The Cinder Hart",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5-r2",
+      "actions": 946,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5-r1",
+        "destination": "5-r2",
+        "step": 311,
+        "reason": "Observation-interface mistake: the previous batch continued moving after returning to a newly changed overworld without inspecting its now-visible enemies. Re-evaluate from that public map state before any move; do not use the ambush draw or future spawns.",
+        "knownArchon": "The Trickster",
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5-r3",
+      "actions": 117,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5-r2",
+        "destination": "5-r3",
+        "step": 1250,
+        "reason": "Correct a rule-known placement error: Crosswind Reed requires both north and south spaces to exist and be empty; placing it on the top edge made it unusable. Same revealed hand and known Hart intent; no future information used.",
+        "knownArchon": null,
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5-r4",
+      "actions": 76,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5-r3",
+        "destination": "5-r4",
+        "step": 1361,
+        "reason": "Correct a visible isolation-rule mistake only: Ward at slot 0 was adjacent to a starting Rite at slot 7. Move that Ward to isolated slot 28; keep all other placement and attack decisions unchanged, including observing Plasma before assigning damage. No RNG-dependent revision.",
+        "knownArchon": null,
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5-r5",
+      "actions": 505,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": false,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [
+        "checkpoint"
+      ],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5-r4",
+        "destination": "5-r5",
+        "step": 1436,
+        "reason": "Correct defense order for the already-visible 35 Light Dazzle: use grid Guard before equipment. No earlier decisions change; Mirror first wrongly made the prepared Bulwark unreachable.",
+        "knownArchon": null,
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    },
+    {
+      "id": "5-r6",
+      "actions": 88,
+      "allActionsAndOutcomesMatch": true,
+      "exactCurrentState": true,
+      "gameplayStateMatches": true,
+      "differingTopLevelFields": [],
+      "forkMatchesParent": true,
+      "fork": {
+        "source": "5-r5",
+        "destination": "5-r6",
+        "step": 1939,
+        "reason": "Correct a reaction sequencing error: the Water bracelet already completed the first Fangs hit, so the next hit needs Ward before equipment. The queued Silver bracelet instead began the second hit and locked out the grid, causing nineteen avoidable HP loss. Replay only from this defense choice with the same visible state; no earlier choices or new hidden information.",
+        "knownArchon": null,
+        "rule": "Correct only errors apparent from player-visible information at branch time; no future RNG or hidden Archon knowledge; original run retained."
+      },
+      "failure": null
+    }
+  ],
+  "runs": [
+    {
+      "id": "1-r1",
+      "seed": 11112601,
+      "version": {
+        "rules": "4.0.45",
+        "content": "4.0.45",
+        "observation": 2,
+        "actions": 10
+      },
+      "outcome": "loss",
+      "stratum": 2,
+      "hp": 0,
+      "maxHp": 55,
+      "steps": 778,
+      "completeTraceActions": 778,
+      "completeFinalExactlyMatches": true,
+      "death": {
+        "kind": "enemy",
+        "enemyId": "blackBile",
+        "enemyUid": 138,
+        "enemyName": "The Black Bile",
+        "tier": "Archon",
+        "attack": "Churn",
+        "flavor": "The forest swallowed its sickness. You could not.",
+        "summary": "The Black Bile killed you with Churn.",
+        "message": "The forest swallowed its sickness. You could not. The Black Bile killed you with Churn. Another traveler may find a different way."
+      },
+      "remainingEnemies": [
+        {
+          "name": "The Black Bile",
+          "hp": 50
+        }
+      ],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Veil Moth"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 5,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 16
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bat"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 25,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 34
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 6,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Fire Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 40,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 49
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 8,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle",
+            "Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 5,
+          "hpEnd": 44,
+          "trace": {
+            "startStep": 55,
+            "observedHPDecreases": 11,
+            "observedHPIncreases": 0,
+            "actions": 31,
+            "endStep": 86
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Shard-Walker"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 4,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 101,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 27,
+            "endStep": 128
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Dervish Hunter"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 135,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 21,
+            "endStep": 156
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 162,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 171
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 16,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Void-Colossus"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 14,
+          "hpEnd": 54,
+          "trace": {
+            "startStep": 176,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 114,
+            "endStep": 290
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 54,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 307,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 1,
+            "actions": 11,
+            "endStep": 318
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 328,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 18,
+            "endStep": 346
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 5,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 350,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 20,
+            "endStep": 370
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 376,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 22,
+            "endStep": 398
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 9,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 406,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 23,
+            "endStep": 429
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Frayed Hound",
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 12,
+          "hpEnd": 41,
+          "trace": {
+            "startStep": 433,
+            "observedHPDecreases": 16,
+            "observedHPIncreases": 2,
+            "actions": 101,
+            "endStep": 534
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 555,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 13,
+            "endStep": 568
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 4,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 573,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 29,
+            "endStep": 602
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Loose Echo",
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 4,
+          "hpEnd": 42,
+          "trace": {
+            "startStep": 610,
+            "observedHPDecreases": 13,
+            "observedHPIncreases": 0,
+            "actions": 33,
+            "endStep": 643
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 17,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Black Bile"
+          ],
+          "outcome": "loss",
+          "hpStart": 42,
+          "hpEnd": 0,
+          "turns": 12,
+          "trace": {
+            "startStep": 647,
+            "observedHPDecreases": 46,
+            "observedHPIncreases": 2,
+            "actions": 131,
+            "endStep": 778
+          }
+        }
+      ],
+      "purchases": [
+        "ring",
+        "fireArmor",
+        "card:lattice",
+        "holyArmor",
+        "quickArmor"
+      ],
+      "sales": [
+        "bronze",
+        "windArmor",
+        "emerald",
+        "emerald",
+        "ruby",
+        "topaz",
+        "fireArmor"
+      ],
+      "consumables": [
+        {
+          "id": "starFlask",
+          "crystal": false,
+          "effects": {
+            "damage": 6,
+            "element": "Arcane"
+          },
+          "round": 8,
+          "turn": 3,
+          "target": 37,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "prismaticTincture",
+          "crystal": false,
+          "effects": {
+            "tincture": "choose"
+          },
+          "round": 16,
+          "turn": 1,
+          "target": null,
+          "slot": 19,
+          "destination": null,
+          "card": null,
+          "element": "Light",
+          "healed": 0
+        },
+        {
+          "id": "focusDraught",
+          "crystal": false,
+          "effects": {
+            "focus": 1
+          },
+          "round": 9,
+          "turn": 3,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "tinctureFire",
+          "crystal": false,
+          "effects": {
+            "tincture": "Fire"
+          },
+          "round": 17,
+          "turn": 1,
+          "target": null,
+          "slot": 19,
+          "destination": null,
+          "card": null,
+          "element": "Fire",
+          "healed": 0
+        },
+        {
+          "id": "focusDraught",
+          "crystal": false,
+          "effects": {
+            "focus": 1
+          },
+          "round": 17,
+          "turn": 1,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        }
+      ],
+      "deck": [
+        {
+          "uid": 1,
+          "id": "blast",
+          "upgrade": true
+        },
+        {
+          "uid": 2,
+          "id": "blast",
+          "upgrade": true
+        },
+        {
+          "uid": 3,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 4,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 5,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 6,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 7,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 8,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 9,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 11,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 12,
+          "id": "sapling",
+          "upgrade": true
+        },
+        {
+          "uid": 21,
+          "id": "ignis",
+          "upgrade": false
+        },
+        {
+          "uid": 30,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 36,
+          "id": "waterSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 42,
+          "id": "earthSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 51,
+          "id": "tide",
+          "upgrade": false
+        },
+        {
+          "uid": 58,
+          "id": "rite",
+          "upgrade": false
+        },
+        {
+          "uid": 63,
+          "id": "magnify",
+          "upgrade": false
+        },
+        {
+          "uid": 70,
+          "id": "meanderingCurrent",
+          "upgrade": false
+        },
+        {
+          "uid": 73,
+          "id": "lattice",
+          "upgrade": false
+        },
+        {
+          "uid": 75,
+          "id": "elves",
+          "upgrade": true
+        },
+        {
+          "uid": 81,
+          "id": "elves",
+          "upgrade": false
+        },
+        {
+          "uid": 92,
+          "id": "rite",
+          "upgrade": false
+        },
+        {
+          "uid": 95,
+          "id": "thornfall",
+          "upgrade": false
+        },
+        {
+          "uid": 96,
+          "id": "rootFlame",
+          "upgrade": false
+        },
+        {
+          "uid": 102,
+          "id": "rot",
+          "upgrade": false
+        },
+        {
+          "uid": 105,
+          "id": "mindfire",
+          "upgrade": false
+        },
+        {
+          "uid": 110,
+          "id": "water",
+          "upgrade": false
+        },
+        {
+          "uid": 119,
+          "id": "seasonsTurn",
+          "upgrade": false
+        },
+        {
+          "uid": 130,
+          "id": "rain",
+          "upgrade": false
+        },
+        {
+          "uid": 140,
+          "id": "rite",
+          "upgrade": false
+        }
+      ],
+      "inventory": [
+        {
+          "uid": 14,
+          "id": "ring",
+          "gem": 15
+        },
+        {
+          "uid": 15,
+          "id": "ruby",
+          "gem": null
+        },
+        {
+          "uid": 27,
+          "id": "gold",
+          "gem": null
+        },
+        {
+          "uid": 47,
+          "id": "ring",
+          "gem": 88
+        },
+        {
+          "uid": 52,
+          "id": "sapphire",
+          "gem": null
+        },
+        {
+          "uid": 72,
+          "id": "silver",
+          "gem": 52
+        },
+        {
+          "uid": 74,
+          "id": "holyArmor",
+          "gem": null
+        },
+        {
+          "uid": 88,
+          "id": "focusGem",
+          "gem": null
+        },
+        {
+          "uid": 101,
+          "id": "crown",
+          "gem": null
+        },
+        {
+          "uid": 128,
+          "id": "quickArmor",
+          "gem": null
+        }
+      ],
+      "equipment": {
+        "head": 101,
+        "neck": null,
+        "torso": 74,
+        "wrist1": 27,
+        "wrist2": 72,
+        "finger1": 47,
+        "finger2": 14
+      },
+      "traceEncounterCount": 18,
+      "recordedEncounterCount": 18
+    },
+    {
+      "id": "2-r3",
+      "seed": 11112602,
+      "version": {
+        "rules": "4.0.45",
+        "content": "4.0.45",
+        "observation": 2,
+        "actions": 10
+      },
+      "outcome": "loss",
+      "stratum": 2,
+      "hp": 0,
+      "maxHp": 55,
+      "steps": 787,
+      "completeTraceActions": 787,
+      "completeFinalExactlyMatches": true,
+      "death": {
+        "kind": "enemy",
+        "enemyId": "blackBile",
+        "enemyUid": 142,
+        "enemyName": "The Black Bile",
+        "tier": "Archon",
+        "attack": "Churn",
+        "flavor": "The forest swallowed its sickness. You could not.",
+        "summary": "The Black Bile killed you with Churn.",
+        "message": "The forest swallowed its sickness. You could not. The Black Bile killed you with Churn. Another traveler may find a different way."
+      },
+      "remainingEnemies": [
+        {
+          "name": "The Black Bile",
+          "hp": 121
+        }
+      ],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Spark-Wisp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 68,
+          "trace": {
+            "startStep": 5,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 7,
+            "endStep": 12
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 68,
+          "turns": 5,
+          "hpEnd": 66,
+          "trace": {
+            "startStep": 15,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 29,
+            "endStep": 44
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 5,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Needle Imp"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 3,
+          "hpEnd": 65,
+          "trace": {
+            "startStep": 50,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 17,
+            "endStep": 67
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 8,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf",
+            "Dervish Hunter"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 6,
+          "hpEnd": 49,
+          "trace": {
+            "startStep": 79,
+            "observedHPDecreases": 21,
+            "observedHPIncreases": 0,
+            "actions": 51,
+            "endStep": 130
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Needle Imp"
+          ],
+          "outcome": "victory",
+          "hpStart": 49,
+          "turns": 2,
+          "hpEnd": 49,
+          "trace": {
+            "startStep": 139,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 12,
+            "endStep": 151
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Ashling 1",
+            "Ashling 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 49,
+          "turns": 3,
+          "hpEnd": 36,
+          "trace": {
+            "startStep": 157,
+            "observedHPDecreases": 9,
+            "observedHPIncreases": 0,
+            "actions": 19,
+            "endStep": 176
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 16,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Void-Colossus"
+          ],
+          "outcome": "victory",
+          "hpStart": 36,
+          "turns": 16,
+          "hpEnd": 12,
+          "trace": {
+            "startStep": 185,
+            "observedHPDecreases": 24,
+            "observedHPIncreases": 0,
+            "actions": 149,
+            "endStep": 334
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Dew Thief"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 4,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 347,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 30,
+            "endStep": 377
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 381,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 7,
+            "endStep": 388
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 390,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 401
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 406,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 12,
+            "endStep": 418
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 5,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 422,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 19,
+            "endStep": 441
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 2,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 447,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 458
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 9,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 4,
+          "hpEnd": 55,
+          "trace": {
+            "startStep": 472,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 31,
+            "endStep": 503
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 55,
+          "turns": 3,
+          "hpEnd": 51,
+          "trace": {
+            "startStep": 507,
+            "observedHPDecreases": 4,
+            "observedHPIncreases": 0,
+            "actions": 19,
+            "endStep": 526
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 51,
+          "turns": 2,
+          "hpEnd": 51,
+          "trace": {
+            "startStep": 530,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 10,
+            "endStep": 540
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Spoolkeeper"
+          ],
+          "outcome": "victory",
+          "hpStart": 51,
+          "turns": 5,
+          "hpEnd": 50,
+          "trace": {
+            "startStep": 543,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 44,
+            "endStep": 587
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Borrowed Face"
+          ],
+          "outcome": "victory",
+          "hpStart": 50,
+          "turns": 5,
+          "hpEnd": 42,
+          "trace": {
+            "startStep": 590,
+            "observedHPDecreases": 8,
+            "observedHPIncreases": 0,
+            "actions": 51,
+            "endStep": 641
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 16,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bellows Grub"
+          ],
+          "outcome": "victory",
+          "hpStart": 52,
+          "turns": 2,
+          "hpEnd": 52,
+          "trace": {
+            "startStep": 653,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 10,
+            "endStep": 663
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 17,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Black Bile"
+          ],
+          "outcome": "loss",
+          "hpStart": 52,
+          "hpEnd": 0,
+          "turns": 11,
+          "trace": {
+            "startStep": 666,
+            "observedHPDecreases": 52,
+            "observedHPIncreases": 0,
+            "actions": 121,
+            "endStep": 787
+          }
+        }
+      ],
+      "purchases": [
+        "windArmor",
+        "card:mindfire",
+        "sightCrown",
+        "antidote"
+      ],
+      "sales": [
+        "windArmor",
+        "sapphire"
+      ],
+      "consumables": [
+        {
+          "id": "starFlask",
+          "crystal": false,
+          "effects": {
+            "damage": 6,
+            "element": "Arcane"
+          },
+          "round": 12,
+          "turn": 3,
+          "target": 58,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 13,
+          "turn": null,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5
+        },
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 13,
+          "turn": null,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5,
+          "source": "fieldPickup"
+        },
+        {
+          "id": "furySap",
+          "crystal": false,
+          "effects": {
+            "fury": true
+          },
+          "round": 17,
+          "turn": 6,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        }
+      ],
+      "deck": [
+        {
+          "uid": 1,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 2,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 3,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 4,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 5,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 6,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 7,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 8,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 9,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 11,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 12,
+          "id": "sapling",
+          "upgrade": true
+        },
+        {
+          "uid": 21,
+          "id": "conduit",
+          "upgrade": false
+        },
+        {
+          "uid": 26,
+          "id": "ward",
+          "upgrade": false
+        },
+        {
+          "uid": 33,
+          "id": "cinder",
+          "upgrade": false
+        },
+        {
+          "uid": 44,
+          "id": "lightSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 51,
+          "id": "thorn",
+          "upgrade": false
+        },
+        {
+          "uid": 52,
+          "id": "rain",
+          "upgrade": false
+        },
+        {
+          "uid": 59,
+          "id": "root",
+          "upgrade": false
+        },
+        {
+          "uid": 64,
+          "id": "kiln",
+          "upgrade": false
+        },
+        {
+          "uid": 74,
+          "id": "eclipse",
+          "upgrade": false
+        },
+        {
+          "uid": 77,
+          "id": "mindfire",
+          "upgrade": false
+        },
+        {
+          "uid": 78,
+          "id": "elves",
+          "upgrade": true
+        },
+        {
+          "uid": 85,
+          "id": "seasonsTurn",
+          "upgrade": false
+        },
+        {
+          "uid": 90,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 91,
+          "id": "lattice",
+          "upgrade": false
+        },
+        {
+          "uid": 97,
+          "id": "cinder",
+          "upgrade": false
+        },
+        {
+          "uid": 101,
+          "id": "ember",
+          "upgrade": false
+        },
+        {
+          "uid": 114,
+          "id": "undertow",
+          "upgrade": false
+        },
+        {
+          "uid": 117,
+          "id": "waterSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 122,
+          "id": "terra",
+          "upgrade": false
+        },
+        {
+          "uid": 128,
+          "id": "borrowedDawn",
+          "upgrade": false
+        },
+        {
+          "uid": 144,
+          "id": "thoughtBulwark",
+          "upgrade": false
+        }
+      ],
+      "inventory": [
+        {
+          "uid": 13,
+          "id": "bronze",
+          "gem": 15
+        },
+        {
+          "uid": 14,
+          "id": "ring",
+          "gem": 102
+        },
+        {
+          "uid": 15,
+          "id": "emerald",
+          "gem": null
+        },
+        {
+          "uid": 41,
+          "id": "windArmor",
+          "gem": null
+        },
+        {
+          "uid": 45,
+          "id": "channelGem",
+          "gem": null
+        },
+        {
+          "uid": 48,
+          "id": "gold",
+          "gem": null
+        },
+        {
+          "uid": 76,
+          "id": "necklace",
+          "gem": 45
+        },
+        {
+          "uid": 86,
+          "id": "shiftingSap",
+          "gem": null
+        },
+        {
+          "uid": 102,
+          "id": "insightGem",
+          "gem": null
+        },
+        {
+          "uid": 109,
+          "id": "sightCrown",
+          "gem": null
+        },
+        {
+          "uid": 110,
+          "id": "antidote",
+          "gem": null
+        },
+        {
+          "uid": 129,
+          "id": "ruby",
+          "gem": null
+        }
+      ],
+      "equipment": {
+        "head": 109,
+        "neck": 76,
+        "torso": 41,
+        "wrist1": 48,
+        "wrist2": 13,
+        "finger1": null,
+        "finger2": 14
+      },
+      "traceEncounterCount": 20,
+      "recordedEncounterCount": 20
+    },
+    {
+      "id": "3-r1",
+      "seed": 11112603,
+      "version": {
+        "rules": "4.0.45",
+        "content": "4.0.45",
+        "observation": 2,
+        "actions": 10
+      },
+      "outcome": "loss",
+      "stratum": 1,
+      "hp": 0,
+      "maxHp": 70,
+      "steps": 247,
+      "completeTraceActions": 247,
+      "completeFinalExactlyMatches": true,
+      "death": {
+        "kind": "status",
+        "status": "burn",
+        "summary": "You died from burning.",
+        "message": "You died from burning. Another traveler may find a different way."
+      },
+      "remainingEnemies": [
+        {
+          "name": "The Cinder Hart",
+          "hp": 58
+        }
+      ],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Spark-Wisp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 5,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 10,
+            "endStep": 15
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 68,
+          "trace": {
+            "startStep": 19,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 28
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 5,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bat"
+          ],
+          "outcome": "victory",
+          "hpStart": 68,
+          "turns": 2,
+          "hpEnd": 68,
+          "trace": {
+            "startStep": 36,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 8,
+            "endStep": 44
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Ink Leech"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 68,
+          "trace": {
+            "startStep": 62,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 15,
+            "endStep": 77
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 68,
+          "turns": 2,
+          "hpEnd": 67,
+          "trace": {
+            "startStep": 81,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 8,
+            "endStep": 89
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Fire Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 66,
+          "trace": {
+            "startStep": 92,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 101
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Hollow Mason"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 4,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 104,
+            "observedHPDecreases": 4,
+            "observedHPIncreases": 0,
+            "actions": 25,
+            "endStep": 129
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bat"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 3,
+          "hpEnd": 58,
+          "trace": {
+            "startStep": 136,
+            "observedHPDecreases": 4,
+            "observedHPIncreases": 0,
+            "actions": 18,
+            "endStep": 154
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 15,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Ashling 1",
+            "Ashling 2",
+            "Ashling 3"
+          ],
+          "outcome": "victory",
+          "hpStart": 58,
+          "turns": 4,
+          "hpEnd": 34,
+          "trace": {
+            "startStep": 158,
+            "observedHPDecreases": 24,
+            "observedHPIncreases": 0,
+            "actions": 28,
+            "endStep": 186
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 20,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Cinder Hart"
+          ],
+          "outcome": "loss",
+          "hpStart": 34,
+          "hpEnd": 0,
+          "turns": 8,
+          "trace": {
+            "startStep": 199,
+            "observedHPDecreases": 34,
+            "observedHPIncreases": 0,
+            "actions": 48,
+            "endStep": 247
+          }
+        }
+      ],
+      "purchases": [
+        "bronze"
+      ],
+      "sales": [],
+      "consumables": [
+        {
+          "id": "insightDew",
+          "crystal": false,
+          "effects": {
+            "draw": 1
+          },
+          "round": 15,
+          "turn": 1,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "focusDraught",
+          "crystal": false,
+          "effects": {
+            "focus": 1
+          },
+          "round": 15,
+          "turn": 1,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "tinctureWater",
+          "crystal": false,
+          "effects": {
+            "tincture": "Water"
+          },
+          "round": 15,
+          "turn": 2,
+          "target": null,
+          "slot": 6,
+          "destination": null,
+          "card": null,
+          "element": "Water",
+          "healed": 0
+        },
+        {
+          "id": "starFlask",
+          "crystal": false,
+          "effects": {
+            "damage": 6,
+            "element": "Arcane"
+          },
+          "round": 20,
+          "turn": 1,
+          "target": 71,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        }
+      ],
+      "deck": [
+        {
+          "uid": 1,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 2,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 3,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 4,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 5,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 6,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 7,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 8,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 9,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 11,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 12,
+          "id": "sapling",
+          "upgrade": true
+        },
+        {
+          "uid": 21,
+          "id": "corner",
+          "upgrade": false
+        },
+        {
+          "uid": 24,
+          "id": "water",
+          "upgrade": false
+        },
+        {
+          "uid": 33,
+          "id": "tide",
+          "upgrade": false
+        },
+        {
+          "uid": 47,
+          "id": "lightSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 51,
+          "id": "corner",
+          "upgrade": false
+        },
+        {
+          "uid": 54,
+          "id": "palimpsest",
+          "upgrade": false
+        },
+        {
+          "uid": 57,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 64,
+          "id": "rootFlame",
+          "upgrade": false
+        },
+        {
+          "uid": 69,
+          "id": "ward",
+          "upgrade": false
+        }
+      ],
+      "inventory": [
+        {
+          "uid": 13,
+          "id": "bronze",
+          "gem": 15
+        },
+        {
+          "uid": 14,
+          "id": "ring",
+          "gem": null
+        },
+        {
+          "uid": 15,
+          "id": "sapphire",
+          "gem": null
+        },
+        {
+          "uid": 25,
+          "id": "sapphire",
+          "gem": null
+        },
+        {
+          "uid": 41,
+          "id": "bronze",
+          "gem": null
+        },
+        {
+          "uid": 44,
+          "id": "recallMist",
+          "gem": null
+        },
+        {
+          "uid": 48,
+          "id": "shiftingSap",
+          "gem": null
+        },
+        {
+          "uid": 58,
+          "id": "sapphire",
+          "gem": null
+        },
+        {
+          "uid": 72,
+          "id": "emerald",
+          "gem": null
+        }
+      ],
+      "equipment": {
+        "head": null,
+        "neck": null,
+        "torso": null,
+        "wrist1": 41,
+        "wrist2": 13,
+        "finger1": null,
+        "finger2": 14
+      },
+      "traceEncounterCount": 10,
+      "recordedEncounterCount": 10
+    },
+    {
+      "id": "4-r3",
+      "seed": 11112604,
+      "version": {
+        "rules": "4.0.45",
+        "content": "4.0.45",
+        "observation": 2,
+        "actions": 10
+      },
+      "outcome": "loss",
+      "stratum": 1,
+      "hp": 0,
+      "maxHp": 70,
+      "steps": 286,
+      "completeTraceActions": 286,
+      "completeFinalExactlyMatches": true,
+      "death": {
+        "kind": "enemy",
+        "enemyId": "colossus",
+        "enemyUid": 69,
+        "enemyName": "Void-Colossus",
+        "tier": "Archon",
+        "attack": "Chaotic Glare",
+        "flavor": "You stared into the void. It took that personally.",
+        "summary": "Void-Colossus killed you with Chaotic Glare.",
+        "message": "You stared into the void. It took that personally. Void-Colossus killed you with Chaotic Glare. Another traveler may find a different way."
+      },
+      "remainingEnemies": [
+        {
+          "name": "Void-Colossus",
+          "hp": 90
+        }
+      ],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Spark-Wisp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 7,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 16
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bat"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 4,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 21,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 20,
+            "endStep": 41
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 6,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 5,
+          "hpEnd": 65,
+          "trace": {
+            "startStep": 45,
+            "observedHPDecreases": 5,
+            "observedHPIncreases": 0,
+            "actions": 27,
+            "endStep": 72
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 9,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Needle Imp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 86,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 18,
+            "endStep": 104
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 69,
+          "trace": {
+            "startStep": 109,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 18,
+            "endStep": 127
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Shard-Walker",
+            "Ink Leech"
+          ],
+          "outcome": "victory",
+          "hpStart": 69,
+          "turns": 6,
+          "hpEnd": 34,
+          "trace": {
+            "startStep": 131,
+            "observedHPDecreases": 35,
+            "observedHPIncreases": 0,
+            "actions": 45,
+            "endStep": 176
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Fire Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 39,
+          "turns": 4,
+          "hpEnd": 31,
+          "trace": {
+            "startStep": 183,
+            "observedHPDecreases": 8,
+            "observedHPIncreases": 0,
+            "actions": 26,
+            "endStep": 209
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 18,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Ashling 1",
+            "Ashling 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 31,
+          "turns": 4,
+          "hpEnd": 19,
+          "trace": {
+            "startStep": 221,
+            "observedHPDecreases": 12,
+            "observedHPIncreases": 0,
+            "actions": 23,
+            "endStep": 244
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 20,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Void-Colossus"
+          ],
+          "outcome": "loss",
+          "hpStart": 19,
+          "hpEnd": 0,
+          "turns": 4,
+          "trace": {
+            "startStep": 252,
+            "observedHPDecreases": 19,
+            "observedHPIncreases": 0,
+            "actions": 34,
+            "endStep": 286
+          }
+        }
+      ],
+      "purchases": [
+        "earthArmor"
+      ],
+      "sales": [],
+      "consumables": [
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 13,
+          "turn": null,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5
+        },
+        {
+          "id": "focusDraught",
+          "crystal": false,
+          "effects": {
+            "focus": 1
+          },
+          "round": 18,
+          "turn": 1,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "tinctureLight",
+          "crystal": false,
+          "effects": {
+            "tincture": "Light"
+          },
+          "round": 20,
+          "turn": 1,
+          "target": null,
+          "slot": 12,
+          "destination": null,
+          "card": null,
+          "element": "Light",
+          "healed": 0
+        }
+      ],
+      "deck": [
+        {
+          "uid": 1,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 2,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 3,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 4,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 5,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 6,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 7,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 8,
+          "id": "shield",
+          "upgrade": false
+        },
+        {
+          "uid": 9,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 11,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 12,
+          "id": "sapling",
+          "upgrade": true
+        },
+        {
+          "uid": 21,
+          "id": "surge",
+          "upgrade": false
+        },
+        {
+          "uid": 25,
+          "id": "square",
+          "upgrade": false
+        },
+        {
+          "uid": 28,
+          "id": "conduit",
+          "upgrade": false
+        },
+        {
+          "uid": 33,
+          "id": "fireSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 40,
+          "id": "rain",
+          "upgrade": false
+        },
+        {
+          "uid": 48,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 53,
+          "id": "undertow",
+          "upgrade": false
+        },
+        {
+          "uid": 57,
+          "id": "sun",
+          "upgrade": false
+        },
+        {
+          "uid": 64,
+          "id": "solitude",
+          "upgrade": false
+        },
+        {
+          "uid": 70,
+          "id": "crosswindReed",
+          "upgrade": false
+        },
+        {
+          "uid": 73,
+          "id": "moth",
+          "upgrade": false
+        }
+      ],
+      "inventory": [
+        {
+          "uid": 13,
+          "id": "bronze",
+          "gem": 15
+        },
+        {
+          "uid": 15,
+          "id": "sapphire",
+          "gem": null
+        },
+        {
+          "uid": 47,
+          "id": "earthArmor",
+          "gem": null
+        },
+        {
+          "uid": 58,
+          "id": "tinctureFire",
+          "gem": null
+        },
+        {
+          "uid": 65,
+          "id": "channelGem",
+          "gem": null
+        },
+        {
+          "uid": 74,
+          "id": "insightGem",
+          "gem": null
+        }
+      ],
+      "equipment": {
+        "head": null,
+        "neck": null,
+        "torso": 47,
+        "wrist1": null,
+        "wrist2": 13,
+        "finger1": null,
+        "finger2": null
+      },
+      "traceEncounterCount": 9,
+      "recordedEncounterCount": 9
+    },
+    {
+      "id": "5-r6",
+      "seed": 11112605,
+      "version": {
+        "rules": "4.0.45",
+        "content": "4.0.45",
+        "observation": 2,
+        "actions": 10
+      },
+      "outcome": "win",
+      "stratum": 4,
+      "hp": 31,
+      "maxHp": 70,
+      "steps": 2027,
+      "completeTraceActions": 2027,
+      "completeFinalExactlyMatches": true,
+      "remainingEnemies": [
+        {
+          "name": "The Apex Predator",
+          "hp": 0
+        }
+      ],
+      "encounters": [
+        {
+          "stratum": 1,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Spark-Wisp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 5,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 7,
+            "endStep": 12
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Needle Imp"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 4,
+          "hpEnd": 66,
+          "trace": {
+            "startStep": 25,
+            "observedHPDecreases": 4,
+            "observedHPIncreases": 0,
+            "actions": 25,
+            "endStep": 50
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 3,
+          "hpEnd": 66,
+          "trace": {
+            "startStep": 66,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 16,
+            "endStep": 82
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Ink Leech"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 2,
+          "hpEnd": 68,
+          "trace": {
+            "startStep": 92,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 103
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 15,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Glass Eel",
+            "Fire Wolf",
+            "Pale Weaver"
+          ],
+          "outcome": "victory",
+          "hpStart": 68,
+          "turns": 6,
+          "hpEnd": 41,
+          "trace": {
+            "startStep": 108,
+            "observedHPDecreases": 32,
+            "observedHPIncreases": 5,
+            "actions": 43,
+            "endStep": 151
+          }
+        },
+        {
+          "stratum": 1,
+          "round": 20,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Cinder Hart"
+          ],
+          "outcome": "victory",
+          "hpStart": 41,
+          "turns": 6,
+          "hpEnd": 16,
+          "trace": {
+            "startStep": 164,
+            "observedHPDecreases": 25,
+            "observedHPIncreases": 0,
+            "actions": 46,
+            "endStep": 210
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 1,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Dew Thief"
+          ],
+          "outcome": "victory",
+          "hpStart": 66,
+          "turns": 2,
+          "hpEnd": 65,
+          "trace": {
+            "startStep": 229,
+            "observedHPDecreases": 1,
+            "observedHPIncreases": 0,
+            "actions": 14,
+            "endStep": 243
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 2,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Censer Engine"
+          ],
+          "outcome": "victory",
+          "hpStart": 65,
+          "turns": 5,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 248,
+            "observedHPDecreases": 3,
+            "observedHPIncreases": 0,
+            "actions": 43,
+            "endStep": 291
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 3,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Bell Beetle"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 2,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 298,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 309
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 1,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 312,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 323
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 1,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 325,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 7,
+            "endStep": 332
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 6,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Frayed Hound"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 2,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 339,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 350
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Censer Engine"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 4,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 353,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 34,
+            "endStep": 387
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 7,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Choir of Borrowed Hands"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 3,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 390,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 27,
+            "endStep": 417
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 11,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Loose Echo"
+          ],
+          "outcome": "victory",
+          "hpStart": 62,
+          "turns": 2,
+          "hpEnd": 62,
+          "trace": {
+            "startStep": 428,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 439
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 1,
+          "hpEnd": 67,
+          "trace": {
+            "startStep": 464,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 8,
+            "endStep": 472
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 67,
+          "trace": {
+            "startStep": 476,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 17,
+            "endStep": 493
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 15,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 2,
+          "hpEnd": 67,
+          "trace": {
+            "startStep": 496,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 19,
+            "endStep": 515
+          }
+        },
+        {
+          "stratum": 2,
+          "round": 17,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Trickster"
+          ],
+          "outcome": "victory",
+          "hpStart": 67,
+          "turns": 8,
+          "hpEnd": 26,
+          "trace": {
+            "startStep": 521,
+            "observedHPDecreases": 41,
+            "observedHPIncreases": 0,
+            "actions": 84,
+            "endStep": 605
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 3,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Borrowed Oracle"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 4,
+          "hpEnd": 56,
+          "trace": {
+            "startStep": 621,
+            "observedHPDecreases": 14,
+            "observedHPIncreases": 0,
+            "actions": 39,
+            "endStep": 660
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 4,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Pale Grazer"
+          ],
+          "outcome": "victory",
+          "hpStart": 56,
+          "turns": 3,
+          "hpEnd": 54,
+          "trace": {
+            "startStep": 665,
+            "observedHPDecreases": 2,
+            "observedHPIncreases": 0,
+            "actions": 25,
+            "endStep": 690
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 5,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Glass Brood"
+          ],
+          "outcome": "victory",
+          "hpStart": 54,
+          "turns": 2,
+          "hpEnd": 54,
+          "trace": {
+            "startStep": 695,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 706
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 8,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Blind Seer"
+          ],
+          "outcome": "victory",
+          "hpStart": 54,
+          "turns": 2,
+          "hpEnd": 54,
+          "trace": {
+            "startStep": 714,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 11,
+            "endStep": 725
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Hollow Drifter"
+          ],
+          "outcome": "victory",
+          "hpStart": 54,
+          "turns": 3,
+          "hpEnd": 54,
+          "trace": {
+            "startStep": 730,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 30,
+            "endStep": 760
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 10,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Knotkeeper"
+          ],
+          "outcome": "victory",
+          "hpStart": 54,
+          "turns": 7,
+          "hpEnd": 21,
+          "trace": {
+            "startStep": 762,
+            "observedHPDecreases": 33,
+            "observedHPIncreases": 0,
+            "actions": 80,
+            "endStep": 842
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 12,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Echo Polyp"
+          ],
+          "outcome": "victory",
+          "hpStart": 41,
+          "turns": 2,
+          "hpEnd": 46,
+          "trace": {
+            "startStep": 862,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 5,
+            "actions": 18,
+            "endStep": 880
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Glass Brood"
+          ],
+          "outcome": "victory",
+          "hpStart": 46,
+          "turns": 1,
+          "hpEnd": 46,
+          "trace": {
+            "startStep": 884,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 893
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 13,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Hollow Drifter"
+          ],
+          "outcome": "victory",
+          "hpStart": 46,
+          "turns": 3,
+          "hpEnd": 43,
+          "trace": {
+            "startStep": 895,
+            "observedHPDecreases": 3,
+            "observedHPIncreases": 0,
+            "actions": 43,
+            "endStep": 938
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 14,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "Echo Polyp"
+          ],
+          "outcome": "victory",
+          "hpStart": 43,
+          "turns": 2,
+          "hpEnd": 43,
+          "trace": {
+            "startStep": 941,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 18,
+            "endStep": 959
+          }
+        },
+        {
+          "stratum": 3,
+          "round": 16,
+          "apexFloor": null,
+          "mapEntityUids": [],
+          "enemies": [
+            "The Mind Hive"
+          ],
+          "outcome": "victory",
+          "hpStart": 43,
+          "turns": 15,
+          "hpEnd": 27,
+          "trace": {
+            "startStep": 965,
+            "observedHPDecreases": 21,
+            "observedHPIncreases": 5,
+            "actions": 216,
+            "endStep": 1181
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 2,
+          "apexFloor": 1,
+          "mapEntityUids": [
+            388
+          ],
+          "enemies": [
+            "Fire Wolf"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 1,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 1199,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 9,
+            "endStep": 1208
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 3,
+          "apexFloor": 1,
+          "mapEntityUids": [
+            391
+          ],
+          "enemies": [
+            "Pale Weaver"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 3,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 1212,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 24,
+            "endStep": 1236
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 4,
+          "apexFloor": 1,
+          "mapEntityUids": [
+            390
+          ],
+          "enemies": [
+            "Ashling"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 1,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 1239,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 7,
+            "endStep": 1246
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 5,
+          "apexFloor": 1,
+          "mapEntityUids": [
+            396
+          ],
+          "enemies": [
+            "The Cinder Hart"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 4,
+          "hpEnd": 58,
+          "trace": {
+            "startStep": 1250,
+            "observedHPDecreases": 12,
+            "observedHPIncreases": 0,
+            "actions": 38,
+            "endStep": 1288
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 3,
+          "apexFloor": 2,
+          "mapEntityUids": [
+            408,
+            409
+          ],
+          "enemies": [
+            "Frayed Hound",
+            "Borrowed Face"
+          ],
+          "outcome": "victory",
+          "hpStart": 58,
+          "turns": 4,
+          "hpEnd": 52,
+          "trace": {
+            "startStep": 1304,
+            "observedHPDecreases": 15,
+            "observedHPIncreases": 9,
+            "actions": 54,
+            "endStep": 1358
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 4,
+          "apexFloor": 2,
+          "mapEntityUids": [
+            404,
+            405
+          ],
+          "enemies": [
+            "Thread Mite 1",
+            "Thread Mite 2",
+            "Sourcap Tender"
+          ],
+          "outcome": "victory",
+          "hpStart": 52,
+          "turns": 3,
+          "hpEnd": 57,
+          "trace": {
+            "startStep": 1361,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 5,
+            "actions": 34,
+            "endStep": 1395
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 4,
+          "apexFloor": 2,
+          "mapEntityUids": [
+            406
+          ],
+          "enemies": [
+            "Hollow Scribe"
+          ],
+          "outcome": "victory",
+          "hpStart": 57,
+          "turns": 2,
+          "hpEnd": 57,
+          "trace": {
+            "startStep": 1397,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 21,
+            "endStep": 1418
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 6,
+          "apexFloor": 2,
+          "mapEntityUids": [
+            417
+          ],
+          "enemies": [
+            "The Trickster"
+          ],
+          "outcome": "victory",
+          "hpStart": 57,
+          "turns": 8,
+          "hpEnd": 35,
+          "trace": {
+            "startStep": 1424,
+            "observedHPDecreases": 33,
+            "observedHPIncreases": 11,
+            "actions": 106,
+            "endStep": 1530
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 2,
+          "apexFloor": 3,
+          "mapEntityUids": [
+            473
+          ],
+          "enemies": [
+            "The Knotkeeper"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 5,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 1548,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 60,
+            "endStep": 1608
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 4,
+          "apexFloor": 3,
+          "mapEntityUids": [
+            492
+          ],
+          "enemies": [
+            "The Mind Hive"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 15,
+          "hpEnd": 70,
+          "trace": {
+            "startStep": 1617,
+            "observedHPDecreases": 0,
+            "observedHPIncreases": 0,
+            "actions": 196,
+            "endStep": 1813
+          }
+        },
+        {
+          "stratum": 4,
+          "round": 0,
+          "apexFloor": 4,
+          "mapEntityUids": [
+            593
+          ],
+          "enemies": [
+            "The Apex Predator"
+          ],
+          "outcome": "victory",
+          "hpStart": 70,
+          "turns": 13,
+          "hpEnd": 31,
+          "trace": {
+            "startStep": 1824,
+            "observedHPDecreases": 62,
+            "observedHPIncreases": 23,
+            "actions": 200,
+            "endStep": 2024
+          }
+        }
+      ],
+      "purchases": [
+        "card:transmute",
+        "silver",
+        "stoneArmor",
+        "healingSap",
+        "silver",
+        "channelGem",
+        "focusRing",
+        "channelDraught",
+        "card:bloom",
+        "cindersalve",
+        "antidote",
+        "quickArmor",
+        "resonanceHelm",
+        "card:lucidNeedle",
+        "memoryDraught",
+        "prismaticTincture"
+      ],
+      "sales": [
+        "ruby",
+        "insightGem",
+        "bronze",
+        "sapphire",
+        "stoneArmor",
+        "topaz",
+        "emerald",
+        "sapphire",
+        "sapphire",
+        "topaz",
+        "silver",
+        "channelGem",
+        "channelGem",
+        "sapphire",
+        "tinctureFire",
+        "echoRing",
+        "quickArmor",
+        "insightGem",
+        "emerald"
+      ],
+      "consumables": [
+        {
+          "id": "channelDraught",
+          "crystal": false,
+          "effects": {
+            "channel": 1
+          },
+          "round": 15,
+          "turn": 5,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 15,
+          "turn": 5,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5
+        },
+        {
+          "id": "tinctureWater",
+          "crystal": false,
+          "effects": {
+            "tincture": "Water"
+          },
+          "round": 20,
+          "turn": 4,
+          "target": null,
+          "slot": 19,
+          "destination": null,
+          "card": null,
+          "element": "Water",
+          "healed": 0
+        },
+        {
+          "id": "healingSap",
+          "crystal": false,
+          "effects": {
+            "heal": 5
+          },
+          "round": 13,
+          "turn": null,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 5
+        },
+        {
+          "id": "insightDew",
+          "crystal": false,
+          "effects": {
+            "draw": 1
+          },
+          "round": 16,
+          "turn": 10,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "channelDraught",
+          "crystal": true,
+          "effects": {
+            "channel": 2
+          },
+          "round": 16,
+          "turn": 11,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": null,
+          "element": null,
+          "healed": 0
+        },
+        {
+          "id": "prismaticTincture",
+          "crystal": false,
+          "effects": {
+            "tincture": "choose"
+          },
+          "round": 0,
+          "turn": 2,
+          "target": null,
+          "slot": 17,
+          "destination": null,
+          "card": null,
+          "element": "Arcane",
+          "healed": 0
+        },
+        {
+          "id": "memoryDraught",
+          "crystal": false,
+          "effects": {
+            "memory": true
+          },
+          "round": 0,
+          "turn": 12,
+          "target": null,
+          "slot": null,
+          "destination": null,
+          "card": 1,
+          "element": null,
+          "healed": 0
+        }
+      ],
+      "deck": [
+        {
+          "uid": 1,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 2,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 3,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 4,
+          "id": "blast",
+          "upgrade": false
+        },
+        {
+          "uid": 5,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 6,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 7,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 8,
+          "id": "shield",
+          "upgrade": true
+        },
+        {
+          "uid": 9,
+          "id": "familiar",
+          "upgrade": false
+        },
+        {
+          "uid": 10,
+          "id": "clear",
+          "upgrade": false
+        },
+        {
+          "uid": 11,
+          "id": "focus",
+          "upgrade": false
+        },
+        {
+          "uid": 12,
+          "id": "sapling",
+          "upgrade": true
+        },
+        {
+          "uid": 21,
+          "id": "crosswindReed",
+          "upgrade": false
+        },
+        {
+          "uid": 34,
+          "id": "ward",
+          "upgrade": false
+        },
+        {
+          "uid": 38,
+          "id": "cinder",
+          "upgrade": true
+        },
+        {
+          "uid": 41,
+          "id": "bastion",
+          "upgrade": false
+        },
+        {
+          "uid": 42,
+          "id": "storm",
+          "upgrade": false
+        },
+        {
+          "uid": 45,
+          "id": "transmute",
+          "upgrade": false
+        },
+        {
+          "uid": 50,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 61,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 65,
+          "id": "conduit",
+          "upgrade": false
+        },
+        {
+          "uid": 69,
+          "id": "water",
+          "upgrade": true
+        },
+        {
+          "uid": 76,
+          "id": "sun",
+          "upgrade": false
+        },
+        {
+          "uid": 81,
+          "id": "elves",
+          "upgrade": true
+        },
+        {
+          "uid": 87,
+          "id": "prismaticSap",
+          "upgrade": false
+        },
+        {
+          "uid": 97,
+          "id": "memoryAcorn",
+          "upgrade": false
+        },
+        {
+          "uid": 105,
+          "id": "rite",
+          "upgrade": false
+        },
+        {
+          "uid": 109,
+          "id": "lightSynergy",
+          "upgrade": false
+        },
+        {
+          "uid": 115,
+          "id": "lattice",
+          "upgrade": false
+        },
+        {
+          "uid": 119,
+          "id": "elves",
+          "upgrade": false
+        },
+        {
+          "uid": 121,
+          "id": "starleaf",
+          "upgrade": false
+        },
+        {
+          "uid": 133,
+          "id": "grove",
+          "upgrade": false
+        },
+        {
+          "uid": 140,
+          "id": "undertow",
+          "upgrade": false
+        },
+        {
+          "uid": 144,
+          "id": "rot",
+          "upgrade": false
+        },
+        {
+          "uid": 150,
+          "id": "borrowedDawn",
+          "upgrade": false
+        },
+        {
+          "uid": 151,
+          "id": "conduit",
+          "upgrade": false
+        },
+        {
+          "uid": 178,
+          "id": "seasonsTurn",
+          "upgrade": false
+        },
+        {
+          "uid": 181,
+          "id": "lucidGuide",
+          "upgrade": false
+        },
+        {
+          "uid": 198,
+          "id": "borrowedDawn",
+          "upgrade": false
+        },
+        {
+          "uid": 207,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 212,
+          "id": "rite",
+          "upgrade": false
+        },
+        {
+          "uid": 221,
+          "id": "magnify",
+          "upgrade": false
+        },
+        {
+          "uid": 247,
+          "id": "thoughtBulwark",
+          "upgrade": false
+        },
+        {
+          "uid": 260,
+          "id": "prismaticSap",
+          "upgrade": false
+        },
+        {
+          "uid": 265,
+          "id": "tide",
+          "upgrade": false
+        },
+        {
+          "uid": 280,
+          "id": "rite",
+          "upgrade": false
+        },
+        {
+          "uid": 381,
+          "id": "grove",
+          "upgrade": false
+        },
+        {
+          "uid": 384,
+          "id": "bloom",
+          "upgrade": false
+        },
+        {
+          "uid": 392,
+          "id": "keystone",
+          "upgrade": false
+        },
+        {
+          "uid": 397,
+          "id": "memoryAcorn",
+          "upgrade": false
+        },
+        {
+          "uid": 402,
+          "id": "bastion",
+          "upgrade": false
+        },
+        {
+          "uid": 415,
+          "id": "bloom",
+          "upgrade": false
+        },
+        {
+          "uid": 421,
+          "id": "plasma",
+          "upgrade": false
+        },
+        {
+          "uid": 470,
+          "id": "lucidNeedle",
+          "upgrade": false
+        },
+        {
+          "uid": 488,
+          "id": "guardian",
+          "upgrade": false
+        },
+        {
+          "uid": 591,
+          "id": "conduit",
+          "upgrade": false
+        }
+      ],
+      "inventory": [
+        {
+          "uid": 14,
+          "id": "ring",
+          "gem": 64
+        },
+        {
+          "uid": 37,
+          "id": "crown",
+          "gem": null
+        },
+        {
+          "uid": 64,
+          "id": "focusGem",
+          "gem": null
+        },
+        {
+          "uid": 70,
+          "id": "insightGem",
+          "gem": null
+        },
+        {
+          "uid": 99,
+          "id": "mirrorArmor",
+          "gem": null
+        },
+        {
+          "uid": 138,
+          "id": "silver",
+          "gem": 139
+        },
+        {
+          "uid": 139,
+          "id": "channelGem",
+          "gem": null
+        },
+        {
+          "uid": 180,
+          "id": "prismaticBracelet",
+          "gem": 70
+        },
+        {
+          "uid": 199,
+          "id": "channelGem",
+          "gem": null
+        },
+        {
+          "uid": 252,
+          "id": "focusRing",
+          "gem": 199
+        },
+        {
+          "uid": 385,
+          "id": "cindersalve",
+          "gem": null
+        },
+        {
+          "uid": 386,
+          "id": "antidote",
+          "gem": null
+        },
+        {
+          "uid": 387,
+          "id": "quickArmor",
+          "gem": null
+        },
+        {
+          "uid": 469,
+          "id": "resonanceHelm",
+          "gem": null
+        },
+        {
+          "uid": 592,
+          "id": "focusGem",
+          "gem": null
+        }
+      ],
+      "equipment": {
+        "head": 469,
+        "neck": null,
+        "torso": 387,
+        "wrist1": 180,
+        "wrist2": 138,
+        "finger1": 252,
+        "finger2": 14
+      },
+      "traceEncounterCount": 41,
+      "recordedEncounterCount": 41
+    }
+  ]
+}
