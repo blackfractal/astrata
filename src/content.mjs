@@ -12,8 +12,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.45",
-  content: "4.0.45",
+  rules: "4.0.46",
+  content: "4.0.46",
   observation: 2,
   actions: 10,
 };
@@ -1301,7 +1301,7 @@ enemy(
     effect("Seal", { grid: "lock", target: "oldest" }),
     attack("Judgment", 10, "Light"),
   ],
-  "Pins your oldest slot.",
+  "Locks your oldest non-spent, non-locked card.",
   "Avoid filling the grid with utility.",
   { herald: true },
 );

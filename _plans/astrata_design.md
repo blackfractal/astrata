@@ -1,4 +1,4 @@
-# Astrata: Game Design Document v4.265
+# Astrata: Game Design Document v4.266
 *(working title through v4.22 was Arcane Architect. That phrase is retired and must not appear anywhere in the game, to stay clear of the Architect in Slay the Spire 2. The title is Astrata, with no subtitle.)*
 ## Roguelike Deckbuilder with a Spatial Spell Grid
 
@@ -342,6 +342,7 @@ Player-card properties (future Ideons use their owner's specified rules) include
 
 **On placed cards** (inflicted by enemies, tracked as a token on the card, cleared when the card leaves the grid)
 * **Lock:** the card cannot be Shifted or Recalled. It can still be activated and receive compatible Melds unless Not meldable. Melds do not bypass Lock.
+  * **Dark Sentinel — Seal:** Lock the oldest placed, non-spent, non-locked card. Skip cards with zero remaining activations and cards already Locked; if none qualify, Seal has no target. Remaining activations include current allowance bonuses.
 * **Freeze:** the card cannot be activated
 * **Sever:** the card counts as having no adjacent cards, and no other card counts it as adjacent. It receives no adjacency or pattern bonuses and contributes to none. A side effect: a Severed card satisfies the Isolated condition, so a card that wants to be alone is happy to be Severed.
 * **Siphon:** the card loses 1 activation limit.

@@ -211,6 +211,8 @@ function tellText(t) {
           ? `Destroy ${t.count || 1} most valuable stacks`
           : t.grid === "destroy" && t.target === "tallest"
             ? "Destroy tallest stack"
+            : t.grid === "lock" && t.target === "oldest"
+              ? "Lock oldest non-spent, non-locked card"
             : t.grid
               ? `${t.grid} ${t.count || 1} · ${t.target}`
               : "",

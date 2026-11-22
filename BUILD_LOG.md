@@ -2136,3 +2136,7 @@ Validation: 268 scripts passed syntax checks; ten archived Apex attempts replaye
 ## Elemental Synergy and Enhance — round248
 
 2026-11-01. Jonathan approved all proposed rules/counts/costs for thirteen new cards. Implemented 4.0.45/design4.265: whole-Grimoire printed-element Synergy, Prismatic minimum counts and cumulative battle-long Enhance direct damage including Allies. Added live damage text, inspection breakdowns, simultaneous pulses, save hydration and heuristic AI valuation. Selected thirteen DGX Spark DreamShaper XL images with all earlier candidates/provenance retained. Druid pool94non-Hex/99total. All833tests and isolated source renderer checks passed; packaged verification recorded in reports/elemental-synergy-report.md. Corrected one stale Crashing Wave8damage test expectation. No live save changes or commit/push. Approximately45minutes additional implementation, documentation, tests and packaging (estimate; art generation recorded in previous entry).
+
+## Dark Sentinel Seal targeting — round 249
+
+2026-11-22. Jonathan requested that Seal skip spent and already-Locked cards. Version 4.0.46/design 4.266 now selects the oldest card with remaining activation allowance that is not Locked, including allowance bonuses; no eligible card means no target. Updated enemy description and move text. Nine targeted targeting/activation tests pass, plus UI syntax check. Release refreshed. Approximately 8 minutes additional work (estimate). No live-save changes.

@@ -563,7 +563,9 @@ export function tradeAssets(s, trade) {
 export function gridTargets(b, t) {
   const occupied = b.grid
     .map((slot, i) => ({ slot, i, c: top(slot) }))
-    .filter((x) => x.c);
+    .filter((x) => x.c)
+    .filter((x) => t.grid !== "lock" || t.target !== "oldest" ||
+      (!x.c.lock && cardAllowance(b, x.c, x.i) > 0));
   let targets = [];
   if (t.grid === "row" || t.grid === "column") {
     const col = t.grid === "column",
