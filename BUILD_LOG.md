@@ -2140,3 +2140,7 @@ Validation: 268 scripts passed syntax checks; ten archived Apex attempts replaye
 ## Dark Sentinel Seal targeting — round 249
 
 2026-11-22. Jonathan requested that Seal skip spent and already-Locked cards. Version 4.0.46/design 4.266 now selects the oldest card with remaining activation allowance that is not Locked, including allowance bonuses; no eligible card means no target. Updated enemy description and move text. Nine targeted targeting/activation tests pass, plus UI syntax check. Release refreshed. Approximately 8 minutes additional work (estimate). No live-save changes.
+
+2026-11-22 title-screen follow-up: Jonathan requested Continue be the most obvious returning-player action. Continue now appears first with the existing gold/yellow primary styling when a save exists; New Game remains primary when no save exists. Verified both rendered menu variants and JavaScript syntax. Packaged release refreshed. Approximately 3 minutes additional work (estimate).
+
+2026-11-22 Continue follow-up: matched saved-run details to the button's dark foreground for contrast on gold. Replaced HP with Stratum: Druid · Stratum N · Round N. Syntax checked and packaged release refreshed. Approximately 2 minutes additional work (estimate).

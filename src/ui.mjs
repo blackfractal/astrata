@@ -323,7 +323,7 @@ function menu() {
   app.classList.remove("battle-scene", "in-loom", "in-depths", "in-apex");
   auto = false;
   clearTimeout(autoTimer);
-  app.innerHTML = `<section class="hero hero-title"><div class="hero-copy"><div class="sigil"><span>✧</span></div><h1>ASTRATA</h1><p>Your mind is the battlefield.</p><nav><button class="primary" data-ui="new">New Game <span style="float:right">→</span></button>${data.save ? `<button data-ui="continue">Continue <small>· Druid · ${data.save.hp} HP · Round ${data.save.field.round}</small></button>` : ""}${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav></div></section>`;
+  app.innerHTML = `<section class="hero hero-title"><div class="hero-copy"><div class="sigil"><span>✧</span></div><h1>ASTRATA</h1><p>Your mind is the battlefield.</p><nav>${data.save ? `<button class="primary" data-ui="continue">Continue <small>· Druid · Stratum ${data.save.stratum || 1} · Round ${data.save.field.round}</small></button>` : ""}<button${data.save ? "" : ' class="primary"'} data-ui="new">New Game <span style="float:right">→</span></button>${data.tutorialSave ? `<button data-ui="continueTutorial">Resume tutorial <small>· ${data.tutorialSave.tutorial?.name || "The First Clearing"}</small></button>` : ""}<button data-ui="tutorialMenu">Tutorial</button><button data-ui="settings">Settings</button><button data-ui="archives">Archives</button><button data-ui="quit">Quit</button></nav></div></section>`;
   bind();
 }
 async function persist() {
