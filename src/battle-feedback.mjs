@@ -8,17 +8,26 @@ export function damageMarkup(b, c, slot) {
   const boost=supplyPreview(b,c,slot);
   return `Deal <b class="damage-value" data-tooltip="${statAttribute(statHelp(b, c, slot))}">${(cardPower(b, c, slot)+boost.damageBonus)*boost.damageMultiplier}${attackElements(b, c, slot).length > 1 ? " ×" + attackElements(b, c, slot).length : ""}</b>`;
 }
-export function targetPreview(ctx, source, slot, actionFor) {
+export function targetPreview(ctx, source, slot, actionFor, previewElement = () => null) {
   const number = source?.querySelector(".damage-value");
   const normal = number?.textContent;
   const normalHelp = number?.dataset.tooltip;
   let target = null;
-  function clear() {
+  function clear(restore = false) {
     if (number) {
       number.textContent = normal;
       number.classList.remove("damage-up", "damage-down");
       if (normalHelp) number.dataset.tooltip = normalHelp;
       else number.removeAttribute("data-tooltip");
+      const element = restore ? null : previewElement();
+      if (element) {
+        const b = ctx.o.battle, c = b.grid[slot].at(-1);
+        const boost = supplyPreview(b, c, slot, element);
+        const power = (cardPower(b, c, slot, null, element) + boost.damageBonus) * boost.damageMultiplier;
+        const count = attackElements(b, c, slot, element).length;
+        number.textContent = `${power}${count > 1 ? " ×" + count : ""}`;
+        number.dataset.tooltip = `${power} ${element} damage before target defenses. Preview only; activating this card commits the chosen element.`;
+      }
     }
     ctx.app
       .querySelectorAll(".target-damage-preview")

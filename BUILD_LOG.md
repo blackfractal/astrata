@@ -2144,3 +2144,7 @@ Validation: 268 scripts passed syntax checks; ten archived Apex attempts replaye
 2026-11-22 title-screen follow-up: Jonathan requested Continue be the most obvious returning-player action. Continue now appears first with the existing gold/yellow primary styling when a save exists; New Game remains primary when no save exists. Verified both rendered menu variants and JavaScript syntax. Packaged release refreshed. Approximately 3 minutes additional work (estimate).
 
 2026-11-22 Continue follow-up: matched saved-run details to the button's dark foreground for contrast on gold. Replaced HP with Stratum: Druid · Stratum N · Round N. Syntax checked and packaged release refreshed. Approximately 2 minutes additional work (estimate).
+
+## Current-element Synergy and Enhance — round 250
+
+2026-11-22. Jonathan approved Synergy counting current elements at activation and Enhance dynamically following attack elements rather than permanently tagging cards. Implemented 4.0.47/design4.267, including per-hit multi-element damage, dynamic previews, preview cancellation and updated card/inspection text. No cost changes. All840tests pass plus isolated browser checks; packaged release refreshed. Existing saves keep their enhancement totals, with new eligibility rules. No live-save changes. Approximately25minutes additional work (estimate). See reports/synergy-current-elements-report.md.

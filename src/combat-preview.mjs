@@ -41,15 +41,13 @@ export function attackPreview(b, c, i, enemy, element = c.element, action = {}) 
   )
     return null;
   const boost=supplyPreview(b,c,i,element);
-  const power = (
-      (f.forked ? corruptionPower(b,i,(action.effects?.route?.find(x=>x.uid===enemy.uid)?.damage||f.damage)+growthDamage(b,c,i,0)) :
-       f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0))) : cardPower(b, c, i, enemy)) * (f.ideonDouble && enemy.ideon ? 2 : 1)+boost.damageBonus)*boost.damageMultiplier,
-    elements = f.braided ? [element,action.secondaryElement].filter(Boolean) : attackElements(b, c, i, element);
-  const base = power * elements.length;
-  const damage =
-    enemy.flicker || (!enemy.ideon && protectedOwner(b, enemy.uid))
-      ? 0
-      : elements.reduce((sum, el) => sum + enemyDamage(power, el, enemy), 0);
+  const elements = f.braided ? [element,action.secondaryElement].filter(Boolean) : attackElements(b, c, i, element);
+  const powers = elements.map(el => (
+    (f.forked ? corruptionPower(b,i,(action.effects?.route?.find(x=>x.uid===enemy.uid)?.damage||f.damage)+growthDamage(b,c,i,0,el)) :
+     f.focusDamage ? corruptionPower(b,i,growthDamage(b,c,i,f.damage+f.focusDamage*(action.focusSpend||0),el)) : cardPower(b, c, i, enemy, el)) * (f.ideonDouble && enemy.ideon ? 2 : 1)+boost.damageBonus)*boost.damageMultiplier);
+  const base = powers.reduce((sum, power) => sum + power, 0);
+  const damage = enemy.flicker || (!enemy.ideon && protectedOwner(b, enemy.uid))
+    ? 0 : elements.reduce((sum, el, index) => sum + enemyDamage(powers[index], el, enemy), 0);
   const blocked = Math.min(damage, enemy.guard || 0);
   return {
     base,

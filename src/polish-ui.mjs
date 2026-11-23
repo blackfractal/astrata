@@ -1,4 +1,4 @@
-import { enhancementBonus } from "./synergy-rules.mjs";
+import { enhancementBonus, currentCardElement } from "./synergy-rules.mjs";
 import {supplyPreview} from './supplies.mjs';
 import {sourceSlots,growthGuard,wardGain,growthReason} from "./growth-rules.mjs";
 import {attackPreview} from "./combat-preview.mjs";
@@ -161,7 +161,7 @@ function effect(c, slot, ctx) {
         ? `Insight +${insightGain(ctx.o.battle, c, slot)} next turn`
         : null,
       f.channel ? `Channel +${f.channel}` : null,
-      f.enhance ? `${d.element} attacks +${f.enhance} this battle` : null,
+      f.enhance ? `${currentCardElement(ctx.o.battle,c)} attacks +${f.enhance} this battle` : null,
       f.bodyGuard ? `Player Guard +${corruptionPower(ctx.o.battle,slot,f.bodyGuard)}` : null,
       f.borrowInsight ? `−${f.borrowInsight} Insight next turn` : null,
       f.spendFocus ? `Spend ${f.spendFocus} Focus` : null,
@@ -242,7 +242,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
     return option?.kind === "target"
       ? filtered().find((a) => a.target === option.value)
       : null;
-  });
+  }, () => element);
   const choiceAt = (target) =>
     [...options.keys()].find((el) => el === target || el.contains(target));
   function clean() {
@@ -256,6 +256,7 @@ function attunedActivationChooser(ctx, slot, choices, dragging) {
   targetingCleanup = () => {
     controller.abort();
     clean();
+    preview.clear(true);
     source?.classList.remove("target-source");
     previewElement(ctx, slot);
     inspectLinks(ctx, null);

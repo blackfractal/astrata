@@ -1,4 +1,4 @@
-import { synergyBonus, enhancementBonus, printedElementCounts } from "./synergy-rules.mjs";
+import { synergyBonus, enhancementBonus, currentElementCounts, currentCardElement } from "./synergy-rules.mjs";
 import { corruptionPower } from "./corruptions.mjs";
 import { cards } from "./content.mjs";
 import {
@@ -48,8 +48,8 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
     });
   }
   if ((f.deckSynergy || f.prismaticSynergy) && live) {
-    const counts = printedElementCounts(b), bonus = synergyBonus(b, c), enhanced = enhancementBonus(b, c);
-    const detail = f.deckSynergy ? `${bonus} other printed ${d.element} cards` :
+    const counts = currentElementCounts(b), bonus = synergyBonus(b, c), enhanced = enhancementBonus(b, c);
+    const detail = f.deckSynergy ? `${bonus} other current ${currentCardElement(b,c)} cards` :
       `${Object.entries(counts).map(([el,n]) => `${el} ${n}`).join(", ")}; lowest ${Math.min(...Object.values(counts))} × 3`;
     rows.push({label: "Damage", text: `${f.damage} base + ${bonus} Grimoire synergy (${detail})${enhanced ? ` + ${enhanced} Enhance` : ""}${corruptionPower(b,slot,4)<4 ? " → Nausea ×½, rounded down" : ""} = ${cardPower(b,c,slot)} damage.`});
   } else if (c.id === "plasma" && live) {
@@ -108,9 +108,9 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
     );
   }
   if (live && enhancementBonus(b,c) && !(f.deckSynergy || f.prismaticSynergy))
-    rows.push({label:"Enhance", text:`Includes +${enhancementBonus(b,c)} direct damage from ${d.element} Enhance for this battle, based on this card's printed element.`});
+    rows.push({label:"Enhance", text:`Includes +${enhancementBonus(b,c)} direct damage from ${currentCardElement(b,c)} Enhance while this card uses that element.`});
   if (live && f.enhance)
-    rows.push({label:"Enhance", text:`Printed ${d.element} attacks currently gain +${b.elementEnhancements?.[d.element] || 0} damage this battle. This activation adds +${f.enhance}, including cards placed later.`});
+    rows.push({label:"Enhance", text:`${currentCardElement(b,c)} attacks currently gain +${b.elementEnhancements?.[currentCardElement(b,c)] || 0} damage this battle. This activation adds +${f.enhance}, including cards placed later.`});
   return rows;
 }
 export function statHelp(b, c, slot, shieldGear = 0) {

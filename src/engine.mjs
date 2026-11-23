@@ -1,4 +1,4 @@
-import { synergyBonus, enhancementBonus, normalizeSynergyState } from "./synergy-rules.mjs";
+import { synergyBonus, enhancementBonus, normalizeSynergyState, currentCardElement } from "./synergy-rules.mjs";
 import {elementalLine} from "./elemental-formations.mjs";
 import {PREMIUM_GEAR} from "./premium-gear.mjs";
 import {suppliesAvailable,supplyChoices,useSupply,nextDrawIndex,inspirationLegal,finishInspiration,supplyResourceLegal,prepareSupplyPayment,equipmentStart,equipmentEnd,gearChoices,destructionGuard,activationSupply,echoAttack} from "./supplies.mjs";
@@ -142,11 +142,7 @@ export function gridNeighbors(b, i) {
 }
 // A relay changes only the element offered for Attune, never printed-element conditions.
 export function attunementSourceElement(b, c) {
-  const d = cards[c.id];
-  if (c.transmuted || c.element !== d.element) return c.element;
-  return d.attune && c.lastActivatedTurn === b.turn
-    ? c.lastActivationElement || c.element
-    : c.element;
+  return currentCardElement(b, c);
 }
 export function attunementElements(b, c, i) {
   const d = cards[c.id];
@@ -361,7 +357,7 @@ export function damageBonusNeighbors(b, c, i) {
       hasDirectDamageActivation(top(b.grid[j])),
   );
 }
-export function cardPower(b, c, i, target = null) {
+export function cardPower(b, c, i, target = null, element) {
   const d = cards[c.id],
     f = cardEffects(c);
   let n = f.hpDamage
@@ -369,7 +365,7 @@ export function cardPower(b, c, i, target = null) {
     : f.damage
       ? f.damage + (c.upgrade ? d.upgrade?.bonus || 0 : 0)
       : 0;
-  n += synergyBonus(b, c);
+  n += synergyBonus(b, c, element);
   if (f.focusDamage) n += f.focusDamage * Math.max(0,Math.min(3,b.focus));
   if (f.nearDamage && target?.ideon && Number.isInteger(target.slot) &&
       Math.abs(i % MIND_COLUMNS - target.slot % MIND_COLUMNS) +
@@ -384,7 +380,7 @@ export function cardPower(b, c, i, target = null) {
   if (f.adj) n += damageBonusNeighbors(b, c, i).length * f.adj;
   if (f.matchingDamage) n += matchingNeighbors(b, c, i) * f.matchingDamage;
   if (f.square) n += squareFormation(b, c, i).bonus;
-  return corruptionPower(b, i, growthDamage(b, c, i, n));
+  return corruptionPower(b, i, growthDamage(b, c, i, n, element));
 }
 
 // Resolve elemental damage locally; only unmodified base damage travels onward.
@@ -3127,15 +3123,16 @@ export class Game {
       c.charge = 0;
     }
     if (f.enhance) {
+      const enhancedElement = element || currentCardElement(b, c);
       b.elementEnhancements ||= {};
-      b.elementEnhancements[d.element] = (b.elementEnhancements[d.element] || 0) + f.enhance;
+      b.elementEnhancements[enhancedElement] = (b.elementEnhancements[enhancedElement] || 0) + f.enhance;
       const slots = b.grid.flatMap((stack, slot) => {
         const other = top(stack);
-        return other && other.uid !== c.uid && cards[other.id].element === d.element &&
+        return other && other.uid !== c.uid && currentCardElement(b, other) === enhancedElement &&
           hasDirectDamageActivation(other) ? [slot] : [];
       });
-      this.present("enhance", { slot: i, slots, element: d.element, amount: f.enhance, name: d.name });
-      this.log(`${d.name}: printed ${d.element} attacks gain +${f.enhance} damage for this battle (+${b.elementEnhancements[d.element]} total).`);
+      this.present("enhance", { slot: i, slots, element: enhancedElement, amount: f.enhance, name: d.name });
+      this.log(`${d.name}: ${enhancedElement} attacks gain +${f.enhance} damage for this battle (+${b.elementEnhancements[enhancedElement]} total).`);
     }
     if (f.transmute) {
       const victim = top(b.grid[a.cardTarget]);
@@ -3283,40 +3280,29 @@ export class Game {
         if (context.blocked?.has(e.uid)) continue;
         attackResolved = true;
         const old = e.hp;
-        let n = f.randomDamage
-          ? corruptionPower(b, i, 1 + Math.floor(this.rand() * f.randomDamage) + enhancementBonus(b, c))
-          : cardPower(b, c, i, e);
-        if (f.focusDamage) n = corruptionPower(b,i, growthDamage(b,c,i,f.damage + f.focusDamage * (a.focusSpend || 0)));
-        if (f.forked) n = corruptionPower(b,i,routeShares.find(x=>x.uid===e.uid).damage + growthDamage(b,c,i,0));
-        if (f.ivy) n = corruptionPower(b,i,growthDamage(b,c,i,f.damage + targets.indexOf(e)*4));
-        if (f.ideonDouble && e.ideon) n *= 2;
-        if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus + enhancementBonus(b, c));
-        n = (n + supply.damageBonus) * supply.damageMultiplier;
-        if (n) {
-          const prism =
-            f.prism &&
-            ["Fire", "Earth", "Wind", "Water"].every((el) =>
-              this.neighbors(i).some((j) => top(b.grid[j]).element === el),
-            );
-          for (const el of f.braided ? [element, a.secondaryElement].filter(Boolean) : f.concord
-            ? [
-                ...new Set(
-                  this.neighbors(i)
-                    .map((j) => attunementSourceElement(b, top(b.grid[j])))
-                    .filter((el) => el !== "Arcane"),
-                ),
-              ].slice(0, 4)
-            : prism
-              ? ["Fire", "Earth", "Wind", "Water"]
-              : [element])
-            this.damageEnemy(
-              e,
-              n,
-              el,
-              context,
-              null,
-              c.id === "rot" ? "corrode" : null,
-            );
+        // Roll once per target, but calculate Enhance separately for each hit element.
+        const rolled = f.randomDamage ? 1 + Math.floor(this.rand() * f.randomDamage) : null;
+        const damageFor = (el) => {
+          let n = f.randomDamage
+            ? corruptionPower(b, i, rolled + enhancementBonus(b, c, el))
+            : cardPower(b, c, i, e, el);
+          if (f.focusDamage) n = corruptionPower(b,i, growthDamage(b,c,i,f.damage + f.focusDamage * (a.focusSpend || 0),el));
+          if (f.forked) n = corruptionPower(b,i,routeShares.find(x=>x.uid===e.uid).damage + growthDamage(b,c,i,0,el));
+          if (f.ivy) n = corruptionPower(b,i,growthDamage(b,c,i,f.damage + targets.indexOf(e)*4,el));
+          if (f.ideonDouble && e.ideon) n *= 2;
+          if (f.beam && e.ideon) n = corruptionPower(b, i, f.beam + bonus + enhancementBonus(b, c, el));
+          return (n + supply.damageBonus) * supply.damageMultiplier;
+        };
+        const prism = f.prism && ["Fire", "Earth", "Wind", "Water"].every((el) =>
+          this.neighbors(i).some((j) => top(b.grid[j]).element === el));
+        const hitElements = f.braided ? [element, a.secondaryElement].filter(Boolean) : f.concord
+          ? [...new Set(this.neighbors(i).map((j) => attunementSourceElement(b, top(b.grid[j])))
+            .filter((el) => el !== "Arcane"))].slice(0, 4)
+          : prism ? ["Fire", "Earth", "Wind", "Water"] : [element];
+        const hits = hitElements.map(el => ({ el, n: damageFor(el) }));
+        if (hits.some(hit => hit.n > 0)) {
+          for (const {el,n} of hits)
+            if (n > 0) this.damageEnemy(e, n, el, context, null, c.id === "rot" ? "corrode" : null);
           for (const gear of this.equipped())
             if (
               gear.definition.effect.damage &&
@@ -4466,7 +4452,7 @@ export class Game {
                         }
                       : f),
                     damage: charging ? 0 : cardPower(b, c, i,
-                      hostiles(b).find(e => e.uid === (ex.target ?? target))),
+                      hostiles(b).find(e => e.uid === (ex.target ?? target)), element),
                     ...growthActionEffects(b,c,i,target,{...ex,element}),
                     ...(f.bodyGuard?{bodyGuard:corruptionPower(b,i,f.bodyGuard)}:{}),
                     ...Object.fromEntries(

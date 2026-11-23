@@ -8,27 +8,21 @@ Adds 13 cards to the 81-card non-Hex Druid pool, bringing it to 94 (99 including
 
 All thirteen are Spells: 1 Focus placement, 1 Channel activation, 2 uses, 1 Focus recall. Standard once-per-turn activation applies. Available from Stratum 1 onward through the normal reward and shop pools. Twelve elemental variants are common; Prismatic Synergy is rare and printed Arcane. No upgrade recipes are introduced in this pass.
 
-## Synergy
+## Synergy — revised 2026-11-22 / 4.0.47
 
-Fire, Water, Earth, Wind, Light and Chaos each have a Synergy card. Deal 7 damage of that card's current attack element, plus 1 per OTHER card of its printed element in the whole Grimoire. Other copies of the same Synergy count; the activating copy does not. Two other printed Fire cards make Fire Synergy deal 9 base damage.
+Elemental Synergy deals **7 +1 per other card matching its current attack element in the whole Grimoire**, including other Synergy copies. Count at activation: placed cards use their current element, including committed Attunement and Transmute; cards in draw, hand, discard and Destroyed use their printed element. Count each card once, including underlying Meld cards; exclude the elemental Synergy caster itself. Transmuting the caster changes both its attack element and the element it counts. Prismatic Synergy deals **7 +3 × the lowest count across the six non-Arcane elements**, using the same current-element counting. A missing element means zero bonus. Counts 4/4/4/4/3/4 yield16damage.
 
-Count printed card definitions, ignoring Attunement and Transmute. Include draw, hand, grid, discard and Destroyed; moving, recalling or destroying a card does not change the Grimoire count. Underlying Meld cards still count separately. Printed-element Hexes also count as cards in the Grimoire. Transmuting Fire Synergy changes its outgoing attack element, but it still scales from printed Fire cards.
+Example: Fire Synergy, Cinder Snap and an activated Fire-attuned Blast provide two other Fire cards, for 9 damage. When the Blast's Attunement expires, Synergy returns to 8. A Water-transmuted Fire Synergy counts Water instead of Fire. Covered Meld cards remain separate Grimoire members, using their own current element rather than inheriting the host's Attunement. No new Attune ability is granted to these cards.
 
-Prismatic Synergy deals 7 + 3 times the LOWEST count among Fire, Water, Earth, Wind, Light and Chaos. Arcane never contributes. Counts 4/4/4/4/3/4 produce 16 damage; a missing element yields base 7. Its own Arcane card never contributes to those counts.
+## Enhance — revised 2026-11-22 / 4.0.47
 
-## Enhance
+Enhance adds **+1 direct damage per hit to attacks matching its current element, for the rest of the battle**. Store cumulative bonuses by element, not on individual cards. Each hit uses its actual attack element, including Attunement and Transmute; a Fire-attuned Blast benefits from Fire Enhance only while attacking as Fire, and gains no permanent personal bonus. Cards need not match when Enhance is activated to benefit later. If Enhance itself is Transmuted, it adds to its new element; previous bonuses retain the element they were granted for. Includes Allies, later placements and placement attacks. Each activation/copy stacks and bonuses survive source Recall/destruction; reset next battle. Does not increase HP, Guard, Ward or status values. Apply before Nausea, multipliers and elemental matchups, once per Plasma Construct hit and separately for each element of a multi-element attack. Anger activates normally; Hypnosis wastes the use without its utility benefit. Damage previews reflect the selected element for that card only: previews never alter board counts, and cancel on switching actions or clicking away. Only committing that card's activation establishes Attunement. Show current bonuses in live numbers, target previews and inspection. Details: `_plans/elemental_synergy_cards.md`.
 
-Fire, Water, Earth, Wind, Light and Chaos each have an Enhance card. On activation, all other matching PRINTED-element damage cards in the Grimoire gain +1 direct damage per hit for the rest of the battle. Includes Allies, later draws/placements, and placement attacks. Does not increase Ally HP, Guard, Ward, or Burn/Poison/Corrode values. Multiple activations and copies stack.
-
-The buff is stored at battle level, surviving Recall/destruction of its source and recalling/replacing affected cards. It ends when the battle ends. No Arcane Enhance exists. Transmute or Attunement never changes which cards receive a buff or which printed element an Enhance empowers. A Fire-transmuted Blast does not qualify for Fire Enhance; a Water-transmuted Ignis Spark still does.
-
-Apply the bonus before Nausea, attack multipliers and elemental matchups. A Plasma Construct receives it once on the combined attack, not once per underlying card. All-enemy and multi-hit attacks receive it on each hit. Anger activates Enhance normally; Hypnosis consumes a use without granting its utility effect.
+Example: after Fire Enhance is activated twice, a Blast attacking as Fire gains +2. After its Attunement expires it loses eligibility, not the battle's stored Fire bonus. An Ignis Spark transmuted to Water benefits from Water Enhance instead of Fire Enhance. An Enhance transmuted to Arcane may grant an Arcane bonus even though no printed Arcane Enhance card exists; elemental Synergy still has no Arcane deck-count bonus, and Prismatic still ignores Arcane.
 
 ## Presentation, saves and AI
 
-Live attack numbers, target previews and inspection breakdowns include these bonuses. Enhance sends simultaneous elemental pulses to matching placed damage cards, while its text makes the battle-long Grimoire effect clear. Save/observation data preserves printed Grimoire membership and enhancement totals. Old saves initialize missing data without granting bonuses. Normal Continue's existing battle-restart behavior is unchanged; exact battle snapshots preserve the exact buff state.
-
-The built-in weighted policy recognizes deck composition when valuing these cards and scores Enhance activations for matching attacks. This is heuristic support, not trained proficiency or a claim of campaign balance.
+The existing battle-level enhancement totals remain compatible with saves and observations. Grimoire membership is stored once, with live grid instances supplying temporary elements for counting. No preview state is saved. Normal Continue's battle-restart behavior remains unchanged. Existing weighted-policy offer valuation uses printed composition because reward cards have no board Attunement; legal activation damage values include the selected element. This is heuristic support, not trained play.
 
 ## Artwork
 

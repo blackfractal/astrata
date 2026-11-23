@@ -1,0 +1,7 @@
+# Current-element Synergy and Enhance — 4.0.47
+
+Jonathan requested that committed Attunement and Transmute affect Synergy counts and Enhance eligibility. Enhance remains a cumulative battle-wide bonus per element, not a permanent buff captured by particular cards. Synergy counts current elements on placed cards and printed elements elsewhere, once per Grimoire member. Transmuting a Synergy changes the element it counts; transmuting Enhance changes the element its next activation empowers. Prismatic still uses the minimum of all six non-Arcane counts. Costs and allowances are unchanged.
+
+Damage calculations and previews now pass the actual attack element, including separate elements in multi-hit activations. Bonuses apply before Nausea and multipliers. Preview selection changes only the selected card's displayed damage, never the actual board or other Synergy counts; cancellation and switching actions restore the original display. Existing saved enhancement totals remain usable. No live player saves were modified.
+
+Validation: all 840 tests pass, including current-element counts, Attunement expiry, Transmute, recalled/Melded cards, per-element multi-hit damage, Nausea, persistence and legacy saves. Isolated browser checks verify selected Fire damage preview, unchanged other-card Synergy during preview, cancellation, switching to another activation, and actual damage/count changes after committing the same card. Packaged verification uses a separate browser profile.

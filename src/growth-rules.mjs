@@ -86,12 +86,12 @@ export function ashesBonus(b, c, i) {
     }),
   );
 }
-export function growthDamage(b, c, i, n) {
+export function growthDamage(b, c, i, n, element) {
   const f = cards[c.id].effects;
   if (f.diagonalDamage && connects(b,i)) n += diagonals(i).filter(j=>connects(b,j)).length * f.diagonalDamage;
   if (f.orthogonalPenalty) n -= adjacent(i).filter(j=>b.grid[j]?.length).length * f.orthogonalPenalty;
   if (f.waterPath) n += Math.max(0,currentPath(b,i).length-1)*f.waterPath;
-  return Math.max(0,n + ashesBonus(b, c, i) + enhancementBonus(b, c));
+  return Math.max(0,n + ashesBonus(b, c, i) + enhancementBonus(b, c, element));
 }
 export function growthGuard(b, c, i) {
   const f = cards[c.id].effects;

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { cards } from "../src/content.mjs";
 import { Game, cardPower } from "../src/engine.mjs";
-import { synergyBonus, enhancementBonus, printedElementCounts } from "../src/synergy-rules.mjs";
+import { synergyBonus, enhancementBonus, printedElementCounts, currentElementCounts } from "../src/synergy-rules.mjs";
 import { SYNERGY_ELEMENTS } from "../src/synergy-content.mjs";
 import { attackPreview } from "../src/combat-preview.mjs";
 import { statHelp } from "../src/card-upgrade-ui.mjs";
@@ -52,24 +52,27 @@ test("Thirteen explicit-cost cards join cumulative reward/shop pools from Stratu
   assert.ok(!cards.arcaneSynergy && !cards.arcaneEnhance);
 });
 
-test("Synergy counts other printed copies across all piles; transforms never alter counts",()=>{
-  const {g,b,e}=setup(["fireSynergy","fireSynergy","cinder","blast","shield"]);
+test("Synergy counts committed current elements once across all piles",()=>{
+  const {g,b,e}=setup(["fireSynergy","fireSynergy","cinder","blast","water"]);
   const c=put(g,"fireSynergy",10), other=put(g,"fireSynergy",12);
   const cinder=put(g,"cinder",14), blast=put(g,"blast",16);
-  c.element="Water"; c.transmuted=true;
-  other.element="Wind"; other.transmuted=true;
-  blast.attuned="Fire"; blast.element="Fire";
   assert.equal(synergyBonus(b,c),2);
-  assert.equal(cardPower(b,c,10),9);
+  blast.lastActivatedTurn=b.turn; blast.lastActivationElement="Fire";
+  assert.equal(synergyBonus(b,c),3);
+  other.element="Wind"; other.transmuted=true;
+  assert.equal(synergyBonus(b,c),2);
+  b.turn++;
+  assert.equal(synergyBonus(b,c),1);
   b.destroyed.push(...b.grid[14]); b.grid[14]=[];
   b.discard.push(...b.grid[12]); b.grid[12]=[];
-  assert.equal(synergyBonus(b,c),2);
+  assert.equal(synergyBonus(b,c),2); // Off-board cards return to printed element.
   assert.equal(printedElementCounts(b).Fire,3);
-  assert.equal(cinder.id,"cinder");
+  c.element="Water"; c.transmuted=true;
+  assert.equal(cardPower(b,c,10),8); // Count Water now, excluding self.
   e.element="Fire";
-  assert.equal(attackPreview(b,c,10,e,"Water").damage,14);
-  const hp=e.hp; use(g,10); assert.equal(hp-e.hp,14);
-  assert.match(statHelp(b,c,10),/2 other printed Fire cards/);
+  assert.equal(attackPreview(b,c,10,e,"Water").damage,12);
+  const hp=e.hp; use(g,10); assert.equal(hp-e.hp,12);
+  assert.match(statHelp(b,c,10),/1 other current Water cards/);
 });
 
 test("Prismatic uses the minimum of all six elements, with zero for a missing one",()=>{
@@ -83,33 +86,55 @@ test("Prismatic uses the minimum of all six elements, with zero for a missing on
   assert.equal(cardPower(b,c,10),7);
 });
 
-test("Enhance stacks, costs a use and Channel, and buffs printed cards rather than attuned ones",()=>{
+test("Enhance follows current attack elements and survives source Recall/save",()=>{
   const {g,b}=setup(["fireEnhance","cinder","blast","shield","water"]);
   const source=put(g,"fireEnhance",10), cinder=put(g,"cinder",12), blast=put(g,"blast",14), shield=put(g,"shield",16);
   const before=cardPower(b,cinder,12);
-  source.element="Water"; source.transmuted=true;
-  cinder.element="Water"; cinder.transmuted=true;
-  blast.element="Fire"; blast.attuned="Fire";
   use(g,10);
   assert.equal(b.channel,19); assert.equal(source.used,1);
   assert.equal(b.elementEnhancements.Fire,1);
   assert.equal(cardPower(b,cinder,12),before+1);
   assert.equal(enhancementBonus(b,blast),0);
+  blast.lastActivatedTurn=b.turn; blast.lastActivationElement="Fire";
+  assert.equal(enhancementBonus(b,blast),1);
   assert.equal(cardPower(b,shield,16),0);
-  assert.ok(!g.legal().some(a=>a.type==="activate"&&a.slot===10));
+  cinder.element="Water"; cinder.transmuted=true;
+  assert.equal(enhancementBonus(b,cinder),0);
   b.turn++; use(g,10);
   assert.equal(b.elementEnhancements.Fire,2);
+  assert.equal(enhancementBonus(b,blast),0); // Temporary Attunement expired.
+  cinder.element="Fire";
   assert.equal(cardPower(b,cinder,12),before+2);
-  b.turn++;
-  assert.ok(!g.legal().some(a=>a.type==="activate"&&a.slot===10));
-  b.phase="place";
+  b.turn++; b.phase="place";
   g.act(g.legal().find(a=>a.type==="recall"&&a.slot===10));
-  assert.equal(b.elementEnhancements.Fire,2);
   const restored=new Game(0,structuredClone(g.s));
   assert.equal(restored.s.battle.elementEnhancements.Fire,2);
   assert.equal(cardPower(restored.s.battle,restored.s.battle.grid[12][0],12),before+2);
   restored.beginBattle([{uid:990,enemy:"beetle",restless:0}]);
   assert.deepEqual(restored.s.battle.elementEnhancements,{});
+});
+
+test("Transmuted Enhance empowers its current element, with no retroactive retagging",()=>{
+  const {g,b}=setup(["fireEnhance"]);
+  const c=put(g,"fireEnhance",10);
+  use(g,10); b.turn++;
+  c.element="Water";c.transmuted=true;use(g,10);
+  assert.deepEqual(b.elementEnhancements,{Fire:1,Water:1});
+});
+
+test("Attuned damage previews agree with resolution without mutating counts",()=>{
+  const {g,b,e}=setup(["blast","cinder","fireSynergy"]);
+  const blast=put(g,"blast",10);put(g,"cinder",11);const synergy=put(g,"fireSynergy",14);
+  b.elementEnhancements={Fire:2};
+  const state=structuredClone(b), counts=currentElementCounts(b);
+  const a=g.legal().find(a=>a.type==="activate"&&a.slot===10&&a.element==="Fire");
+  assert.equal(a.effects.damage,6);
+  assert.equal(attackPreview(b,blast,10,e,"Fire",a).damage,6);
+  assert.deepEqual(b,state);assert.deepEqual(currentElementCounts(b),counts);
+  assert.equal(synergyBonus(b,synergy),1);
+  const hp=e.hp;g.act(a);assert.equal(hp-e.hp,6);
+  assert.equal(synergyBonus(b,synergy),2);
+  b.turn++;assert.equal(synergyBonus(b,synergy),1);
 });
 
 test("Allies gain damage without HP; later placements and recalled attacks retain Enhance",()=>{
@@ -190,4 +215,27 @@ test("Enhance boosts focus-scaled, beam and placement attacks without boosting s
   const strike=g.legal().find(a=>a.type==="placeStrike"&&a.target===e.uid);
   assert.equal(strike.effects.damage,11);
   const before=e.hp; g.act(strike); assert.equal(before-e.hp,11);
+});
+
+test("Prismatic responds to temporary elements, and each Meld card counts once",()=>{
+  const {g,b}=setup(["prismaticSynergy","fireSynergy","earthSynergy","waterSynergy","windSynergy","chaosSynergy","blast","plasma","plasma"]);
+  const prism=put(g,"prismaticSynergy",10), blast=put(g,"blast",12);
+  const host=put(g,"plasma",14), under=put(g,"plasma",16);
+  b.grid[16]=[];under.attachedTo=host.uid;b.grid[14].unshift(under);
+  assert.equal(currentElementCounts(b).Chaos,3);
+  assert.equal(synergyBonus(b,prism),0);
+  blast.lastActivatedTurn=b.turn;blast.lastActivationElement="Light";
+  assert.equal(synergyBonus(b,prism),3);
+  b.turn++;assert.equal(synergyBonus(b,prism),0);
+});
+
+test("Multi-element hits use their own Enhance totals before Nausea and matchups",()=>{
+  const {g,b,e}=setup(["braidedSeasons","cinder","water"]);
+  const c=put(g,"braidedSeasons",10);put(g,"cinder",9);put(g,"water",11);
+  b.elementEnhancements={Fire:3,Water:1};b.corruptions[10]={kind:"nausea"};
+  const a=g.legal().find(a=>a.type==="activate"&&a.slot===10&&a.element==="Fire"&&a.secondaryElement==="Water");
+  assert.ok(a);
+  const preview=attackPreview(b,c,10,e,a.element,a);
+  assert.equal(preview.damage,13); // floor((12+3)/2) + floor((12+1)/2)
+  const hp=e.hp;g.act(a);assert.equal(hp-e.hp,preview.damage);
 });
