@@ -1,0 +1,9 @@
+# Consolidated Element cards — 4.0.50
+
+Replaced twelve elemental Synergy/Enhance variants with Element Synergy and Element Enhance. Prismatic Synergy remains separate. Both common Element cards are printed Arcane, have Attune, and require a non-Arcane element to produce any effect. Costs remain1Focus/1Channel/2uses/1Recall. Druid roster84non-Hex/89total.
+
+Synergy counts other matching current-element cards at activation; Enhance stores battle-wide bonuses by chosen element. Ordinary activation excludes Arcane and is disabled without a source; forced unattuned activation wastes its use/resources without damage or enhancement. Non-Arcane Transmute works. Preview selection never changes state, is cleared on cancellation/switching actions, and shows the selected element's actual damage.
+
+Save migration preserves each owned card one-for-one, UIDs, upgrades, remaining uses, existing Transmute and battle bonuses. Printed elements become Arcane; old innate elements are removed from placed cards. Committed activation history expires normally. Pending offers and checkpoints migrate too. Non-enumerable legacy aliases keep historical records readable without adding catalog or reward entries. Archives recognize old discoveries. Original artwork is retained; new cards reuse the former Light variants' art. No live save/profile edits, no commits or pushes.
+
+Validation: all844tests pass, including roster/pools, source eligibility/Sever, current-element counting, Transmute, forced Anger/Hypnosis, multihit/Nausea, persistence/migration and Archives. Isolated packaged browser checks verify disabled no-source activation, no Arcane choice, selected damage preview, cancellation/switching, actual8damage and exactly two Synergy/one Enhance Archive entries. No whole-run balance claim; family offer weights were not inflated.

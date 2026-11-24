@@ -200,17 +200,17 @@ test("Braided Seasons permits one or two distinct source elements and relays the
 test("Chaos Fracture excludes Archons, does not compound weakness and rings do not consume it", () => {
   const { g, b, e } = setup("chaosFracture");
   use(g);
-  assert.equal(e.chaosFracture, true);
+  assert.equal(e.fractureElement, "Chaos");
   g.damageEnemy(e, 2, "Earth", {}, 123);
-  assert.equal(e.chaosFracture, true);
+  assert.equal(e.fractureElement, "Chaos");
   e.element = "Light";
   const hp = e.hp;
   g.damageEnemy(e, 10, "Chaos", { card: 42 });
   assert.equal(e.hp, hp - 15);
-  assert.ok(!e.chaosFracture);
+  assert.ok(!e.chaosFracture && !e.fractureElement);
   e.chaosFracture = true;
   g.damageEnemy(e, 1, "Water", { card: 43 });
-  assert.ok(!e.chaosFracture);
+  assert.ok(!e.chaosFracture && !e.fractureElement);
   e.id = "colossus";
   b.turn++;
   assert.equal(opts(g).length, 0);
@@ -342,4 +342,44 @@ test("New state fields survive exact-state serialization without changing legal 
   g.act(a);
   h.act(a.key);
   assert.deepEqual(h.observe(), g.observe());
+});
+
+test("Transmute changes Fracture's applied element and saved weakness stays independent of its source", () => {
+  const {g,b,c,e}=setup("chaosFracture");
+  put(g,"transmute",9);
+  const transmute=g.legal().find(a=>a.type==="activate"&&a.slot===9&&a.cardTarget===10&&a.newElement==="Fire");
+  assert.ok(transmute);g.act(transmute);use(g);
+  assert.equal(e.fractureElement,"Fire");
+  const saved=new Game(0,structuredClone(g.s));
+  assert.equal(saved.s.battle.enemies[0].fractureElement,"Fire");
+  c.element="Water"; // Changing the caster later cannot retag an applied debuff.
+  const attack=put(g,"cinder",12);
+  const a=opts(g,12)[0];
+  const preview=attackPreview(b,attack,12,e,a.element,a);
+  assert.equal(preview.damage,9);
+  const hp=e.hp;g.act(a);assert.equal(hp-e.hp,9);
+  assert.ok(!e.fractureElement);
+});
+
+test("Elemental Fracture applies across one activation, not equipment or later activations", () => {
+  const {g,c,e}=setup("chaosFracture");
+  c.element="Fire";c.transmuted=true;use(g);
+  let hp=e.hp;
+  g.damageEnemy(e,10,"Fire",{},123);
+  assert.equal(hp-e.hp,10);assert.equal(e.fractureElement,"Fire");
+  const activation={card:42};hp=e.hp;
+  g.damageEnemy(e,10,"Water",activation);
+  g.damageEnemy(e,10,"Fire",activation);
+  g.damageEnemy(e,10,"Fire",activation);
+  assert.equal(hp-e.hp,40);assert.ok(!e.fractureElement);
+  hp=e.hp;g.damageEnemy(e,10,"Fire",{card:43});assert.equal(hp-e.hp,10);
+});
+
+test("Fracture supports every Transmute element without multiplying existing weakness", () => {
+  for (const el of ["Fire","Water","Earth","Wind","Light","Chaos","Arcane"]) {
+    const {g,c,e}=setup("chaosFracture");c.element=el;c.transmuted=true;use(g);
+    const hp=e.hp;g.damageEnemy(e,10,el,{card:42});assert.equal(hp-e.hp,15,el);
+  }
+  const {g,c,e}=setup("chaosFracture");c.element="Fire";c.transmuted=true;e.element="Earth";use(g);
+  const hp=e.hp;g.damageEnemy(e,10,"Fire",{card:42});assert.equal(hp-e.hp,15);
 });

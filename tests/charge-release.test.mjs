@@ -298,3 +298,40 @@ test("Hymn and policy count the release activation, including current watering a
   assert.equal(stackValue(b, 10).power, 0);
   assert.equal(actions(g).length, 0);
 });
+
+test("Arcane Surge attunes independently on charging and release, with relay and Enhance", () => {
+  const { g, b, c, e } = setup("surge");
+  put(g, "water", 9);
+  const shield = put(g, "shield", 11);
+  e.element = "Fire";
+  const charge = actions(g).find(a => a.element === "Water");
+  assert.ok(charge); assert.equal(charge.target, null);
+  const hp = e.hp;
+  g.act(charge);
+  assert.equal(e.hp, hp);
+  assert.equal(c.charge, 1);
+  assert.equal(c.used, 1);
+  assert.ok(g.legal().some(a => a.type === "activate" && a.slot === 11 && a.element === "Water"));
+  b.turn++;
+  assert.ok(!g.legal().some(a => a.type === "activate" && a.slot === 11 && a.element === "Water"));
+  b.elementEnhancements = { Water: 2 };
+  const release = actions(g).find(a => a.element === "Water");
+  assert.ok(release);
+  assert.equal(attackPreview(b, c, 10, e, "Water", release).damage, 33);
+  g.act(release);
+  assert.equal(hp - e.hp, 33);
+  assert.equal(c.used, 2);
+  assert.equal(c.charge, 0);
+  assert.equal(actions(g).length, 0);
+});
+
+test("Surge can release Arcane after charging Water and does not retain that Attunement", () => {
+  const { g, b, c, e } = setup("surge");
+  put(g, "water", 9);
+  g.act(actions(g).find(a => a.element === "Water"));
+  b.turn++;
+  const hp = e.hp;
+  g.act(actions(g).find(a => a.element === "Arcane"));
+  assert.equal(hp - e.hp, 20);
+  assert.equal(c.lastActivationElement, "Arcane");
+});

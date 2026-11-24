@@ -12,8 +12,8 @@ export const MIND_COLUMNS = 7,
   MIND_ROWS = 6,
   MIND_SIZE = MIND_COLUMNS * MIND_ROWS;
 export const VERSION = {
-  rules: "4.0.47",
-  content: "4.0.47",
+  rules: "4.0.50",
+  content: "4.0.50",
   observation: 2,
   actions: 10,
 };
@@ -389,8 +389,8 @@ card(
   1,
   2,
   hit(20),
-  "Charge 1. When fully charged, spend a separate activation to deal 20 damage, then reset to 0.",
-  { charge: 1 },
+  "Attune. Charge 1. When fully charged, spend a separate activation to deal 20 damage, then reset to 0. Choose an available element on each activation.",
+  { charge: 1, attune: true },
 );
 card(
   "prism",
@@ -1670,7 +1670,8 @@ export const locations = [
 export const glossary = {
   "Player Guard": "Temporary Arcane defense on the Druid, independent of equipment. Select it to intercept an ordinary enemy attack; you may save it and take the hit instead. It cannot stop Pierce, Cull or status damage. Expires at your next turn; survives the source card being Destroyed.",
   "Projected Insight": "Your next Reveal estimate using current equipment, queued bonuses/debts, a Memory Acorn currently in Draw and Fog currently in Discard. Borrowed Dawn requires at least 4 before its -3 debt. Later changes can alter the forecast; Insight never falls below 1.",
-  "Chaos Fracture": "A non-Archon is additionally weak to Chaos for the next card attack activation that hits it. Any attacking element consumes it; all direct hits from that activation share it. Gear and status ticks do not consume or benefit. Existing Chaos weakness does not double up.",
+  "Chaos Fracture": "A non-Archon becomes additionally weak to the caster's current element (normally Chaos) for the next card attack activation that hits it. Transmute changes the element applied. Any attacking element consumes it; all direct hits from that activation share it. Gear and status ticks do not consume or benefit. Existing weakness does not double up.",
+  Fracture: "Additionally weak to the indicated element for the next card attack activation that hits. Any attacking element consumes it; all direct hits from that activation share it. Gear and status ticks do not consume or benefit. Cannot affect Archons. Existing weakness does not double up.",
   Conduit:
     "Familiar activation: choose an adjacent element or remain Arcane. Until the next player turn, defend in that element, relay it to adjacent Attune cards, and provide +1 damage to each adjacent Blast and +1 Guard to each adjacent Shield when they activate. Costs 1 Channel; two uses, once per turn. No attack or Shield Guard is created by Conduit itself. Spent Familiar still supplies the committed effect; Sever or covering stops neighbor connections. Existing Shield Guard is not changed retroactively.",
   Transmute:
@@ -1866,7 +1867,7 @@ registerStratum2(card, enemy, glossary);
 
 registerDepths(card, enemy, glossary, events);
 registerGrowth(card);
-registerSynergy(card);
+registerSynergy(card, cards);
 for (const [kind, d] of Object.entries(ideonDefs))
   enemies["ideon_" + kind] = {
     ...d,

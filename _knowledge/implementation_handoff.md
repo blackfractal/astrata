@@ -1,3 +1,9 @@
+## Latest: Element card consolidation — 4.0.50 / 2026-11-24
+
+Supersedes twelve elemental Synergy/Enhance variants: only elementSynergy and elementEnhance (printed Arcane, Attune, requiresElement) plus unchanged prismaticSynergy. 84non-Hex/89total. No Arcane legal activation/effect; forced Anger spends use/Channel with zero effect; non-Arcane Transmute valid. Same1Focus/1Channel/2uses/1Recall. Existing variants migrate across decks/piles/offers/checkpoints, UID/uses/upgrade/Transmute/battle bonuses preserved. Legacy IDs non-enumerable aliases for archive compatibility; discoveries mapped. New names stable Element Synergy/Enhance; current element shown separately. Art reuses retained Light variants. 844tests + isolated packaged UI checks. Report reports/element-card-consolidation-report.md; tools/synergy-ui-test.mjs covers current flow. No live profiles changed.
+
+Prior4.0.48 gives Surge Attune (20damage,Charge1);4.0.49 makes Fracture use source's current element, displayed Fire Fracture etc; debuff captured on activation, non-Archons only, legacy chaosFracture remains readable.
+
 ## Latest: Current-element Synergy/Enhance — 4.0.47 / 2026-11-22
 
 Supersedes the printed-only 4.0.45 rules below. Synergy counts current elements on grid (committed Attunement/Transmute), printed elements off grid; each Grimoire UID once, elemental caster excluded. Caster Transmute changes counted element; Prismatic minimum still six non-Arcane elements. Enhance stores battle-level bonuses by source's current element at activation; each damage hit uses its actual element, no permanent recipient tags. Bonus before Nausea/multipliers, separate per multi-element hit. Preview never changes state/counts; selected card's displayed damage updates and cancels when changing actions. Existing totals compatible. All840tests + isolated browser checks pass; reports/synergy-current-elements-report.md, tools/synergy-attunement-ui-test.mjs. No live saves touched.

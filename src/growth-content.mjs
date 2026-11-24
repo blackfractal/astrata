@@ -32,7 +32,7 @@ export function registerGrowth(card) {
     2,
     1,
     { fracture: true },
-    "A non-Archon target becomes additionally weak to Chaos for the next attack activation that hits it. Consumed even by a different element. Existing weakness does not multiply again.",
+    "A non-Archon target becomes additionally weak to this card's current element for the next attack activation that hits it. Consumed even by a different element. Existing weakness does not multiply again.",
     { rarity: "rare" },
   );
   add(

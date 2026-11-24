@@ -1,4 +1,5 @@
 import { cards, enemies, items } from "./content.mjs";
+import { LEGACY_ELEMENT_CARDS } from "./synergy-content.mjs";
 
 // Group presentation identities, never merge gameplay definitions or discovery IDs.
 const enemyGroups = {
@@ -21,7 +22,8 @@ export function archiveEntries(section, discoveries = {}) {
     if (section === "enemies" && groupedIds.has(id) && !enemyGroups[id])
       return [];
     const variants = (
-      (section === "enemies" && enemyGroups[id]) || [{ id }]
+      (section === "enemies" && enemyGroups[id]) || [{ id, aliases: section === "cards"
+        ? Object.keys(LEGACY_ELEMENT_CARDS).filter(old => LEGACY_ELEMENT_CARDS[old] === id) : [] }]
     ).map((v) => ({
       ...v,
       definition: catalog[v.id],

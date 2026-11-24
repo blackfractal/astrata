@@ -1,5 +1,7 @@
 import { depthsArt } from "./depths-art.mjs";
 export const artPaths = {
+  "card-elementSynergy": "assets/card-lightSynergy-v2.png",
+  "card-elementEnhance": "assets/card-lightEnhance-v2.png",
   "card-fireSynergy": "assets/card-fireSynergy-v2.png",
   "card-fireEnhance": "assets/card-fireEnhance-v2.png",
   "card-waterSynergy": "assets/card-waterSynergy-v2.png",

@@ -110,9 +110,12 @@ export class WeightedPolicy {
     const d = cards[id];
     if (!d) return 0;
     const e = d.effects;
+    const elements = d.requiresElement ? ["Fire", "Water", "Earth", "Wind", "Light", "Chaos"] : [d.element];
+    const synergy = Math.max(...elements.map(el => synergyBonus({grimoire:o?.deck || []}, {id,uid:"offer"}, el)));
+    const enhanceCount = Math.max(...elements.map(el => (o?.deck || []).filter(c => cards[c.id].element === el && (hasDirectDamageActivation(c) || cards[c.id].effects.placementStrike)).length));
     return (
-      ((e.damage || 0) + synergyBonus({grimoire:o?.deck || []}, {id,uid:"offer"})) / (d.charge ? d.charge + 1 : 1) +
-      (e.enhance ? Math.min(18, (o?.deck || []).filter(c=>cards[c.id].element===d.element && (hasDirectDamageActivation(c) || cards[c.id].effects.placementStrike)).length * 3) : 0) +
+      ((e.damage || 0) + synergy) / (d.charge ? d.charge + 1 : 1) +
+      (e.enhance ? Math.min(18, enhanceCount * 3) : 0) +
       (d.hp || 0) * 0.6 +
       (e.ward || 0) * 0.55 +
       (e.shield || 0) * 0.4 +

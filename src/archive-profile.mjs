@@ -113,6 +113,7 @@ export function discover(collection, state, at = new Date().toISOString()) {
   );
   const seen = (kind, id) => {
     const catalog = { cards, enemies, equipment: items }[kind];
+    if (kind === "cards" && catalog[id]) id = catalog[id].id;
     if (catalog[id]) collection[kind][id] ||= { firstSeenAt: at };
   };
   const offer = (id) => {

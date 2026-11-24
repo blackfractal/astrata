@@ -1,7 +1,7 @@
-import { printedDeck, synergyBonus } from "./synergy-rules.mjs";
+import { printedDeck, synergyBonus, currentCardElement } from "./synergy-rules.mjs";
 import { cards } from "./content.mjs";
 import { formationReady, formationSlots, diagonals } from "./growth-rules.mjs";
-import { enemyDamage, hasDirectDamageActivation, adjacent } from "./engine.mjs";
+import { enemyDamage, hasDirectDamageActivation, adjacent, attunementElements, fractureElement, attunementSourceElement } from "./engine.mjs";
 // Small feature adjustments; all actions still come from the authoritative legal list.
 export function growthScore(o, a) {
   const b = o.battle;
@@ -10,12 +10,13 @@ export function growthScore(o, a) {
     f = a.effects;
   if (a.type === "place" && d?.effects.deckSynergy || a.type === "place" && d?.effects.prismaticSynergy) {
     const c = b.hand.find(c => c.uid === a.uid);
-    return c ? synergyBonus(b,c) : 0;
+    return c ? Math.max(0,...attunementElements(b,c,a.slot).map(el=>synergyBonus(b,c,el))) : 0;
   }
   if ((a.type === "place" || a.type === "activate") && d?.effects.enhance) {
-    const eligible = printedDeck(b).filter(c => cards[c.id].element === d.element &&
+    const element = a.element || attunementElements(b, b.hand.find(c=>c.uid===a.uid), a.slot)[0];
+    const eligible = printedDeck(b).filter(c => cards[c.id].element === element &&
       (hasDirectDamageActivation(c) || cards[c.id].effects.placementStrike));
-    const ready = b.grid.map(s=>s.at(-1)).filter(c=>c && cards[c.id].element === d.element &&
+    const ready = b.grid.map(s=>s.at(-1)).filter(c=>c && currentCardElement(b,c) === element &&
       hasDirectDamageActivation(c) && c.used < cards[c.id].limit && c.lastActivatedTurn !== b.turn).length;
     return Math.min(12, eligible.length * 1.5) + ready * 2 - (eligible.length ? 0 : 12);
   }
@@ -91,11 +92,11 @@ export function growthScore(o, a) {
     const target = [...b.enemies, ...(b.ideons || [])].find(
       (e) => e.uid === a.target,
     );
-    n += target.chaosFracture
+    n += fractureElement(target) === a.element
       ? -15
       : b.grid.some(
             (s) =>
-              s.at(-1)?.element === "Chaos" &&
+              s.length && attunementSourceElement(b, s.at(-1)) === a.element &&
               hasDirectDamageActivation(s.at(-1)),
           )
         ? 6

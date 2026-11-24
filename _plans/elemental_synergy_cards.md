@@ -1,29 +1,28 @@
-# Elemental Synergy and Enhance cards
+# Element Synergy and Element Enhance
 
-Jonathan · Approved 2026-11-01 · Implemented in 4.0.45
+Jonathan · Revised 2026-11-24 · Implemented in 4.0.50
 
-Adds 13 cards to the 81-card non-Hex Druid pool, bringing it to 94 (99 including five Hexes).
+**Element Synergy and Element Enhance (v4.0.50).** Replace the twelve elemental variants with two common, printed-Arcane Spells: **Element Synergy** and **Element Enhance**. Keep **Prismatic Synergy** as the separate rare Arcane Spell. All three appear from Stratum 1, cost **1 Focus** placement, **1 Channel** per activation, have **2 uses**, and cost **1 Focus** Recall. No new upgrades. The Druid pool now has **84 non-Hex cards (89 including five Hexes)**. The two Element cards require a non-Arcane element: ordinary activation is unavailable without an adjacent valid Attunement source (or a non-Arcane Transmute). Arcane is never a choice. Forced unattuned activation spends its usual resources/use but produces no damage or enhancement. Attunement is selected afresh for each activation and follows normal committed relay/expiry rules. Existing variants migrate one-for-one to the corresponding new card, preserving UIDs, used allowance, upgrades, Transmute and already-granted battle bonuses. Old variants leave reward/shop/Archive pools; discovery of any old variant reveals its new family. Card names remain Element Synergy/Element Enhance, with the current or previewed element shown separately.
 
-## Shared stats and availability
+## Element Synergy
 
-All thirteen are Spells: 1 Focus placement, 1 Channel activation, 2 uses, 1 Focus recall. Standard once-per-turn activation applies. Available from Stratum 1 onward through the normal reward and shop pools. Twelve elemental variants are common; Prismatic Synergy is rare and printed Arcane. No upgrade recipes are introduced in this pass.
+Attune to Fire, Water, Earth, Wind, Light or Chaos. Deal 7 damage plus 1 per OTHER card matching that element in the entire Grimoire. Count once per UID: placed cards use current elements including committed Attunement/Transmute; draw, hand, discard and Destroyed use printed elements. Underlying Meld cards count separately with their own elements. The caster is excluded. No base damage or Enhance bonus without a non-Arcane element. A second Element Synergy only contributes if currently placed with the matching element; its printed Arcane identity does not contribute from other piles.
 
-## Synergy — revised 2026-11-22 / 4.0.47
+## Element Enhance
 
-Elemental Synergy deals **7 +1 per other card matching its current attack element in the whole Grimoire**, including other Synergy copies. Count at activation: placed cards use their current element, including committed Attunement and Transmute; cards in draw, hand, discard and Destroyed use their printed element. Count each card once, including underlying Meld cards; exclude the elemental Synergy caster itself. Transmuting the caster changes both its attack element and the element it counts. Prismatic Synergy deals **7 +3 × the lowest count across the six non-Arcane elements**, using the same current-element counting. A missing element means zero bonus. Counts 4/4/4/4/3/4 yield16damage.
+Attune to a non-Arcane element. Add +1 direct damage per hit for that element for the battle. Two uses can strengthen the same element twice or two different elements once each. Bonuses are stored by element, survive source Recall/destruction, and reset next battle. Each hit qualifies using its actual element; temporary Attunement never captures a permanent personal bonus. Includes Allies, later placements and placement attacks, not HP, Guard, Ward or status values. Apply before Nausea/multipliers/matchups, once per Plasma Construct hit, separately per multi-element hit. A non-Arcane Transmute fixes the caster's usable element normally. Arcane cannot receive a new bonus from this card.
 
-Example: Fire Synergy, Cinder Snap and an activated Fire-attuned Blast provide two other Fire cards, for 9 damage. When the Blast's Attunement expires, Synergy returns to 8. A Water-transmuted Fire Synergy counts Water instead of Fire. Covered Meld cards remain separate Grimoire members, using their own current element rather than inheriting the host's Attunement. No new Attune ability is granted to these cards.
+## Prismatic Synergy
 
-## Enhance — revised 2026-11-22 / 4.0.47
+Unchanged: 7 Arcane damage plus 3 times the smallest current count among all six non-Arcane elements, using the same pile rules. Missing any element gives zero bonus. This card does not gain Attune and does not require elemental Attunement.
 
-Enhance adds **+1 direct damage per hit to attacks matching its current element, for the rest of the battle**. Store cumulative bonuses by element, not on individual cards. Each hit uses its actual attack element, including Attunement and Transmute; a Fire-attuned Blast benefits from Fire Enhance only while attacking as Fire, and gains no permanent personal bonus. Cards need not match when Enhance is activated to benefit later. If Enhance itself is Transmuted, it adds to its new element; previous bonuses retain the element they were granted for. Includes Allies, later placements and placement attacks. Each activation/copy stacks and bonuses survive source Recall/destruction; reset next battle. Does not increase HP, Guard, Ward or status values. Apply before Nausea, multipliers and elemental matchups, once per Plasma Construct hit and separately for each element of a multi-element attack. Anger activates normally; Hypnosis wastes the use without its utility benefit. Damage previews reflect the selected element for that card only: previews never alter board counts, and cancel on switching actions or clicking away. Only committing that card's activation establishes Attunement. Show current bonuses in live numbers, target previews and inspection. Details: `_plans/elemental_synergy_cards.md`.
+## Presentation and compatibility
 
-Example: after Fire Enhance is activated twice, a Blast attacking as Fire gains +2. After its Attunement expires it loses eligibility, not the battle's stored Fire bonus. An Ignis Spark transmuted to Water benefits from Water Enhance instead of Fire Enhance. An Enhance transmuted to Arcane may grant an Arcane bonus even though no printed Arcane Enhance card exists; elemental Synergy still has no Arcane deck-count bonus, and Prismatic still ignores Arcane.
+Selected-element previews update that card's damage only; never commit the temporary element or change another card's counts. Cancellation, clicking away or switching actions restores the original display. Normal Continue retains its battle-restart behavior. Existing exact snapshots preserve state and undergo identity migration. Retired IDs remain non-enumerable compatibility aliases for old archives; new cards, offers and catalog entries use only canonical IDs. Historical archives and art files are not rewritten. Existing offer weights are not multiplied to compensate for the smaller pool. Heuristic policy evaluates valid elemental choices rather than rewarding the Arcane starting deck.
 
-## Presentation, saves and AI
-
-The existing battle-level enhancement totals remain compatible with saves and observations. Grimoire membership is stored once, with live grid instances supplying temporary elements for counting. No preview state is saved. Normal Continue's battle-restart behavior remains unchanged. Existing weighted-policy offer valuation uses printed composition because reward cards have no board Attunement; legal activation damage values include the selected element. This is heuristic support, not trained play.
+The two new cards reuse the retained Light Synergy/Enhance illustrations; previous elemental art remains available for future selection. Updated isolated UI checks: tools/synergy-ui-test.mjs.
 
 ## Artwork
 
 Generated on Jonathan's DGX Spark at spark-86e6.local using ComfyUI and dreamshaperXL_alpha2Xl10.safetensors. Selected assets: assets/card-{fire,water,earth,wind,light,chaos}{Synergy,Enhance}-v2.png and assets/card-prismaticSynergy-v2.png. Earlier candidates are retained. tools/synergy-art.mjs reproduces the requests; reports/synergy-art-provenance.json records exact prompts, workflows, seeds and paths. Shared art paths and the main manifest are updated.
+

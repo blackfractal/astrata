@@ -54,7 +54,7 @@ export function angerChoice(g, slot) {
   try {
     b.phase = "activate";
     b.channel = Number.MAX_SAFE_INTEGER;
-    choices = g.baseLegal().filter((a) => {
+    choices = g.baseLegal({ allowUnattuned: true }).filter((a) => {
       const c = a.type === "activate" && top(b.grid[a.slot]);
       return c && targets.includes(a.slot) && a.element === c.element;
     });
@@ -415,6 +415,10 @@ export function compelCard(g, i, q, forced = false) {
   c.used++;
   c.lastActivatedTurn = b.turn;
   g.present("corruption", { slot: i, name: "Hypnosis · " + d.name });
+  if (d.requiresElement && c.element === "Arcane") {
+    g.log("Hypnosis wastes a use of " + d.name + "; no elemental Attunement.");
+    return;
+  }
   if (d.charge && c.charge < d.charge) {
     g.log("Hypnosis wastes a use of " + d.name + "; no charge gained.");
     return;

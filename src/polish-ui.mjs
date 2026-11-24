@@ -54,6 +54,8 @@ import {
   incomingDamageText,
   adjacent,
   attunementSourceElement,
+  attunementElements,
+  fractureElement,
 } from "./engine.mjs";
 const slotNames = {
   head: "Head",
@@ -98,6 +100,13 @@ function bindActions(c, root) {
 }
 function cardName(c) {
   const d = cards[c.id];
+  if (c.id === "surge" && c.used != null)
+    return `${c.element || d.element} Surge`;
+  if (d.effects.fracture && c.used != null)
+    return `${c.element || d.element} Fracture`;
+  if (d.requiresElement) return d.name;
+  if (c.used != null && (d.effects.deckSynergy || d.effects.enhance))
+    return `${c.element || d.element} ${d.effects.deckSynergy ? "Synergy" : "Enhance"}`;
   return (
     (c.used != null && (c.transmuted || c.element !== d.element)
       ? c.element + " "
@@ -161,14 +170,14 @@ function effect(c, slot, ctx) {
         ? `Insight +${insightGain(ctx.o.battle, c, slot)} next turn`
         : null,
       f.channel ? `Channel +${f.channel}` : null,
-      f.enhance ? `${currentCardElement(ctx.o.battle,c)} attacks +${f.enhance} this battle` : null,
+      f.enhance ? `${d.requiresElement && currentCardElement(ctx.o.battle,c) === "Arcane" ? "Attune · elemental" : currentCardElement(ctx.o.battle,c)} attacks +${f.enhance} this battle` : null,
       f.bodyGuard ? `Player Guard +${corruptionPower(ctx.o.battle,slot,f.bodyGuard)}` : null,
       f.borrowInsight ? `−${f.borrowInsight} Insight next turn` : null,
       f.spendFocus ? `Spend ${f.spendFocus} Focus` : null,
       f.loseFocus ? `−${f.loseFocus} recurring Focus` : null,
       f.focusPermanent ? `+${f.focusPermanent} recurring Focus` : null,
       f.focus ? `+${f.focus} Focus next turn` : null,
-      f.fracture ? "Chaos weakness · next attack" : null,
+      f.fracture ? `${currentCardElement(ctx.o.battle,c)} weakness · next attack` : null,
       f.ashesBuff ? `Adjacent attacks +${Math.min(6,ctx.o.battle.destroyed.length)}` : null,
       f.focusDamage ? "+8 per Focus spent" : null,
       f.seasonGuard ? "+8 Guard if element changes" : null,
@@ -197,6 +206,8 @@ function whyDisabled(ctx, c, i) {
     return "Already activated this turn";
   if (b.reaction) return "Resolve the incoming attack first";
   if (b.phase !== "activate") return "Available during activation";
+  if (d.requiresElement && !attunementElements(b, c, i).length)
+    return "Requires elemental Attunement";
   if (d.channel > b.channel)
     return `Needs ${d.channel} Channel; ${b.channel} remaining`;
   if (fieldIdeons(b, i).length)
@@ -796,7 +807,7 @@ export function showCard(ctx, c, slot = null) {
     ? `<h3>Upgrade${c.upgrade ? " · acquired" : ""}</h3><p>${ctx.text(d.upgrade.text)}</p><p>${[d.upgrade.gold ? d.upgrade.gold + " Gold" : null, d.upgrade.hp ? d.upgrade.hp + " HP" : null, d.upgrade.sacrifice ? "Sacrifice another card of equal rarity" : null, d.upgrade.hex ? "Gain " + d.upgrade.hex : null, d.upgrade.element ? "Requires " + d.upgrade.element + " equipment" : null].filter(Boolean).join(" · ")}</p>`
     : "";
   ctx.dialog(
-    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2><div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(cardText(d, ctx.o.stratum))}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.recallPlacement ? "1 + target stack Recall cost" : d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.requiresHost || c.attachedTo != null ? "No independent activation" : live ? activationCost(b, c, slot) : d.channel}</dd><dt>Activations</dt><dd>${c.attachedTo != null ? (c.id === "heat" ? Math.max(0, d.limit - c.used) + "/" + d.limit + " host attacks" : d.meld?.activations ? "+" + d.meld.activations + " host allowance" : "None while melded") : format(allowances) + " / " + (d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit)}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${c.attachedTo != null ? "With host only · " + ((d.meld?.recall || 0) >= 0 ? "+" : "") + (d.meld?.recall || 0) + " Focus" : live ? (ctx.game.recallCost(b.grid[slot]) == null ? "Cannot recall" : ctx.game.recallCost(b.grid[slot]) + " Focus for whole stack") : d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.attachedTo != null ? (c.id === "heat" ? `Melded Heat: ${Math.max(0, d.limit - c.used)}/${d.limit} attack uses left; no independent activation or Recall` : c.id === "plasma" ? "Melded Plasma: contributes diminishing damage; +1 host allowance and +1 Recall Focus; no independent activation" : c.id === "palimpsest" ? "Melded: whole-stack Recall −1 Focus; no independent effects" : c.id === "lattice" ? "Melded: +5 Ward and chosen element granted on placement; no independent effects" : "Melded reinforcement: no independent Guard, activation or Recall") : null, live && slot != null && b.grid[slot].some((x) => x.id === "magnify" && x.attachedTo === c.uid) ? "Reinforced: +" + b.grid[slot].filter((x) => x.id === "magnify" && x.attachedTo === c.uid).length + " activation allowance" : null, c.chosenElement ? "Chosen element: " + c.element + " until Recall or destruction" : c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" && c.attachedTo == null ? (c.zeroWard ? DEPLETED_WARD_TEXT : "Ward " + c.ward) : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, cardSevered(b, c, slot) ? "Severed" : null, cardFrozen(b, c, slot) ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
+    `<h2>${cardName(c)}${c.upgrade ? " +" : ""}</h2>${live && !d.requiresElement && c.element !== d.element && (d.effects.deckSynergy || d.effects.enhance || d.effects.fracture) ? `<p class="muted">Originally ${d.name}</p>` : ""}<div class="card-detail"><div class="card-art-detail">${ctx.img("card-" + c.id, "full-art")}${upgradeBadge(c)}</div><div><div class="eyebrow">${c.element || d.element} · ${d.type} · ${d.rarity}</div><p>${ctx.text(cardText(d, ctx.o.stratum))}</p><dl class="card-facts"><dt>Focus</dt><dd>${d.recallPlacement ? "1 + target stack Recall cost" : d.focus === 99 ? "Cannot place" : d.focus}</dd><dt>Channel</dt><dd>${d.requiresHost || c.attachedTo != null ? "No independent activation" : live ? activationCost(b, c, slot) : d.channel}</dd><dt>Activations</dt><dd>${c.attachedTo != null ? (c.id === "heat" ? Math.max(0, d.limit - c.used) + "/" + d.limit + " host attacks" : d.meld?.activations ? "+" + d.meld.activations + " host allowance" : "None while melded") : format(allowances) + " / " + (d.limit < 0 ? "∞" : live ? ctx.game.allowance({ ...c, used: 0 }, slot) : d.limit)}</dd><dt>Per turn</dt><dd>${d.blink ? "Blink · repeat at printed Channel cost" : "Once"}</dd><dt>Recall</dt><dd>${c.attachedTo != null ? "With host only · " + ((d.meld?.recall || 0) >= 0 ? "+" : "") + (d.meld?.recall || 0) + " Focus" : live ? (ctx.game.recallCost(b.grid[slot]) == null ? "Cannot recall" : ctx.game.recallCost(b.grid[slot]) + " Focus for whole stack") : d.recall == null ? "Cannot recall" : d.recall + " Focus"}</dd>${live ? `<dt>Current state</dt><dd>${[c.attachedTo != null ? (c.id === "heat" ? `Melded Heat: ${Math.max(0, d.limit - c.used)}/${d.limit} attack uses left; no independent activation or Recall` : c.id === "plasma" ? "Melded Plasma: contributes diminishing damage; +1 host allowance and +1 Recall Focus; no independent activation" : c.id === "palimpsest" ? "Melded: whole-stack Recall −1 Focus; no independent effects" : c.id === "lattice" ? "Melded: +5 Ward and chosen element granted on placement; no independent effects" : "Melded reinforcement: no independent Guard, activation or Recall") : null, live && slot != null && b.grid[slot].some((x) => x.id === "magnify" && x.attachedTo === c.uid) ? "Reinforced: +" + b.grid[slot].filter((x) => x.id === "magnify" && x.attachedTo === c.uid).length + " activation allowance" : null, c.chosenElement ? "Chosen element: " + c.element + " until Recall or destruction" : c.transmuted || c.element !== d.element ? "Transmuted: " + c.element + (d.attune ? " (replaces Attune)" : "") : null, d.attune && !c.transmuted && c.lastActivatedTurn === b.turn ? "Relays " + c.lastActivationElement + " until next player turn" : null, d.type === "Ally" ? "HP " + c.hp : null, conduitActive(b, c) ? "Conduit: " + defensiveElement(b, c) + " defense; counts as neighboring Blast and Shield until next player turn" : null, c.taunt ? "Taunt" + (c.tauntUntil != null ? " through enemy phase" : "") : null, d.type === "Ward" && c.attachedTo == null ? (c.zeroWard ? DEPLETED_WARD_TEXT : "Ward " + c.ward) : null, d.charge ? `Charge ${c.charge}/${d.charge} · ${chargeActivations(b, c, slot)} activation(s) to fire${allowances === 0 ? " · Spent" : c.charge >= d.charge ? " · Ready to release" : ""}` : null, !d.blink && c.lastActivatedTurn === b.turn ? "Activated this turn" : null, c.lock ? "Locked" : null, cardSevered(b, c, slot) ? "Severed" : null, cardFrozen(b, c, slot) ? "Frozen" : null].filter(Boolean).join(" · ") || "Ready"}</dd>` : ""}</dl>${statBreakdowns(
       b,
       c,
       slot,
@@ -1832,7 +1843,8 @@ export function enhance(ctx) {
       el.addEventListener('dragover',e=>{if(strikeFor(el)){e.preventDefault();el.classList.add('target-option');}},{capture:true});
       el.addEventListener('drop',e=>{const a=strikeFor(el);if(a){e.preventDefault();e.stopImmediatePropagation();drag=null;run(ctx,a);}},{capture:true});
       const enemy=[...o.battle.enemies,...(o.battle.ideons||[])].find(x=>x.uid===Number(el.dataset.enemyUid));
-      if(enemy?.chaosFracture)el.insertAdjacentHTML('beforeend','<span class="fracture-status" data-tooltip="Additionally weak to Chaos for the next attack activation that hits. A different element consumes this too.">Chaos Fracture</span>');
+      const fractured = fractureElement(enemy);
+      if(fractured)el.insertAdjacentHTML('beforeend',`<span class="fracture-status" data-tooltip="Additionally weak to ${fractured} for the next attack activation that hits. A different element consumes this too.">${fractured} Fracture</span>`);
     });
     boardInteractions(ctx);
     gridTelegraphs(ctx);

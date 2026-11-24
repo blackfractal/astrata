@@ -109,7 +109,9 @@ export function statBreakdowns(b, c, slot, shieldGear = 0) {
   }
   if (live && enhancementBonus(b,c) && !(f.deckSynergy || f.prismaticSynergy))
     rows.push({label:"Enhance", text:`Includes +${enhancementBonus(b,c)} direct damage from ${currentCardElement(b,c)} Enhance while this card uses that element.`});
-  if (live && f.enhance)
+  if (live && d.requiresElement && currentCardElement(b,c) === "Arcane")
+    rows.push({label:"Attunement", text:"Requires non-Arcane elemental Attunement. Without it, activation has no effect. Select an available element to preview its effect."});
+  if (live && f.enhance && (!d.requiresElement || currentCardElement(b,c) !== "Arcane"))
     rows.push({label:"Enhance", text:`${currentCardElement(b,c)} attacks currently gain +${b.elementEnhancements?.[currentCardElement(b,c)] || 0} damage this battle. This activation adds +${f.enhance}, including cards placed later.`});
   return rows;
 }

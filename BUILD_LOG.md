@@ -2148,3 +2148,17 @@ Validation: 268 scripts passed syntax checks; ten archived Apex attempts replaye
 ## Current-element Synergy and Enhance — round 250
 
 2026-11-22. Jonathan approved Synergy counting current elements at activation and Enhance dynamically following attack elements rather than permanently tagging cards. Implemented 4.0.47/design4.267, including per-hit multi-element damage, dynamic previews, preview cancellation and updated card/inspection text. No cost changes. All840tests pass plus isolated browser checks; packaged release refreshed. Existing saves keep their enhancement totals, with new eligibility rules. No live-save changes. Approximately25minutes additional work (estimate). See reports/synergy-current-elements-report.md.
+
+2026-11-23 naming follow-up: Transmuted elemental Synergy/Enhance display their current element in place of the original prefix (Water Enhance, Earth Synergy), with Originally [printed name] in card details. Prismatic Synergy retains its distinct identity. Verified board titles and popup provenance in an isolated browser; syntax checked. Packaged release refreshed. Approximately 5 minutes additional work (estimate). Only other element-prefixed card names are Arcane Surge and Chaos Fracture; unchanged.
+
+## Arcane Surge Attune — round 251
+
+2026-11-24. Jonathan requested Attune for Arcane Surge as an upgraded-Blast-style card. Added standard optional adjacent Attunement to both charging and release; choose anew each activation, with normal committed relay/expiry and Transmute override. Retains20damage,Charge1,two total uses,1Focus/1Channel/1Recall. Transmuted names read Water Surge rather than Water Arcane Surge. Version4.0.48/design4.268. All842tests pass, including new charge/release, neutral choice, relay expiry and Water Enhance/matchup checks. Packaged release refreshed; no live saves changed. Approximately6minutes additional work (estimate).
+
+## Elemental Fracture — round 252
+
+2026-11-24. Jonathan requested Transmute turn Chaos Fracture into the corresponding elemental weakness. Version4.0.49/design4.269 stores fractureElement when activated and displays Fire Fracture/etc on the card and target. Subsequent source changes do not retag applied weakness; reapplication replaces it. All direct hits of the next attacking activation share the captured element; any element consumes it, equipment/status hits neither consume nor benefit, existing weakness does not compound, Archons remain ineligible. Old chaosFracture saves resolve as Chaos. Updated card text, glossary, policy recognition and inspection. All845tests pass plus isolated browser naming/status checks; packaged release refreshed. No live saves touched. Approximately12minutes additional work (estimate).
+
+## Consolidated Element cards — round 253
+
+2026-11-24. Jonathan approved replacing six Synergy and six Enhance variants with Element Synergy/Element Enhance, both requiring non-Arcane Attunement. Prismatic remains. Version4.0.50/design4.270,84non-Hex/89total. Included zero-effect forced activations, stable previews, migration of existing cards/offers/checkpoints, Archive discovery aliases, heuristic scoring and retained art reuse. All844tests and isolated UI checks pass; release refreshed. No live save edits or commit/push. Approximately30minutes additional work (estimate). See reports/element-card-consolidation-report.md.

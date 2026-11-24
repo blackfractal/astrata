@@ -1,5 +1,5 @@
 import { cards } from "./content.mjs";
-import { SYNERGY_ELEMENTS } from "./synergy-content.mjs";
+import { SYNERGY_ELEMENTS, LEGACY_ELEMENT_CARDS, canonicalElementCard } from "./synergy-content.mjs";
 
 export function printedDeck(b) {
   // Real battles retain their full Grimoire independently of cycling and destruction.
@@ -42,6 +42,7 @@ export function currentElementCounts(b, previewCard = null, previewElement = nul
 }
 export function synergyBonus(b, c, element = currentCardElement(b, c)) {
   const d = cards[c.id];
+  if (d.requiresElement && !SYNERGY_ELEMENTS.includes(element)) return 0;
   if (!d.effects.deckSynergy && !d.effects.prismaticSynergy) return 0;
   const counts = currentElementCounts(b, c, element);
   if (d.effects.prismaticSynergy)
@@ -54,13 +55,33 @@ export function synergyBonus(b, c, element = currentCardElement(b, c)) {
 }
 export function enhancementBonus(b, c, element = currentCardElement(b, c)) {
   const d = cards[c.id], f = d.effects;
+  if (d.requiresElement && !SYNERGY_ELEMENTS.includes(element)) return 0;
   return f.damage || f.hpDamage || f.randomDamage || f.placementStrike
     ? b?.elementEnhancements?.[element] || 0 : 0;
 }
 export function normalizeSynergyState(s) {
+  migrateElementCards(s);
   if (s.battle) {
     s.battle.grimoire ||= s.deck.map(({ id, uid }) => ({ id, uid }));
     s.battle.elementEnhancements ||= {};
   }
   if (s.checkpoint) normalizeSynergyState(s.checkpoint);
+}
+
+// Change card identities, not UIDs, upgrades, uses, stored bonuses or RNG.
+export function migrateElementCards(value) {
+  if (!value || typeof value !== "object") return;
+  if (LEGACY_ELEMENT_CARDS[value.id]) {
+    const old = value.id;
+    value.id = canonicalElementCard(old);
+    const oldElement = SYNERGY_ELEMENTS.find(el => old.startsWith(el.toLowerCase()));
+    if (value.element === oldElement && !value.transmuted) value.element = "Arcane";
+  }
+  for (const [key, child] of Object.entries(value)) {
+    if (typeof child === "string") {
+      if (LEGACY_ELEMENT_CARDS[child]) value[key] = canonicalElementCard(child);
+      else if (child.startsWith("card:") && LEGACY_ELEMENT_CARDS[child.slice(5)])
+        value[key] = "card:" + canonicalElementCard(child.slice(5));
+    } else migrateElementCards(child);
+  }
 }

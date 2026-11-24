@@ -147,7 +147,7 @@ export function attunementSourceElement(b, c) {
 export function attunementElements(b, c, i) {
   const d = cards[c.id];
   const elements =
-    d.attune && !c.transmuted && c.element === d.element
+    d.attune && !c.transmuted && (c.element || d.element) === d.element
       ? [
           d.element,
           ...new Set(
@@ -156,7 +156,8 @@ export function attunementElements(b, c, i) {
               .filter((element) => element !== "Arcane" && element !== d.element),
           ),
         ]
-      : [c.element];
+      : [c.element || d.element];
+  if (d.requiresElement) return elements.filter(el => el && el !== "Arcane");
   return elements.length ? elements : ["Arcane"];
 }
 export function conduitActive(b, c) {
@@ -229,12 +230,13 @@ function normalizeCardCaps(state) {
   for (const c of state.battle?.grid?.flat() || []) capAllyHP(c);
   if (state.checkpoint) normalizeCardCaps(state.checkpoint);
 }
+export const fractureElement = (enemy) => enemy?.fractureElement || (enemy?.chaosFracture ? "Chaos" : null);
 export function enemyDamage(n, element, enemy) {
   if (enemy.hive) return 0;
   let damage = enemy.arcaneWeak
     ? Math.ceil(n * (element === "Arcane" ? 1.5 : 0.5))
     : offense(n, element, enemy.element);
-  if (enemy.chaosFracture && element === "Chaos" && enemies[enemy.id]?.tier !== "Archon") damage = Math.max(damage, Math.ceil(n * 1.5));
+  if (fractureElement(enemy) === element && enemies[enemy.id]?.tier !== "Archon") damage = Math.max(damage, Math.ceil(n * 1.5));
   if (enemy.resist === element) damage = Math.ceil(damage / 2);
   if (enemy.wisp) damage = Math.ceil(damage * (element === "Arcane" ? 0.5 : 2));
   return damage;
@@ -360,6 +362,7 @@ export function damageBonusNeighbors(b, c, i) {
 export function cardPower(b, c, i, target = null, element) {
   const d = cards[c.id],
     f = cardEffects(c);
+  if (d.requiresElement && (element || currentCardElement(b, c)) === "Arcane") return 0;
   let n = f.hpDamage
     ? c.hp
     : f.damage
@@ -1267,7 +1270,7 @@ export class Game {
     return ++this.s.uid;
   }
   newCard(id, upgrade = false) {
-    return { uid: this.uid(), id, upgrade };
+    return { uid: this.uid(), id: cards[id]?.id || id, upgrade };
   }
   addCard(id) {
     const c = this.newCard(id);
@@ -3025,12 +3028,14 @@ export class Game {
       delete e.mark;
     }
     const fractureHit = activation.card != null && sourceItem == null;
-    if (fractureHit && e.chaosFracture) {
-      activation.fractures ??= new Set();
-      activation.fractures.add(e.uid);
+    if (fractureHit && fractureElement(e)) {
+      activation.fractures ??= new Map();
+      activation.fractures.set(e.uid, fractureElement(e));
+      delete e.fractureElement;
       delete e.chaosFracture;
     }
-    let d = enemyDamage(n, element, fractureHit && activation.fractures?.has(e.uid) ? {...e, chaosFracture: true} : {...e,chaosFracture:false});
+    let d = enemyDamage(n, element, {...e, chaosFracture: false,
+      fractureElement: fractureHit ? activation.fractures?.get(e.uid) : null});
     const guard = Math.min(d, e.guard);
     e.guard -= guard;
     d -= guard;
@@ -3096,12 +3101,13 @@ export class Game {
       f = cardEffects(c),
       bonus = c.upgrade ? d.upgrade?.bonus || 0 : 0;
     if (!this.activationAvailable(c, i)) return;
-    const supply = activationSupply(this,c,i,element);
     const previousElement = c.previousActivationElement;
     c.lastActivatedTurn = b.turn;
     c.lastActivationElement = a.secondaryElement || element || c.element;
     c.previousActivationElement = c.lastActivationElement;
     c.used++;
+    if (d.requiresElement && (!element || element === "Arcane")) return;
+    const supply = activationSupply(this,c,i,element);
     if (f.guide && a.destination != null && a.destination !== i) {
       const from = i;
       b.grid[a.destination] = b.grid[i];
@@ -3181,7 +3187,13 @@ export class Game {
     if (f.spendFocus || f.focusDamage) b.focus -= f.spendFocus || a.focusSpend || 0;
     if (f.loseFocus) b.permanent.focus -= f.loseFocus;
     if (f.ashesBuff) { c.ashesUntil = b.turn; c.ashesPower = Math.min(6, b.destroyed.length); }
-    if (f.fracture) { const victim = hostiles(b).find(e=>e.uid===target); if(victim) victim.chaosFracture = true; }
+    if (f.fracture) {
+      const victim = hostiles(b).find(e=>e.uid===target);
+      if (victim) {
+        victim.fractureElement = element || c.element;
+        delete victim.chaosFracture;
+      }
+    }
     if (f.seasonGuard && previousElement && previousElement !== element)
       b.shields.push({uid:this.uid(), slot:i, owner:c.uid, block:corruptionPower(b,i,f.seasonGuard), element});
     if (f.shield) {
@@ -3743,7 +3755,7 @@ export class Game {
     if (!this.projectingSupply && this.s.mode === "battle" && b?.confluence && !b.reaction && ["place","activate"].includes(b.phase)) return supplyResourceLegal(this);
     return tutorialActions(this, this.baseLegal());
   }
-  baseLegal() {
+  baseLegal({ allowUnattuned = false } = {}) {
     const s = this.s,
       b = s.battle,
       actions = [];
@@ -4349,7 +4361,7 @@ export class Game {
               !["nausea", "insanity"].includes(corruptionAt(b, i)?.kind))
           )
             continue;
-          const els = attunementElements(b, c, i);
+          const els = d.requiresElement && allowUnattuned ? [c.element] : attunementElements(b, c, i);
           const charging = !!(d.charge && c.charge < d.charge);
           const targets =
             charging ||
